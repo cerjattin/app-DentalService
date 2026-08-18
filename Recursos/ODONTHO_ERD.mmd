@@ -1,0 +1,71 @@
+erDiagram
+    ORGANIZATIONS ||--o{ USERS : has
+    ORGANIZATIONS ||--o{ CLINIC_LOCATIONS : has
+    ORGANIZATIONS ||--o{ PROVIDERS : has
+    ORGANIZATIONS ||--o{ PATIENTS : has
+    ORGANIZATIONS ||--o{ NUMBER_SEQUENCES : owns
+
+    USERS ||--o{ USER_ROLES : assigned
+    ROLES ||--o{ USER_ROLES : contains
+    ROLES ||--o{ ROLE_PERMISSIONS : grants
+    PERMISSIONS ||--o{ ROLE_PERMISSIONS : included
+    USERS o|--o| PROVIDERS : login_for
+
+    PATIENTS ||--o{ PATIENT_INSURANCE : has
+    PAYERS ||--o{ PATIENT_INSURANCE : covers
+
+    PATIENTS ||--o{ TREATMENT_CASES : treatments
+    PATIENTS ||--o{ ACCIDENT_CASES : accidents
+    PATIENTS ||--o{ APPOINTMENTS : books
+    PROVIDERS ||--o{ APPOINTMENTS : scheduled
+    CLINIC_LOCATIONS ||--o{ APPOINTMENTS : occurs_at
+    TREATMENT_CASES o|--o{ APPOINTMENTS : groups
+    ACCIDENT_CASES o|--o{ APPOINTMENTS : relates
+
+    APPOINTMENTS ||--o{ APPOINTMENT_STATUS_HISTORY : history
+    APPOINTMENTS ||--o| CLINICAL_ENCOUNTERS : produces
+    CLINICAL_ENCOUNTERS ||--o{ ENCOUNTER_DIAGNOSES : diagnoses
+    DIAGNOSIS_CODES ||--o{ ENCOUNTER_DIAGNOSES : master
+    CLINICAL_ENCOUNTERS ||--o{ ENCOUNTER_PROCEDURES : performs
+
+    SVB_PROCEDURES ||--o{ SVB_TARIFFS : tariffs
+    PATIENTS ||--o{ SVB_AUTHORIZATIONS : receives
+    PATIENT_INSURANCE ||--o{ SVB_AUTHORIZATIONS : under
+    SVB_AUTHORIZATIONS ||--o{ SVB_AUTHORIZATION_ITEMS : contains
+    SVB_PROCEDURES o|--o{ SVB_AUTHORIZATION_ITEMS : authorizes
+
+    SVB_PROCEDURES ||--o{ ENCOUNTER_PROCEDURES : source
+    SVB_TARIFFS ||--o{ ENCOUNTER_PROCEDURES : priced_by
+    PATIENT_INSURANCE ||--o{ ENCOUNTER_PROCEDURES : coverage
+    PROVIDERS ||--o{ ENCOUNTER_PROCEDURES : performed_by
+    ENCOUNTER_DIAGNOSES o|--o{ ENCOUNTER_PROCEDURES : supports
+    SVB_AUTHORIZATION_ITEMS o|--o{ ENCOUNTER_PROCEDURES : authorizes
+
+    APPOINTMENTS ||--o| INVOICES : one_logical_invoice
+    PATIENTS ||--o{ INVOICES : billed_patient
+    PATIENT_INSURANCE ||--o{ INVOICES : billed_coverage
+    INVOICES ||--o{ INVOICE_VERSIONS : versions
+    INVOICE_VERSIONS ||--o{ INVOICE_ITEMS : lines
+    ENCOUNTER_PROCEDURES ||--o{ INVOICE_ITEMS : billing_source
+    INVOICES ||--o{ INVOICE_STATUS_HISTORY : history
+    INVOICES ||--o{ INVOICE_CORRECTIONS : corrections
+    INVOICE_VERSIONS o|--o{ INVOICE_CORRECTIONS : source_or_replacement
+
+    DOCUMENTS ||--o| SIGNATURES : signature_resource
+    INVOICE_VERSIONS ||--o{ SIGNATURES : signed_version
+    PATIENTS ||--o{ SIGNATURES : signer_patient
+    INVOICE_VERSIONS ||--o{ INVOICE_DOCUMENTS : has
+    DOCUMENTS ||--o{ INVOICE_DOCUMENTS : attached
+
+    ORGANIZATIONS ||--o{ DECLARATION_BATCHES : submits
+    PAYERS ||--o{ DECLARATION_BATCHES : destination
+    DECLARATION_BATCHES ||--o{ DECLARATION_ITEMS : contains
+    INVOICE_ITEMS ||--o{ DECLARATION_ITEMS : declares
+    DECLARATION_BATCHES ||--o{ DECLARATION_BATCH_STATUS_HISTORY : history
+    DECLARATION_BATCHES ||--o{ DECLARATION_EXPORTS : exports
+    DOCUMENTS ||--o| DECLARATION_EXPORTS : export_file
+    DECLARATION_BATCHES ||--o{ DECLARATION_SUBMISSIONS : submissions
+
+    ORGANIZATIONS ||--o{ AUDIT_LOGS : audit
+    USERS o|--o{ AUDIT_LOGS : actor
+    ORGANIZATIONS ||--o{ SYSTEM_SETTINGS : settings

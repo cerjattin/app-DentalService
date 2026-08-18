@@ -1,0 +1,1336 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model AccidentCase {
+  id                 BigInt             @id @default(autoincrement()) @db.UnsignedBigInt
+  patientId          BigInt             @map("patient_id") @db.UnsignedBigInt
+  patientInsuranceId BigInt?            @map("patient_insurance_id") @db.UnsignedBigInt
+  accidentFormNumber String             @map("accident_form_number") @db.VarChar(80)
+  accidentDate       DateTime?          @map("accident_date") @db.Date
+  description        String?            @db.Text
+  status             AccidentCaseStatus @default(OPEN)
+  createdByUserId    BigInt             @map("created_by_user_id") @db.UnsignedBigInt
+  createdAt          DateTime           @default(now()) @map("created_at")
+  updatedAt          DateTime           @default(now()) @map("updated_at")
+  createdByUser      User               @relation(fields: [createdByUserId], references: [id], onUpdate: Restrict, map: "fk_accident_created_by")
+  patientInsurance   PatientInsurance?  @relation(fields: [patientInsuranceId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_accident_insurance")
+  patient            Patient            @relation(fields: [patientId], references: [id], onUpdate: Restrict, map: "fk_accident_patient")
+  appointments       Appointment[]
+
+  @@unique([patientId, accidentFormNumber], map: "uq_accident_patient_form")
+  @@index([createdByUserId], map: "fk_accident_created_by")
+  @@index([patientInsuranceId], map: "fk_accident_insurance")
+  @@index([patientId, status], map: "idx_accident_patient_status")
+  @@map("accident_cases")
+}
+
+model AppointmentStatusHistory {
+  id              BigInt                             @id @default(autoincrement()) @db.UnsignedBigInt
+  appointmentId   BigInt                             @map("appointment_id") @db.UnsignedBigInt
+  oldStatus       AppointmentStatusHistoryOldStatus? @map("old_status")
+  newStatus       AppointmentStatusHistoryNewStatus  @map("new_status")
+  reason          String?                            @db.VarChar(500)
+  changedByUserId BigInt                             @map("changed_by_user_id") @db.UnsignedBigInt
+  changedAt       DateTime                           @default(now()) @map("changed_at")
+  metadata        Json?
+  appointment     Appointment                        @relation(fields: [appointmentId], references: [id], onUpdate: Restrict, map: "fk_appointment_history_appointment")
+  changedByUser   User                               @relation(fields: [changedByUserId], references: [id], onUpdate: Restrict, map: "fk_appointment_history_user")
+
+  @@index([changedByUserId], map: "fk_appointment_history_user")
+  @@index([appointmentId, changedAt], map: "idx_appointment_history_appt_time")
+  @@map("appointment_status_history")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model Appointment {
+  id                 BigInt                     @id @default(autoincrement()) @db.UnsignedBigInt
+  organizationId     BigInt                     @map("organization_id") @db.UnsignedBigInt
+  appointmentNumber  String                     @map("appointment_number") @db.VarChar(50)
+  patientId          BigInt                     @map("patient_id") @db.UnsignedBigInt
+  providerId         BigInt                     @map("provider_id") @db.UnsignedBigInt
+  clinicLocationId   BigInt                     @map("clinic_location_id") @db.UnsignedBigInt
+  treatmentCaseId    BigInt?                    @map("treatment_case_id") @db.UnsignedBigInt
+  accidentCaseId     BigInt?                    @map("accident_case_id") @db.UnsignedBigInt
+  scheduledStartAt   DateTime                   @map("scheduled_start_at")
+  scheduledEndAt     DateTime                   @map("scheduled_end_at")
+  status             AppointmentStatus          @default(SCHEDULED)
+  reason             String?                    @db.VarChar(255)
+  notes              String?                    @db.Text
+  createdByUserId    BigInt                     @map("created_by_user_id") @db.UnsignedBigInt
+  checkedInAt        DateTime?                  @map("checked_in_at")
+  startedAt          DateTime?                  @map("started_at")
+  completedAt        DateTime?                  @map("completed_at")
+  cancelledAt        DateTime?                  @map("cancelled_at")
+  cancellationReason String?                    @map("cancellation_reason") @db.VarChar(500)
+  createdAt          DateTime                   @default(now()) @map("created_at")
+  updatedAt          DateTime                   @default(now()) @map("updated_at")
+  statusHistory      AppointmentStatusHistory[]
+  accidentCase       AccidentCase?              @relation(fields: [accidentCaseId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_appointments_accident")
+  createdByUser      User                       @relation(fields: [createdByUserId], references: [id], onUpdate: Restrict, map: "fk_appointments_created_by")
+  clinicLocation     ClinicLocation             @relation(fields: [clinicLocationId], references: [id], onUpdate: Restrict, map: "fk_appointments_location")
+  organization       Organization               @relation(fields: [organizationId], references: [id], onUpdate: Restrict, map: "fk_appointments_organization")
+  patient            Patient                    @relation(fields: [patientId], references: [id], onUpdate: Restrict, map: "fk_appointments_patient")
+  provider           Provider                   @relation(fields: [providerId], references: [id], onUpdate: Restrict, map: "fk_appointments_provider")
+  treatmentCase      TreatmentCase?             @relation(fields: [treatmentCaseId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_appointments_treatment")
+  clinicalEncounter  ClinicalEncounter?
+  invoice            Invoice?
+
+  @@unique([organizationId, appointmentNumber], map: "uq_appointments_org_number")
+  @@index([accidentCaseId], map: "fk_appointments_accident")
+  @@index([createdByUserId], map: "fk_appointments_created_by")
+  @@index([clinicLocationId], map: "fk_appointments_location")
+  @@index([treatmentCaseId], map: "fk_appointments_treatment")
+  @@index([patientId, scheduledStartAt], map: "idx_appointments_patient_time")
+  @@index([providerId, scheduledStartAt, scheduledEndAt], map: "idx_appointments_provider_time")
+  @@index([status, scheduledStartAt], map: "idx_appointments_status_time")
+  @@map("appointments")
+}
+
+model AuditLog {
+  id             BigInt       @id @default(autoincrement()) @db.UnsignedBigInt
+  organizationId BigInt       @map("organization_id") @db.UnsignedBigInt
+  actorUserId    BigInt?      @map("actor_user_id") @db.UnsignedBigInt
+  action         String       @db.VarChar(80)
+  entityType     String       @map("entity_type") @db.VarChar(80)
+  entityId       BigInt?      @map("entity_id") @db.UnsignedBigInt
+  entityKey      String?      @map("entity_key") @db.VarChar(255)
+  oldValues      Json?        @map("old_values")
+  newValues      Json?        @map("new_values")
+  reason         String?      @db.Text
+  metadata       Json?
+  correlationId  String?      @map("correlation_id") @db.VarChar(80)
+  ipAddress      String?      @map("ip_address") @db.VarChar(45)
+  userAgent      String?      @map("user_agent") @db.VarChar(512)
+  createdAt      DateTime     @default(now()) @map("created_at")
+  actorUser      User?        @relation(fields: [actorUserId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_audit_actor")
+  organization   Organization @relation(fields: [organizationId], references: [id], onUpdate: Restrict, map: "fk_audit_organization")
+
+  @@index([actorUserId, createdAt], map: "idx_audit_actor_time")
+  @@index([correlationId], map: "idx_audit_correlation")
+  @@index([organizationId, entityType, entityId, createdAt], map: "idx_audit_entity")
+  @@map("audit_logs")
+}
+
+model ClinicLocation {
+  id             BigInt        @id @default(autoincrement()) @db.UnsignedBigInt
+  organizationId BigInt        @map("organization_id") @db.UnsignedBigInt
+  code           String        @db.VarChar(50)
+  name           String        @db.VarChar(150)
+  policlinicCode String?       @map("policlinic_code") @db.VarChar(64)
+  addressLine1   String?       @map("address_line1") @db.VarChar(255)
+  addressLine2   String?       @map("address_line2") @db.VarChar(255)
+  city           String?       @db.VarChar(120)
+  countryCode    String        @default("CW") @map("country_code") @db.Char(2)
+  phone          String?       @db.VarChar(40)
+  isActive       Boolean       @default(true) @map("is_active")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @default(now()) @map("updated_at")
+  archivedAt     DateTime?     @map("archived_at")
+  appointments   Appointment[]
+  organization   Organization  @relation(fields: [organizationId], references: [id], onUpdate: Restrict, map: "fk_locations_organization")
+
+  @@unique([organizationId, code], map: "uq_locations_org_code")
+  @@unique([organizationId, policlinicCode], map: "uq_locations_org_policlinic")
+  @@index([organizationId, isActive], map: "idx_locations_org_active")
+  @@map("clinic_locations")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model ClinicalEncounter {
+  id              BigInt                  @id @default(autoincrement()) @db.UnsignedBigInt
+  appointmentId   BigInt                  @unique(map: "uq_encounters_appointment") @map("appointment_id") @db.UnsignedBigInt
+  providerId      BigInt                  @map("provider_id") @db.UnsignedBigInt
+  status          ClinicalEncounterStatus @default(OPEN)
+  startedAt       DateTime                @map("started_at")
+  completedAt     DateTime?               @map("completed_at")
+  chiefComplaint  String?                 @map("chief_complaint") @db.Text
+  clinicalNotes   String?                 @map("clinical_notes") @db.Text
+  createdByUserId BigInt                  @map("created_by_user_id") @db.UnsignedBigInt
+  createdAt       DateTime                @default(now()) @map("created_at")
+  updatedAt       DateTime                @default(now()) @map("updated_at")
+  appointment     Appointment             @relation(fields: [appointmentId], references: [id], onUpdate: Restrict, map: "fk_encounters_appointment")
+  createdByUser   User                    @relation(fields: [createdByUserId], references: [id], onUpdate: Restrict, map: "fk_encounters_created_by")
+  provider        Provider                @relation(fields: [providerId], references: [id], onUpdate: Restrict, map: "fk_encounters_provider")
+  diagnoses       EncounterDiagnosis[]
+  procedures      EncounterProcedure[]
+
+  @@index([createdByUserId], map: "fk_encounters_created_by")
+  @@index([providerId, status], map: "idx_encounters_provider_status")
+  @@map("clinical_encounters")
+}
+
+model DeclarationBatchStatusHistory {
+  id                 BigInt                                  @id @default(autoincrement()) @db.UnsignedBigInt
+  declarationBatchId BigInt                                  @map("declaration_batch_id") @db.UnsignedBigInt
+  oldStatus          DeclarationBatchStatusHistoryOldStatus? @map("old_status")
+  newStatus          DeclarationBatchStatusHistoryNewStatus  @map("new_status")
+  reason             String?                                 @db.VarChar(500)
+  changedByUserId    BigInt                                  @map("changed_by_user_id") @db.UnsignedBigInt
+  changedAt          DateTime                                @default(now()) @map("changed_at")
+  metadata           Json?
+  declarationBatch   DeclarationBatch                        @relation(fields: [declarationBatchId], references: [id], onUpdate: Restrict, map: "fk_declaration_history_batch")
+  changedByUser      User                                    @relation(fields: [changedByUserId], references: [id], onUpdate: Restrict, map: "fk_declaration_history_user")
+
+  @@index([changedByUserId], map: "fk_declaration_history_user")
+  @@index([declarationBatchId, changedAt], map: "idx_declaration_history_batch_time")
+  @@map("declaration_batch_status_history")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model DeclarationBatch {
+  id                  BigInt                          @id @default(autoincrement()) @db.UnsignedBigInt
+  organizationId      BigInt                          @map("organization_id") @db.UnsignedBigInt
+  payerId             BigInt                          @map("payer_id") @db.UnsignedBigInt
+  declarationNumber   String?                         @map("declaration_number") @db.VarChar(80)
+  status              DeclarationBatchStatus          @default(DRAFT)
+  periodStart         DateTime?                       @map("period_start") @db.Date
+  periodEnd           DateTime?                       @map("period_end") @db.Date
+  declarantIdSnapshot String?                         @map("declarant_id_snapshot") @db.VarChar(64)
+  submissionReference String?                         @map("submission_reference") @db.VarChar(120)
+  notes               String?                         @db.Text
+  createdByUserId     BigInt                          @map("created_by_user_id") @db.UnsignedBigInt
+  readyAt             DateTime?                       @map("ready_at")
+  exportedAt          DateTime?                       @map("exported_at")
+  submittedAt         DateTime?                       @map("submitted_at")
+  acceptedAt          DateTime?                       @map("accepted_at")
+  rejectedAt          DateTime?                       @map("rejected_at")
+  createdAt           DateTime                        @default(now()) @map("created_at")
+  updatedAt           DateTime                        @default(now()) @map("updated_at")
+  statusHistory       DeclarationBatchStatusHistory[]
+  createdByUser       User                            @relation(fields: [createdByUserId], references: [id], onUpdate: Restrict, map: "fk_declaration_created_by")
+  organization        Organization                    @relation(fields: [organizationId], references: [id], onUpdate: Restrict, map: "fk_declaration_organization")
+  payer               Payer                           @relation(fields: [payerId], references: [id], onUpdate: Restrict, map: "fk_declaration_payer")
+  exports             DeclarationExport[]
+  items               DeclarationItem[]
+  submissions         DeclarationSubmission[]
+
+  @@unique([organizationId, declarationNumber], map: "uq_declaration_org_number")
+  @@index([createdByUserId], map: "fk_declaration_created_by")
+  @@index([payerId], map: "fk_declaration_payer")
+  @@index([organizationId, status, createdAt], map: "idx_declaration_status_time")
+  @@map("declaration_batches")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model DeclarationExport {
+  id                 BigInt                  @id @default(autoincrement()) @db.UnsignedBigInt
+  declarationBatchId BigInt                  @map("declaration_batch_id") @db.UnsignedBigInt
+  documentId         BigInt                  @unique(map: "uq_declaration_exports_document") @map("document_id") @db.UnsignedBigInt
+  format             DeclarationExportFormat
+  schemaVersion      String?                 @map("schema_version") @db.VarChar(50)
+  adapterVersion     String                  @map("adapter_version") @db.VarChar(50)
+  recordCount        Int                     @map("record_count") @db.UnsignedInt
+  exportedByUserId   BigInt                  @map("exported_by_user_id") @db.UnsignedBigInt
+  exportedAt         DateTime                @default(now()) @map("exported_at")
+  metadata           Json?
+  declarationBatch   DeclarationBatch        @relation(fields: [declarationBatchId], references: [id], onUpdate: Restrict, map: "fk_declaration_exports_batch")
+  document           Document                @relation(fields: [documentId], references: [id], onUpdate: Restrict, map: "fk_declaration_exports_document")
+  exportedByUser     User                    @relation(fields: [exportedByUserId], references: [id], onUpdate: Restrict, map: "fk_declaration_exports_user")
+  submissions        DeclarationSubmission[]
+
+  @@index([exportedByUserId], map: "fk_declaration_exports_user")
+  @@index([declarationBatchId, exportedAt], map: "idx_declaration_exports_batch_time")
+  @@map("declaration_exports")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model DeclarationItem {
+  id                          BigInt                    @id @default(autoincrement()) @db.UnsignedBigInt
+  declarationBatchId          BigInt                    @map("declaration_batch_id") @db.UnsignedBigInt
+  invoiceItemId               BigInt                    @map("invoice_item_id") @db.UnsignedBigInt
+  sequenceNumber              Int                       @map("sequence_number") @db.UnsignedInt
+  lineStatus                  DeclarationItemLineStatus @default(PENDING) @map("line_status")
+  declarantIdSnapshot         String                    @map("declarant_id_snapshot") @db.VarChar(64)
+  invoiceNumberSnapshot       String                    @map("invoice_number_snapshot") @db.VarChar(80)
+  detailInvoiceNumberSnapshot String                    @map("detail_invoice_number_snapshot") @db.VarChar(100)
+  providerIdSnapshot          String                    @map("provider_id_snapshot") @db.VarChar(64)
+  serviceDateSnapshot         DateTime                  @map("service_date_snapshot") @db.Date
+  insuredIdSnapshot           String                    @map("insured_id_snapshot") @db.VarChar(80)
+  accidentFormNumberSnapshot  String?                   @map("accident_form_number_snapshot") @db.VarChar(80)
+  treatmentIdSnapshot         String?                   @map("treatment_id_snapshot") @db.VarChar(80)
+  amountSnapshot              Decimal                   @map("amount_snapshot") @db.Decimal(15, 2)
+  authorizationIdSnapshot     String?                   @map("authorization_id_snapshot") @db.VarChar(80)
+  numberOfTreatmentsSnapshot  Int?                      @map("number_of_treatments_snapshot") @db.UnsignedInt
+  assistanceSnapshot          String?                   @map("assistance_snapshot") @db.VarChar(100)
+  referrerIdSnapshot          String?                   @map("referrer_id_snapshot") @db.VarChar(64)
+  diagnosticCodeSnapshot      String?                   @map("diagnostic_code_snapshot") @db.VarChar(50)
+  policlinicSnapshot          String?                   @map("policlinic_snapshot") @db.VarChar(64)
+  additionalNoteSnapshot      String?                   @map("additional_note_snapshot") @db.Text
+  responseCode                String?                   @map("response_code") @db.VarChar(80)
+  responseMessage             String?                   @map("response_message") @db.VarChar(1000)
+  createdAt                   DateTime                  @default(now()) @map("created_at")
+  updatedAt                   DateTime                  @default(now()) @map("updated_at")
+  declarationBatch            DeclarationBatch          @relation(fields: [declarationBatchId], references: [id], onUpdate: Restrict, map: "fk_declaration_items_batch")
+  invoiceItem                 InvoiceItem               @relation(fields: [invoiceItemId], references: [id], onUpdate: Restrict, map: "fk_declaration_items_invoice_item")
+
+  @@unique([declarationBatchId, invoiceItemId], map: "uq_declaration_items_invoice_item")
+  @@unique([declarationBatchId, sequenceNumber], map: "uq_declaration_items_sequence")
+  @@index([invoiceItemId], map: "idx_declaration_items_invoice")
+  @@index([declarationBatchId, lineStatus], map: "idx_declaration_items_status")
+  @@map("declaration_items")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model DeclarationSubmission {
+  id                  BigInt                       @id @default(autoincrement()) @db.UnsignedBigInt
+  declarationBatchId  BigInt                       @map("declaration_batch_id") @db.UnsignedBigInt
+  declarationExportId BigInt?                      @map("declaration_export_id") @db.UnsignedBigInt
+  attemptNumber       Int                          @map("attempt_number") @db.UnsignedInt
+  channel             DeclarationSubmissionChannel
+  status              DeclarationSubmissionStatus
+  externalReference   String?                      @map("external_reference") @db.VarChar(120)
+  requestMetadata     Json?                        @map("request_metadata")
+  responseMetadata    Json?                        @map("response_metadata")
+  submittedByUserId   BigInt                       @map("submitted_by_user_id") @db.UnsignedBigInt
+  submittedAt         DateTime                     @default(now()) @map("submitted_at")
+  respondedAt         DateTime?                    @map("responded_at")
+  declarationBatch    DeclarationBatch             @relation(fields: [declarationBatchId], references: [id], onUpdate: Restrict, map: "fk_declaration_submissions_batch")
+  declarationExport   DeclarationExport?           @relation(fields: [declarationExportId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_declaration_submissions_export")
+  submittedByUser     User                         @relation(fields: [submittedByUserId], references: [id], onUpdate: Restrict, map: "fk_declaration_submissions_user")
+
+  @@unique([declarationBatchId, attemptNumber], map: "uq_declaration_submission_attempt")
+  @@index([declarationExportId], map: "fk_declaration_submissions_export")
+  @@index([submittedByUserId], map: "fk_declaration_submissions_user")
+  @@index([declarationBatchId, status, submittedAt], map: "idx_declaration_submissions_status")
+  @@map("declaration_submissions")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model DiagnosisCode {
+  id                 BigInt               @id @default(autoincrement()) @db.UnsignedBigInt
+  codeSystem         String               @map("code_system") @db.VarChar(50)
+  code               String               @db.VarChar(50)
+  description        String               @db.VarChar(500)
+  isActive           Boolean              @default(true) @map("is_active")
+  validFrom          DateTime?            @map("valid_from") @db.Date
+  validTo            DateTime?            @map("valid_to") @db.Date
+  createdAt          DateTime             @default(now()) @map("created_at")
+  updatedAt          DateTime             @default(now()) @map("updated_at")
+  encounterDiagnoses EncounterDiagnosis[]
+
+  @@unique([codeSystem, code], map: "uq_diagnosis_system_code")
+  @@map("diagnosis_codes")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model Document {
+  id                BigInt                  @id @default(autoincrement()) @db.UnsignedBigInt
+  organizationId    BigInt                  @map("organization_id") @db.UnsignedBigInt
+  documentType      DocumentType            @map("document_type")
+  storageProvider   DocumentStorageProvider @default(LOCAL) @map("storage_provider")
+  storageUri        String                  @unique(map: "uq_documents_storage_uri") @map("storage_uri") @db.VarChar(1024)
+  originalFilename  String                  @map("original_filename") @db.VarChar(255)
+  mimeType          String                  @map("mime_type") @db.VarChar(150)
+  sizeBytes         BigInt                  @map("size_bytes") @db.UnsignedBigInt
+  sha256            String                  @db.Char(64)
+  metadata          Json?
+  createdByUserId   BigInt?                 @map("created_by_user_id") @db.UnsignedBigInt
+  createdAt         DateTime                @default(now()) @map("created_at")
+  declarationExport DeclarationExport?
+  createdByUser     User?                   @relation(fields: [createdByUserId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_documents_created_by")
+  organization      Organization            @relation(fields: [organizationId], references: [id], onUpdate: Restrict, map: "fk_documents_organization")
+  invoiceDocuments  InvoiceDocument[]
+  signature         Signature?
+
+  @@index([createdByUserId], map: "fk_documents_created_by")
+  @@index([organizationId, documentType, createdAt], map: "idx_documents_org_type_time")
+  @@index([sha256], map: "idx_documents_sha256")
+  @@map("documents")
+}
+
+model EncounterDiagnosis {
+  id                  BigInt               @id @default(autoincrement()) @db.UnsignedBigInt
+  encounterId         BigInt               @map("encounter_id") @db.UnsignedBigInt
+  diagnosisCodeId     BigInt               @map("diagnosis_code_id") @db.UnsignedBigInt
+  isPrimary           Boolean              @default(false) @map("is_primary")
+  codeSnapshot        String               @map("code_snapshot") @db.VarChar(50)
+  descriptionSnapshot String               @map("description_snapshot") @db.VarChar(500)
+  notes               String?              @db.Text
+  createdByUserId     BigInt               @map("created_by_user_id") @db.UnsignedBigInt
+  createdAt           DateTime             @default(now()) @map("created_at")
+  diagnosisCode       DiagnosisCode        @relation(fields: [diagnosisCodeId], references: [id], onUpdate: Restrict, map: "fk_encounter_diagnoses_code")
+  encounter           ClinicalEncounter    @relation(fields: [encounterId], references: [id], onUpdate: Restrict, map: "fk_encounter_diagnoses_encounter")
+  createdByUser       User                 @relation(fields: [createdByUserId], references: [id], onUpdate: Restrict, map: "fk_encounter_diagnoses_user")
+  procedures          EncounterProcedure[]
+
+  @@unique([encounterId, diagnosisCodeId], map: "uq_encounter_diagnosis")
+  @@index([diagnosisCodeId], map: "fk_encounter_diagnoses_code")
+  @@index([createdByUserId], map: "fk_encounter_diagnoses_user")
+  @@index([encounterId, isPrimary], map: "idx_encounter_diagnoses_primary")
+  @@map("encounter_diagnoses")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model EncounterProcedure {
+  id                           BigInt                   @id @default(autoincrement()) @db.UnsignedBigInt
+  encounterId                  BigInt                   @map("encounter_id") @db.UnsignedBigInt
+  patientInsuranceId           BigInt                   @map("patient_insurance_id") @db.UnsignedBigInt
+  svbProcedureId               BigInt                   @map("svb_procedure_id") @db.UnsignedBigInt
+  svbTariffId                  BigInt                   @map("svb_tariff_id") @db.UnsignedBigInt
+  authorizationItemId          BigInt?                  @map("authorization_item_id") @db.UnsignedBigInt
+  diagnosisId                  BigInt?                  @map("diagnosis_id") @db.UnsignedBigInt
+  referrerId                   BigInt?                  @map("referrer_id") @db.UnsignedBigInt
+  performedByProviderId        BigInt                   @map("performed_by_provider_id") @db.UnsignedBigInt
+  procedureCodeSnapshot        String                   @map("procedure_code_snapshot") @db.VarChar(50)
+  procedureDescriptionSnapshot String                   @map("procedure_description_snapshot") @db.VarChar(500)
+  providerIdSnapshot           String?                  @map("provider_id_snapshot") @db.VarChar(64)
+  insuredIdSnapshot            String                   @map("insured_id_snapshot") @db.VarChar(80)
+  unitTariffSnapshot           Decimal                  @map("unit_tariff_snapshot") @db.Decimal(15, 2)
+  currencyCodeSnapshot         String                   @map("currency_code_snapshot") @db.Char(3)
+  quantity                     Decimal                  @default(1.00) @db.Decimal(10, 2)
+  amount                       Decimal                  @db.Decimal(15, 2)
+  authorizationIdSnapshot      String?                  @map("authorization_id_snapshot") @db.VarChar(80)
+  diagnosticCodeSnapshot       String?                  @map("diagnostic_code_snapshot") @db.VarChar(50)
+  treatmentIdSnapshot          String?                  @map("treatment_id_snapshot") @db.VarChar(80)
+  accidentFormNumberSnapshot   String?                  @map("accident_form_number_snapshot") @db.VarChar(80)
+  numberOfTreatmentsSnapshot   Int?                     @map("number_of_treatments_snapshot") @db.UnsignedInt
+  assistanceSnapshot           String?                  @map("assistance_snapshot") @db.VarChar(100)
+  referrerIdSnapshot           String?                  @map("referrer_id_snapshot") @db.VarChar(64)
+  policlinicSnapshot           String?                  @map("policlinic_snapshot") @db.VarChar(64)
+  performedAt                  DateTime?                @map("performed_at")
+  additionalNote               String?                  @map("additional_note") @db.Text
+  status                       EncounterProcedureStatus @default(PERFORMED)
+  createdByUserId              BigInt                   @map("created_by_user_id") @db.UnsignedBigInt
+  createdAt                    DateTime                 @default(now()) @map("created_at")
+  updatedAt                    DateTime                 @default(now()) @map("updated_at")
+  authorizationItem            SvbAuthorizationItem?    @relation(fields: [authorizationItemId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_encounter_procedures_auth_item")
+  createdByUser                User                     @relation(fields: [createdByUserId], references: [id], onUpdate: Restrict, map: "fk_encounter_procedures_created_by")
+  diagnosis                    EncounterDiagnosis?      @relation(fields: [diagnosisId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_encounter_procedures_diagnosis")
+  encounter                    ClinicalEncounter        @relation(fields: [encounterId], references: [id], onUpdate: Restrict, map: "fk_encounter_procedures_encounter")
+  patientInsurance             PatientInsurance         @relation(fields: [patientInsuranceId], references: [id], onUpdate: Restrict, map: "fk_encounter_procedures_insurance")
+  performedByProvider          Provider                 @relation(fields: [performedByProviderId], references: [id], onUpdate: Restrict, map: "fk_encounter_procedures_provider")
+  referrer                     Referrer?                @relation(fields: [referrerId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_encounter_procedures_referrer")
+  svbProcedure                 SvbProcedure             @relation(fields: [svbProcedureId], references: [id], onUpdate: Restrict, map: "fk_encounter_procedures_svb_procedure")
+  svbTariff                    SvbTariff                @relation(fields: [svbTariffId], references: [id], onUpdate: Restrict, map: "fk_encounter_procedures_tariff")
+  invoiceItems                 InvoiceItem[]
+
+  @@index([createdByUserId], map: "fk_encounter_procedures_created_by")
+  @@index([diagnosisId], map: "fk_encounter_procedures_diagnosis")
+  @@index([patientInsuranceId], map: "fk_encounter_procedures_insurance")
+  @@index([performedByProviderId], map: "fk_encounter_procedures_provider")
+  @@index([referrerId], map: "fk_encounter_procedures_referrer")
+  @@index([svbTariffId], map: "fk_encounter_procedures_tariff")
+  @@index([authorizationItemId], map: "idx_encounter_procedures_auth")
+  @@index([encounterId, status], map: "idx_encounter_procedures_encounter_status")
+  @@index([performedAt], map: "idx_encounter_procedures_performed")
+  @@index([svbProcedureId], map: "idx_encounter_procedures_svb")
+  @@map("encounter_procedures")
+}
+
+model InvoiceCorrection {
+  id                   BigInt                  @id @default(autoincrement()) @db.UnsignedBigInt
+  invoiceId            BigInt                  @map("invoice_id") @db.UnsignedBigInt
+  sourceVersionId      BigInt                  @map("source_version_id") @db.UnsignedBigInt
+  replacementVersionId BigInt?                 @unique(map: "uq_invoice_correction_replacement") @map("replacement_version_id") @db.UnsignedBigInt
+  reasonCode           String                  @map("reason_code") @db.VarChar(50)
+  reasonText           String                  @map("reason_text") @db.Text
+  status               InvoiceCorrectionStatus @default(REQUESTED)
+  requestedByUserId    BigInt                  @map("requested_by_user_id") @db.UnsignedBigInt
+  requestedAt          DateTime                @default(now()) @map("requested_at")
+  approvedByUserId     BigInt?                 @map("approved_by_user_id") @db.UnsignedBigInt
+  approvedAt           DateTime?               @map("approved_at")
+  resolvedByUserId     BigInt?                 @map("resolved_by_user_id") @db.UnsignedBigInt
+  resolvedAt           DateTime?               @map("resolved_at")
+  metadata             Json?
+  createdAt            DateTime                @default(now()) @map("created_at")
+  updatedAt            DateTime                @default(now()) @map("updated_at")
+  approvedByUser       User?                   @relation("invoice_corrections_approved_by_user_idTousers", fields: [approvedByUserId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_invoice_corrections_approved_by")
+  invoice              Invoice                 @relation(fields: [invoiceId], references: [id], onUpdate: Restrict, map: "fk_invoice_corrections_invoice")
+  replacementVersion   InvoiceVersion?         @relation("invoice_corrections_replacement_version_idToinvoice_versions", fields: [replacementVersionId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_invoice_corrections_replacement")
+  requestedByUser      User                    @relation("invoice_corrections_requested_by_user_idTousers", fields: [requestedByUserId], references: [id], onUpdate: Restrict, map: "fk_invoice_corrections_requested_by")
+  resolvedByUser       User?                   @relation("invoice_corrections_resolved_by_user_idTousers", fields: [resolvedByUserId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_invoice_corrections_resolved_by")
+  sourceVersion        InvoiceVersion          @relation("invoice_corrections_source_version_idToinvoice_versions", fields: [sourceVersionId], references: [id], onUpdate: Restrict, map: "fk_invoice_corrections_source")
+
+  @@index([approvedByUserId], map: "fk_invoice_corrections_approved_by")
+  @@index([requestedByUserId], map: "fk_invoice_corrections_requested_by")
+  @@index([resolvedByUserId], map: "fk_invoice_corrections_resolved_by")
+  @@index([sourceVersionId], map: "fk_invoice_corrections_source")
+  @@index([invoiceId, status], map: "idx_invoice_corrections_invoice_status")
+  @@map("invoice_corrections")
+}
+
+model InvoiceDocument {
+  id               BigInt              @id @default(autoincrement()) @db.UnsignedBigInt
+  invoiceVersionId BigInt              @map("invoice_version_id") @db.UnsignedBigInt
+  documentId       BigInt              @map("document_id") @db.UnsignedBigInt
+  documentRole     InvoiceDocumentRole @map("document_role")
+  createdAt        DateTime            @default(now()) @map("created_at")
+  document         Document            @relation(fields: [documentId], references: [id], onUpdate: Restrict, map: "fk_invoice_documents_document")
+  invoiceVersion   InvoiceVersion      @relation(fields: [invoiceVersionId], references: [id], onUpdate: Restrict, map: "fk_invoice_documents_version")
+
+  @@unique([invoiceVersionId, documentId, documentRole], map: "uq_invoice_documents_link")
+  @@index([documentId], map: "idx_invoice_documents_document")
+  @@map("invoice_documents")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model InvoiceItem {
+  id                           BigInt             @id @default(autoincrement()) @db.UnsignedBigInt
+  invoiceVersionId             BigInt             @map("invoice_version_id") @db.UnsignedBigInt
+  lineNumber                   Int                @map("line_number") @db.UnsignedInt
+  detailInvoiceNumber          String?            @map("detail_invoice_number") @db.VarChar(100)
+  encounterProcedureId         BigInt             @map("encounter_procedure_id") @db.UnsignedBigInt
+  sourceInvoiceItemId          BigInt?            @map("source_invoice_item_id") @db.UnsignedBigInt
+  svbProcedureId               BigInt             @map("svb_procedure_id") @db.UnsignedBigInt
+  svbTariffId                  BigInt             @map("svb_tariff_id") @db.UnsignedBigInt
+  serviceDateSnapshot          DateTime           @map("service_date_snapshot") @db.Date
+  procedureCodeSnapshot        String             @map("procedure_code_snapshot") @db.VarChar(50)
+  procedureDescriptionSnapshot String             @map("procedure_description_snapshot") @db.VarChar(500)
+  providerIdSnapshot           String             @map("provider_id_snapshot") @db.VarChar(64)
+  insuredIdSnapshot            String             @map("insured_id_snapshot") @db.VarChar(80)
+  unitTariffSnapshot           Decimal            @map("unit_tariff_snapshot") @db.Decimal(15, 2)
+  currencyCodeSnapshot         String             @map("currency_code_snapshot") @db.Char(3)
+  quantity                     Decimal            @db.Decimal(10, 2)
+  amount                       Decimal            @db.Decimal(15, 2)
+  authorizationIdSnapshot      String?            @map("authorization_id_snapshot") @db.VarChar(80)
+  diagnosticCodeSnapshot       String?            @map("diagnostic_code_snapshot") @db.VarChar(50)
+  treatmentIdSnapshot          String?            @map("treatment_id_snapshot") @db.VarChar(80)
+  accidentFormNumberSnapshot   String?            @map("accident_form_number_snapshot") @db.VarChar(80)
+  numberOfTreatmentsSnapshot   Int?               @map("number_of_treatments_snapshot") @db.UnsignedInt
+  assistanceSnapshot           String?            @map("assistance_snapshot") @db.VarChar(100)
+  referrerIdSnapshot           String?            @map("referrer_id_snapshot") @db.VarChar(64)
+  policlinicSnapshot           String?            @map("policlinic_snapshot") @db.VarChar(64)
+  additionalNote               String?            @map("additional_note") @db.Text
+  createdAt                    DateTime           @default(now()) @map("created_at")
+  updatedAt                    DateTime           @default(now()) @map("updated_at")
+  declarationItems             DeclarationItem[]
+  encounterProcedure           EncounterProcedure @relation(fields: [encounterProcedureId], references: [id], onUpdate: Restrict, map: "fk_invoice_items_encounter_procedure")
+  sourceInvoiceItem            InvoiceItem?       @relation("invoice_itemsToinvoice_items", fields: [sourceInvoiceItemId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_invoice_items_source_item")
+  derivedItems                 InvoiceItem[]      @relation("invoice_itemsToinvoice_items")
+  svbProcedure                 SvbProcedure       @relation(fields: [svbProcedureId], references: [id], onUpdate: Restrict, map: "fk_invoice_items_svb_procedure")
+  svbTariff                    SvbTariff          @relation(fields: [svbTariffId], references: [id], onUpdate: Restrict, map: "fk_invoice_items_tariff")
+  invoiceVersion               InvoiceVersion     @relation(fields: [invoiceVersionId], references: [id], onUpdate: Restrict, map: "fk_invoice_items_version")
+
+  @@unique([invoiceVersionId, detailInvoiceNumber], map: "uq_invoice_items_detail")
+  @@unique([invoiceVersionId, lineNumber], map: "uq_invoice_items_line")
+  @@unique([invoiceVersionId, encounterProcedureId], map: "uq_invoice_items_source_proc")
+  @@index([encounterProcedureId], map: "fk_invoice_items_encounter_procedure")
+  @@index([svbTariffId], map: "fk_invoice_items_tariff")
+  @@index([svbProcedureId], map: "idx_invoice_items_procedure")
+  @@index([sourceInvoiceItemId], map: "idx_invoice_items_source_item")
+  @@map("invoice_items")
+}
+
+model InvoiceStatusHistory {
+  id               BigInt                         @id @default(autoincrement()) @db.UnsignedBigInt
+  invoiceId        BigInt                         @map("invoice_id") @db.UnsignedBigInt
+  invoiceVersionId BigInt?                        @map("invoice_version_id") @db.UnsignedBigInt
+  oldStatus        InvoiceStatusHistoryOldStatus? @map("old_status")
+  newStatus        InvoiceStatusHistoryNewStatus  @map("new_status")
+  reason           String?                        @db.VarChar(500)
+  changedByUserId  BigInt                         @map("changed_by_user_id") @db.UnsignedBigInt
+  changedAt        DateTime                       @default(now()) @map("changed_at")
+  metadata         Json?
+  invoice          Invoice                        @relation(fields: [invoiceId], references: [id], onUpdate: Restrict, map: "fk_invoice_history_invoice")
+  changedByUser    User                           @relation(fields: [changedByUserId], references: [id], onUpdate: Restrict, map: "fk_invoice_history_user")
+  invoiceVersion   InvoiceVersion?                @relation(fields: [invoiceVersionId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_invoice_history_version")
+
+  @@index([changedByUserId], map: "fk_invoice_history_user")
+  @@index([invoiceVersionId], map: "fk_invoice_history_version")
+  @@index([invoiceId, changedAt], map: "idx_invoice_history_invoice_time")
+  @@map("invoice_status_history")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model InvoiceVersion {
+  id                            BigInt                 @id @default(autoincrement()) @db.UnsignedBigInt
+  invoiceId                     BigInt                 @map("invoice_id") @db.UnsignedBigInt
+  versionNumber                 Int                    @map("version_number") @db.UnsignedInt
+  versionType                   InvoiceVersionType     @default(ORIGINAL) @map("version_type")
+  supersedesVersionId           BigInt?                @map("supersedes_version_id") @db.UnsignedBigInt
+  status                        InvoiceVersionStatus   @default(DRAFT)
+  invoiceDate                   DateTime?              @map("invoice_date") @db.Date
+  currencyCode                  String                 @map("currency_code") @db.Char(3)
+  totalAmount                   Decimal                @default(0.00) @map("total_amount") @db.Decimal(15, 2)
+  declarantIdSnapshot           String?                @map("declarant_id_snapshot") @db.VarChar(64)
+  patientNameSnapshot           String                 @map("patient_name_snapshot") @db.VarChar(255)
+  patientDocumentTypeSnapshot   String?                @map("patient_document_type_snapshot") @db.VarChar(50)
+  patientDocumentNumberSnapshot String?                @map("patient_document_number_snapshot") @db.VarChar(80)
+  insuredIdSnapshot             String                 @map("insured_id_snapshot") @db.VarChar(80)
+  contentHash                   String?                @map("content_hash") @db.Char(64)
+  preparedByUserId              BigInt                 @map("prepared_by_user_id") @db.UnsignedBigInt
+  lockedAt                      DateTime?              @map("locked_at")
+  signedAt                      DateTime?              @map("signed_at")
+  closedAt                      DateTime?              @map("closed_at")
+  supersededAt                  DateTime?              @map("superseded_at")
+  createdAt                     DateTime               @default(now()) @map("created_at")
+  updatedAt                     DateTime               @default(now()) @map("updated_at")
+  replacementCorrection         InvoiceCorrection?     @relation("invoice_corrections_replacement_version_idToinvoice_versions")
+  sourceCorrections             InvoiceCorrection[]    @relation("invoice_corrections_source_version_idToinvoice_versions")
+  documents                     InvoiceDocument[]
+  items                         InvoiceItem[]
+  statusHistory                 InvoiceStatusHistory[]
+  invoice                       Invoice                @relation("invoice_versions_invoice_idToinvoices", fields: [invoiceId], references: [id], onUpdate: Restrict, map: "fk_invoice_versions_invoice")
+  preparedByUser                User                   @relation(fields: [preparedByUserId], references: [id], onUpdate: Restrict, map: "fk_invoice_versions_prepared_by")
+  supersedesVersion             InvoiceVersion?        @relation("invoice_versionsToinvoice_versions", fields: [supersedesVersionId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_invoice_versions_supersedes")
+  supersededByVersions          InvoiceVersion[]       @relation("invoice_versionsToinvoice_versions")
+  currentForInvoices            Invoice[]              @relation("invoices_current_version_idToinvoice_versions")
+  signatures                    Signature[]
+
+  @@unique([invoiceId, versionNumber], map: "uq_invoice_versions_number")
+  @@index([preparedByUserId], map: "fk_invoice_versions_prepared_by")
+  @@index([invoiceId, status], map: "idx_invoice_versions_status")
+  @@index([supersedesVersionId], map: "idx_invoice_versions_supersedes")
+  @@map("invoice_versions")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model Invoice {
+  id                 BigInt                 @id @default(autoincrement()) @db.UnsignedBigInt
+  organizationId     BigInt                 @map("organization_id") @db.UnsignedBigInt
+  appointmentId      BigInt                 @unique(map: "uq_invoices_appointment") @map("appointment_id") @db.UnsignedBigInt
+  patientId          BigInt                 @map("patient_id") @db.UnsignedBigInt
+  patientInsuranceId BigInt                 @map("patient_insurance_id") @db.UnsignedBigInt
+  invoiceNumber      String?                @map("invoice_number") @db.VarChar(80)
+  status             InvoiceStatus          @default(DRAFT)
+  currentVersionId   BigInt?                @map("current_version_id") @db.UnsignedBigInt
+  createdByUserId    BigInt                 @map("created_by_user_id") @db.UnsignedBigInt
+  cancelledByUserId  BigInt?                @map("cancelled_by_user_id") @db.UnsignedBigInt
+  cancelledAt        DateTime?              @map("cancelled_at")
+  cancellationReason String?                @map("cancellation_reason") @db.VarChar(500)
+  createdAt          DateTime               @default(now()) @map("created_at")
+  updatedAt          DateTime               @default(now()) @map("updated_at")
+  corrections        InvoiceCorrection[]
+  statusHistory      InvoiceStatusHistory[]
+  versions           InvoiceVersion[]       @relation("invoice_versions_invoice_idToinvoices")
+  appointment        Appointment            @relation(fields: [appointmentId], references: [id], onUpdate: Restrict, map: "fk_invoices_appointment")
+  cancelledByUser    User?                  @relation("invoices_cancelled_by_user_idTousers", fields: [cancelledByUserId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_invoices_cancelled_by")
+  createdByUser      User                   @relation("invoices_created_by_user_idTousers", fields: [createdByUserId], references: [id], onUpdate: Restrict, map: "fk_invoices_created_by")
+  currentVersion     InvoiceVersion?        @relation("invoices_current_version_idToinvoice_versions", fields: [currentVersionId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_invoices_current_version")
+  patientInsurance   PatientInsurance       @relation(fields: [patientInsuranceId], references: [id], onUpdate: Restrict, map: "fk_invoices_insurance")
+  organization       Organization           @relation(fields: [organizationId], references: [id], onUpdate: Restrict, map: "fk_invoices_organization")
+  patient            Patient                @relation(fields: [patientId], references: [id], onUpdate: Restrict, map: "fk_invoices_patient")
+
+  @@unique([organizationId, invoiceNumber], map: "uq_invoices_org_number")
+  @@index([cancelledByUserId], map: "fk_invoices_cancelled_by")
+  @@index([createdByUserId], map: "fk_invoices_created_by")
+  @@index([patientInsuranceId], map: "fk_invoices_insurance")
+  @@index([currentVersionId], map: "idx_invoices_current_version")
+  @@index([patientId, createdAt], map: "idx_invoices_patient")
+  @@index([organizationId, status, createdAt], map: "idx_invoices_status")
+  @@map("invoices")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model NumberSequence {
+  id             BigInt             @id @default(autoincrement()) @db.UnsignedBigInt
+  organizationId BigInt             @map("organization_id") @db.UnsignedBigInt
+  sequenceType   NumberSequenceType @map("sequence_type")
+  sequenceYear   Int                @default(0) @map("sequence_year") @db.UnsignedSmallInt
+  prefix         String             @default("") @db.VarChar(30)
+  currentValue   BigInt             @default(0) @map("current_value") @db.UnsignedBigInt
+  padding        Int                @default(6) @db.UnsignedTinyInt
+  updatedAt      DateTime           @default(now()) @map("updated_at")
+  organization   Organization       @relation(fields: [organizationId], references: [id], onUpdate: Restrict, map: "fk_sequences_organization")
+
+  @@unique([organizationId, sequenceType, sequenceYear], map: "uq_sequences_org_type_year")
+  @@map("number_sequences")
+}
+
+model Organization {
+  id                 BigInt             @id @default(autoincrement()) @db.UnsignedBigInt
+  legalName          String             @map("legal_name") @db.VarChar(200)
+  tradeName          String?            @map("trade_name") @db.VarChar(200)
+  declarantId        String?            @unique(map: "uq_organizations_declarant_id") @map("declarant_id") @db.VarChar(64)
+  registrationNumber String?            @map("registration_number") @db.VarChar(80)
+  email              String?            @db.VarChar(320)
+  phone              String?            @db.VarChar(40)
+  addressLine1       String?            @map("address_line1") @db.VarChar(255)
+  addressLine2       String?            @map("address_line2") @db.VarChar(255)
+  city               String?            @db.VarChar(120)
+  countryCode        String?            @map("country_code") @db.Char(2)
+  timezone           String             @default("America/Curacao") @db.VarChar(64)
+  isActive           Boolean            @default(true) @map("is_active")
+  createdAt          DateTime           @default(now()) @map("created_at")
+  updatedAt          DateTime           @default(now()) @map("updated_at")
+  archivedAt         DateTime?          @map("archived_at")
+  appointments       Appointment[]
+  auditLogs          AuditLog[]
+  clinicLocations    ClinicLocation[]
+  declarationBatches DeclarationBatch[]
+  documents          Document[]
+  invoices           Invoice[]
+  numberSequences    NumberSequence[]
+  patients           Patient[]
+  providers          Provider[]
+  referrers          Referrer[]
+  systemSettings     SystemSetting[]
+  treatmentCases     TreatmentCase[]
+  users              User[]
+
+  @@index([isActive], map: "idx_organizations_active")
+  @@map("organizations")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model PatientInsurance {
+  id                  BigInt                 @id @default(autoincrement()) @db.UnsignedBigInt
+  patientId           BigInt                 @map("patient_id") @db.UnsignedBigInt
+  payerId             BigInt                 @map("payer_id") @db.UnsignedBigInt
+  insuredId           String                 @map("insured_id") @db.VarChar(80)
+  validFrom           DateTime?              @map("valid_from") @db.Date
+  validTo             DateTime?              @map("valid_to") @db.Date
+  status              PatientInsuranceStatus @default(ACTIVE)
+  isPrimary           Boolean                @default(true) @map("is_primary")
+  verifiedAt          DateTime?              @map("verified_at")
+  verifiedByUserId    BigInt?                @map("verified_by_user_id") @db.UnsignedBigInt
+  verificationSource  String?                @map("verification_source") @db.VarChar(80)
+  metadata            Json?
+  createdAt           DateTime               @default(now()) @map("created_at")
+  updatedAt           DateTime               @default(now()) @map("updated_at")
+  accidentCases       AccidentCase[]
+  encounterProcedures EncounterProcedure[]
+  invoices            Invoice[]
+  patient             Patient                @relation(fields: [patientId], references: [id], onUpdate: Restrict, map: "fk_insurance_patient")
+  payer               Payer                  @relation(fields: [payerId], references: [id], onUpdate: Restrict, map: "fk_insurance_payer")
+  verifiedByUser      User?                  @relation(fields: [verifiedByUserId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_insurance_verified_by")
+  svbAuthorizations   SvbAuthorization[]
+
+  @@unique([patientId, payerId, insuredId, validFrom], map: "uq_insurance_history")
+  @@index([verifiedByUserId], map: "fk_insurance_verified_by")
+  @@index([patientId, status], map: "idx_insurance_patient_status")
+  @@index([payerId, insuredId], map: "idx_insurance_payer_insured")
+  @@map("patient_insurance")
+}
+
+model Patient {
+  id                 BigInt             @id @default(autoincrement()) @db.UnsignedBigInt
+  organizationId     BigInt             @map("organization_id") @db.UnsignedBigInt
+  patientNumber      String             @map("patient_number") @db.VarChar(50)
+  firstName          String             @map("first_name") @db.VarChar(120)
+  middleName         String?            @map("middle_name") @db.VarChar(120)
+  lastName           String             @map("last_name") @db.VarChar(120)
+  secondLastName     String?            @map("second_last_name") @db.VarChar(120)
+  dateOfBirth        DateTime?          @map("date_of_birth") @db.Date
+  sex                PatientSex?
+  documentType       String?            @map("document_type") @db.VarChar(50)
+  documentNumber     String?            @map("document_number") @db.VarChar(80)
+  email              String?            @db.VarChar(320)
+  phone              String?            @db.VarChar(40)
+  mobilePhone        String?            @map("mobile_phone") @db.VarChar(40)
+  addressLine1       String?            @map("address_line1") @db.VarChar(255)
+  addressLine2       String?            @map("address_line2") @db.VarChar(255)
+  city               String?            @db.VarChar(120)
+  countryCode        String?            @map("country_code") @db.Char(2)
+  status             PatientStatus      @default(ACTIVE)
+  createdAt          DateTime           @default(now()) @map("created_at")
+  updatedAt          DateTime           @default(now()) @map("updated_at")
+  archivedAt         DateTime?          @map("archived_at")
+  accidentCases      AccidentCase[]
+  appointments       Appointment[]
+  invoices           Invoice[]
+  insuranceCoverages PatientInsurance[]
+  organization       Organization       @relation(fields: [organizationId], references: [id], onUpdate: Restrict, map: "fk_patients_organization")
+  signatures         Signature[]
+  svbAuthorizations  SvbAuthorization[]
+  treatmentCases     TreatmentCase[]
+
+  @@unique([organizationId, documentType, documentNumber], map: "uq_patients_org_document")
+  @@unique([organizationId, patientNumber], map: "uq_patients_org_number")
+  @@index([organizationId, lastName, firstName], map: "idx_patients_org_name")
+  @@index([organizationId, status], map: "idx_patients_status")
+  @@map("patients")
+}
+
+model Payer {
+  id                 BigInt             @id @default(autoincrement()) @db.UnsignedBigInt
+  code               String             @unique(map: "uq_payers_code") @db.VarChar(50)
+  name               String             @db.VarChar(150)
+  payerType          PayerType          @default(OTHER) @map("payer_type")
+  isActive           Boolean            @default(true) @map("is_active")
+  createdAt          DateTime           @default(now()) @map("created_at")
+  updatedAt          DateTime           @default(now()) @map("updated_at")
+  declarationBatches DeclarationBatch[]
+  patientInsurance   PatientInsurance[]
+
+  @@map("payers")
+}
+
+model Permission {
+  id              BigInt           @id @default(autoincrement()) @db.UnsignedBigInt
+  code            String           @unique(map: "uq_permissions_code") @db.VarChar(100)
+  name            String           @db.VarChar(120)
+  description     String?          @db.VarChar(255)
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @default(now()) @map("updated_at")
+  rolePermissions RolePermission[]
+
+  @@map("permissions")
+}
+
+model Provider {
+  id                  BigInt               @id @default(autoincrement()) @db.UnsignedBigInt
+  organizationId      BigInt               @map("organization_id") @db.UnsignedBigInt
+  userId              BigInt?              @unique(map: "uq_providers_user") @map("user_id") @db.UnsignedBigInt
+  svbProviderId       String?              @map("svb_provider_id") @db.VarChar(64)
+  firstName           String               @map("first_name") @db.VarChar(120)
+  lastName            String               @map("last_name") @db.VarChar(120)
+  licenseNumber       String?              @map("license_number") @db.VarChar(80)
+  specialty           String?              @db.VarChar(150)
+  email               String?              @db.VarChar(320)
+  phone               String?              @db.VarChar(40)
+  isActive            Boolean              @default(true) @map("is_active")
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @default(now()) @map("updated_at")
+  archivedAt          DateTime?            @map("archived_at")
+  appointments        Appointment[]
+  clinicalEncounters  ClinicalEncounter[]
+  performedProcedures EncounterProcedure[]
+  organization        Organization         @relation(fields: [organizationId], references: [id], onUpdate: Restrict, map: "fk_providers_organization")
+  user                User?                @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_providers_user")
+
+  @@unique([organizationId, svbProviderId], map: "uq_providers_org_svb")
+  @@index([organizationId, isActive], map: "idx_providers_org_active")
+  @@map("providers")
+}
+
+model Referrer {
+  id                  BigInt               @id @default(autoincrement()) @db.UnsignedBigInt
+  organizationId      BigInt               @map("organization_id") @db.UnsignedBigInt
+  referrerIdentifier  String               @map("referrer_identifier") @db.VarChar(64)
+  firstName           String?              @map("first_name") @db.VarChar(120)
+  lastName            String?              @map("last_name") @db.VarChar(120)
+  organizationName    String?              @map("organization_name") @db.VarChar(200)
+  providerType        String?              @map("provider_type") @db.VarChar(100)
+  phone               String?              @db.VarChar(40)
+  email               String?              @db.VarChar(320)
+  isActive            Boolean              @default(true) @map("is_active")
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @default(now()) @map("updated_at")
+  encounterProcedures EncounterProcedure[]
+  organization        Organization         @relation(fields: [organizationId], references: [id], onUpdate: Restrict, map: "fk_referrers_organization")
+
+  @@unique([organizationId, referrerIdentifier], map: "uq_referrers_org_identifier")
+  @@map("referrers")
+}
+
+model RolePermission {
+  roleId       BigInt     @map("role_id") @db.UnsignedBigInt
+  permissionId BigInt     @map("permission_id") @db.UnsignedBigInt
+  createdAt    DateTime   @default(now()) @map("created_at")
+  permission   Permission @relation(fields: [permissionId], references: [id], onUpdate: Restrict, map: "fk_role_permissions_permission")
+  role         Role       @relation(fields: [roleId], references: [id], onUpdate: Restrict, map: "fk_role_permissions_role")
+
+  @@id([roleId, permissionId])
+  @@index([permissionId], map: "idx_role_permissions_permission")
+  @@map("role_permissions")
+}
+
+model Role {
+  id              BigInt           @id @default(autoincrement()) @db.UnsignedBigInt
+  code            String           @unique(map: "uq_roles_code") @db.VarChar(50)
+  name            String           @db.VarChar(100)
+  description     String?          @db.VarChar(255)
+  isSystem        Boolean          @default(false) @map("is_system")
+  isActive        Boolean          @default(true) @map("is_active")
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @default(now()) @map("updated_at")
+  rolePermissions RolePermission[]
+  userRoles       UserRole[]
+
+  @@map("roles")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model Signature {
+  id                  BigInt                 @id @default(autoincrement()) @db.UnsignedBigInt
+  invoiceVersionId    BigInt                 @map("invoice_version_id") @db.UnsignedBigInt
+  patientId           BigInt                 @map("patient_id") @db.UnsignedBigInt
+  signatureDocumentId BigInt                 @unique(map: "uq_signatures_document") @map("signature_document_id") @db.UnsignedBigInt
+  signatureType       SignatureType          @default(PATIENT) @map("signature_type")
+  signerName          String                 @map("signer_name") @db.VarChar(255)
+  signerRelationship  String?                @map("signer_relationship") @db.VarChar(120)
+  captureMethod       SignatureCaptureMethod @map("capture_method")
+  signedContentHash   String                 @map("signed_content_hash") @db.Char(64)
+  signatureHash       String                 @map("signature_hash") @db.Char(64)
+  status              SignatureStatus        @default(VALID)
+  signedAt            DateTime               @map("signed_at")
+  capturedByUserId    BigInt                 @map("captured_by_user_id") @db.UnsignedBigInt
+  deviceIdentifier    String?                @map("device_identifier") @db.VarChar(255)
+  ipAddress           String?                @map("ip_address") @db.VarChar(45)
+  userAgent           String?                @map("user_agent") @db.VarChar(512)
+  metadata            Json?
+  voidedAt            DateTime?              @map("voided_at")
+  voidedByUserId      BigInt?                @map("voided_by_user_id") @db.UnsignedBigInt
+  voidReason          String?                @map("void_reason") @db.VarChar(500)
+  createdAt           DateTime               @default(now()) @map("created_at")
+  capturedByUser      User                   @relation("signatures_captured_by_user_idTousers", fields: [capturedByUserId], references: [id], onUpdate: Restrict, map: "fk_signatures_captured_by")
+  signatureDocument   Document               @relation(fields: [signatureDocumentId], references: [id], onUpdate: Restrict, map: "fk_signatures_document")
+  patient             Patient                @relation(fields: [patientId], references: [id], onUpdate: Restrict, map: "fk_signatures_patient")
+  invoiceVersion      InvoiceVersion         @relation(fields: [invoiceVersionId], references: [id], onUpdate: Restrict, map: "fk_signatures_version")
+  voidedByUser        User?                  @relation("signatures_voided_by_user_idTousers", fields: [voidedByUserId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_signatures_voided_by")
+
+  @@index([capturedByUserId], map: "fk_signatures_captured_by")
+  @@index([patientId], map: "fk_signatures_patient")
+  @@index([voidedByUserId], map: "fk_signatures_voided_by")
+  @@index([invoiceVersionId, status], map: "idx_signatures_version_status")
+  @@map("signatures")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model SvbAuthorizationItem {
+  id                    BigInt               @id @default(autoincrement()) @db.UnsignedBigInt
+  authorizationId       BigInt               @map("authorization_id") @db.UnsignedBigInt
+  svbProcedureId        BigInt?              @map("svb_procedure_id") @db.UnsignedBigInt
+  procedureCodeSnapshot String?              @map("procedure_code_snapshot") @db.VarChar(50)
+  authorizedQuantity    Decimal?             @map("authorized_quantity") @db.Decimal(10, 2)
+  usedQuantity          Decimal              @default(0.00) @map("used_quantity") @db.Decimal(10, 2)
+  validFrom             DateTime?            @map("valid_from") @db.Date
+  validTo               DateTime?            @map("valid_to") @db.Date
+  notes                 String?              @db.Text
+  createdAt             DateTime             @default(now()) @map("created_at")
+  updatedAt             DateTime             @default(now()) @map("updated_at")
+  encounterProcedures   EncounterProcedure[]
+  authorization         SvbAuthorization     @relation(fields: [authorizationId], references: [id], onUpdate: Restrict, map: "fk_authorization_items_authorization")
+  svbProcedure          SvbProcedure?        @relation(fields: [svbProcedureId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_authorization_items_procedure")
+
+  @@index([authorizationId], map: "idx_authorization_items_auth")
+  @@index([svbProcedureId], map: "idx_authorization_items_procedure")
+  @@map("svb_authorization_items")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model SvbAuthorization {
+  id                 BigInt                 @id @default(autoincrement()) @db.UnsignedBigInt
+  patientId          BigInt                 @map("patient_id") @db.UnsignedBigInt
+  patientInsuranceId BigInt                 @map("patient_insurance_id") @db.UnsignedBigInt
+  authorizationId    String                 @map("authorization_id") @db.VarChar(80)
+  status             SvbAuthorizationStatus @default(PENDING)
+  validFrom          DateTime?              @map("valid_from") @db.Date
+  validTo            DateTime?              @map("valid_to") @db.Date
+  issuedAt           DateTime?              @map("issued_at")
+  notes              String?                @db.Text
+  metadata           Json?
+  createdByUserId    BigInt                 @map("created_by_user_id") @db.UnsignedBigInt
+  createdAt          DateTime               @default(now()) @map("created_at")
+  updatedAt          DateTime               @default(now()) @map("updated_at")
+  items              SvbAuthorizationItem[]
+  createdByUser      User                   @relation(fields: [createdByUserId], references: [id], onUpdate: Restrict, map: "fk_svb_authorization_created_by")
+  patientInsurance   PatientInsurance       @relation(fields: [patientInsuranceId], references: [id], onUpdate: Restrict, map: "fk_svb_authorization_insurance")
+  patient            Patient                @relation(fields: [patientId], references: [id], onUpdate: Restrict, map: "fk_svb_authorization_patient")
+
+  @@unique([patientInsuranceId, authorizationId], map: "uq_svb_authorization_insurance")
+  @@index([createdByUserId], map: "fk_svb_authorization_created_by")
+  @@index([patientId, status], map: "idx_svb_authorization_patient_status")
+  @@map("svb_authorizations")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model SvbProcedure {
+  id                    BigInt                 @id @default(autoincrement()) @db.UnsignedBigInt
+  code                  String                 @unique(map: "uq_svb_procedures_code") @db.VarChar(50)
+  description           String                 @db.VarChar(500)
+  category              String?                @db.VarChar(120)
+  unit                  String?                @db.VarChar(50)
+  requiresAuthorization Boolean                @default(false) @map("requires_authorization")
+  requiresReferral      Boolean                @default(false) @map("requires_referral")
+  isActive              Boolean                @default(true) @map("is_active")
+  validFrom             DateTime?              @map("valid_from") @db.Date
+  validTo               DateTime?              @map("valid_to") @db.Date
+  createdAt             DateTime               @default(now()) @map("created_at")
+  updatedAt             DateTime               @default(now()) @map("updated_at")
+  encounterProcedures   EncounterProcedure[]
+  invoiceItems          InvoiceItem[]
+  svbAuthorizationItems SvbAuthorizationItem[]
+  tariffs               SvbTariff[]
+
+  @@index([isActive], map: "idx_svb_procedures_active")
+  @@map("svb_procedures")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model SvbTariff {
+  id                  BigInt               @id @default(autoincrement()) @db.UnsignedBigInt
+  svbProcedureId      BigInt               @map("svb_procedure_id") @db.UnsignedBigInt
+  amount              Decimal              @db.Decimal(15, 2)
+  currencyCode        String               @map("currency_code") @db.Char(3)
+  validFrom           DateTime             @map("valid_from") @db.Date
+  validTo             DateTime?            @map("valid_to") @db.Date
+  isActive            Boolean              @default(true) @map("is_active")
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @default(now()) @map("updated_at")
+  encounterProcedures EncounterProcedure[]
+  invoiceItems        InvoiceItem[]
+  svbProcedure        SvbProcedure         @relation(fields: [svbProcedureId], references: [id], onUpdate: Restrict, map: "fk_svb_tariffs_procedure")
+
+  @@unique([svbProcedureId, currencyCode, validFrom], map: "uq_svb_tariffs_start")
+  @@index([svbProcedureId, validFrom, validTo, isActive], map: "idx_svb_tariffs_lookup")
+  @@map("svb_tariffs")
+}
+
+model SystemSetting {
+  id              BigInt       @id @default(autoincrement()) @db.UnsignedBigInt
+  organizationId  BigInt       @map("organization_id") @db.UnsignedBigInt
+  settingKey      String       @map("setting_key") @db.VarChar(120)
+  settingValue    Json         @map("setting_value")
+  description     String?      @db.VarChar(500)
+  isSecret        Boolean      @default(false) @map("is_secret")
+  updatedByUserId BigInt?      @map("updated_by_user_id") @db.UnsignedBigInt
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @default(now()) @map("updated_at")
+  organization    Organization @relation(fields: [organizationId], references: [id], onUpdate: Restrict, map: "fk_system_settings_organization")
+  updatedByUser   User?        @relation(fields: [updatedByUserId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_system_settings_updated_by")
+
+  @@unique([organizationId, settingKey], map: "uq_system_settings_org_key")
+  @@index([updatedByUserId], map: "fk_system_settings_updated_by")
+  @@map("system_settings")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model TreatmentCase {
+  id              BigInt              @id @default(autoincrement()) @db.UnsignedBigInt
+  organizationId  BigInt              @map("organization_id") @db.UnsignedBigInt
+  patientId       BigInt              @map("patient_id") @db.UnsignedBigInt
+  treatmentId     String?             @map("treatment_id") @db.VarChar(80)
+  treatmentType   String?             @map("treatment_type") @db.VarChar(100)
+  description     String?             @db.Text
+  status          TreatmentCaseStatus @default(PLANNED)
+  startedAt       DateTime?           @map("started_at")
+  completedAt     DateTime?           @map("completed_at")
+  createdByUserId BigInt              @map("created_by_user_id") @db.UnsignedBigInt
+  createdAt       DateTime            @default(now()) @map("created_at")
+  updatedAt       DateTime            @default(now()) @map("updated_at")
+  appointments    Appointment[]
+  createdByUser   User                @relation(fields: [createdByUserId], references: [id], onUpdate: Restrict, map: "fk_treatment_created_by")
+  organization    Organization        @relation(fields: [organizationId], references: [id], onUpdate: Restrict, map: "fk_treatment_organization")
+  patient         Patient             @relation(fields: [patientId], references: [id], onUpdate: Restrict, map: "fk_treatment_patient")
+
+  @@unique([patientId, treatmentId], map: "uq_treatment_patient_external")
+  @@index([createdByUserId], map: "fk_treatment_created_by")
+  @@index([organizationId], map: "fk_treatment_organization")
+  @@index([patientId, status], map: "idx_treatment_patient_status")
+  @@map("treatment_cases")
+}
+
+model UserRole {
+  userId           BigInt   @map("user_id") @db.UnsignedBigInt
+  roleId           BigInt   @map("role_id") @db.UnsignedBigInt
+  assignedByUserId BigInt?  @map("assigned_by_user_id") @db.UnsignedBigInt
+  assignedAt       DateTime @default(now()) @map("assigned_at")
+  assignedByUser   User?    @relation("user_roles_assigned_by_user_idTousers", fields: [assignedByUserId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_user_roles_assigned_by")
+  role             Role     @relation(fields: [roleId], references: [id], onUpdate: Restrict, map: "fk_user_roles_role")
+  user             User     @relation("user_roles_user_idTousers", fields: [userId], references: [id], onUpdate: Restrict, map: "fk_user_roles_user")
+
+  @@id([userId, roleId])
+  @@index([assignedByUserId], map: "idx_user_roles_assigned_by")
+  @@index([roleId], map: "idx_user_roles_role")
+  @@map("user_roles")
+}
+
+model User {
+  id                            BigInt                          @id @default(autoincrement()) @db.UnsignedBigInt
+  organizationId                BigInt                          @map("organization_id") @db.UnsignedBigInt
+  email                         String                          @unique(map: "uq_users_email") @db.VarChar(320)
+  passwordHash                  String                          @map("password_hash") @db.VarChar(255)
+  firstName                     String                          @map("first_name") @db.VarChar(120)
+  lastName                      String                          @map("last_name") @db.VarChar(120)
+  status                        UserStatus                      @default(ACTIVE)
+  lastLoginAt                   DateTime?                       @map("last_login_at")
+  passwordChangedAt             DateTime?                       @map("password_changed_at")
+  failedLoginAttempts           Int                             @default(0) @map("failed_login_attempts") @db.UnsignedSmallInt
+  lockedUntil                   DateTime?                       @map("locked_until")
+  createdAt                     DateTime                        @default(now()) @map("created_at")
+  updatedAt                     DateTime                        @default(now()) @map("updated_at")
+  archivedAt                    DateTime?                       @map("archived_at")
+  createdAccidentCases          AccidentCase[]
+  appointmentStatusChanges      AppointmentStatusHistory[]
+  createdAppointments           Appointment[]
+  auditLogs                     AuditLog[]
+  createdClinicalEncounters     ClinicalEncounter[]
+  declarationBatchStatusChanges DeclarationBatchStatusHistory[]
+  createdDeclarationBatches     DeclarationBatch[]
+  declarationExports            DeclarationExport[]
+  declarationSubmissions        DeclarationSubmission[]
+  createdDocuments              Document[]
+  createdEncounterDiagnoses     EncounterDiagnosis[]
+  createdEncounterProcedures    EncounterProcedure[]
+  approvedInvoiceCorrections    InvoiceCorrection[]             @relation("invoice_corrections_approved_by_user_idTousers")
+  requestedInvoiceCorrections   InvoiceCorrection[]             @relation("invoice_corrections_requested_by_user_idTousers")
+  resolvedInvoiceCorrections    InvoiceCorrection[]             @relation("invoice_corrections_resolved_by_user_idTousers")
+  invoiceStatusChanges          InvoiceStatusHistory[]
+  preparedInvoiceVersions       InvoiceVersion[]
+  cancelledInvoices             Invoice[]                       @relation("invoices_cancelled_by_user_idTousers")
+  createdInvoices               Invoice[]                       @relation("invoices_created_by_user_idTousers")
+  verifiedInsuranceRecords      PatientInsurance[]
+  provider                      Provider?
+  capturedSignatures            Signature[]                     @relation("signatures_captured_by_user_idTousers")
+  voidedSignatures              Signature[]                     @relation("signatures_voided_by_user_idTousers")
+  createdSvbAuthorizations      SvbAuthorization[]
+  updatedSystemSettings         SystemSetting[]
+  createdTreatmentCases         TreatmentCase[]
+  assignedUserRoles             UserRole[]                      @relation("user_roles_assigned_by_user_idTousers")
+  userRoles                     UserRole[]                      @relation("user_roles_user_idTousers")
+  organization                  Organization                    @relation(fields: [organizationId], references: [id], onUpdate: Restrict, map: "fk_users_organization")
+
+  @@index([organizationId, status], map: "idx_users_org_status")
+  @@map("users")
+}
+
+enum AppointmentStatusHistoryOldStatus {
+  SCHEDULED
+  CONFIRMED
+  CHECKED_IN
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum DeclarationBatchStatusHistoryOldStatus {
+  DRAFT
+  READY
+  EXPORTED
+  SUBMITTED
+  ACCEPTED
+  PARTIALLY_REJECTED
+  REJECTED
+  CANCELLED
+}
+
+enum DocumentType {
+  SIGNATURE
+  INVOICE_PDF
+  SIGNED_INVOICE_PDF
+  AUTHORIZATION
+  SUPPORTING_DOCUMENT
+  DECLARATION_EXPORT
+  OTHER
+}
+
+enum NumberSequenceType {
+  PATIENT
+  APPOINTMENT
+  INVOICE
+  DECLARATION
+}
+
+enum AppointmentStatusHistoryNewStatus {
+  SCHEDULED
+  CONFIRMED
+  CHECKED_IN
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum ClinicalEncounterStatus {
+  OPEN
+  COMPLETED
+  VOID
+}
+
+enum DeclarationBatchStatusHistoryNewStatus {
+  DRAFT
+  READY
+  EXPORTED
+  SUBMITTED
+  ACCEPTED
+  PARTIALLY_REJECTED
+  REJECTED
+  CANCELLED
+}
+
+enum DeclarationExportFormat {
+  CSV
+  TXT
+  XLSX
+  JSON
+  XML
+  API_PAYLOAD
+}
+
+enum DocumentStorageProvider {
+  LOCAL
+  NAS
+  S3
+  OTHER
+}
+
+enum InvoiceDocumentRole {
+  INVOICE_PDF
+  SIGNED_INVOICE_PDF
+  SUPPORTING_DOCUMENT
+  OTHER
+}
+
+enum InvoiceStatusHistoryOldStatus {
+  DRAFT
+  PENDING_SIGNATURE
+  SIGNED
+  CLOSED
+  DECLARED
+  CORRECTION_REQUIRED
+  CANCELLED
+}
+
+enum InvoiceVersionType {
+  ORIGINAL
+  CORRECTION
+}
+
+enum PayerType {
+  STATE_INSURANCE
+  PRIVATE_INSURANCE
+  OTHER
+}
+
+enum DeclarationBatchStatus {
+  DRAFT
+  READY
+  EXPORTED
+  SUBMITTED
+  ACCEPTED
+  PARTIALLY_REJECTED
+  REJECTED
+  CANCELLED
+}
+
+enum DeclarationItemLineStatus {
+  PENDING
+  SUBMITTED
+  ACCEPTED
+  REJECTED
+}
+
+enum DeclarationSubmissionChannel {
+  PORTAL_UPLOAD
+  API
+  MANUAL
+  OTHER
+}
+
+enum InvoiceStatusHistoryNewStatus {
+  DRAFT
+  PENDING_SIGNATURE
+  SIGNED
+  CLOSED
+  DECLARED
+  CORRECTION_REQUIRED
+  CANCELLED
+}
+
+enum SignatureType {
+  PATIENT
+  LEGAL_REPRESENTATIVE
+  GUARDIAN
+  OTHER
+}
+
+enum SvbAuthorizationStatus {
+  PENDING
+  APPROVED
+  PARTIALLY_USED
+  EXHAUSTED
+  EXPIRED
+  CANCELLED
+}
+
+enum DeclarationSubmissionStatus {
+  SUBMITTED
+  ACCEPTED
+  PARTIALLY_REJECTED
+  REJECTED
+  FAILED
+}
+
+enum InvoiceVersionStatus {
+  DRAFT
+  PENDING_SIGNATURE
+  SIGNED
+  CLOSED
+  SUPERSEDED
+  VOID
+}
+
+enum AccidentCaseStatus {
+  OPEN
+  CLOSED
+  CANCELLED
+}
+
+enum InvoiceCorrectionStatus {
+  REQUESTED
+  APPROVED
+  APPLIED
+  REJECTED
+  CANCELLED
+}
+
+enum InvoiceStatus {
+  DRAFT
+  PENDING_SIGNATURE
+  SIGNED
+  CLOSED
+  DECLARED
+  CORRECTION_REQUIRED
+  CANCELLED
+}
+
+enum PatientInsuranceStatus {
+  ACTIVE
+  INACTIVE
+  EXPIRED
+  SUSPENDED
+}
+
+enum TreatmentCaseStatus {
+  PLANNED
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  LOCKED
+}
+
+enum SignatureCaptureMethod {
+  SIGNATURE_PAD
+  TOUCHSCREEN
+  MOUSE
+  UPLOADED
+  OTHER
+}
+
+enum PatientSex {
+  FEMALE
+  MALE
+  OTHER
+  UNKNOWN
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  CONFIRMED
+  CHECKED_IN
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum SignatureStatus {
+  VALID
+  VOID
+}
+
+enum PatientStatus {
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+enum EncounterProcedureStatus {
+  PLANNED
+  PERFORMED
+  VOID
+}
