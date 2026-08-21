@@ -11,7 +11,10 @@ const adapter = new PrismaMariaDb({
   user: databaseConfig.user,
   password: databaseConfig.password,
   database: databaseConfig.database,
+
   connectionLimit: env.DB_CONNECTION_LIMIT,
+
+  allowPublicKeyRetrieval: true,
 });
 
 const globalForPrisma = globalThis as unknown as {

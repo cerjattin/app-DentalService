@@ -2,6 +2,7 @@ import { OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
 
 import "./common.schemas.js";
 import "../modules/health/health.openapi.js";
+import "../modules/health/health.openapi.js";
 
 import { openApiRegistry } from "./openapi.registry.js";
 

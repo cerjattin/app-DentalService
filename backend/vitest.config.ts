@@ -6,6 +6,8 @@ export default defineConfig({
 
     globals: false,
 
+    setupFiles: ["./tests/setup-env.ts"],
+
     include: ["tests/**/*.test.ts"],
 
     restoreMocks: true,
@@ -13,5 +15,15 @@ export default defineConfig({
     clearMocks: true,
 
     mockReset: true,
+
+    /*
+     * Estamos ejecutando integration tests
+     * contra la misma instancia MySQL.
+     *
+     * Evitamos inicialmente que distintos
+     * archivos manipulen simultáneamente
+     * fixtures compartidas.
+     */
+    fileParallelism: false,
   },
 });

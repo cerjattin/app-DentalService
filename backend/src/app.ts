@@ -14,8 +14,12 @@ import { errorHandler } from "./shared/errors/error-handler.js";
 import { httpLoggerMiddleware } from "./shared/middleware/http-logger.middleware.js";
 
 import { notFoundMiddleware } from "./shared/middleware/not-found.middleware.js";
+import { userRouter } from "./modules/users/user.routes.js";
+
+import { roleRouter } from "./modules/roles/role.routes.js";
 
 import { requestContextMiddleware } from "./shared/middleware/request-context.middleware.js";
+import { authRouter } from "./modules/auth/auth.routes.js";
 
 export const app = express();
 
@@ -44,28 +48,13 @@ app.use(
 );
 
 app.use(cookieParser());
-
 app.use(requestContextMiddleware);
-
 app.use(httpLoggerMiddleware);
-
-// Documentation
 mountSwagger(app);
-
-// Infrastructure
 app.use("/health", healthRouter);
-
-// Future:
-//
-// app.use(
-//   "/api/v1/auth",
-//   authRouter
-// );
-//
-// app.use(
-//   "/api/v1/patients",
-//   patientRouter
-// );
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/roles", roleRouter);
+app.use("/api/v1/auth", authRouter);
 
 app.use(notFoundMiddleware);
 
