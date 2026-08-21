@@ -18,6 +18,8 @@ export interface AuditEvent {
   correlationId?: string;
   ipAddress?: string;
   userAgent?: string;
+  oldValues?: Prisma.InputJsonValue;
+  newValues?: Prisma.InputJsonValue;
 }
 
 export interface AuditTechnicalMetadata {
@@ -107,6 +109,17 @@ export class AuditService {
       ...(event.userAgent !== undefined
         ? {
             userAgent: event.userAgent,
+          }
+        : {}),
+      ...(event.oldValues !== undefined
+        ? {
+            oldValues: event.oldValues,
+          }
+        : {}),
+
+      ...(event.newValues !== undefined
+        ? {
+            newValues: event.newValues,
           }
         : {}),
     };

@@ -6,7 +6,13 @@ import { successResponse } from "../../shared/http/api-response.js";
 
 import { parseBigIntId } from "../../shared/utils/parse-bigint-id.js";
 
-import { createUserSchema, listUsersQuerySchema } from "./user.schemas.js";
+import {
+  createUserSchema,
+  listUsersQuerySchema,
+  replaceUserRolesSchema,
+  updateUserSchema,
+  updateUserStatusSchema,
+} from "./user.schemas.js";
 
 import { userService } from "./user.service.js";
 
@@ -84,4 +90,71 @@ export const createUser: RequestHandler = async (req, res) => {
   );
 
   res.status(201).json(successResponse(result));
+};
+
+export const updateUser: RequestHandler = async (req, res) => {
+  if (!req.auth) {
+    throw new AppError(
+      401,
+      "AUTHENTICATION_REQUIRED",
+      "Authentication is required",
+    );
+  }
+
+  const userId = parseBigIntId(req.params.id, "userId");
+
+  const input = updateUserSchema.parse(req.body);
+
+  const result = await userService.update(
+    userId,
+    input,
+    req.auth,
+    securityMetadata(req, res),
+  );
+
+  res.status(200).json(successResponse(result));
+};
+export const changeUserStatus: RequestHandler = async (req, res) => {
+  if (!req.auth) {
+    throw new AppError(
+      401,
+      "AUTHENTICATION_REQUIRED",
+      "Authentication is required",
+    );
+  }
+
+  const userId = parseBigIntId(req.params.id, "userId");
+
+  const input = updateUserStatusSchema.parse(req.body);
+
+  const result = await userService.changeStatus(
+    userId,
+    input,
+    req.auth,
+    securityMetadata(req, res),
+  );
+
+  res.status(200).json(successResponse(result));
+};
+export const replaceUserRoles: RequestHandler = async (req, res) => {
+  if (!req.auth) {
+    throw new AppError(
+      401,
+      "AUTHENTICATION_REQUIRED",
+      "Authentication is required",
+    );
+  }
+
+  const userId = parseBigIntId(req.params.id, "userId");
+
+  const input = replaceUserRolesSchema.parse(req.body);
+
+  const result = await userService.replaceRoles(
+    userId,
+    input,
+    req.auth,
+    securityMetadata(req, res),
+  );
+
+  res.status(200).json(successResponse(result));
 };
