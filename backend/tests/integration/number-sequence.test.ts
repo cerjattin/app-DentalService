@@ -4,6 +4,12 @@ import { prisma } from "../../src/infrastructure/database/prisma.js";
 
 import { numberSequenceService } from "../../src/modules/number-sequences/number-sequence.service.js";
 
+type AllocationResult = {
+  value: bigint;
+  formatted: string;
+  sequenceYear: number;
+};
+
 describe("NumberSequenceService", () => {
   afterAll(async () => {
     await prisma.$disconnect();
@@ -13,6 +19,7 @@ describe("NumberSequenceService", () => {
     const organization = await prisma.organization.findFirstOrThrow({
       where: {
         legalName: "Odontho Services B.V.",
+        isActive: true,
       },
 
       select: {
@@ -20,13 +27,37 @@ describe("NumberSequenceService", () => {
       },
     });
 
-    const result = await prisma.$transaction(async (tx) => {
-      return numberSequenceService.allocateWithinTransaction(tx, {
-        organizationId: organization.id,
+    let result: AllocationResult | undefined;
 
-        sequenceType: "PATIENT",
-      });
-    });
+    const rollbackMarker = new Error("TEST_ROLLBACK_NUMBER_SEQUENCE");
+
+    try {
+      await prisma.$transaction(
+        async (tx) => {
+          result = await numberSequenceService.allocateWithinTransaction(tx, {
+            organizationId: organization.id,
+
+            sequenceType: "PATIENT",
+          });
+
+          throw rollbackMarker;
+        },
+        {
+          maxWait: 10_000,
+          timeout: 10_000,
+        },
+      );
+    } catch (error) {
+      if (error !== rollbackMarker) {
+        throw error;
+      }
+    }
+
+    if (!result) {
+      throw new Error(
+        "NumberSequenceService did not return an allocation result",
+      );
+    }
 
     expect(result.formatted).toMatch(/^PAT-\d+$/);
 

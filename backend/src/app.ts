@@ -5,6 +5,7 @@ import helmet from "helmet";
 
 import { env } from "./config/env.js";
 
+import { appointmentRouter } from "./modules/appointments/appointment.routes.js";
 import { mountSwagger } from "./docs/swagger.js";
 
 import { healthRouter } from "./modules/health/health.routes.js";
@@ -20,7 +21,10 @@ import { roleRouter } from "./modules/roles/role.routes.js";
 
 import { requestContextMiddleware } from "./shared/middleware/request-context.middleware.js";
 import { authRouter } from "./modules/auth/auth.routes.js";
-
+import { insuranceRouter } from "./modules/insurance/insurance.routes.js";
+import { payerRouter } from "./modules/insurance/payer.routes.js";
+import { patientRouter } from "./modules/patients/patient.routes.js";
+import { providerRouter } from "./modules/providers/provider.routes.js";
 export const app = express();
 
 app.disable("x-powered-by");
@@ -55,7 +59,11 @@ app.use("/health", healthRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/roles", roleRouter);
 app.use("/api/v1/auth", authRouter);
-
+app.use("/api/v1/appointments", appointmentRouter);
+app.use("/api/v1/payers", payerRouter);
+app.use("/api/v1/patients/:patientId/insurance", insuranceRouter);
+app.use("/api/v1/patients", patientRouter);
+app.use("/api/v1/providers", providerRouter);
 app.use(notFoundMiddleware);
 
 app.use(errorHandler);
