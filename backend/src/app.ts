@@ -6,6 +6,14 @@ import helmet from "helmet";
 import { env } from "./config/env.js";
 
 import { appointmentRouter } from "./modules/appointments/appointment.routes.js";
+import {
+  appointmentClinicalEncounterRouter,
+  clinicalEncounterRouter,
+} from "./modules/clinical-encounters/clinical-encounter.routes.js";
+import {
+  diagnosisCodeRouter,
+  encounterDiagnosisRouter,
+} from "./modules/diagnoses/diagnosis.routes.js";
 import { mountSwagger } from "./docs/swagger.js";
 
 import { healthRouter } from "./modules/health/health.routes.js";
@@ -59,7 +67,17 @@ app.use("/health", healthRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/roles", roleRouter);
 app.use("/api/v1/auth", authRouter);
+app.use(
+  "/api/v1/appointments/:appointmentId/clinical-encounter",
+  appointmentClinicalEncounterRouter,
+);
 app.use("/api/v1/appointments", appointmentRouter);
+app.use(
+  "/api/v1/clinical-encounters/:encounterId/diagnoses",
+  encounterDiagnosisRouter,
+);
+app.use("/api/v1/clinical-encounters", clinicalEncounterRouter);
+app.use("/api/v1/diagnosis-codes", diagnosisCodeRouter);
 app.use("/api/v1/payers", payerRouter);
 app.use("/api/v1/patients/:patientId/insurance", insuranceRouter);
 app.use("/api/v1/patients", patientRouter);
