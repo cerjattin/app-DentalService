@@ -255,3 +255,18 @@ export const cancelInvoice: RequestHandler = async (req, res) => {
 
   res.status(200).json(successResponse(result));
 };
+
+export const generateInvoicePdf: RequestHandler = async (req, res) => {
+  const actor = requireAuth(req);
+  const invoiceId = parseBigIntId(req.params.id, "invoiceId");
+  const versionId = parseBigIntId(req.params.versionId, "versionId");
+
+  const result = await invoiceService.generatePdf(
+    invoiceId,
+    versionId,
+    actor,
+    securityMetadata(req, res),
+  );
+
+  res.status(201).json(successResponse(result));
+};

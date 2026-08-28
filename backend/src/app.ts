@@ -15,7 +15,12 @@ import {
   diagnosisCodeRouter,
   encounterDiagnosisRouter,
 } from "./modules/diagnoses/diagnosis.routes.js";
+import {
+  documentRouter,
+  invoiceDocumentRouter,
+} from "./modules/documents/document.routes.js";
 import { encounterProcedureRouter } from "./modules/encounter-procedures/encounter-procedure.routes.js";
+import { declarationRouter } from "./modules/declarations/declaration.routes.js";
 import { mountSwagger } from "./docs/swagger.js";
 
 import { healthRouter } from "./modules/health/health.routes.js";
@@ -91,7 +96,10 @@ app.use(
   encounterProcedureRouter,
 );
 app.use("/api/v1/clinical-encounters", clinicalEncounterRouter);
+app.use("/api/v1/declarations", declarationRouter);
 app.use("/api/v1/diagnosis-codes", diagnosisCodeRouter);
+app.use("/api/v1/documents", documentRouter);
+app.use("/api/v1/invoices/:invoiceId/documents", invoiceDocumentRouter);
 app.use(
   "/api/v1/invoices/:invoiceId/versions/:versionId",
   invoiceSignatureRouter,

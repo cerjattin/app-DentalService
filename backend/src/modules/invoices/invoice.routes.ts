@@ -9,6 +9,7 @@ import {
   cancelInvoiceCorrectionRequest,
   createAppointmentInvoice,
   createInvoiceCorrectionReplacement,
+  generateInvoicePdf,
   getInvoice,
   getInvoiceCorrection,
   getInvoiceVersion,
@@ -81,6 +82,11 @@ invoiceRouter.get(
   "/:id/versions/:versionId/items",
   requirePermission("invoice.read"),
   listInvoiceVersionItems,
+);
+invoiceRouter.post(
+  "/:id/versions/:versionId/pdf",
+  requirePermission("document.generate"),
+  generateInvoicePdf,
 );
 invoiceRouter.get(
   "/:id/status-history",

@@ -1,3 +1,7 @@
+import { createHash } from "node:crypto";
+import { rm } from "node:fs/promises";
+import path from "node:path";
+
 import request from "supertest";
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -16,6 +20,7 @@ const ADMIN_EMAIL = "invoice.admin@local.invalid";
 const RECEPTION_EMAIL = "invoice.reception@local.invalid";
 const PROVIDER_EMAIL = "invoice.provider@local.invalid";
 const NO_ROLE_EMAIL = "invoice.norole@local.invalid";
+const OTHER_ADMIN_EMAIL = "invoice.other-admin@local.invalid";
 const OTHER_ORG_LEGAL_NAME = "TEST Invoice Other Organization";
 
 let organizationId: bigint;
@@ -27,6 +32,7 @@ let adminToken: string;
 let receptionToken: string;
 let providerToken: string;
 let noRoleToken: string;
+let otherAdminToken: string;
 let patientId: bigint;
 let providerId: bigint;
 let locationId: bigint;
@@ -39,11 +45,30 @@ let createdInvoiceId: string;
 let createdVersionId: string;
 let createdInvoiceNumber: string;
 
+function extractPdfSearchText(pdfBytes: Buffer) {
+  const ascii = pdfBytes.toString("latin1");
+  const decodedHexText = Array.from(
+    ascii.matchAll(/<([0-9A-Fa-f]+)>/g),
+    (match) => {
+      const hex = match[1];
+      return hex === undefined ? "" : Buffer.from(hex, "hex").toString("latin1");
+    },
+  ).join("");
+
+  return `${ascii}\n${decodedHexText}`;
+}
+
 async function cleanupInvoiceFixture() {
   const users = await prisma.user.findMany({
     where: {
       email: {
-        in: [ADMIN_EMAIL, RECEPTION_EMAIL, PROVIDER_EMAIL, NO_ROLE_EMAIL],
+        in: [
+          ADMIN_EMAIL,
+          RECEPTION_EMAIL,
+          PROVIDER_EMAIL,
+          NO_ROLE_EMAIL,
+          OTHER_ADMIN_EMAIL,
+        ],
       },
     },
     select: { id: true },
@@ -88,11 +113,25 @@ async function cleanupInvoiceFixture() {
       OR: [
         { invoiceVersionId: { in: versionIds } },
         { signatureDocument: { storageUri: { startsWith: "test://invoice-signature/" } } },
+        { signatureDocument: { storageUri: { startsWith: "local://documents/" } } },
+      ],
+    },
+  });
+  await prisma.invoiceDocument.deleteMany({
+    where: {
+      OR: [
+        { invoiceVersionId: { in: versionIds } },
+        { document: { storageUri: { startsWith: "local://documents/" } } },
       ],
     },
   });
   await prisma.document.deleteMany({
-    where: { storageUri: { startsWith: "test://invoice-signature/" } },
+    where: {
+      OR: [
+        { storageUri: { startsWith: "test://invoice-signature/" } },
+        { storageUri: { startsWith: "local://documents/" } },
+      ],
+    },
   });
   await prisma.invoiceCorrection.deleteMany({
     where: { invoiceId: { in: invoiceIds } },
@@ -206,12 +245,22 @@ async function cleanupInvoiceFixture() {
   await prisma.organization.deleteMany({
     where: { legalName: OTHER_ORG_LEGAL_NAME },
   });
+
+  if (process.env.NODE_ENV === "test") {
+    await rm(
+      path.resolve(
+        process.cwd(),
+        process.env.DOCUMENT_STORAGE_PATH ?? "storage/documents",
+      ),
+      { recursive: true, force: true },
+    );
+  }
 }
 
-async function createUser(email: string, roleCode?: string) {
+async function createUser(email: string, roleCode?: string, orgId = organizationId) {
   const user = await prisma.user.create({
     data: {
-      organizationId,
+      organizationId: orgId,
       email,
       passwordHash: "not-used-for-token-fixture",
       firstName: "Invoice",
@@ -470,6 +519,26 @@ async function createSignatureDocument(input: {
   });
 }
 
+async function uploadSignatureDocument(suffix: string, token = receptionToken) {
+  const bytes = Buffer.from(`TEST-SIGNATURE-${suffix}`);
+  const response = await request(app)
+    .post(
+      `/api/v1/documents?documentType=SIGNATURE&originalFilename=TEST-SIGN-${suffix}.png`,
+    )
+    .set("Authorization", `Bearer ${token}`)
+    .set("Content-Type", "image/png")
+    .send(bytes)
+    .expect(201);
+
+  return {
+    id: BigInt(response.body.data.id as string),
+    idString: response.body.data.id as string,
+    sha256: createHash("sha256").update(bytes).digest("hex"),
+    bytes,
+    response,
+  };
+}
+
 function closeInvoice(invoiceId: string, versionId: string, token = receptionToken) {
   return request(app)
     .post(`/api/v1/invoices/${invoiceId}/versions/${versionId}/close`)
@@ -512,8 +581,48 @@ async function createSignedInvoiceFixture(suffix: string) {
   };
 }
 
+async function createSignedInvoiceFixtureWithUploadedSignature(suffix: string) {
+  const fixture = await createInvoiceFixture(suffix, 1);
+  const prepared = await prepareInvoice(fixture.invoiceId, fixture.versionId)
+    .expect(200);
+  const contentHash = prepared.body.data.currentVersion.contentHash as string;
+  const document = await uploadSignatureDocument(suffix);
+  const signature = await request(app)
+    .post(
+      `/api/v1/invoices/${fixture.invoiceId}/versions/${fixture.versionId}/signatures`,
+    )
+    .set("Authorization", `Bearer ${providerToken}`)
+    .send({
+      signatureDocumentId: document.idString,
+      signatureType: "PATIENT",
+      captureMethod: "SIGNATURE_PAD",
+      expectedContentHash: contentHash,
+    })
+    .expect(201);
+  const signed = await request(app)
+    .post(`/api/v1/invoices/${fixture.invoiceId}/versions/${fixture.versionId}/sign`)
+    .set("Authorization", `Bearer ${providerToken}`)
+    .send({})
+    .expect(200);
+
+  return {
+    ...fixture,
+    contentHash,
+    signedAt: signed.body.data.currentVersion.signedAt as string,
+    documentId: document.id,
+    signatureId: BigInt(signature.body.data.id as string),
+  };
+}
+
 async function createClosedInvoiceFixture(suffix: string) {
   const fixture = await createSignedInvoiceFixture(suffix);
+  await closeInvoice(fixture.invoiceId, fixture.versionId).expect(200);
+
+  return fixture;
+}
+
+async function createClosedInvoiceFixtureWithUploadedSignature(suffix: string) {
+  const fixture = await createSignedInvoiceFixtureWithUploadedSignature(suffix);
   await closeInvoice(fixture.invoiceId, fixture.versionId).expect(200);
 
   return fixture;
@@ -673,6 +782,11 @@ describe("Invoice API", () => {
     receptionUserId = await createUser(RECEPTION_EMAIL, "RECEPTION");
     const providerUserId = await createUser(PROVIDER_EMAIL, "PROVIDER");
     const noRoleUserId = await createUser(NO_ROLE_EMAIL);
+    const otherAdminUserId = await createUser(
+      OTHER_ADMIN_EMAIL,
+      "ADMIN",
+      otherOrganizationId,
+    );
 
     adminToken = await accessTokenService.sign(adminUserId, organizationId);
     receptionToken = await accessTokenService.sign(
@@ -684,6 +798,10 @@ describe("Invoice API", () => {
       organizationId,
     );
     noRoleToken = await accessTokenService.sign(noRoleUserId, organizationId);
+    otherAdminToken = await accessTokenService.sign(
+      otherAdminUserId,
+      otherOrganizationId,
+    );
 
     const patient = await prisma.patient.create({
       data: {
@@ -2402,6 +2520,321 @@ describe("Invoice API", () => {
       },
     });
     expect(count).toBe(1);
+  });
+
+  it("uploads signature documents with real bytes and serves metadata/download safely", async () => {
+    const uploaded = await uploadSignatureDocument("UPLOAD");
+
+    expect(uploaded.response.body.data).toMatchObject({
+      id: uploaded.idString,
+      organizationId: organizationId.toString(),
+      documentType: "SIGNATURE",
+      storageProvider: "LOCAL",
+      originalFilename: "TEST-SIGN-UPLOAD.png",
+      mimeType: "image/png",
+      sizeBytes: uploaded.bytes.length.toString(),
+      sha256: uploaded.sha256,
+      createdByUserId: receptionUserId.toString(),
+    });
+    expect(uploaded.response.body.data.storageUri).toBeUndefined();
+
+    const metadata = await request(app)
+      .get(`/api/v1/documents/${uploaded.idString}`)
+      .set("Authorization", `Bearer ${receptionToken}`)
+      .expect(200);
+    expect(metadata.body.data.sha256).toBe(uploaded.sha256);
+
+    await request(app)
+      .get(`/api/v1/documents/${uploaded.idString}/download`)
+      .set("Authorization", `Bearer ${receptionToken}`)
+      .buffer()
+      .parse((response, callback) => {
+        const chunks: Buffer[] = [];
+        response.on("data", (chunk: Buffer) => chunks.push(chunk));
+        response.on("end", () => callback(null, Buffer.concat(chunks)));
+      })
+      .expect(200)
+      .expect("Content-Type", "image/png")
+      .expect((response) => {
+        expect(Buffer.compare(response.body as Buffer, uploaded.bytes)).toBe(0);
+        expect(response.headers["content-disposition"]).toContain(
+          "TEST-SIGN-UPLOAD.png",
+        );
+      });
+
+    await request(app)
+      .get(`/api/v1/documents/${uploaded.idString}`)
+      .set("Authorization", `Bearer ${otherAdminToken}`)
+      .expect(404)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("DOCUMENT_NOT_FOUND");
+      });
+  });
+
+  it("rejects invalid document uploads and enforces upload RBAC", async () => {
+    await request(app)
+      .post("/api/v1/documents?documentType=SIGNATURE&originalFilename=TEST.png")
+      .set("Content-Type", "image/png")
+      .send(Buffer.from("TEST"))
+      .expect(401)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("AUTHENTICATION_REQUIRED");
+      });
+
+    await request(app)
+      .post("/api/v1/documents?documentType=SIGNATURE&originalFilename=TEST.png")
+      .set("Authorization", `Bearer ${providerToken}`)
+      .set("Content-Type", "image/png")
+      .send(Buffer.from("TEST"))
+      .expect(403)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("PERMISSION_DENIED");
+      });
+
+    await request(app)
+      .post(
+        "/api/v1/documents?documentType=SIGNATURE&originalFilename=TEST.txt",
+      )
+      .set("Authorization", `Bearer ${receptionToken}`)
+      .set("Content-Type", "text/plain")
+      .send(Buffer.from("TEST"))
+      .expect(400)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("DOCUMENT_MIME_TYPE_NOT_ALLOWED");
+      });
+
+    await request(app)
+      .post(
+        "/api/v1/documents?documentType=SIGNATURE&originalFilename=TEST.png",
+      )
+      .set("Authorization", `Bearer ${receptionToken}`)
+      .set("Content-Type", "image/png")
+      .send(Buffer.alloc(0))
+      .expect(400)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("DOCUMENT_EMPTY");
+      });
+
+    await request(app)
+      .post(
+        "/api/v1/documents?documentType=SIGNATURE&originalFilename=../TEST.png",
+      )
+      .set("Authorization", `Bearer ${receptionToken}`)
+      .set("Content-Type", "image/png")
+      .send(Buffer.from("TEST"))
+      .expect(400)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("INVALID_DOCUMENT_FILENAME");
+      });
+
+    await request(app)
+      .post(
+        "/api/v1/documents?documentType=SIGNATURE&originalFilename=TEST-BIG.png",
+      )
+      .set("Authorization", `Bearer ${receptionToken}`)
+      .set("Content-Type", "image/png")
+      .send(Buffer.alloc(5 * 1024 * 1024 + 1))
+      .expect(400)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("DOCUMENT_TOO_LARGE");
+      });
+  });
+
+  it("generates an idempotent closed invoice PDF from immutable snapshots", async () => {
+    const closed = await createClosedInvoiceFixtureWithUploadedSignature("PDF");
+
+    await prisma.patient.update({
+      where: { id: patientId },
+      data: { firstName: "Changed" },
+    });
+    await prisma.svbProcedure.update({
+      where: { id: procedureAId },
+      data: { description: "Changed master description" },
+    });
+
+    const generated = await request(app)
+      .post(`/api/v1/invoices/${closed.invoiceId}/versions/${closed.versionId}/pdf`)
+      .set("Authorization", `Bearer ${receptionToken}`)
+      .send({})
+      .expect(201);
+
+    expect(generated.body.data).toMatchObject({
+      invoiceVersionId: closed.versionId,
+      documentRole: "SIGNED_INVOICE_PDF",
+      document: {
+        documentType: "SIGNED_INVOICE_PDF",
+        mimeType: "application/pdf",
+      },
+    });
+    expect(typeof generated.body.data.document.id).toBe("string");
+    expect(generated.body.data.document.storageUri).toBeUndefined();
+
+    const persisted = await prisma.invoiceDocument.findFirstOrThrow({
+      where: {
+        invoiceVersionId: BigInt(closed.versionId),
+        documentId: BigInt(generated.body.data.document.id as string),
+      },
+      include: { document: true },
+    });
+    expect(persisted.document.sha256).toMatch(/^[a-f0-9]{64}$/);
+
+    const listed = await request(app)
+      .get(`/api/v1/invoices/${closed.invoiceId}/documents`)
+      .set("Authorization", `Bearer ${receptionToken}`)
+      .expect(200);
+    expect(listed.body.data.map((row: { documentId: string }) => row.documentId))
+      .toContain(generated.body.data.document.id);
+
+    const downloaded = await request(app)
+      .get(`/api/v1/documents/${generated.body.data.document.id}/download`)
+      .set("Authorization", `Bearer ${receptionToken}`)
+      .buffer()
+      .parse((response, callback) => {
+        const chunks: Buffer[] = [];
+        response.on("data", (chunk: Buffer) => chunks.push(chunk));
+        response.on("end", () => callback(null, Buffer.concat(chunks)));
+      })
+      .expect(200)
+      .expect("Content-Type", "application/pdf");
+    const pdfBytes = downloaded.body as Buffer;
+    expect(pdfBytes.subarray(0, 8).toString("ascii")).toBe("%PDF-1.4");
+    const pdfText = extractPdfSearchText(pdfBytes);
+    expect(pdfText).toContain(closed.invoiceNumber);
+    expect(pdfText).toContain("Maria Elena Martina Lopez");
+    expect(pdfText).toContain("TEST Invoice procedure TEST-INV-PROC-A");
+    expect(pdfText).not.toContain("Changed master description");
+    expect(createHash("sha256").update(pdfBytes).digest("hex")).toBe(
+      persisted.document.sha256,
+    );
+
+    const regenerated = await request(app)
+      .post(`/api/v1/invoices/${closed.invoiceId}/versions/${closed.versionId}/pdf`)
+      .set("Authorization", `Bearer ${receptionToken}`)
+      .send({})
+      .expect(201);
+    expect(regenerated.body.data.document.id).toBe(generated.body.data.document.id);
+
+    const count = await prisma.invoiceDocument.count({
+      where: {
+        invoiceVersionId: BigInt(closed.versionId),
+        documentRole: "SIGNED_INVOICE_PDF",
+      },
+    });
+    expect(count).toBe(1);
+
+    const audit = await prisma.auditLog.findFirst({
+      where: {
+        action: "INVOICE_PDF_GENERATE",
+        entityId: BigInt(closed.invoiceId),
+      },
+    });
+    expect(audit?.newValues).not.toBeNull();
+    expect(audit?.correlationId).not.toBeNull();
+  });
+
+  it("rejects PDF generation for non-closed invoices, invalid signatures, and stale content", async () => {
+    const draft = await createInvoiceFixture("PDF-DRAFT", 1);
+    await request(app)
+      .post(`/api/v1/invoices/${draft.invoiceId}/versions/${draft.versionId}/pdf`)
+      .set("Authorization", `Bearer ${receptionToken}`)
+      .send({})
+      .expect(409)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("INVOICE_PDF_NOT_GENERATABLE");
+      });
+
+    const signed = await createSignedInvoiceFixtureWithUploadedSignature("PDF-SIGNED");
+    await request(app)
+      .post(`/api/v1/invoices/${signed.invoiceId}/versions/${signed.versionId}/pdf`)
+      .set("Authorization", `Bearer ${receptionToken}`)
+      .send({})
+      .expect(409)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("INVOICE_PDF_NOT_GENERATABLE");
+      });
+
+    const invalidSignature = await createClosedInvoiceFixtureWithUploadedSignature(
+      "PDF-BAD-SIG",
+    );
+    await prisma.signature.update({
+      where: { id: invalidSignature.signatureId },
+      data: {
+        status: "VOID",
+        voidedAt: new Date(),
+        voidedByUserId: adminUserId,
+        voidReason: "TEST invalid signature for PDF",
+      },
+    });
+    await request(app)
+      .post(
+        `/api/v1/invoices/${invalidSignature.invoiceId}/versions/${invalidSignature.versionId}/pdf`,
+      )
+      .set("Authorization", `Bearer ${receptionToken}`)
+      .send({})
+      .expect(409)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("VALID_SIGNATURE_REQUIRED");
+      });
+
+    const stale = await createClosedInvoiceFixtureWithUploadedSignature("PDF-STALE");
+    await prisma.invoiceItem.updateMany({
+      where: { invoiceVersionId: BigInt(stale.versionId) },
+      data: { amount: "101.00" },
+    });
+    await request(app)
+      .post(`/api/v1/invoices/${stale.invoiceId}/versions/${stale.versionId}/pdf`)
+      .set("Authorization", `Bearer ${receptionToken}`)
+      .send({})
+      .expect(409)
+      .expect((response) => {
+        expect(response.body.error.code).toBe(
+          "INVOICE_CONTENT_INTEGRITY_MISMATCH",
+        );
+      });
+  });
+
+  it("protects invoice PDF endpoints with organization ownership and document permissions", async () => {
+    const closed = await createClosedInvoiceFixtureWithUploadedSignature("PDF-RBAC");
+
+    await request(app)
+      .post(`/api/v1/invoices/${closed.invoiceId}/versions/${closed.versionId}/pdf`)
+      .send({})
+      .expect(401)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("AUTHENTICATION_REQUIRED");
+      });
+
+    await request(app)
+      .post(`/api/v1/invoices/${closed.invoiceId}/versions/${closed.versionId}/pdf`)
+      .set("Authorization", `Bearer ${noRoleToken}`)
+      .send({})
+      .expect(403)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("PERMISSION_DENIED");
+      });
+
+    await request(app)
+      .post(`/api/v1/invoices/${closed.invoiceId}/versions/${closed.versionId}/pdf`)
+      .set("Authorization", `Bearer ${otherAdminToken}`)
+      .send({})
+      .expect(404)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("INVOICE_NOT_FOUND");
+      });
+
+    const generated = await request(app)
+      .post(`/api/v1/invoices/${closed.invoiceId}/versions/${closed.versionId}/pdf`)
+      .set("Authorization", `Bearer ${providerToken}`)
+      .send({})
+      .expect(201);
+
+    await request(app)
+      .get(`/api/v1/documents/${generated.body.data.document.id}/download`)
+      .set("Authorization", `Bearer ${noRoleToken}`)
+      .expect(403)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("PERMISSION_DENIED");
+      });
   });
 
   it("writes invoice audit logs", async () => {

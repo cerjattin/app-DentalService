@@ -42,6 +42,15 @@ const envSchema = z.object({
     .enum(["true", "false"])
     .default("true")
     .transform((value) => value === "true"),
+
+  DOCUMENT_STORAGE_PATH: z.string().min(1).default("storage/documents"),
+
+  DOCUMENT_MAX_UPLOAD_BYTES: z.coerce
+    .number()
+    .int()
+    .positive()
+    .max(25 * 1024 * 1024)
+    .default(5 * 1024 * 1024),
 });
 
 const result = envSchema.safeParse(process.env);

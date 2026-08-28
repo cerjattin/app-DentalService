@@ -9,6 +9,14 @@ import type {
   AuthenticatedRequestContext,
   RequestSecurityMetadata,
 } from "../auth/auth.types.js";
+import { invoiceDocumentSelect } from "../documents/document.repository.js";
+import {
+  documentStorage,
+  sha256Hex,
+  storageUriFromKey,
+} from "../documents/document.storage.js";
+import { toInvoiceDocumentResponse } from "../documents/document.types.js";
+import { generateInvoicePdfBytes } from "../documents/invoice-pdf.generator.js";
 import { numberSequenceService } from "../number-sequences/number-sequence.service.js";
 
 import {
@@ -601,6 +609,11 @@ async function requireValidSignatureForClose(
     select: {
       id: true,
       patientId: true,
+      signatureType: true,
+      signerName: true,
+      signerRelationship: true,
+      captureMethod: true,
+      signedAt: true,
       signedContentHash: true,
       signatureHash: true,
       signatureDocument: {
@@ -676,6 +689,88 @@ async function requireValidSignatureForClose(
     "VALID_SIGNATURE_REQUIRED",
     "At least one valid signature is required",
   );
+}
+
+function assertInvoiceVersionReadyForPdf(
+  invoice: InvoiceRecord,
+  versionId: bigint,
+) {
+  const invoiceNumber = requireInvoiceNumberForClose(invoice.invoiceNumber);
+  const version = assertCurrentVersion(invoice, versionId);
+
+  if (invoice.status !== "CLOSED" || version.status !== "CLOSED") {
+    throw new AppError(
+      409,
+      "INVOICE_PDF_NOT_GENERATABLE",
+      "Invoice PDF can only be generated for a closed invoice version",
+    );
+  }
+
+  if (
+    version.closedAt === null ||
+    version.lockedAt === null ||
+    version.signedAt === null ||
+    version.contentHash === null ||
+    !SHA_256_HEX.test(version.contentHash)
+  ) {
+    throw new AppError(
+      409,
+      "INVOICE_CONTENT_NOT_LOCKED",
+      "Invoice version is missing closed signature content metadata",
+    );
+  }
+
+  const computedHash = computeInvoiceContentHash(
+    rawCanonicalInput(invoice, versionId),
+  );
+
+  if (computedHash !== version.contentHash) {
+    throw new AppError(
+      409,
+      "INVOICE_CONTENT_INTEGRITY_MISMATCH",
+      "Invoice signature content no longer matches its stored hash",
+    );
+  }
+
+  return {
+    invoiceNumber,
+    version,
+    contentHash: version.contentHash,
+  };
+}
+
+function invoicePdfStorageKey(input: {
+  organizationId: bigint;
+  invoiceId: bigint;
+  versionId: bigint;
+  contentHash: string;
+}) {
+  return [
+    input.organizationId.toString(),
+    "invoices",
+    input.invoiceId.toString(),
+    "versions",
+    input.versionId.toString(),
+    `${input.contentHash}.pdf`,
+  ].join("/");
+}
+
+async function findExistingInvoicePdf(
+  versionId: bigint,
+  storageUri: string,
+  tx: Prisma.TransactionClient | typeof prisma = prisma,
+) {
+  return tx.invoiceDocument.findFirst({
+    where: {
+      invoiceVersionId: versionId,
+      documentRole: "SIGNED_INVOICE_PDF",
+      document: {
+        documentType: "SIGNED_INVOICE_PDF",
+        storageUri,
+      },
+    },
+    select: invoiceDocumentSelect,
+  });
 }
 
 export class InvoiceService {
@@ -2553,6 +2648,143 @@ export class InvoiceService {
     });
 
     return toInvoiceResponse(invoice);
+  }
+
+  async generatePdf(
+    invoiceId: bigint,
+    versionId: bigint,
+    actor: AuthenticatedRequestContext,
+    metadata: RequestSecurityMetadata,
+  ) {
+    const current = await invoiceRepository.findById(
+      invoiceId,
+      actor.organizationId,
+    );
+
+    if (!current) {
+      throw new AppError(404, "INVOICE_NOT_FOUND", "Invoice not found");
+    }
+
+    assertVersionBelongsToInvoice(current, versionId);
+    const { invoiceNumber, version, contentHash } =
+      assertInvoiceVersionReadyForPdf(current, versionId);
+    const storageKey = invoicePdfStorageKey({
+      organizationId: actor.organizationId,
+      invoiceId: current.id,
+      versionId: version.id,
+      contentHash,
+    });
+    const storageUri = storageUriFromKey(storageKey);
+    const existing = await findExistingInvoicePdf(version.id, storageUri);
+
+    if (existing !== null) {
+      return toInvoiceDocumentResponse(existing);
+    }
+
+    const validSignature = await prisma.$transaction((tx) =>
+      requireValidSignatureForClose(tx, current, version.id, contentHash),
+    );
+    const pdfBytes = await generateInvoicePdfBytes({
+      invoice: current,
+      version,
+      contentHash,
+      signature: validSignature,
+    });
+    const documentSha256 = sha256Hex(pdfBytes);
+
+    await documentStorage.write(storageKey, pdfBytes);
+
+    try {
+      const invoiceDocument = await serializableTransaction(async (tx) => {
+        const existingInsideTx = await findExistingInvoicePdf(
+          version.id,
+          storageUri,
+          tx,
+        );
+
+        if (existingInsideTx !== null) {
+          return existingInsideTx;
+        }
+
+        const document = await tx.document.create({
+          data: {
+            organizationId: actor.organizationId,
+            documentType: "SIGNED_INVOICE_PDF",
+            storageProvider: "LOCAL",
+            storageUri,
+            originalFilename: `${invoiceNumber}-v${version.versionNumber}.pdf`,
+            mimeType: "application/pdf",
+            sizeBytes: BigInt(pdfBytes.length),
+            sha256: documentSha256,
+            metadata: {
+              invoiceId: current.id.toString(),
+              invoiceVersionId: version.id.toString(),
+              invoiceNumber,
+              versionNumber: version.versionNumber,
+              contentHash,
+              layout: "technical_invoice_document",
+              source: "invoice.pdf.generate",
+            },
+            createdByUserId: actor.userId,
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        const row = await tx.invoiceDocument.create({
+          data: {
+            invoiceVersionId: version.id,
+            documentId: document.id,
+            documentRole: "SIGNED_INVOICE_PDF",
+          },
+          select: invoiceDocumentSelect,
+        });
+
+        await auditService.writeWithinTransaction(tx, {
+          organizationId: actor.organizationId,
+          actorUserId: actor.userId,
+          action: "INVOICE_PDF_GENERATE",
+          entityType: "INVOICE",
+          entityId: current.id,
+          entityKey: invoiceNumber,
+          metadata: {
+            invoiceId: current.id.toString(),
+            versionId: version.id.toString(),
+            documentId: document.id.toString(),
+            contentHash,
+            documentSha256,
+          },
+          newValues: {
+            invoiceVersionId: version.id.toString(),
+            documentId: document.id.toString(),
+            documentType: "SIGNED_INVOICE_PDF",
+            documentRole: "SIGNED_INVOICE_PDF",
+            storageProvider: "LOCAL",
+            sizeBytes: pdfBytes.length.toString(),
+            sha256: documentSha256,
+          },
+          ...auditTechnicalFields(metadata),
+        });
+
+        return row;
+      });
+
+      return toInvoiceDocumentResponse(invoiceDocument);
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === "P2002"
+      ) {
+        const raced = await findExistingInvoicePdf(version.id, storageUri);
+        if (raced !== null) {
+          return toInvoiceDocumentResponse(raced);
+        }
+      }
+
+      await documentStorage.remove(storageUri);
+      throw error;
+    }
   }
 }
 
