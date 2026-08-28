@@ -32,9 +32,14 @@ import { roleRouter } from "./modules/roles/role.routes.js";
 import { requestContextMiddleware } from "./shared/middleware/request-context.middleware.js";
 import { authRouter } from "./modules/auth/auth.routes.js";
 import { insuranceRouter } from "./modules/insurance/insurance.routes.js";
+import {
+  appointmentInvoiceRouter,
+  invoiceRouter,
+} from "./modules/invoices/invoice.routes.js";
 import { payerRouter } from "./modules/insurance/payer.routes.js";
 import { patientRouter } from "./modules/patients/patient.routes.js";
 import { providerRouter } from "./modules/providers/provider.routes.js";
+import { invoiceSignatureRouter } from "./modules/signatures/signature.routes.js";
 import { svbCatalogRouter } from "./modules/svb-catalog/svb-catalog.routes.js";
 export const app = express();
 
@@ -75,6 +80,7 @@ app.use(
   "/api/v1/appointments/:appointmentId/clinical-encounter",
   appointmentClinicalEncounterRouter,
 );
+app.use("/api/v1/appointments/:appointmentId/invoice", appointmentInvoiceRouter);
 app.use("/api/v1/appointments", appointmentRouter);
 app.use(
   "/api/v1/clinical-encounters/:encounterId/diagnoses",
@@ -86,6 +92,11 @@ app.use(
 );
 app.use("/api/v1/clinical-encounters", clinicalEncounterRouter);
 app.use("/api/v1/diagnosis-codes", diagnosisCodeRouter);
+app.use(
+  "/api/v1/invoices/:invoiceId/versions/:versionId",
+  invoiceSignatureRouter,
+);
+app.use("/api/v1/invoices", invoiceRouter);
 app.use("/api/v1/payers", payerRouter);
 app.use("/api/v1/svb-procedures", svbCatalogRouter);
 app.use("/api/v1/patients/:patientId/insurance", insuranceRouter);
