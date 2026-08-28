@@ -1,6 +1,7 @@
 import type { Prisma } from "../../generated/prisma/client.js";
 
 import type {
+  InvoiceCorrectionRecord,
   InvoiceItemRecord,
   InvoiceRecord,
   InvoiceStatusHistoryRecord,
@@ -147,5 +148,45 @@ export function toInvoiceStatusHistoryResponse(
     changedByUserId: row.changedByUserId.toString(),
     changedAt: row.changedAt.toISOString(),
     metadata: row.metadata,
+  };
+}
+
+function toCorrectionVersionSummary(
+  version: InvoiceCorrectionRecord["sourceVersion"] | null,
+) {
+  if (version === null) {
+    return null;
+  }
+
+  return {
+    id: version.id.toString(),
+    versionNumber: version.versionNumber,
+    versionType: version.versionType,
+    status: version.status,
+    totalAmount: decimalString(version.totalAmount),
+    createdAt: version.createdAt.toISOString(),
+  };
+}
+
+export function toInvoiceCorrectionResponse(row: InvoiceCorrectionRecord) {
+  return {
+    id: row.id.toString(),
+    invoiceId: row.invoiceId.toString(),
+    sourceVersionId: row.sourceVersionId.toString(),
+    replacementVersionId: row.replacementVersionId?.toString() ?? null,
+    reasonCode: row.reasonCode,
+    reasonText: row.reasonText,
+    status: row.status,
+    requestedByUserId: row.requestedByUserId.toString(),
+    requestedAt: row.requestedAt.toISOString(),
+    approvedByUserId: row.approvedByUserId?.toString() ?? null,
+    approvedAt: row.approvedAt?.toISOString() ?? null,
+    resolvedByUserId: row.resolvedByUserId?.toString() ?? null,
+    resolvedAt: row.resolvedAt?.toISOString() ?? null,
+    metadata: row.metadata,
+    createdAt: row.createdAt.toISOString(),
+    updatedAt: row.updatedAt.toISOString(),
+    sourceVersion: toCorrectionVersionSummary(row.sourceVersion),
+    replacementVersion: toCorrectionVersionSummary(row.replacementVersion),
   };
 }

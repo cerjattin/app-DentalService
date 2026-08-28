@@ -13,6 +13,7 @@ import { numberSequenceService } from "../number-sequences/number-sequence.servi
 
 import {
   invoiceItemSelect,
+  invoiceCorrectionSelect,
   invoiceRepository,
   invoiceSelect,
   invoiceStatusHistorySelect,
@@ -22,6 +23,9 @@ import {
 import type {
   CancelInvoiceInput,
   ListInvoicesQuery,
+  RequestInvoiceCorrectionInput,
+  ResolveInvoiceCorrectionInput,
+  UpdateCorrectionInvoiceItemInput,
 } from "./invoice.schemas.js";
 import {
   buildInvoiceSignatureCanonicalContent,
@@ -29,12 +33,15 @@ import {
 } from "./invoice-signature-canonicalizer.js";
 import {
   toInvoiceItemResponse,
+  toInvoiceCorrectionResponse,
   toInvoiceResponse,
   toInvoiceStatusHistoryResponse,
   toInvoiceVersionResponse,
 } from "./invoice.types.js";
 
 const BILLABLE_PROCEDURE_STATUS = "PERFORMED";
+const SHA_256_HEX = /^[a-f0-9]{64}$/;
+const ACTIVE_CORRECTION_STATUSES = ["REQUESTED", "APPROVED"] as const;
 
 function serviceDateInCuracao(date: Date) {
   const parts = new Intl.DateTimeFormat("en-US", {
@@ -162,9 +169,66 @@ function toAuditValues(invoice: InvoiceRecord) {
   } satisfies Prisma.InputJsonObject;
 }
 
+function toCorrectionAuditValues(correction: {
+  id: bigint;
+  invoiceId: bigint;
+  sourceVersionId: bigint;
+  replacementVersionId: bigint | null;
+  reasonCode: string;
+  reasonText: string;
+  status: string;
+  requestedByUserId: bigint;
+  approvedByUserId: bigint | null;
+  resolvedByUserId: bigint | null;
+}) {
+  return {
+    id: correction.id.toString(),
+    invoiceId: correction.invoiceId.toString(),
+    sourceVersionId: correction.sourceVersionId.toString(),
+    replacementVersionId: correction.replacementVersionId?.toString() ?? null,
+    reasonCode: correction.reasonCode,
+    reasonText: correction.reasonText,
+    status: correction.status,
+    requestedByUserId: correction.requestedByUserId.toString(),
+    approvedByUserId: correction.approvedByUserId?.toString() ?? null,
+    resolvedByUserId: correction.resolvedByUserId?.toString() ?? null,
+  } satisfies Prisma.InputJsonObject;
+}
+
+function ensureInvoiceNumber(invoice: InvoiceRecord) {
+  return invoice.invoiceNumber ?? invoice.id.toString();
+}
+
+function mapCorrectionUniqueError(error: unknown): never {
+  if (
+    error instanceof Prisma.PrismaClientKnownRequestError &&
+    error.code === "P2002"
+  ) {
+    throw new AppError(
+      409,
+      "INVOICE_CORRECTION_REPLACEMENT_ALREADY_EXISTS",
+      "Invoice correction replacement already exists",
+    );
+  }
+
+  throw error;
+}
+
 function requireInvoiceNumber(invoiceNumber: string | null) {
   if (invoiceNumber === null || invoiceNumber.trim() === "") {
     throw new AppError(409, "INVOICE_NOT_PREPARABLE", "Invoice number is required");
+  }
+
+  return invoiceNumber;
+}
+
+function requireInvoiceNumberForClose(invoiceNumber: string | null) {
+  if (invoiceNumber === null || invoiceNumber.trim() === "") {
+    throw new AppError(
+      409,
+      "INVOICE_SNAPSHOT_INCOMPLETE",
+      "Invoice number snapshot is required",
+    );
   }
 
   return invoiceNumber;
@@ -200,6 +264,24 @@ function assertVersionBelongsToInvoice(invoice: InvoiceRecord, versionId: bigint
       "Invoice version not found",
     );
   }
+}
+
+function assertClosedSourceForCorrection(invoice: InvoiceRecord) {
+  const sourceVersion = invoice.currentVersion;
+
+  if (
+    invoice.status !== "CLOSED" ||
+    sourceVersion === null ||
+    sourceVersion.status !== "CLOSED"
+  ) {
+    throw new AppError(
+      409,
+      "INVOICE_CORRECTION_NOT_REQUESTABLE",
+      "Only closed invoices can be corrected",
+    );
+  }
+
+  return sourceVersion;
 }
 
 function assertInvoiceVersionReadyForCanonicalization(
@@ -351,6 +433,249 @@ function verifyStoredContentHash(invoice: InvoiceRecord, versionId: bigint) {
   }
 
   return computedHash;
+}
+
+function assertInvoiceVersionReadyForClose(
+  invoice: InvoiceRecord,
+  versionId: bigint,
+) {
+  const invoiceNumber = requireInvoiceNumberForClose(invoice.invoiceNumber);
+  const version = assertCurrentVersion(invoice, versionId);
+
+  if (invoice.status === "CLOSED" || version.status === "CLOSED") {
+    throw new AppError(
+      409,
+      "INVOICE_ALREADY_CLOSED",
+      "Invoice version is already closed",
+    );
+  }
+
+  if (invoice.status !== "SIGNED" || version.status !== "SIGNED") {
+    throw new AppError(
+      409,
+      "INVOICE_NOT_CLOSABLE",
+      "Invoice must be signed before closing",
+    );
+  }
+
+  if (version.signedAt === null) {
+    throw new AppError(
+      409,
+      "INVOICE_SIGNATURE_STATE_INVALID",
+      "Signed invoice version is missing signedAt",
+    );
+  }
+
+  if (
+    version.lockedAt === null ||
+    version.contentHash === null ||
+    !SHA_256_HEX.test(version.contentHash)
+  ) {
+    throw new AppError(
+      409,
+      "INVOICE_CONTENT_NOT_LOCKED",
+      "Invoice content must be locked before closing",
+    );
+  }
+
+  if (version.declarantIdSnapshot === null || version.declarantIdSnapshot.trim() === "") {
+    throw new AppError(
+      409,
+      "INVOICE_DECLARANT_ID_REQUIRED",
+      "Invoice declarant ID snapshot is required",
+    );
+  }
+
+  if (version.patientNameSnapshot.trim() === "" || version.currencyCode.trim() === "") {
+    throw new AppError(
+      409,
+      "INVOICE_SNAPSHOT_INCOMPLETE",
+      "Invoice header snapshots are incomplete",
+    );
+  }
+
+  if (version.insuredIdSnapshot.trim() === "") {
+    throw new AppError(
+      409,
+      "INVOICE_INSURED_ID_REQUIRED",
+      "Invoice insured ID snapshot is required",
+    );
+  }
+
+  let totalAmount = new Prisma.Decimal("0.00");
+
+  for (const item of version.items) {
+    if (item.invoiceVersionId !== version.id) {
+      throw new AppError(
+        409,
+        "INVOICE_SNAPSHOT_INCOMPLETE",
+        "Invoice item does not belong to the requested version",
+      );
+    }
+
+    if (
+      item.detailInvoiceNumber === null ||
+      item.detailInvoiceNumber.trim() === "" ||
+      item.serviceDateSnapshot === null ||
+      item.procedureCodeSnapshot.trim() === "" ||
+      item.currencyCodeSnapshot.trim() === ""
+    ) {
+      throw new AppError(
+        409,
+        "INVOICE_SNAPSHOT_INCOMPLETE",
+        "Invoice item snapshots are incomplete",
+      );
+    }
+
+    if (item.providerIdSnapshot.trim() === "") {
+      throw new AppError(
+        409,
+        "INVOICE_PROVIDER_SNAPSHOT_REQUIRED",
+        "Provider SVB snapshot is required for invoice items",
+      );
+    }
+
+    if (item.insuredIdSnapshot.trim() === "") {
+      throw new AppError(
+        409,
+        "INVOICE_INSURED_ID_REQUIRED",
+        "Invoice item insured ID snapshot is required",
+      );
+    }
+
+    if (item.currencyCodeSnapshot !== version.currencyCode) {
+      throw new AppError(
+        409,
+        "INVOICE_CURRENCY_MISMATCH",
+        "Invoice item currency does not match the invoice version",
+      );
+    }
+
+    assertDecimalEquals(
+      item.unitTariffSnapshot.mul(item.quantity),
+      item.amount,
+      "INVOICE_ITEM_AMOUNT_MISMATCH",
+      "Invoice item amount does not match unit tariff and quantity",
+    );
+
+    totalAmount = totalAmount.plus(item.amount);
+  }
+
+  assertDecimalEquals(
+    totalAmount,
+    version.totalAmount,
+    "INVOICE_TOTAL_MISMATCH",
+    "Invoice total does not match item amounts",
+  );
+
+  const computedHash = computeInvoiceContentHash(
+    rawCanonicalInput(invoice, versionId),
+  );
+
+  if (computedHash !== version.contentHash) {
+    throw new AppError(
+      409,
+      "INVOICE_CONTENT_INTEGRITY_MISMATCH",
+      "Invoice signature content no longer matches its stored hash",
+    );
+  }
+
+  return {
+    invoiceNumber,
+    version,
+    contentHash: version.contentHash,
+  };
+}
+
+async function requireValidSignatureForClose(
+  tx: Prisma.TransactionClient,
+  invoice: InvoiceRecord,
+  versionId: bigint,
+  contentHash: string,
+) {
+  const signatures = await tx.signature.findMany({
+    where: {
+      invoiceVersionId: versionId,
+      status: "VALID",
+    },
+    select: {
+      id: true,
+      patientId: true,
+      signedContentHash: true,
+      signatureHash: true,
+      signatureDocument: {
+        select: {
+          organizationId: true,
+          documentType: true,
+          sha256: true,
+          sizeBytes: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
+
+  if (signatures.length === 0) {
+    throw new AppError(
+      409,
+      "VALID_SIGNATURE_REQUIRED",
+      "At least one valid signature is required",
+    );
+  }
+
+  let contentHashMismatch = false;
+  let evidenceInvalid = false;
+
+  for (const signature of signatures) {
+    const document = signature.signatureDocument;
+
+    if (signature.patientId !== invoice.patientId) {
+      evidenceInvalid = true;
+      continue;
+    }
+
+    if (signature.signedContentHash !== contentHash) {
+      contentHashMismatch = true;
+      continue;
+    }
+
+    if (
+      document.organizationId !== invoice.organizationId ||
+      document.documentType !== "SIGNATURE" ||
+      document.sizeBytes <= 0n ||
+      !SHA_256_HEX.test(document.sha256) ||
+      signature.signatureHash !== document.sha256
+    ) {
+      evidenceInvalid = true;
+      continue;
+    }
+
+    return signature;
+  }
+
+  if (contentHashMismatch) {
+    throw new AppError(
+      409,
+      "SIGNATURE_CONTENT_HASH_MISMATCH",
+      "Signature hash does not match invoice content",
+    );
+  }
+
+  if (evidenceInvalid) {
+    throw new AppError(
+      409,
+      "SIGNATURE_EVIDENCE_INVALID",
+      "Signature evidence is invalid",
+    );
+  }
+
+  throw new AppError(
+    409,
+    "VALID_SIGNATURE_REQUIRED",
+    "At least one valid signature is required",
+  );
 }
 
 export class InvoiceService {
@@ -519,6 +844,651 @@ export class InvoiceService {
     return rows.map(toInvoiceStatusHistoryResponse);
   }
 
+  async listCorrections(invoiceId: bigint, actor: AuthenticatedRequestContext) {
+    const invoice = await invoiceRepository.findById(
+      invoiceId,
+      actor.organizationId,
+    );
+
+    if (!invoice) {
+      throw new AppError(404, "INVOICE_NOT_FOUND", "Invoice not found");
+    }
+
+    const rows = await prisma.invoiceCorrection.findMany({
+      where: { invoiceId },
+      select: invoiceCorrectionSelect,
+      orderBy: { createdAt: "asc" },
+    });
+
+    return rows.map(toInvoiceCorrectionResponse);
+  }
+
+  async getCorrection(
+    invoiceId: bigint,
+    correctionId: bigint,
+    actor: AuthenticatedRequestContext,
+  ) {
+    const correction = await prisma.invoiceCorrection.findFirst({
+      where: {
+        id: correctionId,
+        invoiceId,
+        invoice: { organizationId: actor.organizationId },
+      },
+      select: invoiceCorrectionSelect,
+    });
+
+    if (!correction) {
+      throw new AppError(
+        404,
+        "INVOICE_CORRECTION_NOT_FOUND",
+        "Invoice correction not found",
+      );
+    }
+
+    return toInvoiceCorrectionResponse(correction);
+  }
+
+  async requestCorrection(
+    invoiceId: bigint,
+    input: RequestInvoiceCorrectionInput,
+    actor: AuthenticatedRequestContext,
+    metadata: RequestSecurityMetadata,
+  ) {
+    const correction = await serializableTransaction(async (tx) => {
+      const current = await invoiceRepository.findById(
+        invoiceId,
+        actor.organizationId,
+        tx,
+      );
+
+      if (!current) {
+        throw new AppError(404, "INVOICE_NOT_FOUND", "Invoice not found");
+      }
+
+      const activeCorrection = await tx.invoiceCorrection.findFirst({
+        where: {
+          invoiceId: current.id,
+          status: { in: [...ACTIVE_CORRECTION_STATUSES] },
+        },
+        select: { id: true },
+      });
+
+      if (activeCorrection) {
+        throw new AppError(
+          409,
+          "INVOICE_CORRECTION_ALREADY_ACTIVE",
+          "Invoice already has an active correction",
+        );
+      }
+
+      const sourceVersion = assertClosedSourceForCorrection(current);
+
+      const created = await tx.invoiceCorrection.create({
+        data: {
+          invoiceId: current.id,
+          sourceVersionId: sourceVersion.id,
+          reasonCode: input.reasonCode,
+          reasonText: input.reasonText,
+          requestedByUserId: actor.userId,
+          ...(input.metadata !== undefined
+            ? { metadata: input.metadata as Prisma.InputJsonObject }
+            : {}),
+        },
+        select: invoiceCorrectionSelect,
+      });
+
+      await tx.invoice.update({
+        where: { id: current.id },
+        data: { status: "CORRECTION_REQUIRED" },
+      });
+
+      await tx.invoiceStatusHistory.create({
+        data: {
+          invoiceId: current.id,
+          invoiceVersionId: sourceVersion.id,
+          oldStatus: "CLOSED",
+          newStatus: "CORRECTION_REQUIRED",
+          changedByUserId: actor.userId,
+          metadata: { source: "invoice.correction.request" },
+        },
+      });
+
+      await auditService.writeWithinTransaction(tx, {
+        organizationId: actor.organizationId,
+        actorUserId: actor.userId,
+        action: "INVOICE_CORRECTION_REQUEST",
+        entityType: "INVOICE_CORRECTION",
+        entityId: created.id,
+        entityKey: ensureInvoiceNumber(current),
+        newValues: toCorrectionAuditValues(created),
+        ...auditTechnicalFields(metadata),
+      });
+
+      return created;
+    });
+
+    return toInvoiceCorrectionResponse(correction);
+  }
+
+  async approveCorrection(
+    invoiceId: bigint,
+    correctionId: bigint,
+    actor: AuthenticatedRequestContext,
+    metadata: RequestSecurityMetadata,
+  ) {
+    const correction = await serializableTransaction(async (tx) => {
+      const current = await invoiceRepository.findById(
+        invoiceId,
+        actor.organizationId,
+        tx,
+      );
+
+      if (!current) {
+        throw new AppError(404, "INVOICE_NOT_FOUND", "Invoice not found");
+      }
+
+      const existing = await tx.invoiceCorrection.findFirst({
+        where: { id: correctionId, invoiceId: current.id },
+        select: invoiceCorrectionSelect,
+      });
+
+      if (!existing) {
+        throw new AppError(
+          404,
+          "INVOICE_CORRECTION_NOT_FOUND",
+          "Invoice correction not found",
+        );
+      }
+
+      if (existing.status !== "REQUESTED") {
+        throw new AppError(
+          409,
+          "INVOICE_CORRECTION_NOT_APPROVABLE",
+          "Only requested corrections can be approved",
+        );
+      }
+
+      const updated = await tx.invoiceCorrection.update({
+        where: { id: existing.id },
+        data: {
+          status: "APPROVED",
+          approvedByUserId: actor.userId,
+          approvedAt: new Date(),
+        },
+        select: invoiceCorrectionSelect,
+      });
+
+      await auditService.writeWithinTransaction(tx, {
+        organizationId: actor.organizationId,
+        actorUserId: actor.userId,
+        action: "INVOICE_CORRECTION_APPROVE",
+        entityType: "INVOICE_CORRECTION",
+        entityId: updated.id,
+        entityKey: ensureInvoiceNumber(current),
+        oldValues: toCorrectionAuditValues(existing),
+        newValues: toCorrectionAuditValues(updated),
+        ...auditTechnicalFields(metadata),
+      });
+
+      return updated;
+    });
+
+    return toInvoiceCorrectionResponse(correction);
+  }
+
+  async rejectCorrection(
+    invoiceId: bigint,
+    correctionId: bigint,
+    input: ResolveInvoiceCorrectionInput,
+    actor: AuthenticatedRequestContext,
+    metadata: RequestSecurityMetadata,
+  ) {
+    return this.resolveRequestedCorrection(
+      invoiceId,
+      correctionId,
+      "REJECTED",
+      "INVOICE_CORRECTION_REJECT",
+      input,
+      actor,
+      metadata,
+    );
+  }
+
+  async cancelCorrection(
+    invoiceId: bigint,
+    correctionId: bigint,
+    input: ResolveInvoiceCorrectionInput,
+    actor: AuthenticatedRequestContext,
+    metadata: RequestSecurityMetadata,
+  ) {
+    return this.resolveRequestedCorrection(
+      invoiceId,
+      correctionId,
+      "CANCELLED",
+      "INVOICE_CORRECTION_CANCEL",
+      input,
+      actor,
+      metadata,
+    );
+  }
+
+  private async resolveRequestedCorrection(
+    invoiceId: bigint,
+    correctionId: bigint,
+    status: "REJECTED" | "CANCELLED",
+    action: "INVOICE_CORRECTION_REJECT" | "INVOICE_CORRECTION_CANCEL",
+    input: ResolveInvoiceCorrectionInput,
+    actor: AuthenticatedRequestContext,
+    metadata: RequestSecurityMetadata,
+  ) {
+    const correction = await serializableTransaction(async (tx) => {
+      const current = await invoiceRepository.findById(
+        invoiceId,
+        actor.organizationId,
+        tx,
+      );
+
+      if (!current) {
+        throw new AppError(404, "INVOICE_NOT_FOUND", "Invoice not found");
+      }
+
+      const existing = await tx.invoiceCorrection.findFirst({
+        where: { id: correctionId, invoiceId: current.id },
+        select: invoiceCorrectionSelect,
+      });
+
+      if (!existing) {
+        throw new AppError(
+          404,
+          "INVOICE_CORRECTION_NOT_FOUND",
+          "Invoice correction not found",
+        );
+      }
+
+      if (existing.status !== "REQUESTED") {
+        throw new AppError(
+          409,
+          "INVOICE_CORRECTION_NOT_RESOLVABLE",
+          "Only requested corrections can be resolved this way",
+        );
+      }
+
+      const updated = await tx.invoiceCorrection.update({
+        where: { id: existing.id },
+        data: {
+          status,
+          resolvedByUserId: actor.userId,
+          resolvedAt: new Date(),
+        },
+        select: invoiceCorrectionSelect,
+      });
+
+      const remainingActive = await tx.invoiceCorrection.count({
+        where: {
+          invoiceId: current.id,
+          id: { not: existing.id },
+          status: { in: [...ACTIVE_CORRECTION_STATUSES] },
+        },
+      });
+
+      if (remainingActive === 0 && current.status === "CORRECTION_REQUIRED") {
+        await tx.invoice.update({
+          where: { id: current.id },
+          data: { status: "CLOSED" },
+        });
+
+        await tx.invoiceStatusHistory.create({
+          data: {
+            invoiceId: current.id,
+            invoiceVersionId: existing.sourceVersionId,
+            oldStatus: "CORRECTION_REQUIRED",
+            newStatus: "CLOSED",
+            ...(input.reason !== undefined ? { reason: input.reason } : {}),
+            changedByUserId: actor.userId,
+            metadata: { source: "invoice.correction.resolve" },
+          },
+        });
+      }
+
+      await auditService.writeWithinTransaction(tx, {
+        organizationId: actor.organizationId,
+        actorUserId: actor.userId,
+        action,
+        entityType: "INVOICE_CORRECTION",
+        entityId: updated.id,
+        entityKey: ensureInvoiceNumber(current),
+        oldValues: toCorrectionAuditValues(existing),
+        newValues: toCorrectionAuditValues(updated),
+        ...auditTechnicalFields(metadata),
+      });
+
+      return updated;
+    });
+
+    return toInvoiceCorrectionResponse(correction);
+  }
+
+  async createCorrectionReplacement(
+    invoiceId: bigint,
+    correctionId: bigint,
+    actor: AuthenticatedRequestContext,
+    metadata: RequestSecurityMetadata,
+  ) {
+    try {
+      const correction = await serializableTransaction(async (tx) => {
+        const current = await invoiceRepository.findById(
+          invoiceId,
+          actor.organizationId,
+          tx,
+        );
+
+        if (!current) {
+          throw new AppError(404, "INVOICE_NOT_FOUND", "Invoice not found");
+        }
+
+        const existing = await tx.invoiceCorrection.findFirst({
+          where: { id: correctionId, invoiceId: current.id },
+          select: invoiceCorrectionSelect,
+        });
+
+        if (!existing) {
+          throw new AppError(
+            404,
+            "INVOICE_CORRECTION_NOT_FOUND",
+            "Invoice correction not found",
+          );
+        }
+
+        if (existing.status !== "APPROVED") {
+          throw new AppError(
+            409,
+            "INVOICE_CORRECTION_NOT_APPROVED",
+            "Invoice correction must be approved before replacement",
+          );
+        }
+
+        if (existing.replacementVersionId !== null) {
+          throw new AppError(
+            409,
+            "INVOICE_CORRECTION_REPLACEMENT_ALREADY_EXISTS",
+            "Invoice correction replacement already exists",
+          );
+        }
+
+        const source = await tx.invoiceVersion.findFirst({
+          where: {
+            id: existing.sourceVersionId,
+            invoiceId: current.id,
+          },
+          select: invoiceVersionSelect,
+        });
+
+        if (!source || source.status !== "CLOSED") {
+          throw new AppError(
+            409,
+            "INVOICE_CORRECTION_SOURCE_INVALID",
+            "Correction source invoice version must remain closed",
+          );
+        }
+
+        const latestVersion = await tx.invoiceVersion.findFirst({
+          where: { invoiceId: current.id },
+          select: { versionNumber: true },
+          orderBy: { versionNumber: "desc" },
+        });
+        const versionNumber = (latestVersion?.versionNumber ?? 0) + 1;
+
+        const replacement = await tx.invoiceVersion.create({
+          data: {
+            invoiceId: current.id,
+            versionNumber,
+            versionType: "CORRECTION",
+            supersedesVersionId: source.id,
+            status: "DRAFT",
+            invoiceDate: source.invoiceDate,
+            currencyCode: source.currencyCode,
+            totalAmount: source.totalAmount,
+            declarantIdSnapshot: source.declarantIdSnapshot,
+            patientNameSnapshot: source.patientNameSnapshot,
+            patientDocumentTypeSnapshot: source.patientDocumentTypeSnapshot,
+            patientDocumentNumberSnapshot: source.patientDocumentNumberSnapshot,
+            insuredIdSnapshot: source.insuredIdSnapshot,
+            preparedByUserId: actor.userId,
+          },
+          select: invoiceVersionSelect,
+        });
+
+        for (const item of source.items) {
+          await tx.invoiceItem.create({
+            data: {
+              invoiceVersionId: replacement.id,
+              lineNumber: item.lineNumber,
+              detailInvoiceNumber: item.detailInvoiceNumber,
+              encounterProcedureId: item.encounterProcedureId,
+              sourceInvoiceItemId: item.id,
+              svbProcedureId: item.svbProcedureId,
+              svbTariffId: item.svbTariffId,
+              serviceDateSnapshot: item.serviceDateSnapshot,
+              procedureCodeSnapshot: item.procedureCodeSnapshot,
+              procedureDescriptionSnapshot: item.procedureDescriptionSnapshot,
+              providerIdSnapshot: item.providerIdSnapshot,
+              insuredIdSnapshot: item.insuredIdSnapshot,
+              unitTariffSnapshot: item.unitTariffSnapshot,
+              currencyCodeSnapshot: item.currencyCodeSnapshot,
+              quantity: item.quantity,
+              amount: item.amount,
+              authorizationIdSnapshot: item.authorizationIdSnapshot,
+              diagnosticCodeSnapshot: item.diagnosticCodeSnapshot,
+              treatmentIdSnapshot: item.treatmentIdSnapshot,
+              accidentFormNumberSnapshot: item.accidentFormNumberSnapshot,
+              numberOfTreatmentsSnapshot: item.numberOfTreatmentsSnapshot,
+              assistanceSnapshot: item.assistanceSnapshot,
+              referrerIdSnapshot: item.referrerIdSnapshot,
+              policlinicSnapshot: item.policlinicSnapshot,
+              additionalNote: item.additionalNote,
+            },
+          });
+        }
+
+        const updated = await tx.invoiceCorrection.update({
+          where: { id: existing.id },
+          data: { replacementVersionId: replacement.id },
+          select: invoiceCorrectionSelect,
+        });
+
+        await tx.invoice.update({
+          where: { id: current.id },
+          data: {
+            currentVersionId: replacement.id,
+            status: "CORRECTION_REQUIRED",
+          },
+        });
+
+        await auditService.writeWithinTransaction(tx, {
+          organizationId: actor.organizationId,
+          actorUserId: actor.userId,
+          action: "INVOICE_CORRECTION_REPLACEMENT_CREATE",
+          entityType: "INVOICE_CORRECTION",
+          entityId: updated.id,
+          entityKey: ensureInvoiceNumber(current),
+          oldValues: toCorrectionAuditValues(existing),
+          newValues: toCorrectionAuditValues(updated),
+          ...auditTechnicalFields(metadata),
+        });
+
+        return updated;
+      });
+
+      return toInvoiceCorrectionResponse(correction);
+    } catch (error) {
+      mapCorrectionUniqueError(error);
+    }
+  }
+
+  async updateCorrectionItem(
+    invoiceId: bigint,
+    versionId: bigint,
+    itemId: bigint,
+    input: UpdateCorrectionInvoiceItemInput,
+    actor: AuthenticatedRequestContext,
+    metadata: RequestSecurityMetadata,
+  ) {
+    const item = await serializableTransaction(async (tx) => {
+      const current = await invoiceRepository.findById(
+        invoiceId,
+        actor.organizationId,
+        tx,
+      );
+
+      if (!current) {
+        throw new AppError(404, "INVOICE_NOT_FOUND", "Invoice not found");
+      }
+
+      assertVersionBelongsToInvoice(current, versionId);
+      const version = assertCurrentVersion(current, versionId);
+
+      if (version.versionType !== "CORRECTION" || version.status !== "DRAFT") {
+        throw new AppError(
+          409,
+          "INVOICE_CORRECTION_ITEM_NOT_EDITABLE",
+          "Only current draft correction invoice items can be edited",
+        );
+      }
+
+      const existing = await tx.invoiceItem.findFirst({
+        where: { id: itemId, invoiceVersionId: version.id },
+        select: invoiceItemSelect,
+      });
+
+      if (!existing) {
+        throw new AppError(404, "INVOICE_ITEM_NOT_FOUND", "Invoice item not found");
+      }
+
+      if (
+        input.currencyCodeSnapshot !== undefined &&
+        input.currencyCodeSnapshot !== version.currencyCode
+      ) {
+        throw new AppError(
+          409,
+          "INVOICE_CURRENCY_MISMATCH",
+          "Invoice item currency does not match the invoice version",
+        );
+      }
+
+      const unitTariff =
+        input.unitTariffSnapshot !== undefined
+          ? new Prisma.Decimal(input.unitTariffSnapshot)
+          : existing.unitTariffSnapshot;
+      const quantity =
+        input.quantity !== undefined
+          ? new Prisma.Decimal(input.quantity)
+          : existing.quantity;
+      const amount = unitTariff.mul(quantity);
+
+      const data: Prisma.InvoiceItemUpdateInput = { amount };
+
+      if (input.detailInvoiceNumber !== undefined) {
+        data.detailInvoiceNumber = input.detailInvoiceNumber;
+      }
+      if (input.serviceDateSnapshot !== undefined) {
+        data.serviceDateSnapshot = parseDateOnly(
+          input.serviceDateSnapshot,
+          "serviceDateSnapshot",
+        );
+      }
+      if (input.procedureCodeSnapshot !== undefined) {
+        data.procedureCodeSnapshot = input.procedureCodeSnapshot;
+      }
+      if (input.procedureDescriptionSnapshot !== undefined) {
+        data.procedureDescriptionSnapshot = input.procedureDescriptionSnapshot;
+      }
+      if (input.providerIdSnapshot !== undefined) {
+        data.providerIdSnapshot = input.providerIdSnapshot;
+      }
+      if (input.insuredIdSnapshot !== undefined) {
+        data.insuredIdSnapshot = input.insuredIdSnapshot;
+      }
+      if (input.unitTariffSnapshot !== undefined) {
+        data.unitTariffSnapshot = unitTariff;
+      }
+      if (input.currencyCodeSnapshot !== undefined) {
+        data.currencyCodeSnapshot = input.currencyCodeSnapshot;
+      }
+      if (input.quantity !== undefined) {
+        data.quantity = quantity;
+      }
+      if (input.authorizationIdSnapshot !== undefined) {
+        data.authorizationIdSnapshot = input.authorizationIdSnapshot;
+      }
+      if (input.diagnosticCodeSnapshot !== undefined) {
+        data.diagnosticCodeSnapshot = input.diagnosticCodeSnapshot;
+      }
+      if (input.treatmentIdSnapshot !== undefined) {
+        data.treatmentIdSnapshot = input.treatmentIdSnapshot;
+      }
+      if (input.accidentFormNumberSnapshot !== undefined) {
+        data.accidentFormNumberSnapshot = input.accidentFormNumberSnapshot;
+      }
+      if (input.numberOfTreatmentsSnapshot !== undefined) {
+        data.numberOfTreatmentsSnapshot = input.numberOfTreatmentsSnapshot;
+      }
+      if (input.assistanceSnapshot !== undefined) {
+        data.assistanceSnapshot = input.assistanceSnapshot;
+      }
+      if (input.referrerIdSnapshot !== undefined) {
+        data.referrerIdSnapshot = input.referrerIdSnapshot;
+      }
+      if (input.policlinicSnapshot !== undefined) {
+        data.policlinicSnapshot = input.policlinicSnapshot;
+      }
+      if (input.additionalNote !== undefined) {
+        data.additionalNote = input.additionalNote;
+      }
+
+      const updated = await tx.invoiceItem.update({
+        where: { id: existing.id },
+        data,
+        select: invoiceItemSelect,
+      });
+
+      const versionItems = await tx.invoiceItem.findMany({
+        where: { invoiceVersionId: version.id },
+        select: { amount: true },
+      });
+      const totalAmount = versionItems.reduce(
+        (total, row) => total.plus(row.amount),
+        new Prisma.Decimal("0.00"),
+      );
+
+      await tx.invoiceVersion.update({
+        where: { id: version.id },
+        data: { totalAmount },
+      });
+
+      await auditService.writeWithinTransaction(tx, {
+        organizationId: actor.organizationId,
+        actorUserId: actor.userId,
+        action: "INVOICE_CORRECTION_ITEM_UPDATE",
+        entityType: "INVOICE_ITEM",
+        entityId: updated.id,
+        entityKey: `${ensureInvoiceNumber(current)}:${updated.lineNumber}`,
+        oldValues: {
+          ...toInvoiceItemResponse(existing),
+          invoiceTotalAmount: version.totalAmount.toFixed(2),
+        },
+        newValues: {
+          ...toInvoiceItemResponse(updated),
+          invoiceTotalAmount: totalAmount.toFixed(2),
+        },
+        ...auditTechnicalFields(metadata),
+      });
+
+      return updated;
+    });
+
+    return toInvoiceItemResponse(item);
+  }
+
   async getSignatureContent(
     invoiceId: bigint,
     versionId: bigint,
@@ -598,15 +1568,20 @@ export class InvoiceService {
         );
       }
 
-      if (current.status !== "DRAFT") {
+      const version = assertCurrentVersion(current, versionId);
+      const preparableOriginal =
+        current.status === "DRAFT" && version.versionType === "ORIGINAL";
+      const preparableCorrection =
+        current.status === "CORRECTION_REQUIRED" &&
+        version.versionType === "CORRECTION";
+
+      if (!preparableOriginal && !preparableCorrection) {
         throw new AppError(
           409,
           "INVOICE_NOT_PREPARABLE",
           "Invoice is not preparable for signature",
         );
       }
-
-      const version = assertCurrentVersion(current, versionId);
 
       if (
         version.status !== "DRAFT" ||
@@ -643,7 +1618,7 @@ export class InvoiceService {
         data: {
           invoiceId: current.id,
           invoiceVersionId: version.id,
-          oldStatus: "DRAFT",
+          oldStatus: current.status,
           newStatus: "PENDING_SIGNATURE",
           changedByUserId: actor.userId,
           metadata: { source: "invoice.prepare_signature" },
@@ -672,7 +1647,7 @@ export class InvoiceService {
         entityId: prepared.id,
         entityKey: requireInvoiceNumber(prepared.invoiceNumber),
         oldValues: {
-          status: "DRAFT",
+          status: current.status,
           versionStatus: "DRAFT",
           contentHash: null,
         },
@@ -1396,6 +2371,185 @@ export class InvoiceService {
       });
 
       return signed;
+    });
+
+    return toInvoiceResponse(invoice);
+  }
+
+  async close(
+    invoiceId: bigint,
+    versionId: bigint,
+    actor: AuthenticatedRequestContext,
+    metadata: RequestSecurityMetadata,
+  ) {
+    const invoice = await serializableTransaction(async (tx) => {
+      const current = await invoiceRepository.findById(
+        invoiceId,
+        actor.organizationId,
+        tx,
+      );
+
+      if (!current) {
+        throw new AppError(404, "INVOICE_NOT_FOUND", "Invoice not found");
+      }
+
+      assertVersionBelongsToInvoice(current, versionId);
+      const { invoiceNumber, version, contentHash } =
+        assertInvoiceVersionReadyForClose(current, versionId);
+      const validSignature = await requireValidSignatureForClose(
+        tx,
+        current,
+        version.id,
+        contentHash,
+      );
+      const closedAt = new Date();
+      const correction =
+        version.versionType === "CORRECTION"
+          ? await tx.invoiceCorrection.findFirst({
+              where: {
+                invoiceId: current.id,
+                replacementVersionId: version.id,
+                status: "APPROVED",
+              },
+              select: invoiceCorrectionSelect,
+            })
+          : null;
+
+      if (version.versionType === "CORRECTION") {
+        if (!actor.permissions.includes("invoice.apply_correction")) {
+          throw new AppError(
+            403,
+            "PERMISSION_DENIED",
+            "Permission denied",
+          );
+        }
+
+        if (
+          correction === null ||
+          version.supersedesVersionId === null ||
+          correction.sourceVersionId !== version.supersedesVersionId
+        ) {
+          throw new AppError(
+            409,
+            "INVOICE_CORRECTION_SOURCE_INVALID",
+            "Correction replacement is not linked to an approved source",
+          );
+        }
+
+        const source = await tx.invoiceVersion.findFirst({
+          where: {
+            id: correction.sourceVersionId,
+            invoiceId: current.id,
+          },
+          select: { id: true, status: true },
+        });
+
+        if (!source || source.status !== "CLOSED") {
+          throw new AppError(
+            409,
+            "INVOICE_CORRECTION_SOURCE_INVALID",
+            "Correction source invoice version must remain closed",
+          );
+        }
+      }
+
+      await tx.invoiceVersion.update({
+        where: { id: version.id },
+        data: {
+          status: "CLOSED",
+          closedAt,
+        },
+      });
+
+      await tx.invoice.update({
+        where: { id: current.id },
+        data: {
+          status: "CLOSED",
+        },
+      });
+
+      if (correction !== null) {
+        await tx.invoiceVersion.update({
+          where: { id: correction.sourceVersionId },
+          data: {
+            status: "SUPERSEDED",
+            supersededAt: closedAt,
+          },
+        });
+
+        const applied = await tx.invoiceCorrection.update({
+          where: { id: correction.id },
+          data: {
+            status: "APPLIED",
+            resolvedByUserId: actor.userId,
+            resolvedAt: closedAt,
+          },
+          select: invoiceCorrectionSelect,
+        });
+
+        await auditService.writeWithinTransaction(tx, {
+          organizationId: actor.organizationId,
+          actorUserId: actor.userId,
+          action: "INVOICE_CORRECTION_APPLY",
+          entityType: "INVOICE_CORRECTION",
+          entityId: applied.id,
+          entityKey: invoiceNumber,
+          oldValues: toCorrectionAuditValues(correction),
+          newValues: toCorrectionAuditValues(applied),
+          ...auditTechnicalFields(metadata),
+        });
+      }
+
+      await tx.invoiceStatusHistory.create({
+        data: {
+          invoiceId: current.id,
+          invoiceVersionId: version.id,
+          oldStatus: "SIGNED",
+          newStatus: "CLOSED",
+          changedByUserId: actor.userId,
+          metadata: { source: "invoice.close" },
+        },
+      });
+
+      const closed = await invoiceRepository.findById(
+        current.id,
+        actor.organizationId,
+        tx,
+      );
+
+      if (!closed) {
+        throw new AppError(
+          500,
+          "INTERNAL_SERVER_ERROR",
+          "Invoice could not be read after closing",
+        );
+      }
+
+      await auditService.writeWithinTransaction(tx, {
+        organizationId: actor.organizationId,
+        actorUserId: actor.userId,
+        action: "INVOICE_CLOSE",
+        entityType: "INVOICE",
+        entityId: closed.id,
+        entityKey: invoiceNumber,
+        oldValues: {
+          invoiceStatus: "SIGNED",
+          versionStatus: "SIGNED",
+          contentHash,
+          totalAmount: version.totalAmount.toFixed(2),
+        },
+        newValues: {
+          invoiceStatus: "CLOSED",
+          versionStatus: "CLOSED",
+          contentHash,
+          totalAmount: version.totalAmount.toFixed(2),
+          closedAt: closedAt.toISOString(),
+          validSignatureId: validSignature.id.toString(),
+        },
+        ...auditTechnicalFields(metadata),
+      });
+
+      return closed;
     });
 
     return toInvoiceResponse(invoice);

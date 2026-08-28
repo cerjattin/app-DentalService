@@ -119,6 +119,20 @@ export const confirmInvoiceVersionSigned: RequestHandler = async (req, res) => {
   res.status(200).json(successResponse(result));
 };
 
+export const closeInvoiceVersion: RequestHandler = async (req, res) => {
+  const actor = requireAuth(req);
+  const { invoiceId, versionId } = invoiceVersionIds(req);
+
+  const result = await invoiceService.close(
+    invoiceId,
+    versionId,
+    actor,
+    securityMetadata(req, res),
+  );
+
+  res.status(200).json(successResponse(result));
+};
+
 export const voidInvoiceVersionSignature: RequestHandler = async (req, res) => {
   const actor = requireAuth(req);
   const { invoiceId, versionId } = invoiceVersionIds(req);

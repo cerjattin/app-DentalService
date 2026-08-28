@@ -22,6 +22,7 @@ let organizationId: bigint;
 let otherOrganizationId: bigint;
 let payerId: bigint;
 let adminUserId: bigint;
+let receptionUserId: bigint;
 let adminToken: string;
 let receptionToken: string;
 let providerToken: string;
@@ -93,12 +94,31 @@ async function cleanupInvoiceFixture() {
   await prisma.document.deleteMany({
     where: { storageUri: { startsWith: "test://invoice-signature/" } },
   });
+  await prisma.invoiceCorrection.deleteMany({
+    where: { invoiceId: { in: invoiceIds } },
+  });
   await prisma.invoiceItem.deleteMany({
-    where: { invoiceVersionId: { in: versionIds } },
+    where: {
+      invoiceVersionId: { in: versionIds },
+      sourceInvoiceItemId: { not: null },
+    },
+  });
+  await prisma.invoiceItem.deleteMany({
+    where: {
+      invoiceVersionId: { in: versionIds },
+      sourceInvoiceItemId: null,
+    },
   });
   await prisma.invoice.updateMany({
     where: { id: { in: invoiceIds } },
     data: { currentVersionId: null },
+  });
+  await prisma.invoiceVersion.updateMany({
+    where: {
+      id: { in: versionIds },
+      supersedesVersionId: { in: versionIds },
+    },
+    data: { supersedesVersionId: null },
   });
   await prisma.invoiceVersion.deleteMany({
     where: { id: { in: versionIds } },
@@ -450,6 +470,117 @@ async function createSignatureDocument(input: {
   });
 }
 
+function closeInvoice(invoiceId: string, versionId: string, token = receptionToken) {
+  return request(app)
+    .post(`/api/v1/invoices/${invoiceId}/versions/${versionId}/close`)
+    .set("Authorization", `Bearer ${token}`)
+    .send({});
+}
+
+async function createSignedInvoiceFixture(suffix: string) {
+  const fixture = await createInvoiceFixture(suffix, 1);
+  const prepared = await prepareInvoice(fixture.invoiceId, fixture.versionId)
+    .expect(200);
+  const contentHash = prepared.body.data.currentVersion.contentHash as string;
+  const lockedAt = prepared.body.data.currentVersion.lockedAt as string;
+  const document = await createSignatureDocument({ suffix });
+  const signature = await request(app)
+    .post(
+      `/api/v1/invoices/${fixture.invoiceId}/versions/${fixture.versionId}/signatures`,
+    )
+    .set("Authorization", `Bearer ${providerToken}`)
+    .send({
+      signatureDocumentId: document.id.toString(),
+      signatureType: "PATIENT",
+      captureMethod: "SIGNATURE_PAD",
+      expectedContentHash: contentHash,
+    })
+    .expect(201);
+  const signed = await request(app)
+    .post(`/api/v1/invoices/${fixture.invoiceId}/versions/${fixture.versionId}/sign`)
+    .set("Authorization", `Bearer ${providerToken}`)
+    .send({})
+    .expect(200);
+
+  return {
+    ...fixture,
+    contentHash,
+    lockedAt,
+    signedAt: signed.body.data.currentVersion.signedAt as string,
+    documentId: document.id,
+    signatureId: BigInt(signature.body.data.id as string),
+  };
+}
+
+async function createClosedInvoiceFixture(suffix: string) {
+  const fixture = await createSignedInvoiceFixture(suffix);
+  await closeInvoice(fixture.invoiceId, fixture.versionId).expect(200);
+
+  return fixture;
+}
+
+function requestCorrection(invoiceId: string, token = receptionToken) {
+  return request(app)
+    .post(`/api/v1/invoices/${invoiceId}/corrections`)
+    .set("Authorization", `Bearer ${token}`)
+    .send({
+      reasonCode: "TEST-CORRECTION",
+      reasonText: "TEST invoice correction request",
+      metadata: { fixture: true },
+    });
+}
+
+function approveCorrection(
+  invoiceId: string,
+  correctionId: string,
+  token = adminToken,
+) {
+  return request(app)
+    .post(`/api/v1/invoices/${invoiceId}/corrections/${correctionId}/approve`)
+    .set("Authorization", `Bearer ${token}`)
+    .send({});
+}
+
+function createCorrectionReplacement(
+  invoiceId: string,
+  correctionId: string,
+  token = adminToken,
+) {
+  return request(app)
+    .post(
+      `/api/v1/invoices/${invoiceId}/corrections/${correctionId}/replacement`,
+    )
+    .set("Authorization", `Bearer ${token}`)
+    .send({});
+}
+
+async function signInvoiceVersion(input: {
+  invoiceId: string;
+  versionId: string;
+  contentHash: string;
+  suffix: string;
+}) {
+  const document = await createSignatureDocument({ suffix: input.suffix });
+  await request(app)
+    .post(
+      `/api/v1/invoices/${input.invoiceId}/versions/${input.versionId}/signatures`,
+    )
+    .set("Authorization", `Bearer ${providerToken}`)
+    .send({
+      signatureDocumentId: document.id.toString(),
+      signatureType: "PATIENT",
+      captureMethod: "SIGNATURE_PAD",
+      expectedContentHash: input.contentHash,
+    })
+    .expect(201);
+
+  return request(app)
+    .post(`/api/v1/invoices/${input.invoiceId}/versions/${input.versionId}/sign`)
+    .set("Authorization", `Bearer ${providerToken}`)
+    .send({})
+    .expect(200);
+}
+
 async function loadCanonicalSource(invoiceId: string) {
   const invoice = await prisma.invoice.findUniqueOrThrow({
     where: { id: BigInt(invoiceId) },
@@ -539,7 +670,7 @@ describe("Invoice API", () => {
     ).id;
 
     adminUserId = await createUser(ADMIN_EMAIL, "ADMIN");
-    const receptionUserId = await createUser(RECEPTION_EMAIL, "RECEPTION");
+    receptionUserId = await createUser(RECEPTION_EMAIL, "RECEPTION");
     const providerUserId = await createUser(PROVIDER_EMAIL, "PROVIDER");
     const noRoleUserId = await createUser(NO_ROLE_EMAIL);
 
@@ -1680,6 +1811,599 @@ describe("Invoice API", () => {
     expect(signedHistoryCount).toBe(1);
   });
 
+  it("closes a signed invoice without changing locked signature content", async () => {
+    const fixture = await createSignedInvoiceFixture("CLOSE-OK");
+
+    await closeInvoice(fixture.invoiceId, fixture.versionId, adminToken)
+      .expect(200)
+      .expect((response) => {
+        expect(response.body.data.status).toBe("CLOSED");
+        expect(response.body.data.currentVersion.status).toBe("CLOSED");
+        expect(response.body.data.currentVersion.closedAt).not.toBeNull();
+        expect(response.body.data.currentVersion.contentHash).toBe(
+          fixture.contentHash,
+        );
+        expect(response.body.data.currentVersion.lockedAt).toBe(
+          fixture.lockedAt,
+        );
+        expect(response.body.data.currentVersion.signedAt).toBe(
+          fixture.signedAt,
+        );
+      });
+
+    await request(app)
+      .get(
+        `/api/v1/invoices/${fixture.invoiceId}/versions/${fixture.versionId}/signature-content`,
+      )
+      .set("Authorization", `Bearer ${providerToken}`)
+      .expect(200)
+      .expect((response) => {
+        expect(response.body.data.contentHash).toBe(fixture.contentHash);
+      });
+
+    const history = await prisma.invoiceStatusHistory.findFirst({
+      where: {
+        invoiceId: BigInt(fixture.invoiceId),
+        oldStatus: "SIGNED",
+        newStatus: "CLOSED",
+      },
+    });
+    expect(history?.invoiceVersionId).toBe(BigInt(fixture.versionId));
+
+    const audit = await prisma.auditLog.findFirst({
+      where: {
+        action: "INVOICE_CLOSE",
+        entityId: BigInt(fixture.invoiceId),
+      },
+    });
+    expect(audit?.oldValues).not.toBeNull();
+    expect(audit?.newValues).not.toBeNull();
+  });
+
+  it("enforces invoice close RBAC and concurrency", async () => {
+    const rbac = await createSignedInvoiceFixture("CLOSE-RBAC");
+
+    await request(app)
+      .post(`/api/v1/invoices/${rbac.invoiceId}/versions/${rbac.versionId}/close`)
+      .send({})
+      .expect(401);
+
+    await closeInvoice(rbac.invoiceId, rbac.versionId, providerToken)
+      .expect(403);
+    await closeInvoice(rbac.invoiceId, rbac.versionId, receptionToken)
+      .expect(200);
+    await closeInvoice(rbac.invoiceId, rbac.versionId, receptionToken)
+      .expect(409)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("INVOICE_ALREADY_CLOSED");
+      });
+
+    const concurrent = await createSignedInvoiceFixture("CLOSE-CONCURRENT");
+    const [firstClose, secondClose] = await Promise.all([
+      closeInvoice(concurrent.invoiceId, concurrent.versionId, receptionToken),
+      closeInvoice(concurrent.invoiceId, concurrent.versionId, receptionToken),
+    ]);
+    expect([200, 409]).toContain(firstClose.status);
+    expect([200, 409]).toContain(secondClose.status);
+    expect([firstClose.status, secondClose.status].filter((status) => status === 200))
+      .toHaveLength(1);
+    expect(
+      [firstClose, secondClose]
+        .filter((response) => response.status === 409)
+        .every((response) => response.body.error.code === "INVOICE_ALREADY_CLOSED"),
+    ).toBe(true);
+
+    const historyCount = await prisma.invoiceStatusHistory.count({
+      where: {
+        invoiceId: BigInt(concurrent.invoiceId),
+        oldStatus: "SIGNED",
+        newStatus: "CLOSED",
+      },
+    });
+    expect(historyCount).toBe(1);
+
+    const auditCount = await prisma.auditLog.count({
+      where: {
+        action: "INVOICE_CLOSE",
+        entityId: BigInt(concurrent.invoiceId),
+      },
+    });
+    expect(auditCount).toBe(1);
+  });
+
+  it("rejects close when signed invoice content or totals were corrupted", async () => {
+    const contentCorrupted = await createSignedInvoiceFixture("CLOSE-CONTENT");
+    await prisma.invoiceItem.updateMany({
+      where: { invoiceVersionId: BigInt(contentCorrupted.versionId) },
+      data: { additionalNote: "TEST altered after signature" },
+    });
+    await closeInvoice(contentCorrupted.invoiceId, contentCorrupted.versionId)
+      .expect(409)
+      .expect((response) => {
+        expect(response.body.error.code).toBe(
+          "INVOICE_CONTENT_INTEGRITY_MISMATCH",
+        );
+      });
+
+    const itemCorrupted = await createSignedInvoiceFixture("CLOSE-ITEM");
+    await prisma.invoiceItem.updateMany({
+      where: { invoiceVersionId: BigInt(itemCorrupted.versionId) },
+      data: { amount: "101.00" },
+    });
+    await closeInvoice(itemCorrupted.invoiceId, itemCorrupted.versionId)
+      .expect(409)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("INVOICE_ITEM_AMOUNT_MISMATCH");
+      });
+
+    const totalCorrupted = await createSignedInvoiceFixture("CLOSE-TOTAL");
+    await prisma.invoiceVersion.update({
+      where: { id: BigInt(totalCorrupted.versionId) },
+      data: { totalAmount: "999.99" },
+    });
+    await closeInvoice(totalCorrupted.invoiceId, totalCorrupted.versionId)
+      .expect(409)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("INVOICE_TOTAL_MISMATCH");
+      });
+
+    const remaining = await prisma.invoice.findUniqueOrThrow({
+      where: { id: BigInt(totalCorrupted.invoiceId) },
+      select: {
+        status: true,
+        currentVersion: { select: { status: true, closedAt: true } },
+      },
+    });
+    expect(remaining.status).toBe("SIGNED");
+    expect(remaining.currentVersion?.status).toBe("SIGNED");
+    expect(remaining.currentVersion?.closedAt).toBeNull();
+
+    const rollbackHistoryCount = await prisma.invoiceStatusHistory.count({
+      where: {
+        invoiceId: BigInt(totalCorrupted.invoiceId),
+        newStatus: "CLOSED",
+      },
+    });
+    expect(rollbackHistoryCount).toBe(0);
+  });
+
+  it("rejects close when signature state or evidence is invalid", async () => {
+    const missingSignedAt = await createSignedInvoiceFixture("CLOSE-NO-SIGNEDAT");
+    await prisma.invoiceVersion.update({
+      where: { id: BigInt(missingSignedAt.versionId) },
+      data: { signedAt: null },
+    });
+    await closeInvoice(missingSignedAt.invoiceId, missingSignedAt.versionId)
+      .expect(409)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("INVOICE_SIGNATURE_STATE_INVALID");
+      });
+
+    const voidOnly = await createSignedInvoiceFixture("CLOSE-VOID-SIG");
+    await prisma.signature.update({
+      where: { id: voidOnly.signatureId },
+      data: {
+        status: "VOID",
+        voidedAt: new Date(),
+        voidedByUserId: adminUserId,
+        voidReason: "TEST invalidated after sign",
+      },
+    });
+    await closeInvoice(voidOnly.invoiceId, voidOnly.versionId)
+      .expect(409)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("VALID_SIGNATURE_REQUIRED");
+      });
+
+    const wrongContentHash = await createSignedInvoiceFixture("CLOSE-BAD-HASH");
+    await prisma.signature.update({
+      where: { id: wrongContentHash.signatureId },
+      data: { signedContentHash: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
+    });
+    await closeInvoice(wrongContentHash.invoiceId, wrongContentHash.versionId)
+      .expect(409)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("SIGNATURE_CONTENT_HASH_MISMATCH");
+      });
+
+    const wrongDocumentHash = await createSignedInvoiceFixture("CLOSE-BAD-DOC");
+    await prisma.document.update({
+      where: { id: wrongDocumentHash.documentId },
+      data: { sha256: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+    });
+    await closeInvoice(wrongDocumentHash.invoiceId, wrongDocumentHash.versionId)
+      .expect(409)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("SIGNATURE_EVIDENCE_INVALID");
+      });
+
+    const wrongDocumentOrg = await createSignedInvoiceFixture("CLOSE-BAD-ORG");
+    await prisma.document.update({
+      where: { id: wrongDocumentOrg.documentId },
+      data: { organizationId: otherOrganizationId },
+    });
+    await closeInvoice(wrongDocumentOrg.invoiceId, wrongDocumentOrg.versionId)
+      .expect(409)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("SIGNATURE_EVIDENCE_INVALID");
+      });
+  });
+
+  it("rejects close for non-current or non-signed versions", async () => {
+    const draft = await createInvoiceFixture("CLOSE-DRAFT", 1);
+    await closeInvoice(draft.invoiceId, draft.versionId)
+      .expect(409)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("INVOICE_NOT_CLOSABLE");
+      });
+
+    const prepared = await createInvoiceFixture("CLOSE-PREPARED", 1);
+    await prepareInvoice(prepared.invoiceId, prepared.versionId).expect(200);
+    await closeInvoice(prepared.invoiceId, prepared.versionId)
+      .expect(409)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("INVOICE_NOT_CLOSABLE");
+      });
+
+    const signed = await createSignedInvoiceFixture("CLOSE-WRONG-VERSION");
+    await closeInvoice(signed.invoiceId, "999999999999")
+      .expect(404)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("INVOICE_VERSION_NOT_FOUND");
+      });
+  });
+
+  it("manages correction request, reject, cancel, list, detail, and RBAC", async () => {
+    const closed = await createClosedInvoiceFixture("CORR-REQUEST");
+
+    await request(app)
+      .get(`/api/v1/invoices/${closed.invoiceId}/corrections`)
+      .expect(401)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("AUTHENTICATION_REQUIRED");
+      });
+
+    await request(app)
+      .get(`/api/v1/invoices/${closed.invoiceId}/corrections`)
+      .set("Authorization", `Bearer ${noRoleToken}`)
+      .expect(403)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("PERMISSION_DENIED");
+      });
+
+    const requested = await requestCorrection(closed.invoiceId)
+      .expect(201)
+      .expect((response) => {
+        expect(response.body.data).toMatchObject({
+          invoiceId: closed.invoiceId,
+          sourceVersionId: closed.versionId,
+          replacementVersionId: null,
+          reasonCode: "TEST-CORRECTION",
+          reasonText: "TEST invoice correction request",
+          status: "REQUESTED",
+          requestedByUserId: receptionUserId.toString(),
+        });
+        expect(typeof response.body.data.id).toBe("string");
+      });
+    const correctionId = requested.body.data.id as string;
+
+    await requestCorrection(closed.invoiceId)
+      .expect(409)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("INVOICE_CORRECTION_ALREADY_ACTIVE");
+      });
+
+    await request(app)
+      .post(`/api/v1/invoices/${closed.invoiceId}/corrections`)
+      .set("Authorization", `Bearer ${providerToken}`)
+      .send({ reasonCode: "TEST", reasonText: "TEST denied" })
+      .expect(403);
+
+    await request(app)
+      .post(`/api/v1/invoices/${closed.invoiceId}/corrections/${correctionId}/approve`)
+      .set("Authorization", `Bearer ${receptionToken}`)
+      .send({})
+      .expect(403);
+
+    await request(app)
+      .get(`/api/v1/invoices/${closed.invoiceId}/corrections`)
+      .set("Authorization", `Bearer ${providerToken}`)
+      .expect(200)
+      .expect((response) => {
+        expect(response.body.data).toHaveLength(1);
+        expect(response.body.data[0].id).toBe(correctionId);
+      });
+
+    await request(app)
+      .get(`/api/v1/invoices/${closed.invoiceId}/corrections/${correctionId}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(200)
+      .expect((response) => {
+        expect(response.body.data.sourceVersion).toMatchObject({
+          id: closed.versionId,
+          status: "CLOSED",
+        });
+      });
+
+    await request(app)
+      .post(`/api/v1/invoices/${closed.invoiceId}/corrections/${correctionId}/reject`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ reason: "TEST rejected" })
+      .expect(200)
+      .expect((response) => {
+        expect(response.body.data.status).toBe("REJECTED");
+        expect(response.body.data.resolvedByUserId).toBe(adminUserId.toString());
+      });
+
+    await request(app)
+      .get(`/api/v1/invoices/${closed.invoiceId}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(200)
+      .expect((response) => {
+        expect(response.body.data.status).toBe("CLOSED");
+        expect(response.body.data.currentVersion.status).toBe("CLOSED");
+      });
+
+    const cancelRequested = await requestCorrection(closed.invoiceId).expect(201);
+    await request(app)
+      .post(
+        `/api/v1/invoices/${closed.invoiceId}/corrections/${cancelRequested.body.data.id}/cancel`,
+      )
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ reason: "TEST cancelled" })
+      .expect(200)
+      .expect((response) => {
+        expect(response.body.data.status).toBe("CANCELLED");
+      });
+
+    const history = await prisma.invoiceStatusHistory.findMany({
+      where: { invoiceId: BigInt(closed.invoiceId) },
+      select: { oldStatus: true, newStatus: true },
+    });
+    expect(history).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          oldStatus: "CLOSED",
+          newStatus: "CORRECTION_REQUIRED",
+        }),
+        expect.objectContaining({
+          oldStatus: "CORRECTION_REQUIRED",
+          newStatus: "CLOSED",
+        }),
+      ]),
+    );
+  });
+
+  it("creates, edits, signs, closes, and applies a correction replacement", async () => {
+    const closed = await createClosedInvoiceFixture("CORR-FLOW");
+    const requested = await requestCorrection(closed.invoiceId).expect(201);
+    const correctionId = requested.body.data.id as string;
+    await approveCorrection(closed.invoiceId, correctionId).expect(200);
+
+    const replacementResponse = await createCorrectionReplacement(
+      closed.invoiceId,
+      correctionId,
+    )
+      .expect(201)
+      .expect((response) => {
+        expect(response.body.data.status).toBe("APPROVED");
+        expect(response.body.data.replacementVersionId).not.toBeNull();
+        expect(response.body.data.sourceVersion.status).toBe("CLOSED");
+      });
+    const replacementVersionId = replacementResponse.body.data
+      .replacementVersionId as string;
+
+    const versions = await request(app)
+      .get(`/api/v1/invoices/${closed.invoiceId}/versions`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(200);
+    expect(versions.body.data).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: closed.versionId,
+          versionNumber: 1,
+          versionType: "ORIGINAL",
+          status: "CLOSED",
+        }),
+        expect.objectContaining({
+          id: replacementVersionId,
+          versionNumber: 2,
+          versionType: "CORRECTION",
+          status: "DRAFT",
+        }),
+      ]),
+    );
+
+    const sourceItems = await request(app)
+      .get(`/api/v1/invoices/${closed.invoiceId}/versions/${closed.versionId}/items`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(200);
+    const replacementItems = await request(app)
+      .get(
+        `/api/v1/invoices/${closed.invoiceId}/versions/${replacementVersionId}/items`,
+      )
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(200);
+    const sourceItem = sourceItems.body.data[0];
+    const replacementItem = replacementItems.body.data[0];
+    expect(replacementItem.sourceInvoiceItemId).toBe(sourceItem.id);
+
+    await request(app)
+      .patch(
+        `/api/v1/invoices/${closed.invoiceId}/versions/${closed.versionId}/items/${sourceItem.id}`,
+      )
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ quantity: "2.00" })
+      .expect(409)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("INVOICE_VERSION_NOT_CURRENT");
+      });
+
+    await request(app)
+      .patch(
+        `/api/v1/invoices/${closed.invoiceId}/versions/${replacementVersionId}/items/${replacementItem.id}`,
+      )
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        quantity: "2.00",
+        unitTariffSnapshot: "125.25",
+        additionalNote: "TEST corrected amount",
+      })
+      .expect(200)
+      .expect((response) => {
+        expect(response.body.data.quantity).toBe("2.00");
+        expect(response.body.data.unitTariffSnapshot).toBe("125.25");
+        expect(response.body.data.amount).toBe("250.50");
+      });
+
+    const sourceAfterPatch = await prisma.invoiceItem.findUniqueOrThrow({
+      where: { id: BigInt(sourceItem.id as string) },
+      select: { quantity: true, amount: true },
+    });
+    expect(sourceAfterPatch.quantity.toFixed(2)).toBe("1.00");
+    expect(sourceAfterPatch.amount.toFixed(2)).toBe("100.00");
+
+    await request(app)
+      .post(`/api/v1/invoices/${closed.invoiceId}/versions/${replacementVersionId}/sign`)
+      .set("Authorization", `Bearer ${providerToken}`)
+      .send({})
+      .expect(409)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("INVOICE_VERSION_NOT_SIGNATURE_READY");
+      });
+
+    const prepared = await prepareInvoice(
+      closed.invoiceId,
+      replacementVersionId,
+      providerToken,
+    )
+      .expect(200)
+      .expect((response) => {
+        expect(response.body.data.status).toBe("PENDING_SIGNATURE");
+        expect(response.body.data.currentVersion.id).toBe(replacementVersionId);
+        expect(response.body.data.currentVersion.contentHash).not.toBe(
+          closed.contentHash,
+        );
+      });
+
+    await closeInvoice(closed.invoiceId, replacementVersionId)
+      .expect(409)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("INVOICE_NOT_CLOSABLE");
+      });
+
+    await signInvoiceVersion({
+      invoiceId: closed.invoiceId,
+      versionId: replacementVersionId,
+      contentHash: prepared.body.data.currentVersion.contentHash as string,
+      suffix: "CORR-FLOW-REPLACEMENT",
+    });
+
+    const sourceBeforeClose = await prisma.invoiceVersion.findUniqueOrThrow({
+      where: { id: BigInt(closed.versionId) },
+      select: { status: true, supersededAt: true },
+    });
+    expect(sourceBeforeClose.status).toBe("CLOSED");
+    expect(sourceBeforeClose.supersededAt).toBeNull();
+
+    await closeInvoice(closed.invoiceId, replacementVersionId)
+      .expect(403)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("PERMISSION_DENIED");
+      });
+
+    await closeInvoice(closed.invoiceId, replacementVersionId, adminToken)
+      .expect(200)
+      .expect((response) => {
+        expect(response.body.data.status).toBe("CLOSED");
+        expect(response.body.data.currentVersion.id).toBe(replacementVersionId);
+        expect(response.body.data.currentVersion.status).toBe("CLOSED");
+        expect(response.body.data.currentVersion.totalAmount).toBe("250.50");
+      });
+
+    const sourceAfterClose = await prisma.invoiceVersion.findUniqueOrThrow({
+      where: { id: BigInt(closed.versionId) },
+      select: { status: true, supersededAt: true },
+    });
+    expect(sourceAfterClose.status).toBe("SUPERSEDED");
+    expect(sourceAfterClose.supersededAt).not.toBeNull();
+
+    const applied = await prisma.invoiceCorrection.findUniqueOrThrow({
+      where: { id: BigInt(correctionId) },
+      select: {
+        status: true,
+        replacementVersionId: true,
+        resolvedByUserId: true,
+        resolvedAt: true,
+      },
+    });
+    expect(applied).toMatchObject({
+      status: "APPLIED",
+      replacementVersionId: BigInt(replacementVersionId),
+      resolvedByUserId: adminUserId,
+    });
+    expect(applied.resolvedAt).not.toBeNull();
+
+    const logs = await prisma.auditLog.findMany({
+      where: {
+        entityType: { in: ["INVOICE_CORRECTION", "INVOICE_ITEM"] },
+        entityKey: closed.invoiceNumber,
+      },
+      select: { action: true, oldValues: true, newValues: true },
+    });
+    expect(logs.map((log) => log.action)).toEqual(
+      expect.arrayContaining([
+        "INVOICE_CORRECTION_REQUEST",
+        "INVOICE_CORRECTION_APPROVE",
+        "INVOICE_CORRECTION_REPLACEMENT_CREATE",
+        "INVOICE_CORRECTION_APPLY",
+      ]),
+    );
+    expect(logs.some((log) => log.oldValues !== null)).toBe(true);
+    expect(logs.some((log) => log.newValues !== null)).toBe(true);
+
+    const itemLog = await prisma.auditLog.findFirst({
+      where: {
+        action: "INVOICE_CORRECTION_ITEM_UPDATE",
+        entityId: BigInt(replacementItem.id as string),
+      },
+      select: { oldValues: true, newValues: true, correlationId: true },
+    });
+    expect(itemLog?.oldValues).not.toBeNull();
+    expect(itemLog?.newValues).not.toBeNull();
+    expect(itemLog?.correlationId).not.toBeNull();
+  });
+
+  it("prevents concurrent duplicate correction replacements", async () => {
+    const closed = await createClosedInvoiceFixture("CORR-CONCURRENT");
+    const requested = await requestCorrection(closed.invoiceId).expect(201);
+    const correctionId = requested.body.data.id as string;
+    await approveCorrection(closed.invoiceId, correctionId).expect(200);
+
+    const [first, second] = await Promise.all([
+      createCorrectionReplacement(closed.invoiceId, correctionId),
+      createCorrectionReplacement(closed.invoiceId, correctionId),
+    ]);
+
+    expect([201, 409]).toContain(first.status);
+    expect([201, 409]).toContain(second.status);
+    expect([first.status, second.status].filter((status) => status === 201))
+      .toHaveLength(1);
+
+    const failure = [first, second].find((response) => response.status === 409);
+    expect(failure?.body.error.code).toBe(
+      "INVOICE_CORRECTION_REPLACEMENT_ALREADY_EXISTS",
+    );
+
+    const count = await prisma.invoiceVersion.count({
+      where: {
+        invoiceId: BigInt(closed.invoiceId),
+        versionType: "CORRECTION",
+      },
+    });
+    expect(count).toBe(1);
+  });
+
   it("writes invoice audit logs", async () => {
     const logs = await prisma.auditLog.findMany({
       where: {
@@ -1702,6 +2426,7 @@ describe("Invoice API", () => {
         "INVOICE_CANCEL",
         "INVOICE_PREPARE_SIGNATURE",
         "INVOICE_SIGN",
+        "INVOICE_CLOSE",
       ]),
     );
     expect(logs.some((log) => log.newValues !== null)).toBe(true);

@@ -144,6 +144,45 @@ export const invoiceStatusHistorySelect = {
   metadata: true,
 } satisfies Prisma.InvoiceStatusHistorySelect;
 
+export const invoiceCorrectionSelect = {
+  id: true,
+  invoiceId: true,
+  sourceVersionId: true,
+  replacementVersionId: true,
+  reasonCode: true,
+  reasonText: true,
+  status: true,
+  requestedByUserId: true,
+  requestedAt: true,
+  approvedByUserId: true,
+  approvedAt: true,
+  resolvedByUserId: true,
+  resolvedAt: true,
+  metadata: true,
+  createdAt: true,
+  updatedAt: true,
+  sourceVersion: {
+    select: {
+      id: true,
+      versionNumber: true,
+      versionType: true,
+      status: true,
+      totalAmount: true,
+      createdAt: true,
+    },
+  },
+  replacementVersion: {
+    select: {
+      id: true,
+      versionNumber: true,
+      versionType: true,
+      status: true,
+      totalAmount: true,
+      createdAt: true,
+    },
+  },
+} satisfies Prisma.InvoiceCorrectionSelect;
+
 export type InvoiceRecord = Prisma.InvoiceGetPayload<{
   select: typeof invoiceSelect;
 }>;
@@ -157,6 +196,9 @@ export type InvoiceStatusHistoryRecord =
   Prisma.InvoiceStatusHistoryGetPayload<{
     select: typeof invoiceStatusHistorySelect;
   }>;
+export type InvoiceCorrectionRecord = Prisma.InvoiceCorrectionGetPayload<{
+  select: typeof invoiceCorrectionSelect;
+}>;
 
 export class InvoiceRepository {
   findById(

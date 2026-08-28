@@ -5,6 +5,7 @@ import { requirePermission } from "../../shared/middleware/permission.middleware
 
 import {
   captureInvoiceVersionSignature,
+  closeInvoiceVersion,
   confirmInvoiceVersionSigned,
   getInvoiceSignatureContent,
   listInvoiceVersionSignatures,
@@ -41,6 +42,11 @@ invoiceSignatureRouter.post(
   "/sign",
   requirePermission("invoice.sign"),
   confirmInvoiceVersionSigned,
+);
+invoiceSignatureRouter.post(
+  "/close",
+  requirePermission("invoice.close"),
+  closeInvoiceVersion,
 );
 invoiceSignatureRouter.post(
   "/signatures/:signatureId/void",
