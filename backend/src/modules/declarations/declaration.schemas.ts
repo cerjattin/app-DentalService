@@ -57,11 +57,20 @@ export const createDeclarationExportSchema = z.object({
     .pipe(z.enum(["CSV", "TXT", "JSON", "XML", "XLSX", "API_PAYLOAD"])),
 });
 
+export const declarationSubmissionResultSchema = z.object({
+  status: z.enum(["ACCEPTED", "PARTIALLY_REJECTED", "REJECTED"]),
+  externalReference: z.string().trim().max(120).nullable().optional(),
+  responseMetadata: z.record(z.string(), z.unknown()).nullable().optional(),
+});
+
 export type ListDeclarationsQuery = z.infer<typeof listDeclarationsQuerySchema>;
 export type CreateDeclarationInput = z.infer<typeof createDeclarationSchema>;
 export type AddDeclarationItemInput = z.infer<typeof addDeclarationItemSchema>;
 export type CreateDeclarationExportInput = z.infer<
   typeof createDeclarationExportSchema
+>;
+export type DeclarationSubmissionResultInput = z.infer<
+  typeof declarationSubmissionResultSchema
 >;
 
 export { booleanQuery };

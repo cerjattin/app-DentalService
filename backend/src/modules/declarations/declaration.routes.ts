@@ -8,10 +8,14 @@ import {
   createDeclaration,
   exportDeclaration,
   getDeclaration,
+  getDeclarationSubmission,
   listDeclarationExports,
   listDeclarationItems,
+  listDeclarationSubmissions,
   listDeclarations,
   markDeclarationReady,
+  recordDeclarationSubmissionResult,
+  submitDeclaration,
 } from "./declaration.controller.js";
 
 export const declarationRouter = Router();
@@ -58,6 +62,30 @@ declarationRouter.post(
   "/:id/exports",
   requirePermission("declaration.export"),
   exportDeclaration,
+);
+
+declarationRouter.get(
+  "/:id/submissions",
+  requirePermission("declaration.read"),
+  listDeclarationSubmissions,
+);
+
+declarationRouter.get(
+  "/:id/submissions/:submissionId",
+  requirePermission("declaration.read"),
+  getDeclarationSubmission,
+);
+
+declarationRouter.post(
+  "/:id/submissions/:submissionId/result",
+  requirePermission("declaration.submit"),
+  recordDeclarationSubmissionResult,
+);
+
+declarationRouter.post(
+  "/:id/submit",
+  requirePermission("declaration.submit"),
+  submitDeclaration,
 );
 
 declarationRouter.get(

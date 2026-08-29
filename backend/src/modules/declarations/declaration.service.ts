@@ -18,21 +18,26 @@ import type {
   AddDeclarationItemInput,
   CreateDeclarationExportInput,
   CreateDeclarationInput,
+  DeclarationSubmissionResultInput,
   ListDeclarationsQuery,
 } from "./declaration.schemas.js";
+import type { DeclarationSubmissionAdapter } from "./declaration-submission.adapter.js";
 import {
   declarationItemSelect,
   declarationRepository,
   declarationBatchSelect,
   declarationExportSelect,
+  declarationSubmissionSelect,
   type DeclarationBatchRecord,
   type DeclarationItemRecord,
+  type DeclarationSubmissionRecord,
   type InvoiceItemForDeclarationRecord,
 } from "./declaration.repository.js";
 import {
   toDeclarationBatchResponse,
   toDeclarationExportResponse,
   toDeclarationItemResponse,
+  toDeclarationSubmissionResponse,
 } from "./declaration.types.js";
 import { renderCsvRows } from "./export/csv.adapter.js";
 import {
@@ -126,6 +131,69 @@ function mapDuplicateItemError(error: unknown): never {
   throw error;
 }
 
+function mapSubmissionError(error: unknown): never {
+  if (error instanceof AppError) {
+    throw error;
+  }
+
+  if (
+    error instanceof Prisma.PrismaClientKnownRequestError &&
+    error.code === "P2002"
+  ) {
+    throw new AppError(
+      409,
+      "DECLARATION_ALREADY_SUBMITTED",
+      "Declaration is already submitted",
+    );
+  }
+
+  throw new AppError(
+    502,
+    "DECLARATION_SUBMISSION_FAILED",
+    "Declaration submission transport failed",
+  );
+}
+
+function toInputJsonProperty(value: unknown): Prisma.InputJsonValue | null {
+  if (value === null) {
+    return null;
+  }
+
+  if (
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean"
+  ) {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => toInputJsonProperty(item));
+  }
+
+  if (typeof value === "object" && value !== null) {
+    return toInputJsonObject(value as Record<string, unknown>);
+  }
+
+  return String(value);
+}
+
+function toInputJsonObject(value: Record<string, unknown>) {
+  const result: Record<string, Prisma.InputJsonValue | null> = {};
+
+  for (const [key, entry] of Object.entries(value)) {
+    result[key] = toInputJsonProperty(entry);
+  }
+
+  return result;
+}
+
+function jsonOrDbNull(value: Record<string, unknown> | undefined | null) {
+  return value === undefined || value === null
+    ? Prisma.JsonNull
+    : toInputJsonObject(value);
+}
+
 function declarationAuditValues(row: DeclarationBatchRecord) {
   return {
     payerId: row.payerId.toString(),
@@ -135,6 +203,20 @@ function declarationAuditValues(row: DeclarationBatchRecord) {
     periodEnd: row.periodEnd?.toISOString().slice(0, 10) ?? null,
     declarantIdSnapshot: row.declarantIdSnapshot,
     notes: row.notes,
+  };
+}
+
+function declarationSubmissionAuditValues(row: DeclarationSubmissionRecord) {
+  return {
+    declarationBatchId: row.declarationBatchId.toString(),
+    declarationExportId: row.declarationExportId?.toString() ?? null,
+    attemptNumber: row.attemptNumber,
+    channel: row.channel,
+    status: row.status,
+    externalReference: row.externalReference,
+    submittedByUserId: row.submittedByUserId.toString(),
+    submittedAt: row.submittedAt.toISOString(),
+    respondedAt: row.respondedAt?.toISOString() ?? null,
   };
 }
 
@@ -202,6 +284,71 @@ function assertReadyForExport(batch: { status: string }) {
   }
 }
 
+function assertSubmittable(batch: DeclarationBatchRecord) {
+  if (batch.status === "SUBMITTED") {
+    throw new AppError(
+      409,
+      "DECLARATION_ALREADY_SUBMITTED",
+      "Declaration is already submitted",
+    );
+  }
+
+  if (batch.status !== "EXPORTED") {
+    throw new AppError(
+      409,
+      "DECLARATION_NOT_SUBMITTABLE",
+      "Declaration must be EXPORTED before submission",
+    );
+  }
+
+  if (batch.items.length === 0) {
+    throw new AppError(
+      409,
+      "DECLARATION_EMPTY",
+      "Declaration must contain at least one item",
+    );
+  }
+
+  if (batch.exports.length === 0) {
+    throw new AppError(
+      404,
+      "DECLARATION_EXPORT_NOT_FOUND",
+      "Declaration export not found",
+    );
+  }
+}
+
+async function assertExportDocumentIntegrity(
+  declarationExport: DeclarationBatchRecord["exports"][number],
+  organizationId: bigint,
+) {
+  if (
+    declarationExport.document.organizationId !== organizationId ||
+    declarationExport.document.documentType !== "DECLARATION_EXPORT"
+  ) {
+    throw new AppError(
+      409,
+      "DECLARATION_EXPORT_INVALID",
+      "Declaration export document does not match the declaration",
+    );
+  }
+
+  const documentBytes = await documentStorage.read(
+    declarationExport.document.storageUri,
+  );
+  const actualHash = sha256Hex(documentBytes);
+
+  if (actualHash !== declarationExport.document.sha256) {
+    throw new AppError(
+      409,
+      "DECLARATION_EXPORT_INVALID",
+      "Declaration export document integrity check failed",
+    );
+  }
+
+  return documentBytes;
+}
+
 function assertInvoiceItemEligible(
   batch: DeclarationBatchRecord,
   invoiceItem: InvoiceItemForDeclarationRecord | null,
@@ -257,6 +404,12 @@ function snapshotDeclarant(
 }
 
 export class DeclarationService {
+  private submissionAdapter: DeclarationSubmissionAdapter | null = null;
+
+  setSubmissionAdapter(adapter: DeclarationSubmissionAdapter | null) {
+    this.submissionAdapter = adapter;
+  }
+
   async list(query: ListDeclarationsQuery, actor: AuthenticatedRequestContext) {
     const where: Prisma.DeclarationBatchWhereInput = {
       organizationId: actor.organizationId,
@@ -657,6 +810,302 @@ export class DeclarationService {
     }
 
     return declaration.exports.map(toDeclarationExportResponse);
+  }
+
+  async listSubmissions(
+    declarationId: bigint,
+    actor: AuthenticatedRequestContext,
+  ) {
+    const declaration = await declarationRepository.findById(
+      declarationId,
+      actor.organizationId,
+    );
+
+    if (!declaration) {
+      throw new AppError(
+        404,
+        "DECLARATION_NOT_FOUND",
+        "Declaration not found",
+      );
+    }
+
+    return declaration.submissions.map(toDeclarationSubmissionResponse);
+  }
+
+  async getSubmission(
+    declarationId: bigint,
+    submissionId: bigint,
+    actor: AuthenticatedRequestContext,
+  ) {
+    const submission = await declarationRepository.findSubmissionById(
+      declarationId,
+      submissionId,
+      actor.organizationId,
+    );
+
+    if (!submission) {
+      throw new AppError(
+        404,
+        "DECLARATION_SUBMISSION_NOT_FOUND",
+        "Declaration submission not found",
+      );
+    }
+
+    return toDeclarationSubmissionResponse(submission);
+  }
+
+  async submit(
+    declarationId: bigint,
+    actor: AuthenticatedRequestContext,
+    metadata: RequestSecurityMetadata,
+  ) {
+    if (!this.submissionAdapter) {
+      throw new AppError(
+        503,
+        "SUBMISSION_ADAPTER_NOT_CONFIGURED",
+        "Declaration submission adapter is not configured",
+      );
+    }
+
+    const adapter = this.submissionAdapter;
+
+    try {
+      const submission = await serializableTransaction(async (tx) => {
+        const current = await declarationRepository.findById(
+          declarationId,
+          actor.organizationId,
+          tx,
+        );
+
+        if (!current) {
+          throw new AppError(
+            404,
+            "DECLARATION_NOT_FOUND",
+            "Declaration not found",
+          );
+        }
+
+        assertSubmittable(current);
+
+        const activeSubmission = await tx.declarationSubmission.findFirst({
+          where: {
+            declarationBatchId: current.id,
+            status: "SUBMITTED",
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        if (activeSubmission) {
+          throw new AppError(
+            409,
+            "DECLARATION_ALREADY_SUBMITTED",
+            "Declaration is already submitted",
+          );
+        }
+
+        const declarationExport = current.exports[0];
+        if (declarationExport === undefined) {
+          throw new AppError(
+            404,
+            "DECLARATION_EXPORT_NOT_FOUND",
+            "Declaration export not found",
+          );
+        }
+
+        const documentBytes = await assertExportDocumentIntegrity(
+          declarationExport,
+          actor.organizationId,
+        );
+
+        const adapterResult = await adapter.submit({
+          declaration: current,
+          declarationExport,
+          documentBytes,
+          metadata: {
+            ...(metadata.correlationId !== undefined
+              ? { correlationId: metadata.correlationId }
+              : {}),
+          },
+        });
+
+        const maxAttempt = await tx.declarationSubmission.aggregate({
+          where: {
+            declarationBatchId: current.id,
+          },
+          _max: {
+            attemptNumber: true,
+          },
+        });
+
+        const created = await tx.declarationSubmission.create({
+          data: {
+            declarationBatchId: current.id,
+            declarationExportId: declarationExport.id,
+            attemptNumber: (maxAttempt._max.attemptNumber ?? 0) + 1,
+            channel: adapterResult.channel,
+            status: "SUBMITTED",
+            externalReference: adapterResult.externalReference ?? null,
+            requestMetadata: jsonOrDbNull(adapterResult.requestMetadata),
+            responseMetadata: jsonOrDbNull(adapterResult.responseMetadata),
+            submittedByUserId: actor.userId,
+          },
+          select: declarationSubmissionSelect,
+        });
+
+        await tx.declarationBatch.update({
+          where: {
+            id: current.id,
+          },
+          data: {
+            status: "SUBMITTED",
+            submittedAt: new Date(),
+            submissionReference: adapterResult.externalReference ?? null,
+          },
+        });
+
+        await tx.declarationBatchStatusHistory.create({
+          data: {
+            declarationBatchId: current.id,
+            oldStatus: "EXPORTED",
+            newStatus: "SUBMITTED",
+            changedByUserId: actor.userId,
+            metadata: {
+              source: "api",
+              submissionId: created.id.toString(),
+            },
+          },
+        });
+
+        await auditService.writeWithinTransaction(tx, {
+          organizationId: actor.organizationId,
+          actorUserId: actor.userId,
+          action: "DECLARATION_SUBMIT",
+          entityType: "DECLARATION_SUBMISSION",
+          entityId: created.id,
+          entityKey: current.declarationNumber ?? current.id.toString(),
+          newValues: declarationSubmissionAuditValues(created),
+          ...auditTechnicalFields(metadata),
+        });
+
+        return created;
+      });
+
+      return toDeclarationSubmissionResponse(submission);
+    } catch (error) {
+      mapSubmissionError(error);
+    }
+  }
+
+  async recordSubmissionResult(
+    declarationId: bigint,
+    submissionId: bigint,
+    input: DeclarationSubmissionResultInput,
+    actor: AuthenticatedRequestContext,
+    metadata: RequestSecurityMetadata,
+  ) {
+    const submission = await serializableTransaction(async (tx) => {
+      const current = await declarationRepository.findById(
+        declarationId,
+        actor.organizationId,
+        tx,
+      );
+
+      if (!current) {
+        throw new AppError(
+          404,
+          "DECLARATION_NOT_FOUND",
+          "Declaration not found",
+        );
+      }
+
+      const existing = await declarationRepository.findSubmissionById(
+        declarationId,
+        submissionId,
+        actor.organizationId,
+        tx,
+      );
+
+      if (!existing) {
+        throw new AppError(
+          404,
+          "DECLARATION_SUBMISSION_NOT_FOUND",
+          "Declaration submission not found",
+        );
+      }
+
+      if (current.status !== "SUBMITTED" || existing.status !== "SUBMITTED") {
+        throw new AppError(
+          409,
+          "DECLARATION_SUBMISSION_RESULT_NOT_ALLOWED",
+          "Submission result can only be recorded for submitted declarations",
+        );
+      }
+
+      const updated = await tx.declarationSubmission.update({
+        where: {
+          id: existing.id,
+        },
+        data: {
+          status: input.status,
+          externalReference:
+            input.externalReference === undefined
+              ? existing.externalReference
+              : input.externalReference,
+          responseMetadata: jsonOrDbNull(input.responseMetadata),
+          respondedAt: new Date(),
+        },
+        select: declarationSubmissionSelect,
+      });
+
+      const resultDate = new Date();
+      await tx.declarationBatch.update({
+        where: {
+          id: current.id,
+        },
+        data: {
+          status: input.status,
+          ...(input.status === "ACCEPTED" ? { acceptedAt: resultDate } : {}),
+          ...(input.status === "REJECTED" ||
+          input.status === "PARTIALLY_REJECTED"
+            ? { rejectedAt: resultDate }
+            : {}),
+          ...(updated.externalReference !== null
+            ? { submissionReference: updated.externalReference }
+            : {}),
+        },
+      });
+
+      await tx.declarationBatchStatusHistory.create({
+        data: {
+          declarationBatchId: current.id,
+          oldStatus: "SUBMITTED",
+          newStatus: input.status,
+          changedByUserId: actor.userId,
+          metadata: {
+            source: "api",
+            submissionId: updated.id.toString(),
+          },
+        },
+      });
+
+      await auditService.writeWithinTransaction(tx, {
+        organizationId: actor.organizationId,
+        actorUserId: actor.userId,
+        action: "DECLARATION_SUBMISSION_RESULT",
+        entityType: "DECLARATION_SUBMISSION",
+        entityId: updated.id,
+        entityKey: current.declarationNumber ?? current.id.toString(),
+        oldValues: declarationSubmissionAuditValues(existing),
+        newValues: declarationSubmissionAuditValues(updated),
+        ...auditTechnicalFields(metadata),
+      });
+
+      return updated;
+    });
+
+    return toDeclarationSubmissionResponse(submission);
   }
 
   async exportDeclaration(

@@ -8,6 +8,11 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { app } from "../../src/app.js";
 import { prisma } from "../../src/infrastructure/database/prisma.js";
 import { accessTokenService } from "../../src/modules/auth/access-token.service.js";
+import type {
+  DeclarationSubmissionAdapter,
+  DeclarationSubmissionAdapterResult,
+} from "../../src/modules/declarations/declaration-submission.adapter.js";
+import { declarationService } from "../../src/modules/declarations/declaration.service.js";
 
 const ADMIN_EMAIL = "declaration.admin@local.invalid";
 const RECEPTION_EMAIL = "declaration.reception@local.invalid";
@@ -24,6 +29,7 @@ let adminToken: string;
 let receptionToken: string;
 let providerToken: string;
 let noRoleToken: string;
+let otherAdminToken: string;
 let payerId: bigint;
 let otherPayerId: bigint;
 let invoiceItemId: bigint;
@@ -587,6 +593,60 @@ async function createDeclaration(declarantIdSnapshot: string | null = "12345") {
   return response.body.data.id as string;
 }
 
+async function createExportedDeclaration(suffix: string) {
+  const targetDeclarationId = await createDeclaration("12345");
+  const targetInvoiceItemId = await createInvoiceFixture({
+    orgId: organizationId,
+    payer: payerId,
+    createdBy: adminUserId,
+    suffix,
+  });
+
+  await request(app)
+    .post(`/api/v1/declarations/${targetDeclarationId}/items`)
+    .set("Authorization", `Bearer ${adminToken}`)
+    .send({
+      invoiceItemId: targetInvoiceItemId.toString(),
+    })
+    .expect(201);
+  await request(app)
+    .post(`/api/v1/declarations/${targetDeclarationId}/ready`)
+    .set("Authorization", `Bearer ${adminToken}`)
+    .expect(200);
+  const exported = await request(app)
+    .post(`/api/v1/declarations/${targetDeclarationId}/exports`)
+    .set("Authorization", `Bearer ${adminToken}`)
+    .send({
+      format: "CSV",
+    })
+    .expect(201);
+
+  return {
+    declarationId: targetDeclarationId,
+    exportId: exported.body.data.id as string,
+    documentId: exported.body.data.document.id as string,
+  };
+}
+
+function useSuccessfulSubmissionAdapter(
+  externalReference: string,
+): DeclarationSubmissionAdapter {
+  return {
+    async submit(): Promise<DeclarationSubmissionAdapterResult> {
+      return {
+        channel: "MANUAL",
+        externalReference,
+        requestMetadata: {
+          adapter: "test",
+        },
+        responseMetadata: {
+          transport: "accepted",
+        },
+      };
+    },
+  };
+}
+
 describe("Declaration API", () => {
   beforeAll(async () => {
     await cleanupDeclarationFixture();
@@ -647,11 +707,7 @@ describe("Declaration API", () => {
     const receptionUserId = await createUser(RECEPTION_EMAIL, "RECEPTION");
     const providerUserId = await createUser(PROVIDER_EMAIL, "PROVIDER");
     const noRoleUserId = await createUser(NO_ROLE_EMAIL);
-    otherUserId = await createUser(
-      OTHER_EMAIL,
-      undefined,
-      otherOrganizationId,
-    );
+    otherUserId = await createUser(OTHER_EMAIL, "ADMIN", otherOrganizationId);
 
     adminToken = await accessTokenService.sign(adminUserId, organizationId);
     receptionToken = await accessTokenService.sign(
@@ -663,6 +719,10 @@ describe("Declaration API", () => {
       organizationId,
     );
     noRoleToken = await accessTokenService.sign(noRoleUserId, organizationId);
+    otherAdminToken = await accessTokenService.sign(
+      otherUserId,
+      otherOrganizationId,
+    );
 
     invoiceItemId = await createInvoiceFixture({
       orgId: organizationId,
@@ -685,6 +745,7 @@ describe("Declaration API", () => {
   });
 
   afterAll(async () => {
+    declarationService.setSubmissionAdapter(null);
     await cleanupDeclarationFixture();
     await prisma.$disconnect();
   });
@@ -968,6 +1029,383 @@ describe("Declaration API", () => {
       .get("/api/v1/declarations")
       .set("Authorization", `Bearer ${noRoleToken}`)
       .expect(403);
+  });
+
+  it("keeps production submission disabled when no adapter is configured", async () => {
+    declarationService.setSubmissionAdapter(null);
+    const exported = await createExportedDeclaration("0006");
+
+    await request(app)
+      .post(`/api/v1/declarations/${exported.declarationId}/submit`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(503)
+      .expect((response) => {
+        expect(response.body.error.code).toBe(
+          "SUBMISSION_ADAPTER_NOT_CONFIGURED",
+        );
+      });
+
+    const batch = await prisma.declarationBatch.findUniqueOrThrow({
+      where: {
+        id: BigInt(exported.declarationId),
+      },
+      select: {
+        status: true,
+      },
+    });
+    const submissionCount = await prisma.declarationSubmission.count({
+      where: {
+        declarationBatchId: BigInt(exported.declarationId),
+      },
+    });
+
+    expect(batch.status).toBe("EXPORTED");
+    expect(submissionCount).toBe(0);
+  });
+
+  it("submits an exported declaration using the injected adapter", async () => {
+    const exported = await createExportedDeclaration("0007");
+    declarationService.setSubmissionAdapter(
+      useSuccessfulSubmissionAdapter("TEST-SUBMISSION-0007"),
+    );
+
+    const submitted = await request(app)
+      .post(`/api/v1/declarations/${exported.declarationId}/submit`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(201);
+
+    expect(submitted.body.data.id).toEqual(expect.any(String));
+    expect(submitted.body.data.declarationBatchId).toBe(
+      exported.declarationId,
+    );
+    expect(submitted.body.data.declarationExportId).toBe(exported.exportId);
+    expect(submitted.body.data.status).toBe("SUBMITTED");
+    expect(submitted.body.data.channel).toBe("MANUAL");
+    expect(submitted.body.data.externalReference).toBe("TEST-SUBMISSION-0007");
+    expect(submitted.body.data.submittedByUserId).toBe(
+      adminUserId.toString(),
+    );
+
+    const list = await request(app)
+      .get(`/api/v1/declarations/${exported.declarationId}/submissions`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(200);
+
+    expect(list.body.data).toHaveLength(1);
+    expect(list.body.data[0].id).toBe(submitted.body.data.id);
+
+    await request(app)
+      .get(
+        `/api/v1/declarations/${exported.declarationId}/submissions/${submitted.body.data.id}`,
+      )
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(200)
+      .expect((response) => {
+        expect(response.body.data.id).toBe(submitted.body.data.id);
+      });
+
+    const batch = await prisma.declarationBatch.findUniqueOrThrow({
+      where: {
+        id: BigInt(exported.declarationId),
+      },
+      select: {
+        status: true,
+        submittedAt: true,
+        acceptedAt: true,
+        submissionReference: true,
+      },
+    });
+    const history = await prisma.declarationBatchStatusHistory.findFirst({
+      where: {
+        declarationBatchId: BigInt(exported.declarationId),
+        oldStatus: "EXPORTED",
+        newStatus: "SUBMITTED",
+      },
+    });
+    const audit = await prisma.auditLog.findFirst({
+      where: {
+        action: "DECLARATION_SUBMIT",
+        entityId: BigInt(submitted.body.data.id),
+      },
+    });
+
+    expect(batch.status).toBe("SUBMITTED");
+    expect(batch.submittedAt).toBeInstanceOf(Date);
+    expect(batch.acceptedAt).toBeNull();
+    expect(batch.submissionReference).toBe("TEST-SUBMISSION-0007");
+    expect(history).not.toBeNull();
+    expect(audit?.actorUserId).toBe(adminUserId);
+    expect(audit?.entityKey).toEqual(expect.any(String));
+    expect(audit?.correlationId).toEqual(expect.any(String));
+  });
+
+  it("records an explicit submission result without inferring business acceptance from transport", async () => {
+    const exported = await createExportedDeclaration("0008");
+    declarationService.setSubmissionAdapter(
+      useSuccessfulSubmissionAdapter("TEST-SUBMISSION-0008"),
+    );
+
+    const submitted = await request(app)
+      .post(`/api/v1/declarations/${exported.declarationId}/submit`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(201);
+
+    const beforeResult = await prisma.declarationBatch.findUniqueOrThrow({
+      where: {
+        id: BigInt(exported.declarationId),
+      },
+      select: {
+        status: true,
+      },
+    });
+    expect(beforeResult.status).toBe("SUBMITTED");
+
+    const result = await request(app)
+      .post(
+        `/api/v1/declarations/${exported.declarationId}/submissions/${submitted.body.data.id}/result`,
+      )
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        status: "ACCEPTED",
+        externalReference: "TEST-SVB-ACCEPTED-0008",
+        responseMetadata: {
+          result: "accepted",
+        },
+      })
+      .expect(200);
+
+    expect(result.body.data.status).toBe("ACCEPTED");
+    expect(result.body.data.externalReference).toBe(
+      "TEST-SVB-ACCEPTED-0008",
+    );
+    expect(result.body.data.respondedAt).toEqual(expect.any(String));
+
+    const batch = await prisma.declarationBatch.findUniqueOrThrow({
+      where: {
+        id: BigInt(exported.declarationId),
+      },
+      select: {
+        status: true,
+        acceptedAt: true,
+      },
+    });
+    const audit = await prisma.auditLog.findFirst({
+      where: {
+        action: "DECLARATION_SUBMISSION_RESULT",
+        entityId: BigInt(submitted.body.data.id),
+      },
+    });
+
+    expect(batch.status).toBe("ACCEPTED");
+    expect(batch.acceptedAt).toBeInstanceOf(Date);
+    expect(audit?.oldValues).not.toBeNull();
+    expect(audit?.newValues).not.toBeNull();
+  });
+
+  it("leaves the declaration exported when the adapter fails", async () => {
+    const exported = await createExportedDeclaration("0009");
+    declarationService.setSubmissionAdapter({
+      async submit(): Promise<DeclarationSubmissionAdapterResult> {
+        throw new Error("TEST transport failure");
+      },
+    });
+
+    await request(app)
+      .post(`/api/v1/declarations/${exported.declarationId}/submit`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(502)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("DECLARATION_SUBMISSION_FAILED");
+      });
+
+    const batch = await prisma.declarationBatch.findUniqueOrThrow({
+      where: {
+        id: BigInt(exported.declarationId),
+      },
+      select: {
+        status: true,
+      },
+    });
+    const submissionCount = await prisma.declarationSubmission.count({
+      where: {
+        declarationBatchId: BigInt(exported.declarationId),
+      },
+    });
+
+    expect(batch.status).toBe("EXPORTED");
+    expect(submissionCount).toBe(0);
+  });
+
+  it("rejects invalid submission preconditions and export evidence", async () => {
+    declarationService.setSubmissionAdapter(
+      useSuccessfulSubmissionAdapter("TEST-SUBMISSION-PRECHECK"),
+    );
+
+    const draftDeclarationId = await createDeclaration("12345");
+    await request(app)
+      .post(`/api/v1/declarations/${draftDeclarationId}/submit`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(409)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("DECLARATION_NOT_SUBMITTABLE");
+      });
+
+    const missingExportDeclarationId = await createDeclaration("12345");
+    const itemId = await createInvoiceFixture({
+      orgId: organizationId,
+      payer: payerId,
+      createdBy: adminUserId,
+      suffix: "0010",
+    });
+    await request(app)
+      .post(`/api/v1/declarations/${missingExportDeclarationId}/items`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        invoiceItemId: itemId.toString(),
+      })
+      .expect(201);
+    await prisma.declarationBatch.update({
+      where: {
+        id: BigInt(missingExportDeclarationId),
+      },
+      data: {
+        status: "EXPORTED",
+        exportedAt: new Date(),
+      },
+    });
+    await request(app)
+      .post(`/api/v1/declarations/${missingExportDeclarationId}/submit`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(404)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("DECLARATION_EXPORT_NOT_FOUND");
+      });
+
+    const invalidHash = await createExportedDeclaration("0011");
+    await prisma.document.update({
+      where: {
+        id: BigInt(invalidHash.documentId),
+      },
+      data: {
+        sha256:
+          "0000000000000000000000000000000000000000000000000000000000000000",
+      },
+    });
+    await request(app)
+      .post(`/api/v1/declarations/${invalidHash.declarationId}/submit`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(409)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("DECLARATION_EXPORT_INVALID");
+      });
+
+    const invalidDocumentType = await createExportedDeclaration("0012");
+    await prisma.document.update({
+      where: {
+        id: BigInt(invalidDocumentType.documentId),
+      },
+      data: {
+        documentType: "INVOICE_PDF",
+      },
+    });
+    await request(app)
+      .post(`/api/v1/declarations/${invalidDocumentType.declarationId}/submit`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(409)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("DECLARATION_EXPORT_INVALID");
+      });
+  });
+
+  it("prevents duplicate and concurrent logical submissions", async () => {
+    const exported = await createExportedDeclaration("0013");
+    declarationService.setSubmissionAdapter(
+      useSuccessfulSubmissionAdapter("TEST-SUBMISSION-0013"),
+    );
+
+    await request(app)
+      .post(`/api/v1/declarations/${exported.declarationId}/submit`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(201);
+
+    await request(app)
+      .post(`/api/v1/declarations/${exported.declarationId}/submit`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(409)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("DECLARATION_ALREADY_SUBMITTED");
+      });
+
+    const concurrent = await createExportedDeclaration("0014");
+    declarationService.setSubmissionAdapter(
+      useSuccessfulSubmissionAdapter("TEST-SUBMISSION-0014"),
+    );
+
+    const results = await Promise.allSettled([
+      request(app)
+        .post(`/api/v1/declarations/${concurrent.declarationId}/submit`)
+        .set("Authorization", `Bearer ${adminToken}`),
+      request(app)
+        .post(`/api/v1/declarations/${concurrent.declarationId}/submit`)
+        .set("Authorization", `Bearer ${adminToken}`),
+    ]);
+    const responses = results
+      .filter((result) => result.status === "fulfilled")
+      .map((result) => result.value);
+
+    expect(responses).toHaveLength(2);
+    expect(responses.filter((response) => response.status === 201)).toHaveLength(
+      1,
+    );
+    expect(responses.filter((response) => response.status === 409)).toHaveLength(
+      1,
+    );
+
+    const count = await prisma.declarationSubmission.count({
+      where: {
+        declarationBatchId: BigInt(concurrent.declarationId),
+      },
+    });
+    expect(count).toBe(1);
+  });
+
+  it("enforces submission RBAC and organization boundaries", async () => {
+    const exported = await createExportedDeclaration("0015");
+    declarationService.setSubmissionAdapter(
+      useSuccessfulSubmissionAdapter("TEST-SUBMISSION-0015"),
+    );
+
+    await request(app)
+      .get(`/api/v1/declarations/${exported.declarationId}/submissions`)
+      .set("Authorization", `Bearer ${receptionToken}`)
+      .expect(200);
+
+    await request(app)
+      .post(`/api/v1/declarations/${exported.declarationId}/submit`)
+      .expect(401);
+
+    await request(app)
+      .post(`/api/v1/declarations/${exported.declarationId}/submit`)
+      .set("Authorization", `Bearer ${receptionToken}`)
+      .expect(403);
+
+    await request(app)
+      .post(`/api/v1/declarations/${exported.declarationId}/submit`)
+      .set("Authorization", `Bearer ${providerToken}`)
+      .expect(403);
+
+    await request(app)
+      .get(`/api/v1/declarations/${exported.declarationId}/submissions`)
+      .set("Authorization", `Bearer ${noRoleToken}`)
+      .expect(403);
+
+    await request(app)
+      .post(`/api/v1/declarations/${exported.declarationId}/submit`)
+      .set("Authorization", `Bearer ${otherAdminToken}`)
+      .expect(404)
+      .expect((response) => {
+        expect(response.body.error.code).toBe("DECLARATION_NOT_FOUND");
+      });
   });
 
   it("writes audit logs for create, item add, ready, and export", async () => {

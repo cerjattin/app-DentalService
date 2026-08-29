@@ -9,6 +9,7 @@ import {
   addDeclarationItemSchema,
   createDeclarationExportSchema,
   createDeclarationSchema,
+  declarationSubmissionResultSchema,
   listDeclarationsQuerySchema,
 } from "./declaration.schemas.js";
 import { declarationService } from "./declaration.service.js";
@@ -109,6 +110,58 @@ export const listDeclarationExports: RequestHandler = async (req, res) => {
   const actor = requireAuth(req);
   const declarationId = parseBigIntId(req.params.id, "declarationId");
   const result = await declarationService.listExports(declarationId, actor);
+
+  res.status(200).json(successResponse(result));
+};
+
+export const listDeclarationSubmissions: RequestHandler = async (req, res) => {
+  const actor = requireAuth(req);
+  const declarationId = parseBigIntId(req.params.id, "declarationId");
+  const result = await declarationService.listSubmissions(declarationId, actor);
+
+  res.status(200).json(successResponse(result));
+};
+
+export const getDeclarationSubmission: RequestHandler = async (req, res) => {
+  const actor = requireAuth(req);
+  const declarationId = parseBigIntId(req.params.id, "declarationId");
+  const submissionId = parseBigIntId(req.params.submissionId, "submissionId");
+  const result = await declarationService.getSubmission(
+    declarationId,
+    submissionId,
+    actor,
+  );
+
+  res.status(200).json(successResponse(result));
+};
+
+export const submitDeclaration: RequestHandler = async (req, res) => {
+  const actor = requireAuth(req);
+  const declarationId = parseBigIntId(req.params.id, "declarationId");
+  const result = await declarationService.submit(
+    declarationId,
+    actor,
+    securityMetadata(req, res),
+  );
+
+  res.status(201).json(successResponse(result));
+};
+
+export const recordDeclarationSubmissionResult: RequestHandler = async (
+  req,
+  res,
+) => {
+  const actor = requireAuth(req);
+  const declarationId = parseBigIntId(req.params.id, "declarationId");
+  const submissionId = parseBigIntId(req.params.submissionId, "submissionId");
+  const input = declarationSubmissionResultSchema.parse(req.body);
+  const result = await declarationService.recordSubmissionResult(
+    declarationId,
+    submissionId,
+    input,
+    actor,
+    securityMetadata(req, res),
+  );
 
   res.status(200).json(successResponse(result));
 };

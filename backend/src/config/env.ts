@@ -1,10 +1,11 @@
 import "dotenv/config";
 import { z } from "zod";
 
-const envSchema = z.object({
-  NODE_ENV: z
-    .enum(["development", "test", "production"])
-    .default("development"),
+const envSchema = z
+  .object({
+    NODE_ENV: z
+      .enum(["development", "test", "production"])
+      .default("development"),
 
   HOST: z.string().default("0.0.0.0"),
 
@@ -34,9 +35,19 @@ const envSchema = z.object({
 
   AUTH_LOCK_MINUTES: z.coerce.number().int().positive().max(1440).default(15),
 
+  AUTH_LOGIN_RATE_LIMIT_WINDOW_MS: z.coerce
+    .number()
+    .int()
+    .positive()
+    .default(60_000),
+
+  AUTH_LOGIN_RATE_LIMIT_MAX: z.coerce.number().int().positive().default(20),
+
   REFRESH_TOKEN_TTL_DAYS: z.coerce.number().int().positive().default(7),
 
   CORS_ORIGIN: z.string().default("http://localhost:5173"),
+
+  CORS_ALLOWED_ORIGINS: z.string().optional(),
 
   OPENAPI_ENABLED: z
     .enum(["true", "false"])
@@ -45,13 +56,33 @@ const envSchema = z.object({
 
   DOCUMENT_STORAGE_PATH: z.string().min(1).default("storage/documents"),
 
-  DOCUMENT_MAX_UPLOAD_BYTES: z.coerce
-    .number()
-    .int()
-    .positive()
-    .max(25 * 1024 * 1024)
-    .default(5 * 1024 * 1024),
-});
+    DOCUMENT_MAX_UPLOAD_BYTES: z.coerce
+      .number()
+      .int()
+      .positive()
+      .max(25 * 1024 * 1024)
+      .default(5 * 1024 * 1024),
+  })
+  .superRefine((value, context) => {
+    if (value.NODE_ENV !== "production") {
+      return;
+    }
+
+    if (
+      value.CORS_ALLOWED_ORIGINS === undefined ||
+      value.CORS_ALLOWED_ORIGINS
+        .split(",")
+        .map((origin) => origin.trim())
+        .filter((origin) => origin.length > 0 && origin !== "*").length === 0
+    ) {
+      context.addIssue({
+        code: "custom",
+        path: ["CORS_ALLOWED_ORIGINS"],
+        message:
+          "CORS_ALLOWED_ORIGINS must list explicit origins in production",
+      });
+    }
+  });
 
 const result = envSchema.safeParse(process.env);
 

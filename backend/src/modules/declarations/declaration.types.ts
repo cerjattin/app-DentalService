@@ -6,6 +6,7 @@ import type {
   DeclarationBatchRecord,
   DeclarationExportRecord,
   DeclarationItemRecord,
+  DeclarationSubmissionRecord,
 } from "./declaration.repository.js";
 
 function decimalString(value: Prisma.Decimal) {
@@ -58,6 +59,25 @@ export function toDeclarationExportResponse(row: DeclarationExportRecord) {
   };
 }
 
+export function toDeclarationSubmissionResponse(
+  row: DeclarationSubmissionRecord,
+) {
+  return {
+    id: row.id.toString(),
+    declarationBatchId: row.declarationBatchId.toString(),
+    declarationExportId: row.declarationExportId?.toString() ?? null,
+    attemptNumber: row.attemptNumber,
+    channel: row.channel,
+    status: row.status,
+    externalReference: row.externalReference,
+    requestMetadata: row.requestMetadata,
+    responseMetadata: row.responseMetadata,
+    submittedByUserId: row.submittedByUserId.toString(),
+    submittedAt: row.submittedAt.toISOString(),
+    respondedAt: row.respondedAt?.toISOString() ?? null,
+  };
+}
+
 export function toDeclarationBatchResponse(row: DeclarationBatchRecord) {
   return {
     id: row.id.toString(),
@@ -86,5 +106,6 @@ export function toDeclarationBatchResponse(row: DeclarationBatchRecord) {
     },
     items: row.items.map(toDeclarationItemResponse),
     exports: row.exports.map(toDeclarationExportResponse),
+    submissions: row.submissions.map(toDeclarationSubmissionResponse),
   };
 }

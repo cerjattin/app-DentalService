@@ -3,7 +3,7 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 
-import { env } from "./config/env.js";
+import { corsOptions } from "./config/cors.config.js";
 
 import { appointmentRouter } from "./modules/appointments/appointment.routes.js";
 import { authorizationRouter } from "./modules/authorizations/authorization.routes.js";
@@ -50,14 +50,24 @@ export const app = express();
 
 app.disable("x-powered-by");
 
-app.use(helmet());
-
 app.use(
-  cors({
-    origin: env.CORS_ORIGIN,
-    credentials: true,
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        imgSrc: ["'self'", "data:"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+      },
+    },
   }),
 );
+
+app.use(
+  cors(corsOptions),
+);
+
+app.use(requestContextMiddleware);
 
 app.use(
   express.json({
@@ -73,7 +83,6 @@ app.use(
 );
 
 app.use(cookieParser());
-app.use(requestContextMiddleware);
 app.use(httpLoggerMiddleware);
 mountSwagger(app);
 app.use("/health", healthRouter);

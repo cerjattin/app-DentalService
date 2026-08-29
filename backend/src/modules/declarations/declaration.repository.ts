@@ -47,6 +47,21 @@ export const declarationExportSelect = {
   },
 } satisfies Prisma.DeclarationExportSelect;
 
+export const declarationSubmissionSelect = {
+  id: true,
+  declarationBatchId: true,
+  declarationExportId: true,
+  attemptNumber: true,
+  channel: true,
+  status: true,
+  externalReference: true,
+  requestMetadata: true,
+  responseMetadata: true,
+  submittedByUserId: true,
+  submittedAt: true,
+  respondedAt: true,
+} satisfies Prisma.DeclarationSubmissionSelect;
+
 export const declarationBatchSelect = {
   id: true,
   organizationId: true,
@@ -84,6 +99,12 @@ export const declarationBatchSelect = {
     select: declarationExportSelect,
     orderBy: {
       exportedAt: "desc",
+    },
+  },
+  submissions: {
+    select: declarationSubmissionSelect,
+    orderBy: {
+      submittedAt: "desc",
     },
   },
 } satisfies Prisma.DeclarationBatchSelect;
@@ -148,6 +169,11 @@ export type DeclarationExportRecord = Prisma.DeclarationExportGetPayload<{
   select: typeof declarationExportSelect;
 }>;
 
+export type DeclarationSubmissionRecord =
+  Prisma.DeclarationSubmissionGetPayload<{
+    select: typeof declarationSubmissionSelect;
+  }>;
+
 export type InvoiceItemForDeclarationRecord = Prisma.InvoiceItemGetPayload<{
   select: typeof invoiceItemForDeclarationSelect;
 }>;
@@ -190,6 +216,24 @@ export class DeclarationRepository {
         id: invoiceItemId,
       },
       select: invoiceItemForDeclarationSelect,
+    });
+  }
+
+  findSubmissionById(
+    declarationId: bigint,
+    submissionId: bigint,
+    organizationId: bigint,
+    client: Prisma.TransactionClient | typeof prisma = prisma,
+  ) {
+    return client.declarationSubmission.findFirst({
+      where: {
+        id: submissionId,
+        declarationBatchId: declarationId,
+        declarationBatch: {
+          organizationId,
+        },
+      },
+      select: declarationSubmissionSelect,
     });
   }
 }
