@@ -9,6 +9,7 @@ interface DialogProps {
   title: string
   description?: string
   children: ReactNode
+  size?: 'default' | 'wide'
 }
 
 export function Dialog({
@@ -17,12 +18,17 @@ export function Dialog({
   title,
   description,
   children,
+  size = 'default',
 }: DialogProps) {
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="fixed inset-0 z-40 bg-slate-950/40" />
-        <DialogPrimitive.Content className="fixed left-1/2 top-1/2 z-50 w-[min(92vw,520px)] -translate-x-1/2 -translate-y-1/2 rounded-lg border border-clinic-border bg-white p-5 shadow-xl focus:outline-none">
+        <DialogPrimitive.Content
+          className={`fixed left-1/2 top-1/2 z-50 max-h-[90vh] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-lg border border-clinic-border bg-white p-5 shadow-xl focus:outline-none ${
+            size === 'wide' ? 'w-[min(94vw,820px)]' : 'w-[min(92vw,520px)]'
+          }`}
+        >
           <div className="mb-4 flex items-start justify-between gap-4">
             <div>
               <DialogPrimitive.Title className="text-base font-semibold text-slate-900">

@@ -8,6 +8,11 @@ interface SuccessEnvelope<T> {
   meta?: unknown
 }
 
+export interface ApiResult<T, TMeta = unknown> {
+  data: T
+  meta?: TMeta
+}
+
 type ApiEnvelope<T> = SuccessEnvelope<T> | BackendErrorEnvelope
 
 interface ApiRequestOptions extends Omit<RequestInit, 'body'> {
@@ -27,7 +32,7 @@ function isJsonResponse(response: Response) {
   return response.headers.get('content-type')?.includes('application/json')
 }
 
-export async function apiFetch<T>(
+async function request<T, TMeta = unknown>(
   path: string,
   {
     body,
@@ -36,7 +41,7 @@ export async function apiFetch<T>(
     skipUnauthorizedHandler = false,
     ...init
   }: ApiRequestOptions = {},
-): Promise<T> {
+): Promise<ApiResult<T, TMeta>> {
   const token = authStore.getAccessToken()
   const requestHeaders = new Headers(headers)
 
@@ -83,8 +88,26 @@ export async function apiFetch<T>(
   }
 
   if (payload?.success === true) {
-    return payload.data
+    return {
+      data: payload.data,
+      ...(payload.meta !== undefined ? { meta: payload.meta as TMeta } : {}),
+    }
   }
 
-  return undefined as T
+  return { data: undefined as T }
+}
+
+export async function apiFetch<T>(
+  path: string,
+  options: ApiRequestOptions = {},
+): Promise<T> {
+  const result = await request<T>(path, options)
+  return result.data
+}
+
+export function apiFetchResult<T, TMeta = unknown>(
+  path: string,
+  options: ApiRequestOptions = {},
+) {
+  return request<T, TMeta>(path, options)
 }

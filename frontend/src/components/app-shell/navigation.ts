@@ -17,6 +17,7 @@ export interface NavigationItem {
   permissions: string[]
   icon: ComponentType<{ size?: number; className?: string }>
   unavailable?: boolean
+  unavailableReason?: string
 }
 
 export interface NavigationGroup {
@@ -37,7 +38,7 @@ export const navigationGroups: NavigationGroup[] = [
       {
         label: 'Reception',
         path: '/reception',
-        permissions: ['appointment.read', 'patient.read'],
+        permissions: ['appointment.read'],
         icon: ClipboardList,
       },
       {
@@ -55,8 +56,10 @@ export const navigationGroups: NavigationGroup[] = [
       {
         label: 'Clinical',
         path: '/clinical/current',
-        permissions: ['encounter.read', 'encounter.create', 'encounter.update'],
+        permissions: ['encounter.read'],
         icon: Stethoscope,
+        unavailable: true,
+        unavailableReason: 'Open the clinical workspace from an eligible appointment.',
       },
     ],
   },
@@ -104,6 +107,7 @@ export const navigationGroups: NavigationGroup[] = [
         permissions: ['user.read', 'provider.read', 'role.read'],
         icon: Settings,
         unavailable: true,
+        unavailableReason: 'Settings backend CRUD is not available in the frozen contract.',
       },
     ],
   },
