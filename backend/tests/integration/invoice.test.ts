@@ -95,6 +95,30 @@ async function cleanupInvoiceFixture() {
   const versionIds = invoices.flatMap((invoice) =>
     invoice.versions.map((version) => version.id),
   );
+  const signatureDocuments = await prisma.signature.findMany({
+    where: {
+      OR: [
+        { invoiceVersionId: { in: versionIds } },
+        { signatureDocument: { storageUri: { startsWith: "test://invoice-signature/" } } },
+      ],
+    },
+    select: { signatureDocumentId: true },
+  });
+  const invoiceDocuments = await prisma.invoiceDocument.findMany({
+    where: {
+      invoiceVersionId: { in: versionIds },
+    },
+    select: { documentId: true },
+  });
+  const documentIds = Array.from(
+    new Set(
+      [
+        ...signatureDocuments.map((document) => document.signatureDocumentId),
+        ...invoiceDocuments.map((document) => document.documentId),
+      ].map((documentId) => documentId.toString()),
+    ),
+    (documentId) => BigInt(documentId),
+  );
 
   await prisma.auditLog.deleteMany({
     where: {
@@ -113,7 +137,6 @@ async function cleanupInvoiceFixture() {
       OR: [
         { invoiceVersionId: { in: versionIds } },
         { signatureDocument: { storageUri: { startsWith: "test://invoice-signature/" } } },
-        { signatureDocument: { storageUri: { startsWith: "local://documents/" } } },
       ],
     },
   });
@@ -121,15 +144,16 @@ async function cleanupInvoiceFixture() {
     where: {
       OR: [
         { invoiceVersionId: { in: versionIds } },
-        { document: { storageUri: { startsWith: "local://documents/" } } },
+        { documentId: { in: documentIds } },
       ],
     },
   });
   await prisma.document.deleteMany({
     where: {
       OR: [
+        { id: { in: documentIds } },
         { storageUri: { startsWith: "test://invoice-signature/" } },
-        { storageUri: { startsWith: "local://documents/" } },
+        { originalFilename: { startsWith: "TEST-SIGN-" } },
       ],
     },
   });

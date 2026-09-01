@@ -1,0 +1,35 @@
+ODONTHO SVB BACKEND — POSTMAN QA RUN SETUP (V2)
+
+1) Use Postman DESKTOP.
+
+2) Postman Settings -> Working Directory:
+   C:\workspace\app-DentalService\backend\tests\fixtures
+
+3) Confirm this file exists and is not empty:
+   C:\workspace\app-DentalService\backend\tests\fixtures\qa-postman-signature.png
+
+4) The collection now references ONLY:
+   qa-postman-signature.png
+
+   Postman resolves binary files relative to its Working Directory.
+   Do NOT select the image manually after importing if the Working Directory is correct.
+
+5) Before a full run:
+   cd C:/workspace/app-DentalService/backend
+   npx tsx src/scripts/qa-postman-cleanup.ts
+   npx tsx src/scripts/qa-postman-seed.ts
+
+6) Import the updated collection and select ODONTHO_LOCAL.
+
+7) Run the complete collection sequentially, 1 iteration, no parallel.
+
+8) The first request resets only runtime variables. Seed/static IDs remain untouched.
+
+9) If a signature upload still returns DOCUMENT_EMPTY:
+   - verify Postman is the Desktop app;
+   - verify Working Directory exactly matches the path in step 2;
+   - verify qa-postman-signature.png exists in that directory;
+   - do not continue the run: the collection now stops to prevent cascade failures.
+
+Files:
+- ODONTHO_SVB_BACKEND.postman_collection.FINAL-QA-V2.json
