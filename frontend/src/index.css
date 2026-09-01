@@ -1,0 +1,54 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+  --color-clinic-navy: #0b1f3a;
+  --color-clinic-navy-light: #132a50;
+  --color-clinic-blue: #1a6fe8;
+  --color-clinic-blue-soft: #ebf3ff;
+  --color-clinic-surface: #f4f6f9;
+  --color-clinic-border: #e2e8f0;
+  --color-clinic-border-strong: #cbd5e1;
+  --color-clinic-text: #0f172a;
+  --color-clinic-muted: #64748b;
+  --color-clinic-success: #16a34a;
+  --color-clinic-warning: #d97706;
+  --color-clinic-danger: #dc2626;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #f4f6f9;
+  color: #0f172a;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
