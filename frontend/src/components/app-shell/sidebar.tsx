@@ -58,7 +58,7 @@ export function Sidebar({
                     key={item.path}
                     className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-white/30"
                     aria-disabled="true"
-                    title={item.unavailableReason}
+                    title="Settings backend CRUD is not available in the frozen contract."
                   >
                     <item.icon size={17} aria-hidden="true" />
                     <span>{item.label}</span>

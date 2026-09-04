@@ -1,136 +1,259 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Pencil, Plus, Search, Trash2 } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { getApiErrorMessage } from '../../api'
-import { hasPermission } from '../../auth/permissions'
-import { useAuth } from '../../auth/use-auth'
-import { EmptyState } from '../../components/feedback/empty-state'
-import { ErrorState } from '../../components/feedback/error-state'
-import { LoadingState } from '../../components/feedback/loading-state'
-import { StatusBadge } from '../../components/feedback/status-badge'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { Pencil, Plus, Trash2 } from 'lucide-react'
+import { PermissionGuard } from '../../auth/permission-guard'
 import { Button } from '../../components/ui/button'
 import { Checkbox } from '../../components/ui/checkbox'
-import { ConfirmDialog } from '../../components/ui/confirm-dialog'
 import { Dialog } from '../../components/ui/dialog'
-import { Input } from '../../components/ui/input'
 import { Textarea } from '../../components/ui/textarea'
-import type { EncounterDiagnosis } from '../../types/clinical'
+import { FormField } from '../../components/forms/form-field'
+import { LoadingState } from '../../components/feedback/loading-state'
+import { StatusBadge } from '../../components/feedback/status-badge'
+import type {
+  ClinicalEncounter,
+  EncounterDiagnosis,
+} from '../../types/clinical'
 import {
-  assignDiagnosis,
-  diagnosisKeys,
-  listEncounterDiagnoses,
+  addDiagnosis,
+  encounterKeys,
+  listDiagnoses,
   removeDiagnosis,
-  searchDiagnosisCodes,
   updateDiagnosis,
 } from './clinical-api'
+import { CatalogueSearch } from './catalogue-search'
+import { ClinicalConfirm, ClinicalSection, MutationError } from './clinical-ui'
+import { notesSchema } from './clinical-model'
 
-export function DiagnosisSection({ encounterId, editable }: { encounterId: string; editable: boolean }) {
-  const { permissions } = useAuth()
-  const queryClient = useQueryClient()
-  const canRead = hasPermission(permissions, 'diagnosis.read')
-  const canAssign = editable && hasPermission(permissions, 'diagnosis.assign')
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [editing, setEditing] = useState<EncounterDiagnosis>()
-  const [removeTarget, setRemoveTarget] = useState<EncounterDiagnosis>()
-  const [searchInput, setSearchInput] = useState('')
-  const [search, setSearch] = useState('')
-  const [selectedCodeId, setSelectedCodeId] = useState('')
-  const [isPrimary, setIsPrimary] = useState(false)
-  const [notes, setNotes] = useState('')
-
-  useEffect(() => {
-    const timeout = window.setTimeout(() => setSearch(searchInput.trim()), 300)
-    return () => window.clearTimeout(timeout)
-  }, [searchInput])
-
-  const diagnosesQuery = useQuery({
-    queryKey: diagnosisKeys.encounter(encounterId),
-    queryFn: ({ signal }) => listEncounterDiagnoses(encounterId, signal),
-    enabled: canRead,
+const schema = z.object({ isPrimary: z.boolean(), notes: notesSchema })
+type Values = z.infer<typeof schema>
+export function DiagnosisSection({
+  encounter,
+  serviceDate,
+}: {
+  encounter: ClinicalEncounter
+  serviceDate: string
+}) {
+  const client = useQueryClient()
+  const [editing, setEditing] = useState<EncounterDiagnosis | 'new' | null>(
+    null,
+  )
+  const [removing, setRemoving] = useState<EncounterDiagnosis | null>(null)
+  const [notice, setNotice] = useState('')
+  const query = useQuery({
+    queryKey: encounterKeys.diagnoses(encounter.id),
+    queryFn: ({ signal }) => listDiagnoses(encounter.id, signal),
   })
-  const codeQuery = useQuery({
-    queryKey: diagnosisKeys.codes(search),
-    queryFn: ({ signal }) => searchDiagnosisCodes(search, signal),
-    enabled: dialogOpen && !editing && canRead,
-  })
-
-  async function refresh() {
-    await queryClient.invalidateQueries({ queryKey: diagnosisKeys.encounter(encounterId) })
+  const refresh = async () => {
+    await client.invalidateQueries({
+      queryKey: encounterKeys.diagnoses(encounter.id),
+    })
+    await client.invalidateQueries({
+      queryKey: encounterKeys.procedures(encounter.id),
+    })
   }
-  const saveMutation = useMutation({
-    mutationFn: () => editing
-      ? updateDiagnosis(encounterId, editing.id, { isPrimary, notes: notes || null })
-      : assignDiagnosis(encounterId, { diagnosisCodeId: selectedCodeId, isPrimary, notes: notes || null }),
+  const remove = useMutation({
+    mutationFn: () => removeDiagnosis(encounter.id, removing!.id),
     onSuccess: async () => {
-      setDialogOpen(false)
-      setEditing(undefined)
+      setRemoving(null)
+      setNotice('Diagnosis removed.')
       await refresh()
     },
   })
-  const removeMutation = useMutation({
-    mutationFn: () => {
-      if (!removeTarget) throw new Error('No diagnosis selected')
-      return removeDiagnosis(encounterId, removeTarget.id)
-    },
-    onSuccess: async () => {
-      setRemoveTarget(undefined)
-      await refresh()
-    },
-  })
-
-  function openAdd() {
-    setEditing(undefined)
-    setSelectedCodeId('')
-    setSearchInput('')
-    setIsPrimary(false)
-    setNotes('')
-    saveMutation.reset()
-    setDialogOpen(true)
-  }
-  function openEdit(diagnosis: EncounterDiagnosis) {
-    setEditing(diagnosis)
-    setIsPrimary(diagnosis.isPrimary)
-    setNotes(diagnosis.notes ?? '')
-    saveMutation.reset()
-    setDialogOpen(true)
-  }
-
   return (
-    <section>
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <div><h3 className="font-semibold text-slate-900">Diagnoses</h3><p className="mt-0.5 text-sm text-slate-500">Diagnosis snapshots assigned to this encounter.</p></div>
-        {canAssign ? <Button onClick={openAdd}><Plus size={16} />Add diagnosis</Button> : null}
-      </div>
-      {!canRead ? <ErrorState title="Diagnosis access unavailable" description="Diagnosis read permission is required." /> : diagnosesQuery.isPending ? <LoadingState label="Loading diagnoses" /> : diagnosesQuery.isError ? <ErrorState title="Unable to load diagnoses" description={getApiErrorMessage(diagnosesQuery.error)} /> : diagnosesQuery.data.length === 0 ? <EmptyState title="No diagnoses recorded" /> : (
-        <div className="divide-y divide-clinic-border rounded-lg border border-clinic-border bg-white">
-          {diagnosesQuery.data.map((diagnosis) => (
-            <div key={diagnosis.id} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+    <ClinicalSection
+      title="Diagnoses"
+      actions={
+        encounter.status === 'OPEN' ? (
+          <PermissionGuard allOf={['diagnosis.assign']}>
+            <Button variant="secondary" onClick={() => setEditing('new')}>
+              <Plus size={16} />
+              Add diagnosis
+            </Button>
+          </PermissionGuard>
+        ) : null
+      }
+    >
+      {notice ? (
+        <p role="status" className="mb-3 text-sm text-green-700">
+          {notice}
+        </p>
+      ) : null}
+      {query.isPending ? (
+        <LoadingState label="Loading diagnoses" />
+      ) : query.isError ? (
+        <>
+          <MutationError error={query.error} />
+          <Button onClick={() => void query.refetch()}>Retry</Button>
+        </>
+      ) : query.data.length ? (
+        <ul className="divide-y divide-clinic-border">
+          {query.data.map((row) => (
+            <li
+              className="flex items-start justify-between gap-3 py-3"
+              key={row.id}
+            >
               <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-2"><span className="font-mono text-sm font-semibold text-clinic-blue">{diagnosis.codeSnapshot}</span>{diagnosis.isPrimary ? <StatusBadge tone="info">Primary</StatusBadge> : null}<span className="text-xs text-slate-500">{diagnosis.diagnosisCode.codeSystem}</span></div>
-                <p className="mt-1 text-sm text-slate-800">{diagnosis.descriptionSnapshot}</p>
-                {diagnosis.notes ? <p className="mt-1 text-xs text-slate-500">{diagnosis.notes}</p> : null}
+                <p className="break-words text-sm">
+                  <span className="mr-2 font-mono text-clinic-blue">
+                    {row.codeSnapshot}
+                  </span>
+                  {row.descriptionSnapshot}
+                </p>
+                {row.isPrimary ? (
+                  <StatusBadge tone="info">Primary</StatusBadge>
+                ) : null}
+                <p className="mt-1 whitespace-pre-wrap break-words text-sm text-slate-500">
+                  {row.notes}
+                </p>
               </div>
-              {canAssign ? <div className="flex gap-2"><Button variant="secondary" className="h-8 px-2.5 text-xs" onClick={() => openEdit(diagnosis)}><Pencil size={14} />Edit</Button><Button variant="ghost" className="h-8 px-2.5 text-xs text-clinic-danger" onClick={() => setRemoveTarget(diagnosis)}><Trash2 size={14} />Remove</Button></div> : null}
-            </div>
+              {encounter.status === 'OPEN' ? (
+                <PermissionGuard allOf={['diagnosis.assign']}>
+                  <div className="flex shrink-0 gap-1">
+                    <Button
+                      variant="ghost"
+                      title="Edit diagnosis"
+                      aria-label={`Edit diagnosis ${row.codeSnapshot}`}
+                      onClick={() => setEditing(row)}
+                    >
+                      <Pencil size={16} />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      title="Remove diagnosis"
+                      aria-label={`Remove diagnosis ${row.codeSnapshot}`}
+                      onClick={() => {
+                        remove.reset()
+                        setRemoving(row)
+                      }}
+                    >
+                      <Trash2 size={16} />
+                    </Button>
+                  </div>
+                </PermissionGuard>
+              ) : null}
+            </li>
           ))}
-        </div>
+        </ul>
+      ) : (
+        <p className="text-sm text-slate-500">No diagnoses recorded.</p>
       )}
-
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen} title={editing ? 'Edit diagnosis' : 'Add diagnosis'}>
-        <div className="space-y-4">
-          {!editing ? <>
-            <div className="relative"><Search className="absolute left-3 top-2.5 text-slate-400" size={16} /><Input aria-label="Search diagnosis codes" className="pl-9" placeholder="Search code or description" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} /></div>
-            <div className="max-h-52 overflow-y-auto rounded-md border border-clinic-border">
-              {codeQuery.isPending ? <p className="p-3 text-sm text-slate-500">Loading diagnosis codes...</p> : (codeQuery.data?.data ?? []).map((code) => <button key={code.id} type="button" className={`w-full border-b border-clinic-border px-3 py-2 text-left last:border-0 ${selectedCodeId === code.id ? 'bg-clinic-blue-soft' : 'hover:bg-slate-50'}`} onClick={() => setSelectedCodeId(code.id)}><span className="font-mono text-xs font-semibold text-clinic-blue">{code.code}</span><span className="ml-2 text-sm text-slate-700">{code.description}</span></button>)}
-            </div>
-          </> : <p className="rounded-md bg-slate-50 p-3 text-sm"><span className="font-mono font-semibold">{editing.codeSnapshot}</span> {editing.descriptionSnapshot}</p>}
-          <label className="flex items-center gap-2 text-sm font-medium text-slate-700"><Checkbox checked={isPrimary} onChange={(event) => setIsPrimary(event.target.checked)} />Primary diagnosis</label>
-          <div><label htmlFor="diagnosisNotes" className="mb-1.5 block text-sm font-medium text-slate-700">Notes</label><Textarea id="diagnosisNotes" value={notes} onChange={(event) => setNotes(event.target.value)} /></div>
-          {saveMutation.isError ? <p role="alert" className="text-sm text-clinic-danger">{getApiErrorMessage(saveMutation.error)}</p> : null}
-          <div className="flex justify-end gap-2"><Button variant="secondary" onClick={() => setDialogOpen(false)}>Cancel</Button><Button disabled={saveMutation.isPending || (!editing && !selectedCodeId)} onClick={() => saveMutation.mutate()}>{saveMutation.isPending ? 'Saving...' : 'Save diagnosis'}</Button></div>
-        </div>
-      </Dialog>
-      <ConfirmDialog open={Boolean(removeTarget)} title="Remove diagnosis" description="Remove this diagnosis from the open encounter?" confirmLabel={removeMutation.isPending ? 'Removing...' : 'Remove'} onCancel={() => setRemoveTarget(undefined)} onConfirm={() => removeMutation.mutate()} />
-    </section>
+      {editing && encounter.status === 'OPEN' ? (
+        <DiagnosisForm
+          encounter={encounter}
+          initial={editing}
+          serviceDate={serviceDate}
+          onClose={() => setEditing(null)}
+          onSaved={async () => {
+            setEditing(null)
+            setNotice('Diagnosis saved.')
+            await refresh()
+          }}
+        />
+      ) : null}
+      {removing && encounter.status === 'OPEN' ? (
+        <ClinicalConfirm
+          title="Remove diagnosis?"
+          description="This removes the diagnosis from this encounter. Related procedures may prevent removal."
+          onClose={() => setRemoving(null)}
+          onConfirm={() => remove.mutate()}
+          pending={remove.isPending}
+          error={remove.error}
+        />
+      ) : null}
+    </ClinicalSection>
+  )
+}
+function DiagnosisForm({
+  encounter,
+  initial,
+  serviceDate,
+  onClose,
+  onSaved,
+}: {
+  encounter: ClinicalEncounter
+  initial: EncounterDiagnosis | 'new'
+  serviceDate: string
+  onClose: () => void
+  onSaved: () => Promise<void>
+}) {
+  const [selected, setSelected] = useState(
+    initial === 'new' ? null : initial.diagnosisCode,
+  )
+  const form = useForm<Values>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      isPrimary: initial === 'new' ? false : initial.isPrimary,
+      notes: initial === 'new' ? '' : (initial.notes ?? ''),
+    },
+  })
+  const mutation = useMutation({
+    mutationFn: (values: Values) =>
+      initial === 'new'
+        ? addDiagnosis(encounter.id, {
+            diagnosisCodeId: selected!.id,
+            isPrimary: values.isPrimary,
+            notes: values.notes || null,
+          })
+        : updateDiagnosis(encounter.id, initial.id, {
+            isPrimary: values.isPrimary,
+            notes: values.notes || null,
+          }),
+    onSuccess: onSaved,
+  })
+  return (
+    <Dialog
+      open
+      title={initial === 'new' ? 'Add diagnosis' : 'Edit diagnosis'}
+      description="Record the diagnosis and optional clinical notes."
+      onOpenChange={(open) => {
+        if (!open && !mutation.isPending) onClose()
+      }}
+    >
+      {initial === 'new' && !selected ? (
+        <CatalogueSearch
+          kind="diagnosis"
+          serviceDate={serviceDate}
+          onSelect={(row) => {
+            if ('codeSystem' in row) setSelected(row)
+          }}
+        />
+      ) : (
+        <form
+          className="space-y-4"
+          onSubmit={form.handleSubmit((values) => mutation.mutate(values))}
+        >
+          <p className="text-sm font-medium">
+            {selected?.code} {selected?.description}
+          </p>
+          <label className="flex min-h-11 items-center gap-2 text-sm">
+            <Checkbox {...form.register('isPrimary')} />
+            Primary diagnosis
+          </label>
+          <FormField
+            label="Diagnosis notes"
+            htmlFor="diagnosis-notes"
+            error={form.formState.errors.notes?.message}
+          >
+            <Textarea id="diagnosis-notes" {...form.register('notes')} />
+          </FormField>
+          <MutationError error={mutation.error} />
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="secondary"
+              disabled={mutation.isPending}
+              onClick={onClose}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" disabled={mutation.isPending}>
+              {mutation.isPending ? 'Saving...' : 'Save diagnosis'}
+            </Button>
+          </div>
+        </form>
+      )}
+    </Dialog>
   )
 }

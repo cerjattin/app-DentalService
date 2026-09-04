@@ -55,7 +55,7 @@ export const routes: RouteObject[] = [
             ],
           },
           {
-            element: <PermissionRoute allOf={[...routePermissions.clinical, 'appointment.read']} />,
+            element: <PermissionRoute anyOf={routePermissions.clinical} />,
             children: [
               {
                 path: '/clinical/:appointmentId',

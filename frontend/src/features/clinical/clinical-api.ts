@@ -1,128 +1,169 @@
-import { apiFetch, apiFetchResult } from '../../api'
-import type {
-  Authorization,
-  ClinicalEncounter,
-  DiagnosisCode,
-  EncounterDiagnosis,
-  EncounterProcedure,
-  EncounterProcedureCreateDto,
-  SvbProcedure,
-  SvbTariff,
-} from '../../types/clinical'
+import { ApiError, apiFetch, apiFetchResult } from '../../api'
 import type { EntityId } from '../../types/core'
 import type { PaginationMeta } from '../../types/patient'
+import type {
+  Authorization,
+  AuthorizationItem,
+  AuthorizationItemWriteDto,
+  AuthorizationUpdateDto,
+  AuthorizationWriteDto,
+  ClinicalEncounter,
+  DiagnosisCode,
+  DiagnosisUpdateDto,
+  DiagnosisWriteDto,
+  EncounterDiagnosis,
+  EncounterProcedure,
+  EncounterWriteDto,
+  ProcedureUpdateDto,
+  ProcedureWriteDto,
+  SvbProcedure,
+  TariffResolution,
+} from '../../types/clinical'
 
 export const encounterKeys = {
-  all: ['clinical-encounters'] as const,
-  byAppointment: (appointmentId: EntityId) =>
-    [...encounterKeys.all, 'appointment', appointmentId] as const,
-  detail: (encounterId: EntityId) =>
-    [...encounterKeys.all, 'detail', encounterId] as const,
+  appointment: (id: EntityId) =>
+    ['clinical-encounter', 'appointment', id] as const,
+  diagnoses: (id: EntityId) => ['clinical-encounter', id, 'diagnoses'] as const,
+  procedures: (id: EntityId) =>
+    ['clinical-encounter', id, 'procedures'] as const,
 }
-
-export const diagnosisKeys = {
-  all: ['diagnoses'] as const,
-  codes: (q: string) => [...diagnosisKeys.all, 'codes', q] as const,
-  encounter: (encounterId: EntityId) =>
-    [...diagnosisKeys.all, 'encounter', encounterId] as const,
+export const catalogueKeys = {
+  diagnoses: (q: string, page: number) => ['diagnosis-codes', q, page] as const,
+  procedures: (q: string, page: number, date: string) =>
+    ['svb-procedures', q, page, date] as const,
+  tariff: (id: EntityId, date: string) =>
+    ['svb-tariff', id, date, 'ANG'] as const,
 }
-
-export const svbProcedureKeys = {
-  all: ['svb-procedures'] as const,
-  search: (q: string, serviceDate: string) =>
-    [...svbProcedureKeys.all, 'search', q, serviceDate] as const,
-  tariff: (procedureId: EntityId, serviceDate: string) =>
-    [...svbProcedureKeys.all, 'tariff', procedureId, serviceDate] as const,
-}
-
 export const authorizationKeys = {
-  all: ['authorizations'] as const,
-  patient: (patientId: EntityId, serviceDate: string) =>
-    [...authorizationKeys.all, 'patient', patientId, serviceDate] as const,
+  patient: (id: EntityId) => ['authorizations', 'patient', id] as const,
+  list: (id: EntityId, page: number, q: string) =>
+    [...authorizationKeys.patient(id), page, q] as const,
 }
-
-export const performedProcedureKeys = {
-  all: ['encounter-procedures'] as const,
-  encounter: (encounterId: EntityId) =>
-    [...performedProcedureKeys.all, 'encounter', encounterId] as const,
-}
-
-export function getEncounterByAppointment(appointmentId: EntityId, signal?: AbortSignal) {
-  return apiFetch<ClinicalEncounter>(`/appointments/${appointmentId}/clinical-encounter`, { signal })
-}
-
-export function createEncounter(
+export async function getEncounter(
   appointmentId: EntityId,
-  input: { chiefComplaint?: string | null; clinicalNotes?: string | null },
+  signal?: AbortSignal,
 ) {
-  return apiFetch<ClinicalEncounter>(`/appointments/${appointmentId}/clinical-encounter`, {
+  try {
+    return await apiFetch<ClinicalEncounter>(
+      `/appointments/${appointmentId}/clinical-encounter`,
+      { signal },
+    )
+  } catch (error) {
+    if (
+      error instanceof ApiError &&
+      error.status === 404 &&
+      error.code === 'CLINICAL_ENCOUNTER_NOT_FOUND'
+    )
+      return null
+    throw error
+  }
+}
+export const createEncounter = (id: EntityId, body: EncounterWriteDto) =>
+  apiFetch<ClinicalEncounter>(`/appointments/${id}/clinical-encounter`, {
     method: 'POST',
-    body: input,
+    body,
   })
-}
-
-export function updateEncounter(
-  encounterId: EntityId,
-  input: { chiefComplaint?: string | null; clinicalNotes?: string | null },
-) {
-  return apiFetch<ClinicalEncounter>(`/clinical-encounters/${encounterId}`, {
+export const updateEncounter = (id: EntityId, body: EncounterWriteDto) =>
+  apiFetch<ClinicalEncounter>(`/clinical-encounters/${id}`, {
     method: 'PATCH',
-    body: input,
+    body,
   })
+export const completeEncounter = (id: EntityId) =>
+  apiFetch<ClinicalEncounter>(`/clinical-encounters/${id}/complete`, {
+    method: 'POST',
+  })
+const diagnosesPath = (id: EntityId) => `/clinical-encounters/${id}/diagnoses`
+export const listDiagnoses = (id: EntityId, signal?: AbortSignal) =>
+  apiFetch<EncounterDiagnosis[]>(diagnosesPath(id), { signal })
+export const addDiagnosis = (id: EntityId, body: DiagnosisWriteDto) =>
+  apiFetch<EncounterDiagnosis>(diagnosesPath(id), { method: 'POST', body })
+export const updateDiagnosis = (
+  id: EntityId,
+  diagnosisId: EntityId,
+  body: DiagnosisUpdateDto,
+) =>
+  apiFetch<EncounterDiagnosis>(`${diagnosesPath(id)}/${diagnosisId}`, {
+    method: 'PATCH',
+    body,
+  })
+export const removeDiagnosis = (id: EntityId, diagnosisId: EntityId) =>
+  apiFetch<EncounterDiagnosis>(`${diagnosesPath(id)}/${diagnosisId}`, {
+    method: 'DELETE',
+  })
+export function searchDiagnoses(q: string, page: number, signal?: AbortSignal) {
+  return apiFetchResult<DiagnosisCode[], PaginationMeta>(
+    `/diagnosis-codes?${new URLSearchParams({ q, page: String(page), pageSize: '20', isActive: 'true' })}`,
+    { signal },
+  )
 }
-
-export function completeEncounter(encounterId: EntityId) {
-  return apiFetch<ClinicalEncounter>(`/clinical-encounters/${encounterId}/complete`, { method: 'POST' })
+export function searchProcedures(
+  q: string,
+  page: number,
+  serviceDate: string,
+  signal?: AbortSignal,
+) {
+  return apiFetchResult<SvbProcedure[], PaginationMeta>(
+    `/svb-procedures?${new URLSearchParams({ q, page: String(page), pageSize: '20', isActive: 'true', serviceDate })}`,
+    { signal },
+  )
 }
-
-export function listEncounterDiagnoses(encounterId: EntityId, signal?: AbortSignal) {
-  return apiFetch<EncounterDiagnosis[]>(`/clinical-encounters/${encounterId}/diagnoses`, { signal })
-}
-
-export function searchDiagnosisCodes(q: string, signal?: AbortSignal) {
-  const params = new URLSearchParams({ q, isActive: 'true', page: '1', pageSize: '20' })
-  return apiFetchResult<DiagnosisCode[], PaginationMeta>(`/diagnosis-codes?${params}`, { signal })
-}
-
-export function assignDiagnosis(encounterId: EntityId, input: { diagnosisCodeId: EntityId; isPrimary: boolean; notes?: string | null }) {
-  return apiFetch<EncounterDiagnosis>(`/clinical-encounters/${encounterId}/diagnoses`, { method: 'POST', body: input })
-}
-
-export function updateDiagnosis(encounterId: EntityId, diagnosisId: EntityId, input: { isPrimary?: boolean; notes?: string | null }) {
-  return apiFetch<EncounterDiagnosis>(`/clinical-encounters/${encounterId}/diagnoses/${diagnosisId}`, { method: 'PATCH', body: input })
-}
-
-export function removeDiagnosis(encounterId: EntityId, diagnosisId: EntityId) {
-  return apiFetch<EncounterDiagnosis>(`/clinical-encounters/${encounterId}/diagnoses/${diagnosisId}`, { method: 'DELETE' })
-}
-
-export function searchSvbProcedures(q: string, serviceDate: string, signal?: AbortSignal) {
-  const params = new URLSearchParams({ q, isActive: 'true', serviceDate, page: '1', pageSize: '20' })
-  return apiFetchResult<SvbProcedure[], PaginationMeta>(`/svb-procedures?${params}`, { signal })
-}
-
-export function getApplicableTariff(procedureId: EntityId, serviceDate: string, signal?: AbortSignal) {
-  const params = new URLSearchParams({ serviceDate, currencyCode: 'ANG' })
-  return apiFetch<SvbTariff>(`/svb-procedures/${procedureId}/applicable-tariff?${params}`, { signal })
-}
-
-export function listAuthorizations(patientId: EntityId, serviceDate: string, signal?: AbortSignal) {
-  const params = new URLSearchParams({ patientId, serviceDate, page: '1', pageSize: '100' })
-  return apiFetchResult<Authorization[], PaginationMeta>(`/authorizations?${params}`, { signal })
-}
-
-export function listEncounterProcedures(encounterId: EntityId, signal?: AbortSignal) {
-  return apiFetch<EncounterProcedure[]>(`/clinical-encounters/${encounterId}/procedures`, { signal })
-}
-
-export function addEncounterProcedure(encounterId: EntityId, input: EncounterProcedureCreateDto) {
-  return apiFetch<EncounterProcedure>(`/clinical-encounters/${encounterId}/procedures`, { method: 'POST', body: input })
-}
-
-export function updateEncounterProcedure(encounterId: EntityId, procedureId: EntityId, input: { diagnosisId?: EntityId | null; additionalNote?: string | null }) {
-  return apiFetch<EncounterProcedure>(`/clinical-encounters/${encounterId}/procedures/${procedureId}`, { method: 'PATCH', body: input })
-}
-
-export function removeEncounterProcedure(encounterId: EntityId, procedureId: EntityId) {
-  return apiFetch<EncounterProcedure>(`/clinical-encounters/${encounterId}/procedures/${procedureId}`, { method: 'DELETE' })
-}
+export const getTariff = (
+  id: EntityId,
+  serviceDate: string,
+  signal?: AbortSignal,
+) =>
+  apiFetch<TariffResolution>(
+    `/svb-procedures/${id}/applicable-tariff?${new URLSearchParams({ serviceDate, currencyCode: 'ANG' })}`,
+    { signal },
+  )
+const proceduresPath = (id: EntityId) => `/clinical-encounters/${id}/procedures`
+export const listProcedures = (id: EntityId, signal?: AbortSignal) =>
+  apiFetch<EncounterProcedure[]>(proceduresPath(id), { signal })
+export const addProcedure = (id: EntityId, body: ProcedureWriteDto) =>
+  apiFetch<EncounterProcedure>(proceduresPath(id), { method: 'POST', body })
+export const updateProcedure = (
+  id: EntityId,
+  procedureId: EntityId,
+  body: ProcedureUpdateDto,
+) =>
+  apiFetch<EncounterProcedure>(`${proceduresPath(id)}/${procedureId}`, {
+    method: 'PATCH',
+    body,
+  })
+export const removeProcedure = (id: EntityId, procedureId: EntityId) =>
+  apiFetch<EncounterProcedure>(`${proceduresPath(id)}/${procedureId}`, {
+    method: 'DELETE',
+  })
+export const listAuthorizations = (
+  patientId: EntityId,
+  page: number,
+  q: string,
+  signal?: AbortSignal,
+) =>
+  apiFetchResult<Authorization[], PaginationMeta>(
+    `/authorizations?${new URLSearchParams({ patientId, page: String(page), pageSize: '20', q })}`,
+    { signal },
+  )
+export const createAuthorization = (body: AuthorizationWriteDto) =>
+  apiFetch<Authorization>('/authorizations', { method: 'POST', body })
+export const updateAuthorization = (
+  id: EntityId,
+  body: AuthorizationUpdateDto,
+) => apiFetch<Authorization>(`/authorizations/${id}`, { method: 'PATCH', body })
+export const createAuthorizationItem = (
+  id: EntityId,
+  body: AuthorizationItemWriteDto,
+) =>
+  apiFetch<AuthorizationItem>(`/authorizations/${id}/items`, {
+    method: 'POST',
+    body,
+  })
+export const updateAuthorizationItem = (
+  id: EntityId,
+  itemId: EntityId,
+  body: AuthorizationItemWriteDto,
+) =>
+  apiFetch<AuthorizationItem>(`/authorizations/${id}/items/${itemId}`, {
+    method: 'PATCH',
+    body,
+  })

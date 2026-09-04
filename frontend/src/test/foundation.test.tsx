@@ -10,6 +10,7 @@ import {
 } from 'react-router'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { apiFetch, ApiError } from '../api'
+import { normalizeApiBaseUrl } from '../api/client'
 import { authStore } from '../auth/auth-store'
 import { AuthProvider } from '../auth/auth-context'
 import { PermissionGuard } from '../auth/permission-guard'
@@ -32,6 +33,21 @@ const testUser: AuthenticatedUser = {
   roles: ['RECEPTION'],
   permissions: ['patient.read', 'appointment.read'],
 }
+
+describe('API base URL', () => {
+  it('uses the configured API prefix without duplicating path segments', () => {
+    expect(normalizeApiBaseUrl('http://127.0.0.1:3000/api/v1/')).toBe(
+      'http://127.0.0.1:3000/api/v1',
+    )
+  })
+
+  it('rejects missing and invalid API base URLs', () => {
+    expect(() => normalizeApiBaseUrl(undefined)).toThrow('VITE_API_BASE_URL is required.')
+    expect(() => normalizeApiBaseUrl('/api/v1')).toThrow(
+      'VITE_API_BASE_URL must be a valid absolute URL.',
+    )
+  })
+})
 
 function renderLoginRoute() {
   const queryClient = new QueryClient({
@@ -103,12 +119,12 @@ describe('authentication integration', () => {
     expect(sessionStorage.getItem('accessToken')).toBeNull()
     expect(fetchMock).toHaveBeenNthCalledWith(
       1,
-      '/api/v1/auth/login',
+      'http://api.test/api/v1/auth/login',
       expect.objectContaining({ method: 'POST' }),
     )
     expect(fetchMock).toHaveBeenNthCalledWith(
       2,
-      '/api/v1/auth/me',
+      'http://api.test/api/v1/auth/me',
       expect.objectContaining({ headers: expect.any(Headers) }),
     )
   })

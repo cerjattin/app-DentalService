@@ -1,14 +1,11 @@
 import { Navigate, Outlet } from 'react-router'
-import { hasAllPermissions, hasAnyPermission } from '../auth/permissions'
+import { hasAnyPermission } from '../auth/permissions'
 import { useAuth } from '../auth/use-auth'
 
-export function PermissionRoute({ anyOf = [], allOf = [] }: { anyOf?: string[]; allOf?: string[] }) {
+export function PermissionRoute({ anyOf }: { anyOf: string[] }) {
   const { permissions } = useAuth()
 
-  if (
-    (anyOf.length > 0 && !hasAnyPermission(permissions, anyOf)) ||
-    (allOf.length > 0 && !hasAllPermissions(permissions, allOf))
-  ) {
+  if (anyOf.length > 0 && !hasAnyPermission(permissions, anyOf)) {
     return <Navigate to="/access-denied" replace />
   }
 

@@ -198,7 +198,7 @@ describe('patient detail and insurance', () => {
     resolveRequest(json({ success: true, data: patient }))
     expect(await screen.findByText('Patient information')).toBeInTheDocument()
     expect(fetchMock).toHaveBeenCalledWith(
-      `/api/v1/patients/${patient.id}`,
+      `http://api.test/api/v1/patients/${patient.id}`,
       expect.objectContaining({ signal: expect.any(AbortSignal) }),
     )
   })

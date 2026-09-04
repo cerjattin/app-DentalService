@@ -29,6 +29,7 @@ import {
   appointmentStatusTone,
 } from './appointment-model'
 import { AppointmentUpdateDialog } from './appointment-update-dialog'
+import { AppointmentBilling } from '../billing/appointment-billing'
 
 function Field({ label, value }: { label: string; value: string | null }) {
   return <div><dt className="text-xs font-medium uppercase text-slate-500">{label}</dt><dd className="mt-1 text-sm text-slate-800">{value || 'Not provided'}</dd></div>
@@ -78,7 +79,7 @@ export function AppointmentDetailPage() {
   const appointment = appointmentQuery.data
   const primaryInsurance = insuranceQuery.data?.find((item) => item.isPrimary) ?? insuranceQuery.data?.[0]
   const canEnterClinical =
-    (appointment.status === 'CHECKED_IN' || appointment.status === 'IN_PROGRESS') &&
+    ['CHECKED_IN', 'IN_PROGRESS', 'COMPLETED'].includes(appointment.status) &&
     hasPermission(permissions, 'encounter.read')
 
   return (
@@ -96,6 +97,7 @@ export function AppointmentDetailPage() {
       />
       {notice ? <div role="status" className="mb-4 flex items-center justify-between rounded-md border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800"><span className="flex items-center gap-2"><CheckCircle2 size={16} />{notice}</span><button type="button" className="font-medium hover:underline" onClick={() => setNotice(null)}>Dismiss</button></div> : null}
 
+      <AppointmentBilling appointment={appointment} />
       <Card className="mb-5 p-5">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>

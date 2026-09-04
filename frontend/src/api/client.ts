@@ -19,9 +19,33 @@ interface ApiRequestOptions extends Omit<RequestInit, 'body'> {
   body?: unknown
   signal?: AbortSignal
   skipUnauthorizedHandler?: boolean
+  rawBody?: Blob
+  responseType?: 'json' | 'blob'
 }
 
-const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL ?? ''}/api/v1`
+export function normalizeApiBaseUrl(value: string | undefined) {
+  const candidate = value?.trim()
+  if (!candidate) {
+    throw new Error('VITE_API_BASE_URL is required.')
+  }
+
+  let url: URL
+  try {
+    url = new URL(candidate)
+  } catch {
+    throw new Error('VITE_API_BASE_URL must be a valid absolute URL.')
+  }
+
+  if (!['http:', 'https:'].includes(url.protocol) || url.search || url.hash) {
+    throw new Error(
+      'VITE_API_BASE_URL must be an HTTP(S) URL without a query or fragment.',
+    )
+  }
+
+  return candidate.replace(/\/+$/, '')
+}
+
+const API_BASE_URL = normalizeApiBaseUrl(import.meta.env.VITE_API_BASE_URL)
 
 function resolveUrl(path: string) {
   const normalizedPath = path.startsWith('/') ? path : `/${path}`
@@ -39,6 +63,8 @@ async function request<T, TMeta = unknown>(
     headers,
     signal,
     skipUnauthorizedHandler = false,
+    rawBody,
+    responseType = 'json',
     ...init
   }: ApiRequestOptions = {},
 ): Promise<ApiResult<T, TMeta>> {
@@ -55,7 +81,7 @@ async function request<T, TMeta = unknown>(
 
   const response = await fetch(resolveUrl(path), {
     ...init,
-    body: body === undefined ? undefined : JSON.stringify(body),
+    body: rawBody ?? (body === undefined ? undefined : JSON.stringify(body)),
     headers: requestHeaders,
     signal,
   })
@@ -94,7 +120,13 @@ async function request<T, TMeta = unknown>(
     }
   }
 
+  if (responseType === 'blob') return { data: (await response.blob()) as T }
+
   return { data: undefined as T }
+}
+
+export function apiDownload(path: string, signal?: AbortSignal) {
+  return apiFetch<Blob>(path, { signal, responseType: 'blob' })
 }
 
 export async function apiFetch<T>(

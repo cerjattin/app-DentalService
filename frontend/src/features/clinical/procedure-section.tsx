@@ -1,240 +1,677 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Pencil, Plus, Search, Trash2 } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
-import { getApiErrorMessage } from '../../api'
-import { hasPermission } from '../../auth/permissions'
+import { zodResolver } from '@hookform/resolvers/zod'
+import {
+  useIsMutating,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
+import { useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
+import { z } from 'zod'
+import { Pencil, Plus, Trash2 } from 'lucide-react'
+import { PermissionGuard } from '../../auth/permission-guard'
 import { useAuth } from '../../auth/use-auth'
-import { EmptyState } from '../../components/feedback/empty-state'
-import { ErrorState } from '../../components/feedback/error-state'
-import { LoadingState } from '../../components/feedback/loading-state'
-import { StatusBadge } from '../../components/feedback/status-badge'
+import { hasPermission } from '../../auth/permissions'
+import { DataTable } from '../../components/data-table/data-table'
 import { Button } from '../../components/ui/button'
-import { ConfirmDialog } from '../../components/ui/confirm-dialog'
 import { Dialog } from '../../components/ui/dialog'
 import { Input } from '../../components/ui/input'
 import { Select } from '../../components/ui/select'
 import { Textarea } from '../../components/ui/textarea'
+import { FormField } from '../../components/forms/form-field'
+import { LoadingState } from '../../components/feedback/loading-state'
+import { StatusBadge } from '../../components/feedback/status-badge'
 import type {
-  EncounterDiagnosis,
+  ClinicalEncounter,
   EncounterProcedure,
   SvbProcedure,
 } from '../../types/clinical'
 import type { PatientInsurance } from '../../types/patient'
+import { CatalogueSearch } from './catalogue-search'
 import {
-  addEncounterProcedure,
+  addProcedure,
   authorizationKeys,
-  getApplicableTariff,
+  catalogueKeys,
+  encounterKeys,
+  getTariff,
   listAuthorizations,
-  listEncounterProcedures,
-  performedProcedureKeys,
-  removeEncounterProcedure,
-  searchSvbProcedures,
-  svbProcedureKeys,
-  updateEncounterProcedure,
+  listDiagnoses,
+  listProcedures,
+  removeProcedure,
+  updateProcedure,
 } from './clinical-api'
+import {
+  ClinicalConfirm,
+  ClinicalSection,
+  MutationError,
+  Pager,
+} from './clinical-ui'
+import {
+  clinicalLabel,
+  entityIdSchema,
+  notesSchema,
+  positiveQuantitySchema,
+  useSearch,
+} from './clinical-model'
 
 export function ProcedureSection({
-  encounterId,
-  patientId,
-  serviceDate,
+  encounter,
   insurance,
-  diagnoses,
-  editable,
+  serviceDate,
 }: {
-  encounterId: string
-  patientId: string
-  serviceDate: string
+  encounter: ClinicalEncounter
   insurance: PatientInsurance[]
-  diagnoses: EncounterDiagnosis[]
-  editable: boolean
+  serviceDate: string
+}) {
+  const client = useQueryClient()
+  const [editing, setEditing] = useState<EncounterProcedure | 'new' | null>(
+    null,
+  )
+  const [removing, setRemoving] = useState<EncounterProcedure | null>(null)
+  const [notice, setNotice] = useState('')
+  const query = useQuery({
+    queryKey: encounterKeys.procedures(encounter.id),
+    queryFn: ({ signal }) => listProcedures(encounter.id, signal),
+  })
+  const refresh = async () => {
+    await client.invalidateQueries({
+      queryKey: encounterKeys.procedures(encounter.id),
+    })
+    await client.invalidateQueries({
+      queryKey: authorizationKeys.patient(encounter.patient.id),
+    })
+  }
+  const remove = useMutation({
+    mutationFn: () => removeProcedure(encounter.id, removing!.id),
+    onSuccess: async () => {
+      setRemoving(null)
+      setNotice('Procedure removed.')
+      await refresh()
+    },
+  })
+  return (
+    <ClinicalSection
+      title="Performed procedures"
+      actions={
+        encounter.status === 'OPEN' ? (
+          <PermissionGuard
+            allOf={['procedure.update', 'svb_procedure.read', 'insurance.read']}
+          >
+            <Button
+              onClick={() => setEditing('new')}
+              disabled={!insurance.length}
+            >
+              <Plus size={16} />
+              Add procedure
+            </Button>
+          </PermissionGuard>
+        ) : null
+      }
+    >
+      {notice ? (
+        <p role="status" className="mb-3 text-sm text-green-700">
+          {notice}
+        </p>
+      ) : null}
+      {query.isPending ? (
+        <LoadingState label="Loading performed procedures" />
+      ) : query.isError ? (
+        <>
+          <MutationError error={query.error} />
+          <Button onClick={() => void query.refetch()}>Retry</Button>
+        </>
+      ) : (
+        <DataTable
+          rows={query.data}
+          getRowKey={(row) => row.id}
+          emptyMessage="No performed procedures recorded."
+          columns={[
+            {
+              key: 'procedure',
+              header: 'Procedure',
+              render: (row) => (
+                <div className="min-w-44 max-w-80 break-words">
+                  <span className="font-mono text-clinic-blue">
+                    {row.procedureCodeSnapshot}
+                  </span>
+                  <p>{row.procedureDescriptionSnapshot}</p>
+                  <StatusBadge>{clinicalLabel(row.status)}</StatusBadge>
+                  <p className="mt-1 whitespace-pre-wrap text-xs text-slate-500">
+                    {row.additionalNote}
+                  </p>
+                </div>
+              ),
+            },
+            {
+              key: 'quantity',
+              header: 'Quantity / tariff',
+              render: (row) => (
+                <div className="whitespace-nowrap font-mono text-xs">
+                  <p>{row.quantity}</p>
+                  <p>
+                    {row.currencyCodeSnapshot} {row.unitTariffSnapshot}
+                  </p>
+                </div>
+              ),
+            },
+            {
+              key: 'context',
+              header: 'Clinical context',
+              render: (row) => (
+                <div className="min-w-44 break-words text-xs">
+                  <p>
+                    Diagnosis: {row.diagnosticCodeSnapshot ?? 'Not recorded'}
+                  </p>
+                  <p>
+                    Authorization:{' '}
+                    {row.authorizationIdSnapshot ??
+                      (row.svbProcedure.requiresAuthorization
+                        ? 'Required; not recorded'
+                        : 'Not required')}
+                  </p>
+                  {row.authorizationItem ? (
+                    <p>
+                      Remaining:{' '}
+                      {row.authorizationItem.remainingQuantity ?? 'Unlimited'}
+                    </p>
+                  ) : null}
+                  <p>
+                    TreatmentId: {row.treatmentIdSnapshot ?? 'Not recorded'}
+                  </p>
+                  <p>Insured ID: {row.insuredIdSnapshot}</p>
+                </div>
+              ),
+            },
+            {
+              key: 'actions',
+              header: 'Actions',
+              render: (row) =>
+                encounter.status === 'OPEN' && row.status === 'PERFORMED' ? (
+                  <PermissionGuard allOf={['procedure.update']}>
+                    <div className="flex">
+                      <Button
+                        title="Edit procedure"
+                        aria-label={`Edit procedure ${row.procedureCodeSnapshot}`}
+                        variant="ghost"
+                        onClick={() => setEditing(row)}
+                      >
+                        <Pencil size={16} />
+                      </Button>
+                      <Button
+                        title="Remove procedure"
+                        aria-label={`Remove procedure ${row.procedureCodeSnapshot}`}
+                        variant="ghost"
+                        onClick={() => {
+                          remove.reset()
+                          setRemoving(row)
+                        }}
+                      >
+                        <Trash2 size={16} />
+                      </Button>
+                    </div>
+                  </PermissionGuard>
+                ) : (
+                  <span className="text-xs text-slate-500">Read only</span>
+                ),
+            },
+          ]}
+        />
+      )}
+      {editing && encounter.status === 'OPEN' ? (
+        <ProcedureForm
+          encounter={encounter}
+          initial={editing}
+          insurance={insurance}
+          serviceDate={serviceDate}
+          onClose={() => setEditing(null)}
+          onSaved={async () => {
+            setEditing(null)
+            setNotice('Procedure saved.')
+            await refresh()
+          }}
+        />
+      ) : null}
+      {removing && encounter.status === 'OPEN' ? (
+        <ClinicalConfirm
+          title="Remove performed procedure?"
+          description="This permanently removes the procedure record and releases its authorization usage. It cannot be restored here. Billed records cannot be removed."
+          onClose={() => setRemoving(null)}
+          onConfirm={() => remove.mutate()}
+          pending={remove.isPending}
+          error={remove.error}
+        />
+      ) : null}
+    </ClinicalSection>
+  )
+}
+const updateSchema = z.object({
+  diagnosisId: z.string(),
+  additionalNote: notesSchema,
+})
+const createSchema = updateSchema.extend({
+  patientInsuranceId: entityIdSchema,
+  quantity: positiveQuantitySchema,
+  authorizationItemId: z.string(),
+})
+type UpdateValues = z.infer<typeof updateSchema>
+type CreateValues = z.infer<typeof createSchema>
+function ProcedureForm({
+  encounter,
+  initial,
+  insurance,
+  serviceDate,
+  onClose,
+  onSaved,
+}: {
+  encounter: ClinicalEncounter
+  initial: EncounterProcedure | 'new'
+  insurance: PatientInsurance[]
+  serviceDate: string
+  onClose: () => void
+  onSaved: () => Promise<void>
 }) {
   const { permissions } = useAuth()
-  const queryClient = useQueryClient()
-  const canRead = hasPermission(permissions, 'procedure.read')
-  const canUpdate = editable && hasPermission(permissions, 'procedure.update')
-  const canSearchCatalog = hasPermission(permissions, 'svb_procedure.read')
-  const canReadTariff = hasPermission(permissions, 'svb_tariff.read')
-  const canReadAuthorizations = hasPermission(permissions, 'authorization.read')
-  const [addOpen, setAddOpen] = useState(false)
-  const [editTarget, setEditTarget] = useState<EncounterProcedure>()
-  const [removeTarget, setRemoveTarget] = useState<EncounterProcedure>()
-  const [searchInput, setSearchInput] = useState('')
-  const [search, setSearch] = useState('')
-  const [selectedProcedure, setSelectedProcedure] = useState<SvbProcedure>()
-  const [insuranceId, setInsuranceId] = useState('')
-  const [diagnosisId, setDiagnosisId] = useState('')
-  const [authorizationItemId, setAuthorizationItemId] = useState('')
-  const [quantity, setQuantity] = useState('1.00')
-  const [note, setNote] = useState('')
-
-  useEffect(() => {
-    const timeout = window.setTimeout(() => setSearch(searchInput.trim()), 300)
-    return () => window.clearTimeout(timeout)
-  }, [searchInput])
-
-  const proceduresQuery = useQuery({
-    queryKey: performedProcedureKeys.encounter(encounterId),
-    queryFn: ({ signal }) => listEncounterProcedures(encounterId, signal),
-    enabled: canRead,
+  const [selected, setSelected] = useState<SvbProcedure | null>(null)
+  const pending = useIsMutating() > 0
+  const diagnoses = useQuery({
+    queryKey: encounterKeys.diagnoses(encounter.id),
+    queryFn: ({ signal }) => listDiagnoses(encounter.id, signal),
+    enabled: hasPermission(permissions, 'diagnosis.read'),
   })
-  const catalogQuery = useQuery({
-    queryKey: svbProcedureKeys.search(search, serviceDate),
-    queryFn: ({ signal }) => searchSvbProcedures(search, serviceDate, signal),
-    enabled: addOpen && canSearchCatalog,
-  })
-  const tariffQuery = useQuery({
-    queryKey: svbProcedureKeys.tariff(selectedProcedure?.id ?? '', serviceDate),
-    queryFn: ({ signal }) => getApplicableTariff(selectedProcedure?.id ?? '', serviceDate, signal),
-    enabled: Boolean(selectedProcedure) && canReadTariff,
-    retry: false,
-  })
-  const authorizationsQuery = useQuery({
-    queryKey: authorizationKeys.patient(patientId, serviceDate),
-    queryFn: ({ signal }) => listAuthorizations(patientId, serviceDate, signal),
-    enabled: canReadAuthorizations,
-  })
-
-  const authorizationItems = useMemo(
-    () => (authorizationsQuery.data?.data ?? []).flatMap((authorization) =>
-      authorization.items.map((item) => ({ ...item, authorization })),
-    ),
-    [authorizationsQuery.data],
-  )
-  const matchingAuthorizationItems = authorizationItems.filter((item) =>
-    !selectedProcedure || item.svbProcedureId === null || item.svbProcedureId === selectedProcedure.id,
-  )
-
-  async function refresh() {
-    await Promise.all([
-      queryClient.invalidateQueries({ queryKey: performedProcedureKeys.encounter(encounterId) }),
-      queryClient.invalidateQueries({ queryKey: authorizationKeys.patient(patientId, serviceDate) }),
-    ])
-  }
-  const addMutation = useMutation({
-    mutationFn: () => {
-      if (!selectedProcedure) throw new Error('No procedure selected')
-      return addEncounterProcedure(encounterId, {
-        patientInsuranceId: insuranceId,
-        svbProcedureId: selectedProcedure.id,
-        authorizationItemId: authorizationItemId || null,
-        diagnosisId: diagnosisId || null,
-        quantity,
-        additionalNote: note || null,
-      })
-    },
-    onSuccess: async () => {
-      setAddOpen(false)
-      await refresh()
-    },
-  })
-  const editMutation = useMutation({
-    mutationFn: () => {
-      if (!editTarget) throw new Error('No procedure selected')
-      return updateEncounterProcedure(encounterId, editTarget.id, {
-        diagnosisId: diagnosisId || null,
-        additionalNote: note || null,
-      })
-    },
-    onSuccess: async () => {
-      setEditTarget(undefined)
-      await refresh()
-    },
-  })
-  const removeMutation = useMutation({
-    mutationFn: () => {
-      if (!removeTarget) throw new Error('No procedure selected')
-      return removeEncounterProcedure(encounterId, removeTarget.id)
-    },
-    onSuccess: async () => {
-      setRemoveTarget(undefined)
-      await refresh()
-    },
-  })
-
-  function openAdd() {
-    setSearchInput('')
-    setSelectedProcedure(undefined)
-    setInsuranceId(insurance.find((item) => item.isPrimary)?.id ?? insurance[0]?.id ?? '')
-    setDiagnosisId(diagnoses.find((item) => item.isPrimary)?.id ?? '')
-    setAuthorizationItemId('')
-    setQuantity('1.00')
-    setNote('')
-    addMutation.reset()
-    setAddOpen(true)
-  }
-  function openEdit(procedure: EncounterProcedure) {
-    setDiagnosisId(procedure.diagnosisId ?? '')
-    setNote(procedure.additionalNote ?? '')
-    editMutation.reset()
-    setEditTarget(procedure)
-  }
-
-  const addDisabled =
-    addMutation.isPending ||
-    !selectedProcedure ||
-    !insuranceId ||
-    !/^(0|[1-9]\d*)(\.\d{1,2})?$/.test(quantity) ||
-    quantity === '0' ||
-    (selectedProcedure.requiresAuthorization && !authorizationItemId)
-
   return (
-    <section>
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <div><h3 className="font-semibold text-slate-900">Performed procedures</h3><p className="mt-0.5 text-sm text-slate-500">Backend-resolved tariffs and clinical snapshots.</p></div>
-        {canUpdate && canSearchCatalog ? <Button onClick={openAdd}><Plus size={16} />Add procedure</Button> : null}
-      </div>
-      {!canRead ? <ErrorState title="Procedure access unavailable" description="Procedure read permission is required." /> : proceduresQuery.isPending ? <LoadingState label="Loading performed procedures" /> : proceduresQuery.isError ? <ErrorState title="Unable to load procedures" description={getApiErrorMessage(proceduresQuery.error)} /> : proceduresQuery.data.length === 0 ? <EmptyState title="No procedures recorded" description="No performed procedures are attached to this encounter." /> : (
-        <div className="space-y-3">
-          {proceduresQuery.data.map((procedure) => (
-            <div key={procedure.id} className="rounded-lg border border-clinic-border bg-white p-4">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                <div><div className="flex flex-wrap items-center gap-2"><span className="font-mono text-sm font-semibold text-clinic-blue">{procedure.procedureCodeSnapshot}</span><StatusBadge tone={procedure.status === 'PERFORMED' ? 'success' : 'neutral'}>{procedure.status.charAt(0) + procedure.status.slice(1).toLowerCase()}</StatusBadge>{procedure.svbProcedure.requiresAuthorization ? <StatusBadge tone="warning">Authorization required</StatusBadge> : null}</div><p className="mt-1 text-sm font-medium text-slate-800">{procedure.procedureDescriptionSnapshot}</p></div>
-                {canUpdate && procedure.status === 'PERFORMED' ? <div className="flex gap-2"><Button variant="secondary" className="h-8 px-2.5 text-xs" onClick={() => openEdit(procedure)}><Pencil size={14} />Edit</Button><Button variant="ghost" className="h-8 px-2.5 text-xs text-clinic-danger" onClick={() => setRemoveTarget(procedure)}><Trash2 size={14} />Remove</Button></div> : null}
-              </div>
-              <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-4">
-                <div><dt className="text-xs text-slate-500">Quantity</dt><dd className="mt-1 font-mono">{procedure.quantity}</dd></div>
-                <div><dt className="text-xs text-slate-500">Authoritative tariff</dt><dd className="mt-1 font-mono">{procedure.currencyCodeSnapshot} {procedure.unitTariffSnapshot}</dd></div>
-                <div><dt className="text-xs text-slate-500">Backend amount</dt><dd className="mt-1 font-mono">{procedure.currencyCodeSnapshot} {procedure.amount}</dd></div>
-                <div><dt className="text-xs text-slate-500">Authorization</dt><dd className="mt-1">{procedure.authorizationIdSnapshot ?? 'Not linked'}</dd></div>
-                <div><dt className="text-xs text-slate-500">Diagnosis</dt><dd className="mt-1">{procedure.diagnosticCodeSnapshot ?? 'Not linked'}</dd></div>
-                <div><dt className="text-xs text-slate-500">Treatment ID</dt><dd className="mt-1">{procedure.treatmentIdSnapshot ?? 'Not available'}</dd></div>
-                <div><dt className="text-xs text-slate-500">Policlinic</dt><dd className="mt-1">{procedure.policlinicSnapshot ?? 'Not available'}</dd></div>
-                <div><dt className="text-xs text-slate-500">Insured ID</dt><dd className="mt-1 font-mono">{procedure.insuredIdSnapshot}</dd></div>
-              </dl>
-              {procedure.additionalNote ? <p className="mt-3 text-sm text-slate-600">{procedure.additionalNote}</p> : null}
-            </div>
-          ))}
-        </div>
+    <Dialog
+      open
+      size="wide"
+      title={
+        initial === 'new'
+          ? 'Add performed procedure'
+          : 'Edit performed procedure'
+      }
+      description="Clinical procedure record. Tariffs and coverage are validated by the backend."
+      onOpenChange={(open) => {
+        if (!open && !pending) onClose()
+      }}
+    >
+      {initial === 'new' ? (
+        selected ? (
+          <CreateProcedureForm
+            encounter={encounter}
+            selected={selected}
+            insurance={insurance}
+            serviceDate={serviceDate}
+            diagnoses={diagnoses.data ?? []}
+            onClose={onClose}
+            onSaved={onSaved}
+          />
+        ) : (
+          <CatalogueSearch
+            kind="procedure"
+            serviceDate={serviceDate}
+            onSelect={(row) => {
+              if ('requiresAuthorization' in row) setSelected(row)
+            }}
+          />
+        )
+      ) : (
+        <UpdateProcedureForm
+          encounter={encounter}
+          procedure={initial}
+          diagnoses={diagnoses.data ?? []}
+          onClose={onClose}
+          onSaved={onSaved}
+        />
       )}
-
-      <Dialog open={addOpen} onOpenChange={setAddOpen} title="Add performed procedure" description="The backend resolves and snapshots the applicable ANG tariff." size="wide">
-        <div className="space-y-4">
-          <div className="relative"><Search className="absolute left-3 top-2.5 text-slate-400" size={16} /><Input aria-label="Search SVB procedures" className="pl-9" placeholder="Search procedure code or description" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} /></div>
-          <div className="max-h-48 overflow-y-auto rounded-md border border-clinic-border">
-            {catalogQuery.isPending ? <p className="p-3 text-sm text-slate-500">Loading SVB procedures...</p> : (catalogQuery.data?.data ?? []).map((procedure) => <button key={procedure.id} type="button" className={`w-full border-b border-clinic-border px-3 py-2 text-left last:border-0 ${selectedProcedure?.id === procedure.id ? 'bg-clinic-blue-soft' : 'hover:bg-slate-50'}`} onClick={() => { setSelectedProcedure(procedure); setAuthorizationItemId('') }}><span className="font-mono text-xs font-semibold text-clinic-blue">{procedure.code}</span><span className="ml-2 text-sm text-slate-700">{procedure.description}</span>{procedure.requiresAuthorization ? <span className="ml-2 text-xs text-amber-700">Authorization required</span> : null}</button>)}
-          </div>
-          {selectedProcedure ? <div className="rounded-md bg-slate-50 p-3 text-sm"><div className="font-medium">{selectedProcedure.code} - {selectedProcedure.description}</div><div className="mt-1 text-slate-600">Tariff: {tariffQuery.isPending ? 'Resolving...' : tariffQuery.data ? `${tariffQuery.data.currencyCode} ${tariffQuery.data.amount}` : canReadTariff ? 'Unavailable' : 'Tariff read permission required'}</div></div> : null}
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div><label htmlFor="procedureInsurance" className="mb-1.5 block text-sm font-medium text-slate-700">Patient insurance</label><Select id="procedureInsurance" value={insuranceId} onChange={(event) => setInsuranceId(event.target.value)}><option value="">Select insurance</option>{insurance.map((item) => <option key={item.id} value={item.id}>{item.payer.name} - {item.insuredId} ({item.status})</option>)}</Select></div>
-            <div><label htmlFor="procedureDiagnosis" className="mb-1.5 block text-sm font-medium text-slate-700">Diagnosis</label><Select id="procedureDiagnosis" value={diagnosisId} onChange={(event) => setDiagnosisId(event.target.value)}><option value="">No linked diagnosis</option>{diagnoses.map((item) => <option key={item.id} value={item.id}>{item.codeSnapshot} - {item.descriptionSnapshot}</option>)}</Select></div>
-            <div><label htmlFor="procedureQuantity" className="mb-1.5 block text-sm font-medium text-slate-700">Quantity</label><Input id="procedureQuantity" inputMode="decimal" value={quantity} onChange={(event) => setQuantity(event.target.value)} /></div>
-            <div><label htmlFor="procedureAuthorization" className="mb-1.5 block text-sm font-medium text-slate-700">Authorization item</label><Select id="procedureAuthorization" value={authorizationItemId} disabled={!canReadAuthorizations} onChange={(event) => setAuthorizationItemId(event.target.value)}><option value="">No authorization item</option>{matchingAuthorizationItems.map((item) => <option key={item.id} value={item.id}>{item.authorization.authorizationId} - {item.procedureCodeSnapshot ?? 'General'} - remaining {item.remainingQuantity ?? 'unlimited'}</option>)}</Select></div>
-          </div>
-          <div><label htmlFor="procedureNote" className="mb-1.5 block text-sm font-medium text-slate-700">Additional note</label><Textarea id="procedureNote" value={note} onChange={(event) => setNote(event.target.value)} /></div>
-          {addMutation.isError ? <p role="alert" className="text-sm text-clinic-danger">{getApiErrorMessage(addMutation.error)}</p> : null}
-          <div className="flex justify-end gap-2"><Button variant="secondary" onClick={() => setAddOpen(false)}>Cancel</Button><Button disabled={addDisabled} onClick={() => addMutation.mutate()}>{addMutation.isPending ? 'Adding...' : 'Add performed procedure'}</Button></div>
-        </div>
-      </Dialog>
-
-      <Dialog open={Boolean(editTarget)} onOpenChange={(open) => { if (!open) setEditTarget(undefined) }} title="Edit performed procedure">
-        <div className="space-y-4">
-          <div><label htmlFor="editProcedureDiagnosis" className="mb-1.5 block text-sm font-medium text-slate-700">Diagnosis</label><Select id="editProcedureDiagnosis" value={diagnosisId} onChange={(event) => setDiagnosisId(event.target.value)}><option value="">No linked diagnosis</option>{diagnoses.map((item) => <option key={item.id} value={item.id}>{item.codeSnapshot} - {item.descriptionSnapshot}</option>)}</Select></div>
-          <div><label htmlFor="editProcedureNote" className="mb-1.5 block text-sm font-medium text-slate-700">Additional note</label><Textarea id="editProcedureNote" value={note} onChange={(event) => setNote(event.target.value)} /></div>
-          {editMutation.isError ? <p role="alert" className="text-sm text-clinic-danger">{getApiErrorMessage(editMutation.error)}</p> : null}
-          <div className="flex justify-end gap-2"><Button variant="secondary" onClick={() => setEditTarget(undefined)}>Cancel</Button><Button disabled={editMutation.isPending} onClick={() => editMutation.mutate()}>{editMutation.isPending ? 'Saving...' : 'Save changes'}</Button></div>
-        </div>
-      </Dialog>
-      <ConfirmDialog open={Boolean(removeTarget)} title="Remove performed procedure" description="Remove this procedure from the open encounter? Linked authorization usage will be handled by the backend." confirmLabel={removeMutation.isPending ? 'Removing...' : 'Remove'} onCancel={() => setRemoveTarget(undefined)} onConfirm={() => removeMutation.mutate()} />
-    </section>
+      {hasPermission(permissions, 'diagnosis.read') && diagnoses.isError ? (
+        <MutationError error={diagnoses.error} />
+      ) : null}
+    </Dialog>
+  )
+}
+type DiagnosisOption = {
+  id: string
+  codeSnapshot: string
+  descriptionSnapshot: string
+}
+function DiagnosisOptions({ diagnoses }: { diagnoses: DiagnosisOption[] }) {
+  return (
+    <>
+      <option value="">No diagnosis selected</option>
+      {diagnoses.map((row) => (
+        <option key={row.id} value={row.id}>
+          {row.codeSnapshot} - {row.descriptionSnapshot}
+        </option>
+      ))}
+    </>
+  )
+}
+function UpdateProcedureForm({
+  encounter,
+  procedure,
+  diagnoses,
+  onClose,
+  onSaved,
+}: {
+  encounter: ClinicalEncounter
+  procedure: EncounterProcedure
+  diagnoses: DiagnosisOption[]
+  onClose: () => void
+  onSaved: () => Promise<void>
+}) {
+  const form = useForm<UpdateValues>({
+    resolver: zodResolver(updateSchema),
+    defaultValues: {
+      diagnosisId: procedure.diagnosisId ?? '',
+      additionalNote: procedure.additionalNote ?? '',
+    },
+  })
+  const mutation = useMutation({
+    mutationFn: (values: UpdateValues) =>
+      updateProcedure(encounter.id, procedure.id, {
+        diagnosisId: values.diagnosisId || null,
+        additionalNote: values.additionalNote || null,
+      }),
+    onSuccess: onSaved,
+  })
+  return (
+    <form
+      className="space-y-4"
+      onSubmit={form.handleSubmit((values) => mutation.mutate(values))}
+    >
+      <p className="font-medium">
+        {procedure.procedureCodeSnapshot}{' '}
+        {procedure.procedureDescriptionSnapshot}
+      </p>
+      <PermissionGuard allOf={['diagnosis.read']}>
+        <FormField label="Procedure diagnosis" htmlFor="procedure-diagnosis">
+          <Select id="procedure-diagnosis" {...form.register('diagnosisId')}>
+            <DiagnosisOptions diagnoses={diagnoses} />
+          </Select>
+        </FormField>
+      </PermissionGuard>
+      <FormField
+        label="Procedure notes"
+        htmlFor="procedure-notes"
+        error={form.formState.errors.additionalNote?.message}
+      >
+        <Textarea id="procedure-notes" {...form.register('additionalNote')} />
+      </FormField>
+      <MutationError error={mutation.error} />
+      <div className="flex justify-end gap-2">
+        <Button
+          variant="secondary"
+          disabled={mutation.isPending}
+          onClick={onClose}
+        >
+          Cancel
+        </Button>
+        <Button type="submit" disabled={mutation.isPending}>
+          {mutation.isPending ? 'Saving...' : 'Save procedure'}
+        </Button>
+      </div>
+    </form>
+  )
+}
+function CreateProcedureForm({
+  encounter,
+  selected,
+  insurance,
+  serviceDate,
+  diagnoses,
+  onClose,
+  onSaved,
+}: {
+  encounter: ClinicalEncounter
+  selected: SvbProcedure
+  insurance: PatientInsurance[]
+  serviceDate: string
+  diagnoses: DiagnosisOption[]
+  onClose: () => void
+  onSaved: () => Promise<void>
+}) {
+  const { permissions } = useAuth()
+  const form = useForm<CreateValues>({
+    resolver: zodResolver(createSchema),
+    defaultValues: {
+      patientInsuranceId: '',
+      quantity: '',
+      diagnosisId: '',
+      authorizationItemId: '',
+      additionalNote: '',
+    },
+  })
+  const insuranceId = useWatch({
+    control: form.control,
+    name: 'patientInsuranceId',
+  })
+  const authorizationItemId = useWatch({
+    control: form.control,
+    name: 'authorizationItemId',
+  })
+  const canReadTariff = hasPermission(permissions, 'svb_tariff.read')
+  const tariff = useQuery({
+    queryKey: catalogueKeys.tariff(selected.id, serviceDate),
+    queryFn: ({ signal }) => getTariff(selected.id, serviceDate, signal),
+    enabled: canReadTariff,
+  })
+  const mutation = useMutation({
+    mutationFn: (values: CreateValues) =>
+      addProcedure(encounter.id, {
+        svbProcedureId: selected.id,
+        patientInsuranceId: values.patientInsuranceId,
+        quantity: values.quantity,
+        diagnosisId: values.diagnosisId || null,
+        authorizationItemId: values.authorizationItemId || null,
+        additionalNote: values.additionalNote || null,
+      }),
+    onSuccess: onSaved,
+  })
+  return (
+    <form
+      className="space-y-4"
+      onSubmit={form.handleSubmit((values) => mutation.mutate(values))}
+    >
+      <div>
+        <p className="font-medium">
+          {selected.code} {selected.description}
+        </p>
+        <p className="text-sm text-slate-500">Service date: {serviceDate}</p>
+        {canReadTariff ? (
+          tariff.isPending ? (
+            <p role="status">Loading tariff...</p>
+          ) : tariff.isError ? (
+            <>
+              <MutationError error={tariff.error} />
+              <Button variant="secondary" onClick={() => void tariff.refetch()}>
+                Retry tariff
+              </Button>
+            </>
+          ) : (
+            <p className="mt-2 font-mono">
+              Tariff: {tariff.data.tariff.currencyCode}{' '}
+              {tariff.data.tariff.amount}
+            </p>
+          )
+        ) : (
+          <p className="text-sm text-slate-500">
+            Tariff preview unavailable with your permissions.
+          </p>
+        )}
+        {selected.requiresAuthorization ? (
+          <StatusBadge tone="warning">Authorization required</StatusBadge>
+        ) : null}
+        {selected.requiresReferral ? (
+          <p className="text-sm text-amber-700">
+            Referral required by catalogue.
+          </p>
+        ) : null}
+      </div>
+      <FormField
+        label="Procedure insurance"
+        htmlFor="procedure-insurance"
+        error={form.formState.errors.patientInsuranceId?.message}
+      >
+        <Select
+          id="procedure-insurance"
+          {...form.register('patientInsuranceId', {
+            onChange: () => form.setValue('authorizationItemId', ''),
+          })}
+        >
+          <option value="">Select insurance</option>
+          {insurance.map((row) => (
+            <option key={row.id} value={row.id}>
+              {row.payer.name} - {row.insuredId} ({clinicalLabel(row.status)})
+            </option>
+          ))}
+        </Select>
+      </FormField>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <FormField
+          label="Quantity"
+          htmlFor="procedure-quantity"
+          error={form.formState.errors.quantity?.message}
+        >
+          <Input
+            id="procedure-quantity"
+            inputMode="decimal"
+            {...form.register('quantity')}
+          />
+        </FormField>
+        <PermissionGuard allOf={['diagnosis.read']}>
+          <FormField label="Procedure diagnosis" htmlFor="procedure-diagnosis">
+            <Select id="procedure-diagnosis" {...form.register('diagnosisId')}>
+              <DiagnosisOptions diagnoses={diagnoses} />
+            </Select>
+          </FormField>
+        </PermissionGuard>
+      </div>
+      {insuranceId ? (
+        <PermissionGuard
+          allOf={['authorization.read']}
+          fallback={
+            selected.requiresAuthorization ? (
+              <p className="text-sm text-amber-700">
+                Authorization selection requires additional permission.
+              </p>
+            ) : null
+          }
+        >
+          <AuthorizationPicker
+            key={insuranceId}
+            patientId={encounter.patient.id}
+            insuranceId={insuranceId}
+            procedureId={selected.id}
+            value={authorizationItemId}
+            onChange={(value) => form.setValue('authorizationItemId', value)}
+          />
+        </PermissionGuard>
+      ) : null}
+      <FormField
+        label="Procedure notes"
+        htmlFor="procedure-notes"
+        error={form.formState.errors.additionalNote?.message}
+      >
+        <Textarea id="procedure-notes" {...form.register('additionalNote')} />
+      </FormField>
+      <MutationError error={mutation.error} />
+      <div className="flex justify-end gap-2">
+        <Button
+          variant="secondary"
+          disabled={mutation.isPending}
+          onClick={onClose}
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          disabled={
+            mutation.isPending ||
+            (selected.requiresAuthorization && !authorizationItemId) ||
+            (canReadTariff && !tariff.isSuccess)
+          }
+        >
+          {mutation.isPending ? 'Saving...' : 'Save procedure'}
+        </Button>
+      </div>
+    </form>
+  )
+}
+function AuthorizationPicker({
+  patientId,
+  insuranceId,
+  procedureId,
+  value,
+  onChange,
+}: {
+  patientId: string
+  insuranceId: string
+  procedureId: string
+  value: string
+  onChange: (value: string) => void
+}) {
+  const search = useSearch()
+  const query = useQuery({
+    queryKey: authorizationKeys.list(patientId, search.page, search.q),
+    queryFn: ({ signal }) =>
+      listAuthorizations(patientId, search.page, search.q, signal),
+  })
+  const options =
+    query.data?.data
+      .filter((row) => row.patientInsuranceId === insuranceId)
+      .flatMap((row) =>
+        row.items
+          .filter(
+            (item) =>
+              item.svbProcedureId === null ||
+              item.svbProcedureId === procedureId,
+          )
+          .map((item) => ({
+            id: item.id,
+            label: `${row.authorizationId} - ${clinicalLabel(row.status)} - remaining ${item.remainingQuantity ?? 'unlimited'}`,
+          })),
+      ) ?? []
+  return (
+    <div className="space-y-3">
+      <FormField label="Find authorization" htmlFor="procedure-auth-search">
+        <Input
+          id="procedure-auth-search"
+          maxLength={120}
+          value={search.text}
+          onChange={(e) => {
+            search.setText(e.target.value)
+            onChange('')
+          }}
+        />
+      </FormField>
+      <FormField label="Authorization item" htmlFor="procedure-authorization">
+        <Select
+          id="procedure-authorization"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          disabled={query.isFetching || search.settling}
+        >
+          <option value="">Select authorization item</option>
+          {options.map((row) => (
+            <option key={row.id} value={row.id}>
+              {row.label}
+            </option>
+          ))}
+        </Select>
+      </FormField>
+      <MutationError error={query.error} />
+      {query.isError ? (
+        <Button variant="secondary" onClick={() => void query.refetch()}>
+          Retry authorizations
+        </Button>
+      ) : null}
+      <Pager
+        page={search.page}
+        meta={query.data?.meta}
+        disabled={query.isFetching || search.settling}
+        onChange={(page) => {
+          search.setPage(page)
+          onChange('')
+        }}
+      />
+    </div>
   )
 }

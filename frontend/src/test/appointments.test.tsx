@@ -171,7 +171,7 @@ describe('appointment detail and updates', () => {
     renderDetail()
     expect(await screen.findByText('Appointment information')).toBeInTheDocument()
     expect(fetchMock).toHaveBeenCalledWith(
-      `/api/v1/appointments/${appointment.id}`,
+      `http://api.test/api/v1/appointments/${appointment.id}`,
       expect.objectContaining({ signal: expect.any(AbortSignal) }),
     )
   })

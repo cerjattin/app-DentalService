@@ -27,7 +27,7 @@ const widgets = [
   },
   {
     title: 'SVB Billing',
-    description: 'Open the invoice and signature foundation.',
+    description: 'Invoices, signatures and closed documents.',
     path: '/invoices',
     permissions: ['invoice.read'],
   },

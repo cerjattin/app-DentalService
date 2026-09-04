@@ -9,7 +9,7 @@ const pageTitles: Record<string, { title: string; subtitle?: string }> = {
   '/reception': { title: 'Reception', subtitle: 'Front desk workspace' },
   '/patients': { title: 'Patients', subtitle: 'Patient records foundation' },
   '/appointments': { title: 'Appointments', subtitle: 'Scheduling foundation' },
-  '/invoices': { title: 'Invoices', subtitle: 'SVB billing foundation' },
+  '/invoices': { title: 'Invoices', subtitle: 'SVB billing' },
   '/declarations': { title: 'Declarations', subtitle: 'SVB declarations foundation' },
   '/admin': { title: 'Administration', subtitle: 'System administration' },
   '/admin/users': { title: 'Users', subtitle: 'Access management foundation' },
@@ -31,11 +31,11 @@ function titleForPath(pathname: string) {
   }
 
   if (pathname.startsWith('/clinical/')) {
-    return { title: 'Clinical Workspace', subtitle: 'Tablet-ready clinical foundation' }
+    return { title: 'Clinical Workspace', subtitle: 'Encounter and procedures' }
   }
 
   if (pathname.startsWith('/invoices/')) {
-    return { title: 'Invoice Detail', subtitle: 'Invoice version foundation' }
+    return { title: 'Invoice Detail', subtitle: 'Invoice version and documents' }
   }
 
   if (pathname.startsWith('/declarations/')) {

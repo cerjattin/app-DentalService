@@ -1,13 +1,11 @@
-import type { AppointmentStatus } from './appointment'
 import type { DecimalString, EntityId } from './core'
-
-export type EncounterStatus = 'OPEN' | 'COMPLETED' | 'VOID'
+import type { AppointmentProvider } from './appointment'
 
 export interface ClinicalEncounter {
   id: EntityId
   appointmentId: EntityId
   providerId: EntityId
-  status: EncounterStatus
+  status: 'OPEN' | 'COMPLETED' | 'VOID'
   startedAt: string
   completedAt: string | null
   chiefComplaint: string | null
@@ -17,7 +15,7 @@ export interface ClinicalEncounter {
     appointmentNumber: string
     scheduledStartAt: string
     scheduledEndAt: string
-    status: AppointmentStatus
+    status: string
   }
   patient: {
     id: EntityId
@@ -27,18 +25,15 @@ export interface ClinicalEncounter {
     lastName: string
     secondLastName: string | null
   }
-  provider: {
-    id: EntityId
-    svbProviderId: string | null
-    firstName: string
-    lastName: string
-    isActive: boolean
-  }
+  provider: AppointmentProvider
   createdByUserId: EntityId
   createdAt: string
   updatedAt: string
 }
-
+export interface EncounterWriteDto {
+  chiefComplaint?: string | null
+  clinicalNotes?: string | null
+}
 export interface DiagnosisCode {
   id: EntityId
   codeSystem: string
@@ -50,7 +45,6 @@ export interface DiagnosisCode {
   createdAt: string
   updatedAt: string
 }
-
 export interface EncounterDiagnosis {
   id: EntityId
   encounterId: EntityId
@@ -63,7 +57,12 @@ export interface EncounterDiagnosis {
   createdAt: string
   diagnosisCode: DiagnosisCode
 }
-
+export interface DiagnosisWriteDto {
+  diagnosisCodeId: EntityId
+  isPrimary: boolean
+  notes: string | null
+}
+export type DiagnosisUpdateDto = Pick<DiagnosisWriteDto, 'isPrimary' | 'notes'>
 export interface SvbProcedure {
   id: EntityId
   code: string
@@ -78,7 +77,6 @@ export interface SvbProcedure {
   createdAt: string
   updatedAt: string
 }
-
 export interface SvbTariff {
   id: EntityId
   svbProcedureId: EntityId
@@ -90,7 +88,11 @@ export interface SvbTariff {
   createdAt: string
   updatedAt: string
 }
-
+export interface TariffResolution {
+  procedure: SvbProcedure
+  tariff: SvbTariff
+  serviceDate: string
+}
 export type AuthorizationStatus =
   | 'PENDING'
   | 'APPROVED'
@@ -98,7 +100,8 @@ export type AuthorizationStatus =
   | 'EXHAUSTED'
   | 'EXPIRED'
   | 'CANCELLED'
-
+export type AuthorizationAdminStatus =
+  'PENDING' | 'APPROVED' | 'EXPIRED' | 'CANCELLED'
 export interface AuthorizationItem {
   id: EntityId
   authorizationId: EntityId
@@ -110,14 +113,13 @@ export interface AuthorizationItem {
   validFrom: string | null
   validTo: string | null
   notes: string | null
-  svbProcedure?: {
-    id: EntityId
-    code: string
-    description: string
-    requiresAuthorization: boolean
-  } | null
+  svbProcedure?: Pick<
+    SvbProcedure,
+    'id' | 'code' | 'description' | 'requiresAuthorization'
+  > | null
+  createdAt?: string
+  updatedAt?: string
 }
-
 export interface Authorization {
   id: EntityId
   patientId: EntityId
@@ -129,7 +131,14 @@ export interface Authorization {
   issuedAt: string | null
   notes: string | null
   createdByUserId: EntityId
-  patient: { id: EntityId; patientNumber: string; firstName: string; lastName: string }
+  createdAt: string
+  updatedAt: string
+  patient: {
+    id: EntityId
+    patientNumber: string
+    firstName: string
+    lastName: string
+  }
   patientInsurance: {
     id: EntityId
     insuredId: string
@@ -137,10 +146,26 @@ export interface Authorization {
     payer: { id: EntityId; code: string; name: string }
   }
   items: AuthorizationItem[]
-  createdAt: string
-  updatedAt: string
 }
-
+export interface AuthorizationUpdateDto {
+  status?: AuthorizationAdminStatus
+  validFrom?: string | null
+  validTo?: string | null
+  issuedAt?: string | null
+  notes?: string | null
+}
+export interface AuthorizationWriteDto extends AuthorizationUpdateDto {
+  patientId: EntityId
+  patientInsuranceId: EntityId
+  authorizationId: string
+}
+export interface AuthorizationItemWriteDto {
+  svbProcedureId?: EntityId | null
+  authorizedQuantity: DecimalString | null
+  validFrom: string | null
+  validTo: string | null
+  notes: string | null
+}
 export interface EncounterProcedure {
   id: EntityId
   encounterId: EntityId
@@ -149,6 +174,7 @@ export interface EncounterProcedure {
   svbTariffId: EntityId
   authorizationItemId: EntityId | null
   diagnosisId: EntityId | null
+  referrerId: EntityId | null
   performedByProviderId: EntityId
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
@@ -162,17 +188,24 @@ export interface EncounterProcedure {
   diagnosticCodeSnapshot: string | null
   treatmentIdSnapshot: string | null
   accidentFormNumberSnapshot: string | null
-  numberOfTreatmentsSnapshot: string | null
+  numberOfTreatmentsSnapshot: number | null
   assistanceSnapshot: string | null
+  referrerIdSnapshot: string | null
   policlinicSnapshot: string | null
   performedAt: string | null
   additionalNote: string | null
-  status: string
+  status: 'PERFORMED' | 'BILLED' | 'VOID'
   createdByUserId: EntityId
   createdAt: string
   updatedAt: string
-  svbProcedure: Pick<SvbProcedure, 'id' | 'code' | 'description' | 'requiresAuthorization' | 'requiresReferral'>
-  svbTariff: Pick<SvbTariff, 'id' | 'amount' | 'currencyCode' | 'validFrom' | 'validTo'>
+  svbProcedure: Pick<
+    SvbProcedure,
+    'id' | 'code' | 'description' | 'requiresAuthorization' | 'requiresReferral'
+  >
+  svbTariff: Pick<
+    SvbTariff,
+    'id' | 'amount' | 'currencyCode' | 'validFrom' | 'validTo'
+  >
   patientInsurance: {
     id: EntityId
     patientId: EntityId
@@ -182,38 +215,30 @@ export interface EncounterProcedure {
     validTo: string | null
     payer: { id: EntityId; code: string; name: string }
   }
-  authorizationItem: {
-    id: EntityId
-    authorizationId: EntityId
-    externalAuthorizationId: string
-    status: AuthorizationStatus
-    svbProcedureId: EntityId | null
-    procedureCodeSnapshot: string | null
-    authorizedQuantity: DecimalString | null
-    usedQuantity: DecimalString
-    remainingQuantity: DecimalString | null
-    validFrom: string | null
-    validTo: string | null
-  } | null
-  diagnosis: {
-    id: EntityId
-    codeSnapshot: string
-    descriptionSnapshot: string
-    isPrimary: boolean
-  } | null
-  performedByProvider: {
-    id: EntityId
-    svbProviderId: string | null
-    firstName: string
-    lastName: string
-  }
+  authorizationItem:
+    | (Omit<AuthorizationItem, 'notes'> & {
+        externalAuthorizationId: string
+        status: AuthorizationStatus
+      })
+    | null
+  diagnosis: Pick<
+    EncounterDiagnosis,
+    'id' | 'codeSnapshot' | 'descriptionSnapshot' | 'isPrimary'
+  > | null
+  performedByProvider: Pick<
+    AppointmentProvider,
+    'id' | 'svbProviderId' | 'firstName' | 'lastName'
+  >
 }
-
-export interface EncounterProcedureCreateDto {
+export interface ProcedureWriteDto {
   patientInsuranceId: EntityId
   svbProcedureId: EntityId
-  authorizationItemId?: EntityId | null
-  diagnosisId?: EntityId | null
   quantity: DecimalString
-  additionalNote?: string | null
+  authorizationItemId: EntityId | null
+  diagnosisId: EntityId | null
+  additionalNote: string | null
 }
+export type ProcedureUpdateDto = Pick<
+  ProcedureWriteDto,
+  'diagnosisId' | 'additionalNote'
+>
