@@ -52,12 +52,6 @@ export const navigationGroups: NavigationGroup[] = [
         permissions: ['appointment.read'],
         icon: CalendarDays,
       },
-      {
-        label: 'Clinical',
-        path: '/clinical/current',
-        permissions: ['encounter.read'],
-        icon: Stethoscope,
-      },
     ],
   },
   {

@@ -1,4 +1,4 @@
-import { Menu, Search } from 'lucide-react'
+import { LogOut, Menu } from 'lucide-react'
 import { useNavigate } from 'react-router'
 import { Button } from '../ui/button'
 import { useAuth } from '../../auth/use-auth'
@@ -24,7 +24,7 @@ export function Topbar({
   return (
     <header className="flex min-h-16 items-center gap-4 border-b border-clinic-border bg-white px-4 lg:px-6">
       <Button
-        className="h-9 w-9 px-0 lg:hidden"
+        className="h-9 w-9 px-0 xl:hidden"
         variant="ghost"
         onClick={onMenuClick}
         aria-label="Open navigation"
@@ -34,18 +34,6 @@ export function Topbar({
       <div className="min-w-0 flex-1">
         <h1 className="truncate text-base font-semibold text-slate-900">{title}</h1>
         {subtitle ? <p className="truncate text-xs text-slate-500">{subtitle}</p> : null}
-      </div>
-      <div className="relative hidden md:block">
-        <Search
-          className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400"
-          size={15}
-          aria-hidden="true"
-        />
-        <input
-          aria-label="Global search"
-          className="h-9 w-72 rounded-md border border-clinic-border bg-slate-50 pl-8 pr-3 text-sm placeholder:text-slate-400 focus:border-clinic-blue focus:outline-none focus:ring-2 focus:ring-clinic-blue/20"
-          placeholder="Search patients, invoices, or appointments"
-        />
       </div>
       <div className="hidden text-xs font-mono text-slate-400 xl:block">
         {formatBusinessTime(new Date())}
@@ -61,12 +49,14 @@ export function Topbar({
       </div>
       <Button
         variant="secondary"
+        aria-label="Sign out"
         onClick={() => {
           clearSession()
           navigate('/login', { replace: true })
         }}
       >
-        Sign out
+        <LogOut size={16} aria-hidden="true" />
+        <span className="hidden sm:inline">Sign out</span>
       </Button>
     </header>
   )

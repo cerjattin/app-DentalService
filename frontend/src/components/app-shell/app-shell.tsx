@@ -1,3 +1,4 @@
+import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { useState } from 'react'
 import { Outlet, useLocation } from 'react-router'
 import { useAuth } from '../../auth/use-auth'
@@ -7,14 +8,14 @@ import { Topbar } from './topbar'
 const pageTitles: Record<string, { title: string; subtitle?: string }> = {
   '/dashboard': { title: 'Dashboard', subtitle: 'Operational overview' },
   '/reception': { title: 'Reception', subtitle: 'Front desk workspace' },
-  '/patients': { title: 'Patients', subtitle: 'Patient records foundation' },
-  '/appointments': { title: 'Appointments', subtitle: 'Scheduling foundation' },
+  '/patients': { title: 'Patients', subtitle: 'Patient records and insurance' },
+  '/appointments': { title: 'Appointments', subtitle: 'Scheduling and status workflow' },
   '/invoices': { title: 'Invoices', subtitle: 'SVB billing' },
-  '/declarations': { title: 'Declarations', subtitle: 'SVB declarations foundation' },
-  '/admin': { title: 'Administration', subtitle: 'System administration' },
-  '/admin/users': { title: 'Users', subtitle: 'Access management foundation' },
-  '/admin/providers': { title: 'Providers', subtitle: 'Provider management foundation' },
-  '/admin/settings': { title: 'Settings', subtitle: 'Application configuration foundation' },
+  '/declarations': { title: 'Declarations', subtitle: 'SVB batches and submissions' },
+  '/admin': { title: 'Administration', subtitle: 'Users, roles and providers' },
+  '/admin/users': { title: 'Users', subtitle: 'Profiles, status and role assignments' },
+  '/admin/providers': { title: 'Providers', subtitle: 'Professional and user relationships' },
+  '/admin/settings': { title: 'Settings', subtitle: 'Unavailable in the Backend contract' },
 }
 
 function titleForPath(pathname: string) {
@@ -23,11 +24,11 @@ function titleForPath(pathname: string) {
   }
 
   if (pathname.startsWith('/patients/')) {
-    return { title: 'Patient Profile', subtitle: 'Patient detail foundation' }
+    return { title: 'Patient Profile', subtitle: 'Patient and insurance details' }
   }
 
   if (pathname.startsWith('/appointments/')) {
-    return { title: 'Appointment Detail', subtitle: 'Appointment detail foundation' }
+    return { title: 'Appointment Detail', subtitle: 'Schedule, status and patient context' }
   }
 
   if (pathname.startsWith('/clinical/')) {
@@ -39,7 +40,7 @@ function titleForPath(pathname: string) {
   }
 
   if (pathname.startsWith('/declarations/')) {
-    return { title: 'Declaration Detail', subtitle: 'Declaration detail foundation' }
+    return { title: 'Declaration Detail', subtitle: 'Items, exports and submissions' }
   }
 
   return { title: 'Odontho Services', subtitle: 'SVB billing application' }
@@ -53,25 +54,26 @@ export function AppShell() {
 
   return (
     <div className="flex min-h-svh bg-clinic-surface">
-      <div className="hidden lg:block">
+      <div className="hidden xl:block">
         <Sidebar permissions={permissions} />
       </div>
-      {mobileNavigationOpen ? (
-        <div className="fixed inset-0 z-40 lg:hidden">
-          <button
-            aria-label="Close navigation"
-            className="absolute inset-0 bg-slate-950/40"
-            onClick={() => setMobileNavigationOpen(false)}
-            type="button"
-          />
-          <div className="relative h-full w-72 max-w-[82vw]">
+      <DialogPrimitive.Root
+        open={mobileNavigationOpen}
+        onOpenChange={setMobileNavigationOpen}
+      >
+        <DialogPrimitive.Portal>
+          <DialogPrimitive.Overlay className="fixed inset-0 z-40 bg-slate-950/40 xl:hidden" />
+          <DialogPrimitive.Content className="fixed inset-y-0 left-0 z-50 w-72 max-w-[82vw] focus:outline-none xl:hidden">
+            <DialogPrimitive.Title className="sr-only">
+              Application navigation
+            </DialogPrimitive.Title>
             <Sidebar
               permissions={permissions}
               onNavigate={() => setMobileNavigationOpen(false)}
             />
-          </div>
-        </div>
-      ) : null}
+          </DialogPrimitive.Content>
+        </DialogPrimitive.Portal>
+      </DialogPrimitive.Root>
       <div className="flex min-w-0 flex-1 flex-col">
         <Topbar
           title={page.title}

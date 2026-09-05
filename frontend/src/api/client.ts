@@ -86,7 +86,8 @@ async function request<T, TMeta = unknown>(
     signal,
   })
 
-  const payload = isJsonResponse(response)
+  const payload =
+    (responseType !== 'blob' || !response.ok) && isJsonResponse(response)
     ? ((await response.json()) as ApiEnvelope<T>)
     : null
 

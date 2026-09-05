@@ -1,11 +1,11 @@
-import { FoundationPage } from '../shared/foundation-page'
+import { PageHeader } from '../../components/app-shell/page-header'
+import { EmptyState } from '../../components/feedback/empty-state'
 
 export function AdminSettingsPage() {
   return (
-    <FoundationPage
-      title="Settings"
-      description="Configuration shell only. Backend freeze exposes no organization/settings CRUD."
-      tableTitle="Settings"
-    />
+    <div className="mx-auto max-w-4xl">
+      <PageHeader title="Settings" description="Organization configuration" />
+      <EmptyState title="Settings unavailable" description="Settings management is not available in the current Backend contract." />
+    </div>
   )
 }

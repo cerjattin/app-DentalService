@@ -33,7 +33,7 @@ const widgets = [
   },
   {
     title: 'Declarations',
-    description: 'Open the SVB declaration foundation.',
+    description: 'Manage SVB batches, exports and submission history.',
     path: '/declarations',
     permissions: ['declaration.read'],
   },
@@ -83,7 +83,7 @@ export function DashboardPage() {
               <Card className="h-full p-4 transition-colors hover:border-clinic-blue">
                 <div className="mb-3 flex items-center justify-between gap-2">
                   <h3 className="text-sm font-semibold text-slate-900">{widget.title}</h3>
-                  <StatusBadge tone="info">Ready</StatusBadge>
+                  <StatusBadge tone="info">Open</StatusBadge>
                 </div>
                 <p className="text-sm text-slate-500">{widget.description}</p>
               </Card>

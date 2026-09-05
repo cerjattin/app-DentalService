@@ -1,6 +1,53 @@
 import { ApiError } from './api-error'
 
 const apiErrorMessages: Record<string, string> = {
+  USER_NOT_FOUND: 'The user could not be found.',
+  USER_EMAIL_ALREADY_EXISTS: 'A user with this email already exists.',
+  INVALID_ROLE: 'One or more selected roles are invalid or inactive.',
+  SELF_DEACTIVATION_NOT_ALLOWED: 'You cannot deactivate your current account.',
+  SELF_ADMIN_ROLE_REMOVAL_NOT_ALLOWED:
+    'You cannot remove the administrator role from your current account.',
+  LAST_ADMIN_REQUIRED:
+    'The organization must retain at least one active administrator.',
+  USER_ALREADY_LINKED_TO_PROVIDER:
+    'This user is already linked to another provider.',
+  PROVIDER_SVB_ID_ALREADY_EXISTS:
+    'This SVB provider ID is already assigned to another provider.',
+  INVALID_DECLARATION_PERIOD:
+    'The declaration end date must be on or after its start date.',
+  DECLARATION_NOT_FOUND: 'The declaration could not be found.',
+  DECLARATION_ITEM_ALREADY_EXISTS:
+    'This invoice item is already included in the declaration.',
+  DECLARATION_ITEM_NOT_ELIGIBLE:
+    'This item is not from the current closed invoice version.',
+  DECLARATION_ITEM_WRONG_ORGANIZATION:
+    'This invoice item belongs to another organization.',
+  DECLARATION_ITEM_WRONG_PAYER:
+    'This invoice item does not match the declaration payer.',
+  DECLARATION_NOT_EDITABLE: 'Only draft declarations can be edited.',
+  DECLARATION_EMPTY: 'Add at least one invoice item before continuing.',
+  DECLARATION_NOT_READY:
+    'This declaration is not ready for the requested export operation.',
+  DECLARATION_NOT_SUBMITTABLE:
+    'Generate an export before submitting this declaration.',
+  DECLARATION_SVB_DATA_INCOMPLETE:
+    'Required SVB snapshot data is missing. Review the source invoice version.',
+  DECLARATION_SVB_DATA_INVALID:
+    'SVB snapshot data is invalid. Review the source invoice version.',
+  UNSUPPORTED_EXPORT_FORMAT: 'This export format is not supported.',
+  DECLARATION_EXPORT_NOT_FOUND: 'No declaration export could be found.',
+  DECLARATION_EXPORT_INVALID:
+    'The declaration export failed its integrity check.',
+  SUBMISSION_ADAPTER_NOT_CONFIGURED:
+    'Declaration submission is unavailable because no Backend adapter is configured.',
+  DECLARATION_ALREADY_SUBMITTED:
+    'This declaration already has an active submission.',
+  DECLARATION_SUBMISSION_FAILED:
+    'The Backend submission adapter could not submit the declaration.',
+  DECLARATION_SUBMISSION_NOT_FOUND:
+    'The declaration submission could not be found.',
+  DECLARATION_SUBMISSION_RESULT_NOT_ALLOWED:
+    'A result can only be recorded for an active submitted declaration.',
   INVOICE_NOT_FOUND: 'The invoice could not be found.',
   INVOICE_VERSION_NOT_FOUND: 'The invoice version could not be found.',
   INVOICE_ALREADY_EXISTS:

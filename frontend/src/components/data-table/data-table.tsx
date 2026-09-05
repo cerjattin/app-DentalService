@@ -21,7 +21,12 @@ export function DataTable<T>({
 }: DataTableProps<T>) {
   return (
     <div className="overflow-hidden rounded-lg border border-clinic-border bg-white">
-      <div className="overflow-x-auto">
+      <div
+        aria-label="Scrollable data table"
+        className="overflow-x-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-clinic-blue"
+        role="region"
+        tabIndex={0}
+      >
         <table className="min-w-full divide-y divide-clinic-border text-left text-sm">
           <thead className="bg-slate-50 text-xs font-semibold uppercase text-slate-500">
             <tr>

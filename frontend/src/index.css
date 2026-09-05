@@ -43,6 +43,15 @@ textarea {
   font: inherit;
 }
 
+@media (pointer: coarse) {
+  button,
+  input:not([type='checkbox']):not([type='radio']),
+  select,
+  textarea {
+    min-height: 44px;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form'
 import { Navigate, useLocation, useNavigate } from 'react-router'
 import { z } from 'zod'
 import { getApiErrorMessage } from '../../api'
-import { getCurrentUser, login, type LoginCredentials } from '../../auth/auth-api'
+import { authKeys, getCurrentUser, login, type LoginCredentials } from '../../auth/auth-api'
 import { useAuth } from '../../auth/use-auth'
 import { FormField } from '../../components/forms/form-field'
 import { Button } from '../../components/ui/button'
@@ -46,7 +46,7 @@ export function LoginPage() {
       setAccessToken(loginResult.accessToken)
 
       return queryClient.fetchQuery({
-        queryKey: ['auth', 'me'],
+        queryKey: authKeys.me,
         queryFn: getCurrentUser,
         staleTime: 60_000,
       })
@@ -127,6 +127,8 @@ export function LoginPage() {
               <div className="relative">
                 <Input
                   id="password"
+                  aria-describedby={form.formState.errors.password ? 'password-description' : undefined}
+                  aria-invalid={Boolean(form.formState.errors.password)}
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
                   className="pr-10"

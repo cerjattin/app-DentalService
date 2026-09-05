@@ -25,7 +25,7 @@ export function Dialog({
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="fixed inset-0 z-40 bg-slate-950/40" />
         <DialogPrimitive.Content
-          className={`fixed left-1/2 top-1/2 z-50 max-h-[90vh] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-lg border border-clinic-border bg-white p-5 shadow-xl focus:outline-none ${
+          className={`fixed left-1/2 top-1/2 z-50 max-h-[calc(100svh-1rem)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto overscroll-contain rounded-lg border border-clinic-border bg-white p-4 shadow-xl focus:outline-none sm:max-h-[90vh] sm:p-5 ${
             size === 'wide' ? 'w-[min(94vw,820px)]' : 'w-[min(92vw,520px)]'
           }`}
         >

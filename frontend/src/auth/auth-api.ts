@@ -6,6 +6,10 @@ export interface LoginCredentials {
   password: string
 }
 
+export const authKeys = {
+  me: ['auth', 'me'] as const,
+}
+
 export function login(credentials: LoginCredentials) {
   return apiFetch<LoginResponse>('/auth/login', {
     method: 'POST',

@@ -47,7 +47,7 @@ function InvoiceList() {
         description="Billing and signed invoice documents"
       />
       <form
-        className="mb-5 flex flex-wrap items-end gap-3"
+        className="mb-5 grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(10rem,auto)_auto] sm:items-end"
         onSubmit={(e) => {
           e.preventDefault()
           setQ(search.trim())
@@ -64,7 +64,7 @@ function InvoiceList() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </label>
-        <label className="text-sm">
+        <label className="min-w-0 text-sm">
           Status
           <Select
             className="mt-1"
@@ -92,12 +92,13 @@ function InvoiceList() {
             ))}
           </Select>
         </label>
-        <Button type="submit" variant="secondary">
+        <Button className="w-full sm:w-auto" type="submit" variant="secondary">
           <Search size={16} />
           Search
         </Button>
         {q || status ? (
           <Button
+            className="w-full sm:w-auto"
             variant="ghost"
             onClick={() => {
               setSearch('')
