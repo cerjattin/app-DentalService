@@ -37,7 +37,7 @@ export function DashboardReport() {
     }}>
       <label className="text-sm">From<Input className="mt-1" type="date" name="from" required defaultValue={filters.from} /></label>
       <label className="text-sm">To<Input className="mt-1" type="date" name="to" required defaultValue={filters.to} /></label>
-      {canReadProviders ? <><label className="text-sm">Find provider<Input className="mt-1" maxLength={120} value={search} onChange={(event) => setSearch(event.target.value)} /></label><label className="text-sm">Provider<Select className="mt-1" name="providerId" disabled={providers.isFetching}><option value="">All providers</option>{providers.data?.data.map((p) => <option key={p.id} value={p.id}>{p.firstName} {p.lastName}{p.isActive ? '' : ' (Inactive)'}</option>)}</Select></label></> : null}
+      {canReadProviders ? <><label className="text-sm">Find provider<Input className="mt-1" maxLength={120} value={search} onChange={(event) => setSearch(event.target.value)} /></label><div className="text-sm"><label htmlFor="dashboard-provider">Provider</label><Select id="dashboard-provider" className="mt-1" name="providerId" disabled={providers.isFetching}><option value="">All providers</option>{providers.data?.data.map((p) => <option key={p.id} value={p.id}>{p.firstName} {p.lastName}{p.isActive ? '' : ' (Inactive)'}</option>)}</Select></div></> : null}
       <div className="flex items-end"><Button type="submit">Apply filters</Button></div>
     </form>
     {canReadProviders && providers.isError ? <ErrorState title="Unable to load provider filter" description={getApiErrorMessage(providers.error)} onRetry={() => void providers.refetch()} /> : null}

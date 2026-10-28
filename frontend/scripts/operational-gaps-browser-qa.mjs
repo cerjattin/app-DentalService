@@ -238,11 +238,15 @@ try {
 } catch (error) {
   report.status = 'FAILED'
   report.error = error instanceof Error ? error.message : String(error)
-  if (page) await page.screenshot({ path: resolve(output, 'failure.png'), fullPage: true }).catch(() => {})
+  if (page) {
+    await page.screenshot({ path: resolve(output, 'failure.png'), fullPage: true }).catch(() => {})
+    const picture = await readFile(resolve(output, 'failure.png')).catch(() => null)
+    if (picture) console.log('QA_PREVIEW:failure:data:image/png;base64,' + picture.toString('base64'))
+  }
   process.exitCode = 1
 } finally {
   await writeFile(resolve(output, 'report.json'), JSON.stringify(report, null, 2) + '\n')
-  console.log(JSON.stringify({ status: report.status, serviceId: report.serviceId, tariffId: report.tariffId, responsive: report.responsive, error: report.error }, null, 2))
+  console.log(JSON.stringify({ status: report.status, serviceId: report.serviceId, tariffId: report.tariffId, responsive: report.responsive, error: report.error, steps: report.steps, lastRequests: report.network.slice(-15), pageUrl: page?.url() }, null, 2))
   await browser?.close()
   backend.kill('SIGTERM'); frontend.kill('SIGTERM')
   await prisma.$disconnect()
