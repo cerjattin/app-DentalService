@@ -1,6 +1,7 @@
 import { ApiError } from './api-error'
 
 const apiErrorMessages: Record<string, string> = {
+  INVALID_REPORT_PERIOD: 'Choose valid start and end dates, in order, covering at most 366 days.',
   USER_NOT_FOUND: 'The user could not be found.',
   USER_EMAIL_ALREADY_EXISTS: 'A user with this email already exists.',
   INVALID_ROLE: 'One or more selected roles are invalid or inactive.',

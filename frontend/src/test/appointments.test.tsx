@@ -157,7 +157,7 @@ describe('appointment list', () => {
     }, { timeout: 1000 })
   })
 
-  it('represents creation as unavailable when the required lookup contract is missing', async () => {
+  it('disables creation when required lookup permissions are missing', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(listResponse([])))
     renderList(['appointment.read', 'appointment.create'])
     expect(await screen.findByRole('button', { name: 'Create appointment' })).toBeDisabled()

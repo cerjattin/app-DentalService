@@ -114,3 +114,13 @@ export type AppointmentListResult = {
   data: Appointment[]
   meta?: PaginationMeta
 }
+
+export interface AppointmentCreateDto {
+  patientId: EntityId
+  providerId: EntityId
+  clinicLocationId: EntityId
+  scheduledStart: string
+  scheduledEnd: string
+  reason?: string | null
+  notes?: string | null
+}

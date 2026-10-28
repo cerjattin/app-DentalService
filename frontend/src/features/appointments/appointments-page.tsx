@@ -1,5 +1,6 @@
+import { AppointmentCreateAction } from './appointment-create-dialog'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { ChevronLeft, ChevronRight, Plus, Search, X } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Search, X } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { getApiErrorMessage } from '../../api'
@@ -122,9 +123,7 @@ export function AppointmentsPage() {
       <PageHeader
         title="Appointments"
         description="Search the appointment schedule and manage front-desk status changes."
-        actions={hasPermission(permissions, 'appointment.create') ? (
-          <Button disabled title="Appointment creation requires a clinic-location lookup endpoint that is not available in the frozen backend."><Plus size={16} />Create appointment</Button>
-        ) : undefined}
+        actions={<AppointmentCreateAction />}
       />
       <div className="mb-4 grid gap-3 rounded-lg border border-clinic-border bg-white p-4 md:grid-cols-2 xl:grid-cols-[minmax(280px,1fr)_170px_170px_220px]">
         <div>
