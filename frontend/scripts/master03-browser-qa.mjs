@@ -17,7 +17,7 @@ assert.equal(db.pathname, '/odontho_master03_test')
 assert(['127.0.0.1', 'localhost'].includes(db.hostname))
 const output = resolve(root, 'frontend/qa/master03')
 await mkdir(output, { recursive: true })
-const report = { status: 'IN_PROGRESS', network: [], consoleErrors: [], pageErrors: [], failedRequests: [], responsive: [], steps: [] }
+const report = { status: 'IN_PROGRESS', network: [], consoleErrors: [], consoleWarnings: [], pageErrors: [], failedRequests: [], responsive: [], steps: [] }
 const backend = spawn(process.execPath, ['dist/src/server.js'], { cwd: resolve(root, 'backend'), env: { ...process.env, PORT: '3403', HOST: '127.0.0.1', CORS_ALLOWED_ORIGINS: 'http://127.0.0.1:5173' }, stdio: 'inherit' })
 const frontend = spawn(process.execPath, ['node_modules/vite/bin/vite.js', '--host', '127.0.0.1', '--port', '5173', '--strictPort'], { cwd: resolve(root, 'frontend'), env: { ...process.env, VITE_API_BASE_URL: 'http://127.0.0.1:3403/api/v1' }, stdio: 'inherit' })
 let browser
@@ -36,17 +36,14 @@ async function http(path, body) {
   assert.equal(response.status, 201, JSON.stringify(data))
   return data.data
 }
-async function visit(path) {
-  await page.goto('http://127.0.0.1:5173' + path)
-  await page.getByRole('button', { name: 'Sign in', exact: true }).or(page.getByRole('button', { name: 'Create service', exact: true })).or(page.getByRole('button', { name: 'Add procedure', exact: true })).waitFor()
-  if (new URL(page.url()).pathname === '/login' || await page.getByLabel('Email', { exact: true }).isVisible()) {
-    await page.getByLabel('Email', { exact: true }).fill(email)
-    await page.getByLabel('Password', { exact: true }).fill(password)
-    const login = page.waitForResponse((r) => r.url().endsWith('/auth/login') && r.request().method() === 'POST')
-    await page.getByRole('button', { name: 'Sign in', exact: true }).click()
-    token = (await (await login).json()).data.accessToken
-    await page.waitForURL('**' + path)
-  }
+async function signIn() {
+  await page.goto('http://127.0.0.1:5173/login')
+  await page.getByLabel('Email', { exact: true }).fill(email)
+  await page.getByLabel('Password', { exact: true }).fill(password)
+  const login = page.waitForResponse((r) => r.url().endsWith('/auth/login') && r.request().method() === 'POST')
+  await page.getByRole('button', { name: 'Sign in', exact: true }).click()
+  token = (await (await login).json()).data.accessToken
+  await page.waitForURL('**/dashboard')
 }
 async function navServices() {
   const menu = page.getByRole('button', { name: 'Open navigation' })
@@ -62,7 +59,10 @@ async function saveResponse(action, method, suffix) {
   return (await response.json()).data
 }
 async function clinicalSearch(appointmentId, active, snapshotDescription) {
-  await visit(`/clinical/${appointmentId}`)
+  await page.getByRole('link', { name: 'Appointments', exact: true }).click()
+  await page.getByRole('link', { name: 'View', exact: true }).click()
+  await page.getByRole('link', { name: 'Open clinical workspace', exact: true }).click()
+  await page.waitForURL(`**/clinical/${appointmentId}`)
   await page.getByText(snapshotDescription, { exact: true }).waitFor()
   await page.getByRole('button', { name: 'Add procedure', exact: true }).click()
   const search = page.getByLabel('Search SVB procedures')
@@ -101,11 +101,12 @@ try {
   report.encounterId = encounter.id.toString()
   browser = await chromium.launch({ headless: true })
   page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
-  page.on('console', (m) => { if (m.type() === 'error') report.consoleErrors.push(m.text()) })
+  page.on('console', (m) => { if (m.type() === 'error') report.consoleErrors.push(m.text()); if (m.type() === 'warning') report.consoleWarnings.push(m.text()) })
   page.on('pageerror', (e) => report.pageErrors.push(e.message))
   page.on('requestfailed', (r) => { if (!r.failure()?.errorText.includes('ERR_ABORTED')) report.failedRequests.push({ url: r.url(), error: r.failure()?.errorText }) })
   page.on('response', (r) => { if (r.url().includes('/api/v1/')) report.network.push({ method: r.request().method(), path: new URL(r.url()).pathname + new URL(r.url()).search, status: r.status() }) })
-  await visit('/admin/services')
+  await signIn()
+  await navServices()
   await page.getByRole('button', { name: 'Create service', exact: true }).waitFor()
   assert(await page.getByRole('link', { name: 'Services', exact: true }).isVisible())
   await page.getByRole('button', { name: 'Create service', exact: true }).click()
