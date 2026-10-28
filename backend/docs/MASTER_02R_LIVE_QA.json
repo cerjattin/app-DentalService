@@ -1,0 +1,80 @@
+{
+  "status": "PASSED",
+  "procedureCode": "TEST-SVB-M02R-LIVE-1793215293930",
+  "steps": [
+    {
+      "method": "POST",
+      "path": "",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/44",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "?q=TEST-SVB-M02R-LIVE-1793215293930&isActive=true&serviceDate=2026-10-28",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/44/tariffs",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/44/tariffs",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/44/applicable-tariff?serviceDate=2026-10-28&currencyCode=ANG",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/44",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/44/tariffs/41",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/44/status",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "?q=TEST-SVB-M02R-LIVE-1793215293930&isActive=true&serviceDate=2026-10-28",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/44/applicable-tariff?serviceDate=2026-10-28&currencyCode=ANG",
+      "status": 409,
+      "error": "SVB_PROCEDURE_INACTIVE"
+    },
+    {
+      "method": "PATCH",
+      "path": "/44/status",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/44/applicable-tariff?serviceDate=2026-10-28&currencyCode=ANG",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/44/status",
+      "status": 200
+    }
+  ],
+  "procedureId": "44",
+  "tariffId": "41",
+  "finalActiveState": false
+}
