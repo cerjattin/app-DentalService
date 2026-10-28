@@ -114,6 +114,35 @@ describe("Operational gap corrections", () => {
     await prisma.declarationBatch.update({ where: { id: batch.id }, data: { status: "CANCELLED" } });
     expect((await get()).body.data.kpis.toDeclare).toBe(1);
   });
+  it("counts pending signatures from the current invoice version only", async () => {
+    const record = await prisma.invoice.findUniqueOrThrow({ where: { id: invoice } });
+    await prisma.invoiceVersion.update({ where: { id: record.currentVersionId! }, data: { status: "PENDING_SIGNATURE" } });
+    await prisma.invoice.update({ where: { id: invoice }, data: { status: "PENDING_SIGNATURE" } });
+    try {
+      const r = (await get()).body.data;
+      expect(r.kpis.pendingSignatures).toBe(1);
+      expect(r.kpis.closedInvoices).toBe(0);
+      expect(r.kpis.toDeclare).toBe(0);
+      expect(r.kpis.svbBilled).toEqual([]);
+    } finally {
+      await prisma.invoiceVersion.update({ where: { id: record.currentVersionId! }, data: { status: "CLOSED" } });
+      await prisma.invoice.update({ where: { id: invoice }, data: { status: "CLOSED" } });
+    }
+  });
+  it("attributes production to the performing provider after appointment reassignment", async () => {
+    const ep = await prisma.encounterProcedure.findUniqueOrThrow({ where: { id: ids[0]! }, include: { encounter: true } });
+    const assigned = await prisma.provider.create({ data: { organizationId: org, firstName: "QA", lastName: "Assigned" } });
+    await prisma.appointment.update({ where: { id: ep.encounter.appointmentId }, data: { providerId: assigned.id } });
+    try {
+      const r = (await get(query + "&providerId=" + provider)).body.data;
+      expect(r.kpis.production[0].amount).toBe("88.90");
+      expect(r.kpis.appointments).toBe(2);
+      expect(r.kpis.patientsSeen).toBe(2);
+    } finally {
+      await prisma.appointment.update({ where: { id: ep.encounter.appointmentId }, data: { providerId: provider } });
+      await prisma.provider.delete({ where: { id: assigned.id } });
+    }
+  });
   it("does not leak another organization through a provider filter", async () => {
     const p = await prisma.provider.create({ data: { organizationId: otherOrg, firstName: "Other", lastName: "Provider" } });
     await request(app).get("/api/v1/reports/dashboard" + query + "&providerId=" + p.id).set("Authorization", "Bearer " + token).expect(404);

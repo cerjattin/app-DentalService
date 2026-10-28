@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { randomUUID } from 'node:crypto'
 import { spawn } from 'node:child_process'
 import { createRequire } from 'node:module'
-import { mkdir, writeFile } from 'node:fs/promises'
+import { mkdir, writeFile, readFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { setTimeout as delay } from 'node:timers/promises'
@@ -219,6 +219,20 @@ try {
   assert.equal(report.consoleErrors.length, 0, JSON.stringify(report.consoleErrors))
   assert.equal(report.pageErrors.length, 0, JSON.stringify(report.pageErrors))
   assert.equal(report.failedRequests.length, 0, JSON.stringify(report.failedRequests))
+  await page.setViewportSize({ width: 1440, height: 900 })
+  const dashboardFinal = page.waitForResponse((r) => r.url().includes('/reports/dashboard?'))
+  await page.getByRole('link', { name: 'Dashboard', exact: true }).click()
+  const totals = (await (await dashboardFinal).json()).data
+  assert.equal(totals.kpis.production.find((r) => r.currencyCode === 'ANG').amount, '88.80')
+  assert.equal(totals.kpis.appointments, 3)
+  await page.getByText('ANG 88.80', { exact: true }).first().waitFor()
+  await checkViewport('1440x900-dashboard-production')
+  await page.setViewportSize({ width: 390, height: 844 })
+  await checkViewport('390x844-dashboard-production')
+  for (const name of ['1440x900-dashboard-production', '390x844-dashboard-production']) {
+    console.log('QA_PREVIEW:' + name + ':data:image/png;base64,' + (await readFile(resolve(output, name + '.png'))).toString('base64'))
+  }
+  report.steps.push('Dashboard production equals original performed snapshot 88.80 after tariff edit and service deactivation')
   report.status = 'PASSED'
   report.finalActiveState = false
 } catch (error) {

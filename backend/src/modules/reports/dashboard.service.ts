@@ -59,7 +59,7 @@ export async function getDashboard(query: DashboardQuery, organizationId: bigint
         ep.performed_by_provider_id providerId, CONCAT(p.first_name, ' ', p.last_name) providerName,
         ep.currency_code_snapshot currencyCode, CAST(SUM(ep.amount) AS CHAR) amount
       FROM encounter_procedures ep JOIN clinical_encounters ce ON ce.id = ep.encounter_id
-      JOIN appointments a ON a.id = ce.appointment_id JOIN providers p ON p.id = ep.performed_by_provider_id
+      JOIN appointments a ON a.id = ce.appointment_id JOIN providers p ON p.id = ep.performed_by_provider_id AND p.organization_id = a.organization_id
       WHERE a.organization_id = ${organizationId} AND ep.status IN ('PERFORMED','BILLED') AND ce.status <> 'VOID'
         AND COALESCE(ep.performed_at, ce.started_at) >= ${start} AND COALESCE(ep.performed_at, ce.started_at) < ${end} ${performed}
       GROUP BY date, ep.performed_by_provider_id, p.first_name, p.last_name, ep.currency_code_snapshot`);

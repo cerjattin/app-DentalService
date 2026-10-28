@@ -148,3 +148,8 @@ Malformed bodies use 400 `VALIDATION_ERROR`, invalid calendar dates use 400 `INV
 Business mutation and audit insertion commit in the **same** transaction. Actions: `SVB_PROCEDURE_CREATE`, `SVB_PROCEDURE_UPDATE` (including status), `SVB_TARIFF_CREATE`, `SVB_TARIFF_UPDATE`. Events include organization, actor, entity type/ID, old/new serialized values as appropriate and available request metadata. Audit failure rolls back both records.
 
 Master mutations touch only `SvbProcedure`/`SvbTariff` and `AuditLog`. They do not create/update patient authorizations or rewrite `EncounterProcedure`, `InvoiceItem`, `InvoiceVersion`, PDFs or declarations. Existing snapshots remain authoritative for past care/billing. Existing PDFs are not regenerated. No schema, migration or seed change is required. MASTER-03 remains a separate paused Frontend sprint; runtime compliance evidence is recorded in `MASTER_02R_RESULTS.md`.
+
+
+## Operational forward corrections
+
+Appointment creation is now available through the existing POST /api/v1/appointments plus GET /api/v1/clinic-locations?isActive=true (clinic_location.read). Shared Frontend creation requires independent patient/provider/location read permissions and appointment.create. Dashboard now consumes GET /api/v1/reports/dashboard (dashboard.read) with inclusive Curacao from/to dates and optional organization-scoped providerId. Exact request/response fields, Decimal string/currency rules, metric/date/correction/assignment semantics and errors are documented in [OPERATIONAL_CORRECTIONS.md](OPERATIONAL_CORRECTIONS.md). No schema, migration, seed or existing catalogue contract changes.
