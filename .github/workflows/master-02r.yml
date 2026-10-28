@@ -1,0 +1,72 @@
+name: MASTER-02R MySQL compliance
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/master-02r.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mysql-compliance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: isolated-master02r-only
+          MYSQL_DATABASE: odontho_master02r_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -pisolated-master02r-only"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=30
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      DATABASE_URL: mysql://root:isolated-master02r-only@127.0.0.1:3306/odontho_master02r_test
+      ACCESS_TOKEN_SECRET: isolated-master02r-ci-secret-at-least-32-characters
+      NODE_ENV: test
+      LOG_LEVEL: silent
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Generate Prisma client
+        run: npm run prisma:generate
+      - name: Prepare isolated schema and core data
+        id: prepare
+        run: |
+          npx prisma migrate deploy
+          npx prisma db seed
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Build
+        run: npm run build
+      - name: Full suite with real MySQL
+        run: npm test -- --reporter=default --reporter=json --outputFile=test-results-master02r.json
+      - name: Live HTTP QA with normal login
+        if: ${{ !cancelled() && steps.prepare.outcome == 'success' }}
+        run: node --import tsx src/scripts/run-master-02r-live-qa.ts
+      - name: Preserve validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: master-02r-validation
+          if-no-files-found: warn
+          path: |
+            backend/test-results-master02r.json
+            backend/docs/MASTER_02R_LIVE_QA.json
