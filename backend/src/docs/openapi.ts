@@ -4,6 +4,8 @@ import "./common.schemas.js";
 import "../modules/health/health.openapi.js";
 import "../modules/health/health.openapi.js";
 
+import "../modules/svb-catalog/svb-catalog.openapi.js";
+
 import { openApiRegistry } from "./openapi.registry.js";
 
 const generator = new OpenApiGeneratorV3(openApiRegistry.definitions);

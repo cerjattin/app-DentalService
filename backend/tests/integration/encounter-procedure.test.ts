@@ -809,6 +809,71 @@ describe("Encounter Procedure API", () => {
     expect(response.body.data.svbTariff.amount).toBe("1234.50");
   });
 
+  it("preserves persisted encounter snapshots when procedure configuration and tariff change", async () => {
+    const before = await prisma.encounterProcedure.findUniqueOrThrow({
+      where: { id: BigInt(createdProcedureId) },
+    });
+    const master = await prisma.svbProcedure.findUniqueOrThrow({
+      where: { id: noAuthProcedureId },
+    });
+    if (before.svbTariffId === null)
+      throw new Error("Expected historical tariff fixture");
+    const tariff = await prisma.svbTariff.findUniqueOrThrow({
+      where: { id: before.svbTariffId },
+    });
+    const base = `/api/v1/svb-procedures/${noAuthProcedureId.toString()}`;
+    try {
+      await request(app)
+        .patch(base)
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send({
+          code: master.code + "-EDIT",
+          description: "Changed master only",
+          requiresAuthorization: true,
+          requiresReferral: true,
+        })
+        .expect(200);
+      await request(app)
+        .patch(`${base}/tariffs/${tariff.id.toString()}`)
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send({ amount: "88.80" })
+        .expect(200);
+      expect(
+        await prisma.encounterProcedure.findUniqueOrThrow({
+          where: { id: before.id },
+        }),
+      ).toEqual(before);
+      const response = await request(app)
+        .get(
+          `/api/v1/clinical-encounters/${openEncounterId.toString()}/procedures/${createdProcedureId}`,
+        )
+        .set("Authorization", `Bearer ${providerToken}`)
+        .expect(200);
+      expect(response.body.data).toMatchObject({
+        procedureCodeSnapshot: before.procedureCodeSnapshot,
+        procedureDescriptionSnapshot: before.procedureDescriptionSnapshot,
+        unitTariffSnapshot: before.unitTariffSnapshot.toFixed(2),
+      });
+    } finally {
+      await request(app)
+        .patch(base)
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send({
+          code: master.code,
+          description: master.description,
+          requiresAuthorization: master.requiresAuthorization,
+          requiresReferral: master.requiresReferral,
+        })
+        .expect(200);
+      await request(app)
+        .patch(`${base}/tariffs/${tariff.id.toString()}`)
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send({ amount: tariff.amount.toFixed(2) })
+        .expect(200);
+    }
+  });
+
+
   it("lists, gets detail, and patches editable notes/diagnosis", async () => {
     const list = await request(app)
       .get(`/api/v1/clinical-encounters/${openEncounterId.toString()}/procedures`)

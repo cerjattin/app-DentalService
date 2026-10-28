@@ -1,11 +1,12 @@
 import request from "supertest";
 
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 import { app } from "../../src/app.js";
 import { prisma } from "../../src/infrastructure/database/prisma.js";
 import { accessTokenService } from "../../src/modules/auth/access-token.service.js";
 import { svbCatalogService } from "../../src/modules/svb-catalog/svb-catalog.service.js";
+import { auditService } from "../../src/modules/audit/audit.service.js";
 import { parseDateOnly } from "../../src/shared/utils/date-only.js";
 
 const ADMIN_EMAIL = "svb.catalog.admin.integration@local.invalid";
@@ -611,5 +612,469 @@ describe("SVB catalog API", () => {
 
     expect(result.procedure.id).toBe(mainProcedureId.toString());
     expect(result.tariff.amount).toBe("1400.00");
+  });
+  let sequence = 0;
+  async function newMaster(extra: Record<string, unknown> = {}) {
+    const response = await request(app)
+      .post("/api/v1/svb-procedures")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        code: `TEST-SVB-PROC-M02R-${++sequence}`,
+        description: "M02R fixture",
+        ...extra,
+      })
+      .expect(201);
+    return response.body.data as { id: string; code: string };
+  }
+  const tariffInput = {
+    amount: "88.80",
+    currencyCode: "ANG",
+    validFrom: "2026-01-01",
+    validTo: "2026-06-30",
+  };
+  async function newTariff(id: string, extra: Record<string, unknown> = {}) {
+    const response = await request(app)
+      .post(`/api/v1/svb-procedures/${id}/tariffs`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ ...tariffInput, ...extra })
+      .expect(201);
+    return response.body.data as { id: string; amount: string };
+  }
+  const mutations = [
+    {
+      method: "post",
+      path: "",
+      body: { code: "TEST-SVB-PROC-DENIED", description: "Denied" },
+      permission: "svb_procedure.manage",
+    },
+    {
+      method: "patch",
+      path: "/1",
+      body: { description: "Denied" },
+      permission: "svb_procedure.manage",
+    },
+    {
+      method: "patch",
+      path: "/1/status",
+      body: { isActive: false },
+      permission: "svb_procedure.manage",
+    },
+    {
+      method: "post",
+      path: "/1/tariffs",
+      body: tariffInput,
+      permission: "svb_tariff.manage",
+    },
+    {
+      method: "patch",
+      path: "/1/tariffs/1",
+      body: { amount: "88.80" },
+      permission: "svb_tariff.manage",
+    },
+  ] as const;
+  it.each(mutations)(
+    "requires authentication for $method $path",
+    async ({ method, path, body }) => {
+      await request(app)
+        [method](`/api/v1/svb-procedures${path}`)
+        .send(body)
+        .expect(401);
+    },
+  );
+  it.each(mutations)(
+    "read does not imply $permission for $method $path",
+    async ({ method, path, body, permission }) => {
+      const response = await request(app)
+        [method](`/api/v1/svb-procedures${path}`)
+        .set("Authorization", `Bearer ${receptionToken}`)
+        .send(body)
+        .expect(403);
+      expect(response.body.error).toMatchObject({
+        code: "PERMISSION_DENIED",
+        details: { requiredPermission: permission },
+      });
+    },
+  );
+  it("creates and updates all mutable procedure fields with string IDs and nullable bounds", async () => {
+    const master = await newMaster({
+      category: "M02R",
+      unit: "VISIT",
+      requiresAuthorization: true,
+      requiresReferral: true,
+      isActive: false,
+      validFrom: "2026-01-01",
+      validTo: null,
+    });
+    expect(typeof master.id).toBe("string");
+    const response = await request(app)
+      .patch(`/api/v1/svb-procedures/${master.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        code: master.code + "-EDIT",
+        description: "Changed",
+        category: null,
+        unit: null,
+        requiresAuthorization: false,
+        requiresReferral: false,
+        isActive: true,
+        validFrom: null,
+        validTo: "2026-12-31",
+      })
+      .expect(200);
+    expect(response.body.data).toMatchObject({
+      id: master.id,
+      code: master.code + "-EDIT",
+      description: "Changed",
+      category: null,
+      unit: null,
+      requiresAuthorization: false,
+      requiresReferral: false,
+      isActive: true,
+      validFrom: null,
+      validTo: "2026-12-31",
+    });
+    const logs = await prisma.auditLog.findMany({
+      where: { entityType: "SVB_PROCEDURE", entityId: BigInt(master.id) },
+      orderBy: { id: "asc" },
+    });
+    expect(logs.map((log) => log.action)).toEqual([
+      "SVB_PROCEDURE_CREATE",
+      "SVB_PROCEDURE_UPDATE",
+    ]);
+    expect(logs[1]).toMatchObject({
+      actorUserId: adminUserId,
+      organizationId,
+      oldValues: expect.objectContaining({ code: master.code }),
+      newValues: expect.objectContaining({ code: master.code + "-EDIT" }),
+    });
+  });
+  it("maps duplicate code on create and update without leaking database internals", async () => {
+    const a = await newMaster();
+    const b = await newMaster();
+    for (const response of [
+      await request(app)
+        .post("/api/v1/svb-procedures")
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send({ code: a.code, description: "Duplicate" })
+        .expect(409),
+      await request(app)
+        .patch(`/api/v1/svb-procedures/${b.id}`)
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send({ code: a.code })
+        .expect(409),
+    ]) {
+      expect(response.body.error.code).toBe(
+        "SVB_PROCEDURE_CODE_ALREADY_EXISTS",
+      );
+      expect(JSON.stringify(response.body)).not.toMatch(/Prisma|P2002|uq_svb/);
+    }
+  });
+  it("rejects invalid procedure periods on create and merged partial update", async () => {
+    const response = await request(app)
+      .post("/api/v1/svb-procedures")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        code: "TEST-SVB-PROC-M02R-BAD",
+        description: "Invalid",
+        validFrom: "2026-07-01",
+        validTo: "2026-06-30",
+      })
+      .expect(400);
+    expect(response.body.error.code).toBe("INVALID_SVB_PROCEDURE_PERIOD");
+    const master = await newMaster({ validFrom: "2026-07-01" });
+    const update = await request(app)
+      .patch(`/api/v1/svb-procedures/${master.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ validTo: "2026-06-30" })
+      .expect(400);
+    expect(update.body.error.code).toBe("INVALID_SVB_PROCEDURE_PERIOD");
+  });
+  it("deactivates and reactivates without deletion, excludes inactive Clinical selections, and audits status", async () => {
+    const master = await newMaster();
+    await newTariff(master.id);
+    for (const active of [false, true]) {
+      await request(app)
+        .patch(`/api/v1/svb-procedures/${master.id}/status`)
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send({ isActive: active })
+        .expect(200);
+      const list = await request(app)
+        .get(
+          `/api/v1/svb-procedures?q=${master.code}&isActive=true&serviceDate=2026-03-01`,
+        )
+        .set("Authorization", `Bearer ${adminToken}`)
+        .expect(200);
+      expect(list.body.data.length).toBe(active ? 1 : 0);
+      const detail = await request(app)
+        .get(`/api/v1/svb-procedures/${master.id}`)
+        .set("Authorization", `Bearer ${adminToken}`)
+        .expect(200);
+      expect(detail.body.data.isActive).toBe(active);
+      const applicable = await request(app)
+        .get(applicableTariffUrl(BigInt(master.id), "2026-03-01"))
+        .set("Authorization", `Bearer ${adminToken}`)
+        .expect(active ? 200 : 409);
+      if (!active)
+        expect(applicable.body.error.code).toBe("SVB_PROCEDURE_INACTIVE");
+    }
+    expect(
+      await prisma.auditLog.count({
+        where: {
+          entityType: "SVB_PROCEDURE",
+          entityId: BigInt(master.id),
+          action: "SVB_PROCEDURE_UPDATE",
+        },
+      }),
+    ).toBe(2);
+    await request(app)
+      .delete(`/api/v1/svb-procedures/${master.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(404);
+  });
+  it("applies validity only when serviceDate is supplied", async () => {
+    const master = await newMaster({ validFrom: "2030-01-01" });
+    const base = `/api/v1/svb-procedures?q=${master.code}&isActive=true`;
+    const unfiltered = await request(app)
+      .get(base)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(200);
+    expect(unfiltered.body.data).toHaveLength(1);
+    const clinical = await request(app)
+      .get(base + "&serviceDate=2026-01-01")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(200);
+    expect(clinical.body.data).toHaveLength(0);
+  });
+  it("creates/updates exact Decimal strings and audits both tariff mutations", async () => {
+    const master = await newMaster();
+    const tariff = await newTariff(master.id);
+    expect(tariff.amount).toBe("88.80");
+    const response = await request(app)
+      .patch(`/api/v1/svb-procedures/${master.id}/tariffs/${tariff.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        amount: "9999999999999.99",
+        currencyCode: "usd",
+        validFrom: "2026-02-01",
+        validTo: null,
+        isActive: false,
+      })
+      .expect(200);
+    expect(response.body.data).toMatchObject({
+      id: tariff.id,
+      svbProcedureId: master.id,
+      amount: "9999999999999.99",
+      currencyCode: "USD",
+      validTo: null,
+      isActive: false,
+    });
+    const rows = await prisma.auditLog.findMany({
+      where: { entityType: "SVB_TARIFF", entityId: BigInt(tariff.id) },
+      orderBy: { id: "asc" },
+    });
+    expect(rows.map((row) => row.action)).toEqual([
+      "SVB_TARIFF_CREATE",
+      "SVB_TARIFF_UPDATE",
+    ]);
+    expect(rows[1]).toMatchObject({
+      actorUserId: adminUserId,
+      oldValues: expect.objectContaining({ amount: "88.80" }),
+      newValues: expect.objectContaining({ amount: "9999999999999.99" }),
+    });
+    await request(app)
+      .delete(`/api/v1/svb-procedures/${master.id}/tariffs/${tariff.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(404);
+  });
+  it("rejects invalid tariff periods on create and merged partial update", async () => {
+    const master = await newMaster();
+    const bad = await request(app)
+      .post(`/api/v1/svb-procedures/${master.id}/tariffs`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ ...tariffInput, validTo: "2025-12-31" })
+      .expect(400);
+    expect(bad.body.error.code).toBe("INVALID_SVB_TARIFF_PERIOD");
+    const tariff = await newTariff(master.id);
+    const update = await request(app)
+      .patch(`/api/v1/svb-procedures/${master.id}/tariffs/${tariff.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ validFrom: "2026-07-01" })
+      .expect(400);
+    expect(update.body.error.code).toBe("INVALID_SVB_TARIFF_PERIOD");
+  });
+  it("rejects duplicate starts, inclusive overlap, overlapping update and activation; permits adjacent periods and other currency", async () => {
+    const master = await newMaster();
+    await newTariff(master.id);
+    const base = `/api/v1/svb-procedures/${master.id}/tariffs`;
+    const duplicate = await request(app)
+      .post(base)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send(tariffInput)
+      .expect(409);
+    expect(duplicate.body.error.code).toBe("SVB_TARIFF_ALREADY_EXISTS");
+    const overlap = await request(app)
+      .post(base)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ ...tariffInput, validFrom: "2026-06-30", validTo: null })
+      .expect(409);
+    expect(overlap.body.error.code).toBe("SVB_TARIFF_PERIOD_OVERLAP");
+    const next = await newTariff(master.id, {
+      validFrom: "2026-07-01",
+      validTo: null,
+    });
+    const duplicateUpdate = await request(app)
+      .patch(`${base}/${next.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ validFrom: "2026-01-01" })
+      .expect(409);
+    expect(duplicateUpdate.body.error.code).toBe("SVB_TARIFF_ALREADY_EXISTS");
+    const update = await request(app)
+      .patch(`${base}/${next.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ validFrom: "2026-06-29" })
+      .expect(409);
+    expect(update.body.error.code).toBe("SVB_TARIFF_PERIOD_OVERLAP");
+    const inactive = await newTariff(master.id, {
+      validFrom: "2026-02-01",
+      isActive: false,
+    });
+    const activation = await request(app)
+      .patch(`${base}/${inactive.id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ isActive: true })
+      .expect(409);
+    expect(activation.body.error.code).toBe("SVB_TARIFF_PERIOD_OVERLAP");
+    await newTariff(master.id, { currencyCode: "USD" });
+  });
+  it("serializes competing tariff creates so at most one overlapping period commits", async () => {
+    const master = await newMaster();
+    const responses = await Promise.all(
+      ["2026-01-01", "2026-02-01"].map((validFrom) =>
+        request(app)
+          .post(`/api/v1/svb-procedures/${master.id}/tariffs`)
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send({ ...tariffInput, validFrom }),
+      ),
+    );
+    expect(responses.map((response) => response.status).sort()).toEqual([
+      201, 409,
+    ]);
+    expect(
+      responses.find((response) => response.status === 409)?.body.error.code,
+    ).toBe("SVB_TARIFF_PERIOD_OVERLAP");
+  });
+  it("returns domain not-found for missing procedure on all mutation paths", async () => {
+    for (const operation of [
+      {
+        method: "patch",
+        path: "/999999999999",
+        body: { description: "Missing" },
+      },
+      {
+        method: "patch",
+        path: "/999999999999/status",
+        body: { isActive: false },
+      },
+      { method: "post", path: "/999999999999/tariffs", body: tariffInput },
+    ] as const) {
+      const response = await request(app)
+        [operation.method](`/api/v1/svb-procedures${operation.path}`)
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send(operation.body)
+        .expect(404);
+      expect(response.body.error.code).toBe("SVB_PROCEDURE_NOT_FOUND");
+    }
+  });
+  it("rejects missing and foreign-parent tariffs without changing their amounts", async () => {
+    const a = await newMaster();
+    const b = await newMaster();
+    const tariff = await newTariff(a.id);
+    for (const id of [tariff.id, "999999999999"]) {
+      const response = await request(app)
+        .patch(`/api/v1/svb-procedures/${b.id}/tariffs/${id}`)
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send({ amount: "99.99" })
+        .expect(404);
+      expect(response.body.error.code).toBe("SVB_TARIFF_NOT_FOUND");
+    }
+    expect(
+      (
+        await prisma.svbTariff.findUniqueOrThrow({
+          where: { id: BigInt(tariff.id) },
+        })
+      ).amount.toFixed(2),
+    ).toBe("88.80");
+  });
+  it("rolls back procedure and tariff creates/updates/status when transactional audit fails", async () => {
+    const master = await newMaster();
+    const tariff = await newTariff(master.id);
+    const beforeProcedure = await prisma.svbProcedure.findUniqueOrThrow({
+      where: { id: BigInt(master.id) },
+    });
+    const beforeTariff = await prisma.svbTariff.findUniqueOrThrow({
+      where: { id: BigInt(tariff.id) },
+    });
+    const beforeLogs = await prisma.auditLog.count({
+      where: { actorUserId: adminUserId },
+    });
+    const writeAudit = auditService.writeWithinTransaction.bind(auditService);
+    const spy = vi
+      .spyOn(auditService, "writeWithinTransaction")
+      .mockImplementation(async (tx, event) => {
+        await writeAudit(tx, event);
+        throw new Error("TEST failure after inserting audit record");
+      });
+    try {
+      await request(app)
+        .post("/api/v1/svb-procedures")
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send({ code: "TEST-SVB-PROC-M02R-ROLLBACK", description: "Rollback" })
+        .expect(500);
+      await request(app)
+        .patch(`/api/v1/svb-procedures/${master.id}`)
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send({ description: "Rollback" })
+        .expect(500);
+      await request(app)
+        .patch(`/api/v1/svb-procedures/${master.id}/status`)
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send({ isActive: false })
+        .expect(500);
+      await request(app)
+        .post(`/api/v1/svb-procedures/${master.id}/tariffs`)
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send({ ...tariffInput, currencyCode: "USD" })
+        .expect(500);
+      await request(app)
+        .patch(`/api/v1/svb-procedures/${master.id}/tariffs/${tariff.id}`)
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send({ amount: "99.99" })
+        .expect(500);
+    } finally {
+      spy.mockRestore();
+    }
+    expect(
+      await prisma.svbProcedure.findUnique({
+        where: { code: "TEST-SVB-PROC-M02R-ROLLBACK" },
+      }),
+    ).toBeNull();
+    expect(
+      await prisma.svbProcedure.findUniqueOrThrow({
+        where: { id: BigInt(master.id) },
+      }),
+    ).toEqual(beforeProcedure);
+    expect(
+      await prisma.svbTariff.findUniqueOrThrow({
+        where: { id: BigInt(tariff.id) },
+      }),
+    ).toEqual(beforeTariff);
+    expect(
+      await prisma.svbTariff.count({
+        where: { svbProcedureId: BigInt(master.id) },
+      }),
+    ).toBe(1);
+    expect(
+      await prisma.auditLog.count({ where: { actorUserId: adminUserId } }),
+    ).toBe(beforeLogs);
   });
 });

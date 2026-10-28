@@ -79,3 +79,72 @@ Domain errors include: `PATIENT_NOT_FOUND`, `INSURANCE_NOT_FOUND`, `PROVIDER_NOT
 ## Freeze Boundaries
 
 No frontend should rely on unimplemented endpoints for organization/settings/audit administration. No CRUD exists for SVB productive master data. No revocable refresh token/logout is implemented until DBR-001. Declaration submission is recorded locally unless a real adapter is configured.
+
+## MASTER-02R — SVB procedure and tariff administration
+
+Domain: Service/SKU = `SvbProcedure`; performed care = `EncounterProcedure`; price history = `SvbTariff`. No separate service model or mapping. All paths below are mounted under `/api/v1`. Bearer authentication is required. Permissions are independent; no role-name shortcut and no read-implies-manage rule.
+
+| Method | Path (after `/api/v1`) | Required permission | Success |
+|---|---|---|---|
+| GET | `/svb-procedures` | `svb_procedure.read` | 200 paginated procedures |
+| GET | `/svb-procedures/:id` | `svb_procedure.read` | 200 procedure |
+| POST | `/svb-procedures` | `svb_procedure.manage` | 201 procedure |
+| PATCH | `/svb-procedures/:id` | `svb_procedure.manage` | 200 procedure |
+| PATCH | `/svb-procedures/:id/status` | `svb_procedure.manage` | 200 procedure |
+| GET | `/svb-procedures/:procedureId/tariffs` | `svb_tariff.read` | 200 paginated tariffs |
+| GET | `/svb-procedures/:procedureId/applicable-tariff` | `svb_tariff.read` | 200 procedure + tariff + serviceDate |
+| POST | `/svb-procedures/:procedureId/tariffs` | `svb_tariff.manage` | 201 tariff |
+| PATCH | `/svb-procedures/:procedureId/tariffs/:tariffId` | `svb_tariff.manage` | 200 tariff |
+
+Mutation bodies are strict: unknown and system fields are rejected. A PATCH requires at least one mutable field. No DELETE endpoint exists for either master resource. Response envelope: `{ success: true, data, meta? }`; pagination meta contains `page`, `pageSize`, `total`, `totalPages`. IDs and parent IDs are strings, never JS numbers.
+
+### Procedure input and output
+
+| Field | Create | PATCH | Validation/default |
+|---|---|---|---|
+| code | required | optional | Trimmed nonempty string, max 50; unique authoritative SKU |
+| description | required | optional | Trimmed nonempty string, max 500 |
+| category | optional | optional | Nullable string, max 120; omitted create => null |
+| unit | optional | optional | Nullable string, max 50; omitted create => null |
+| requiresAuthorization | optional | optional | Boolean; create default false; master configuration only |
+| requiresReferral | optional | optional | Boolean; create default false; no referral workflow |
+| isActive | optional | optional | Boolean; create default true |
+| validFrom | optional | optional | Nullable business date YYYY-MM-DD; create default null |
+| validTo | optional | optional | Nullable business date YYYY-MM-DD; create default null |
+
+Responses expose these fields plus string `id`, `createdAt`, `updatedAt`. Status accepts exactly `{ "isActive": boolean }` and uses the same audited update transaction as normal PATCH. Inactivation preserves the row and historical readability. Null validity bounds are open-ended. Merged PATCH state is validated, so changing only one bound cannot create an inverted period. Dates must be real calendar dates; no client timezone conversion is required.
+
+### Tariff input and output
+
+Create requires `amount` (nonnegative decimal **string**, 1–13 integer digits and up to 2 fractional digits), explicit three-letter `currencyCode` (trimmed/uppercased), and `validFrom` (YYYY-MM-DD). Optional `validTo` is nullable/open-ended and `isActive` defaults to true. PATCH permits only those five fields and preserves omitted values. Responses additionally contain string `id`, string `svbProcedureId`, timestamps; `amount` always has two fractional digits (e.g. `"88.80"`). No JS float conversion occurs. The existing Decimal(15,2) storage and exact string API boundary are preserved. Currency is never silently defaulted to ANG.
+
+`validTo >= validFrom` is inclusive. Duplicate `(svbProcedureId, currencyCode, validFrom)` is rejected even for inactive tariffs (existing DB unique key). Active tariffs may not overlap for the same procedure and currency. Periods ending June 30 and beginning July 1 are adjacent, allowed periods. Sharing June 30 is an overlap. Inactive tariffs may overlap but activating one rechecks the invariant; currency/date changes also recheck. Open-ended periods participate in the same comparison. All procedure/tariff writers for an existing procedure first lock that parent row inside the transaction, serializing concurrent overlap checks. Legacy ambiguous data is not rewritten; resolution retains `SVB_TARIFF_AMBIGUOUS`.
+
+Tariff update verifies the parent and scopes ownership using procedure ID + tariff ID. A tariff belonging to another procedure returns `SVB_TARIFF_NOT_FOUND` and is unchanged. A missing parent returns `SVB_PROCEDURE_NOT_FOUND`.
+
+### Catalogue selection and applicable tariff (preserved contract)
+
+Procedure list filters: optional `q` (code/description, max 120), `category` (max 120), `requiresAuthorization`, `requiresReferral`, `isActive`, `serviceDate`; pagination `page` default 1, `pageSize` default 20/max 100. Boolean query values are `true` or `false`. No active or validity filter is implicit: `isActive=true` alone includes active procedures outside validity. Supplying `serviceDate` applies inclusive validity filtering independently of active state. Existing Clinical lookup supplies **both** `isActive=true` and its service date.
+
+Tariff list supports optional `currencyCode`, `isActive`, `serviceDate`, `page`, `pageSize` with the same pagination defaults. It shows history, including inactive records when no active filter is supplied. Applicable tariff requires both `serviceDate` and `currencyCode`, verifies the parent is active/valid on that date, then selects an active same-currency tariff valid on that date. Zero matches => 404 `SVB_TARIFF_NOT_FOUND`; multiple => 409 `SVB_TARIFF_AMBIGUOUS`. Inactive procedure => **409 `SVB_PROCEDURE_INACTIVE`**; outside validity => 409 `SVB_PROCEDURE_NOT_VALID`.
+
+### Stable errors
+
+| HTTP | Domain error |
+|---|---|
+| 409 | SVB_PROCEDURE_CODE_ALREADY_EXISTS |
+| 400 | INVALID_SVB_PROCEDURE_PERIOD |
+| 404 | SVB_PROCEDURE_NOT_FOUND |
+| 409 | SVB_PROCEDURE_INACTIVE / SVB_PROCEDURE_NOT_VALID |
+| 404 | SVB_TARIFF_NOT_FOUND |
+| 409 | SVB_TARIFF_ALREADY_EXISTS |
+| 400 | INVALID_SVB_TARIFF_PERIOD |
+| 409 | SVB_TARIFF_PERIOD_OVERLAP / SVB_TARIFF_AMBIGUOUS |
+
+Malformed bodies use 400 `VALIDATION_ERROR`, invalid calendar dates use 400 `INVALID_DATE`, malformed IDs use 400 `INVALID_ID`. Existing authentication middleware controls 401 responses; absent permissions produce 403 `PERMISSION_DENIED`. Unique conflicts are translated; no Prisma/database details are exposed.
+
+### Audit and historical safety
+
+Business mutation and audit insertion commit in the **same** transaction. Actions: `SVB_PROCEDURE_CREATE`, `SVB_PROCEDURE_UPDATE` (including status), `SVB_TARIFF_CREATE`, `SVB_TARIFF_UPDATE`. Events include organization, actor, entity type/ID, old/new serialized values as appropriate and available request metadata. Audit failure rolls back both records.
+
+Master mutations touch only `SvbProcedure`/`SvbTariff` and `AuditLog`. They do not create/update patient authorizations or rewrite `EncounterProcedure`, `InvoiceItem`, `InvoiceVersion`, PDFs or declarations. Existing snapshots remain authoritative for past care/billing. Existing PDFs are not regenerated. No schema, migration or seed change is required. MASTER-03 remains a separate paused Frontend sprint; runtime compliance evidence is recorded in `MASTER_02R_RESULTS.md`.
