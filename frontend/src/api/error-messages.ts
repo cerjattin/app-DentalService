@@ -165,11 +165,16 @@ const apiErrorMessages: Record<string, string> = {
     'This diagnosis code is not valid for the service date.',
   DIAGNOSIS_ALREADY_ASSIGNED: 'This diagnosis is already recorded.',
   ENCOUNTER_DIAGNOSIS_NOT_FOUND: 'The recorded diagnosis could not be found.',
+  SVB_PROCEDURE_CODE_ALREADY_EXISTS: 'A service with this code already exists.',
+  INVALID_SVB_PROCEDURE_PERIOD: 'The service end date must be on or after its start date.',
+  SVB_TARIFF_ALREADY_EXISTS: 'A tariff with this currency and start date already exists.',
+  INVALID_SVB_TARIFF_PERIOD: 'The tariff end date must be on or after its start date.',
+  SVB_TARIFF_PERIOD_OVERLAP: 'This period overlaps another active tariff for the same service and currency.',
   SVB_PROCEDURE_NOT_FOUND: 'The SVB procedure could not be found.',
   SVB_PROCEDURE_INACTIVE: 'This SVB procedure is inactive.',
   SVB_PROCEDURE_NOT_VALID: 'This procedure is not valid for the service date.',
   SVB_TARIFF_NOT_FOUND:
-    'No tariff is available for this procedure and service date.',
+    'The tariff could not be found, or no tariff applies to the selected service date and currency.',
   SVB_TARIFF_AMBIGUOUS:
     'Multiple tariffs apply. Contact the catalogue administrator.',
   PATIENT_INSURANCE_NOT_FOUND: 'The selected insurance could not be found.',

@@ -1,3 +1,4 @@
+import type { SvbProcedure, SvbTariff } from './svb-catalog'
 import type { DecimalString, EntityId } from './core'
 import type { AppointmentProvider } from './appointment'
 
@@ -63,36 +64,7 @@ export interface DiagnosisWriteDto {
   notes: string | null
 }
 export type DiagnosisUpdateDto = Pick<DiagnosisWriteDto, 'isPrimary' | 'notes'>
-export interface SvbProcedure {
-  id: EntityId
-  code: string
-  description: string
-  category: string | null
-  unit: string | null
-  requiresAuthorization: boolean
-  requiresReferral: boolean
-  isActive: boolean
-  validFrom: string | null
-  validTo: string | null
-  createdAt: string
-  updatedAt: string
-}
-export interface SvbTariff {
-  id: EntityId
-  svbProcedureId: EntityId
-  amount: DecimalString
-  currencyCode: string
-  validFrom: string | null
-  validTo: string | null
-  isActive: boolean
-  createdAt: string
-  updatedAt: string
-}
-export interface TariffResolution {
-  procedure: SvbProcedure
-  tariff: SvbTariff
-  serviceDate: string
-}
+export type { SvbProcedure, SvbTariff, TariffResolution } from './svb-catalog'
 export type AuthorizationStatus =
   | 'PENDING'
   | 'APPROVED'

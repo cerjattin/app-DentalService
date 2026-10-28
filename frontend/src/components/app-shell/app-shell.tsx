@@ -15,12 +15,17 @@ const pageTitles: Record<string, { title: string; subtitle?: string }> = {
   '/admin': { title: 'Administration', subtitle: 'Users, roles and providers' },
   '/admin/users': { title: 'Users', subtitle: 'Profiles, status and role assignments' },
   '/admin/providers': { title: 'Providers', subtitle: 'Professional and user relationships' },
+  '/admin/services': { title: 'Services', subtitle: 'SVB catalogue and tariffs' },
   '/admin/settings': { title: 'Settings', subtitle: 'Unavailable in the Backend contract' },
 }
 
 function titleForPath(pathname: string) {
   if (pageTitles[pathname]) {
     return pageTitles[pathname]
+  }
+
+  if (pathname.startsWith('/admin/services/')) {
+    return { title: 'Service Details', subtitle: 'Master configuration and tariff history' }
   }
 
   if (pathname.startsWith('/patients/')) {
