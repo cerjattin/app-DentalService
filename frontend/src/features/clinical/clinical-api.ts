@@ -1,3 +1,4 @@
+import { getApplicableTariff, listServices, svbServiceKeys } from '../svb-catalog/svb-catalog-api'
 import { ApiError, apiFetch, apiFetchResult } from '../../api'
 import type { EntityId } from '../../types/core'
 import type { PaginationMeta } from '../../types/patient'
@@ -16,8 +17,6 @@ import type {
   EncounterWriteDto,
   ProcedureUpdateDto,
   ProcedureWriteDto,
-  SvbProcedure,
-  TariffResolution,
 } from '../../types/clinical'
 
 export const encounterKeys = {
@@ -30,9 +29,9 @@ export const encounterKeys = {
 export const catalogueKeys = {
   diagnoses: (q: string, page: number) => ['diagnosis-codes', q, page] as const,
   procedures: (q: string, page: number, date: string) =>
-    ['svb-procedures', q, page, date] as const,
+    svbServiceKeys.list({ q, page, pageSize: 20, isActive: true, serviceDate: date }),
   tariff: (id: EntityId, date: string) =>
-    ['svb-tariff', id, date, 'ANG'] as const,
+    svbServiceKeys.applicableTariff(id, date, 'ANG'),
 }
 export const authorizationKeys = {
   patient: (id: EntityId) => ['authorizations', 'patient', id] as const,
@@ -102,20 +101,10 @@ export function searchProcedures(
   serviceDate: string,
   signal?: AbortSignal,
 ) {
-  return apiFetchResult<SvbProcedure[], PaginationMeta>(
-    `/svb-procedures?${new URLSearchParams({ q, page: String(page), pageSize: '20', isActive: 'true', serviceDate })}`,
-    { signal },
-  )
+  return listServices({ q, page, pageSize: 20, isActive: true, serviceDate }, signal)
 }
-export const getTariff = (
-  id: EntityId,
-  serviceDate: string,
-  signal?: AbortSignal,
-) =>
-  apiFetch<TariffResolution>(
-    `/svb-procedures/${id}/applicable-tariff?${new URLSearchParams({ serviceDate, currencyCode: 'ANG' })}`,
-    { signal },
-  )
+export const getTariff = (id: EntityId, serviceDate: string, signal?: AbortSignal) =>
+  getApplicableTariff(id, serviceDate, 'ANG', signal)
 const proceduresPath = (id: EntityId) => `/clinical-encounters/${id}/procedures`
 export const listProcedures = (id: EntityId, signal?: AbortSignal) =>
   apiFetch<EncounterProcedure[]>(proceduresPath(id), { signal })

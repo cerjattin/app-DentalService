@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { Settings, Stethoscope, Users } from 'lucide-react'
+import { ListChecks, Settings, Stethoscope, Users } from 'lucide-react'
 import { Link } from 'react-router'
 import { getApiErrorMessage } from '../../api'
 import { hasPermission } from '../../auth/permissions'
@@ -19,6 +19,7 @@ export function AdminPage() {
   const areas = [
     { title: 'Users', description: 'Profiles, account status and system role assignments.', path: '/admin/users', permission: 'user.read', icon: Users, available: true },
     { title: 'Providers', description: 'Professional records and linked user accounts.', path: '/admin/providers', permission: 'provider.read', icon: Stethoscope, available: true },
+    { title: 'Services', description: 'SVB services, validity and tariff history.', path: '/admin/services', permission: 'svb_procedure.read', icon: ListChecks, available: true },
     { title: 'Settings', description: 'Settings management is not available in the current Backend contract.', path: '/admin/settings', permission: '', icon: Settings, available: false },
   ]
   return <div className="mx-auto max-w-[1500px]"><PageHeader title="Administration" description="Manage authorized users, roles and clinical providers." />

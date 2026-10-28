@@ -1,0 +1,261 @@
+{
+  "status": "PASSED",
+  "validatedCommit": "7094a6ee19b53321c297b545b146188f04533c82",
+  "workflowRun": "https://github.com/cerjattin/app-DentalService/actions/runs/40753346760",
+  "artifactId": "12843888187",
+  "artifactDigest": "sha256:3cf60b9032e35dfae75b9fdd17fabff96247dfde21425e4076416ce6b6b8a82c",
+  "environment": {
+    "node": "22",
+    "mysql": "8.0",
+    "database": "odontho_master02r_test",
+    "scope": "Disposable isolated GitHub Actions database; no clinic connection"
+  },
+  "typecheck": "PASSED",
+  "build": "PASSED",
+  "lint": "NOT_AVAILABLE: no script in backend/package.json",
+  "totalTests": 277,
+  "passedTests": 277,
+  "failedTests": 0,
+  "skippedTests": 0,
+  "testFiles": 28,
+  "files": [
+    {
+      "file": "tests/integration/appointment.test.ts",
+      "status": "passed",
+      "tests": 17
+    },
+    {
+      "file": "tests/integration/auth-lockout.test.ts",
+      "status": "passed",
+      "tests": 1
+    },
+    {
+      "file": "tests/integration/auth-login.test.ts",
+      "status": "passed",
+      "tests": 3
+    },
+    {
+      "file": "tests/integration/auth-me.test.ts",
+      "status": "passed",
+      "tests": 3
+    },
+    {
+      "file": "tests/integration/authorization.test.ts",
+      "status": "passed",
+      "tests": 14
+    },
+    {
+      "file": "tests/integration/clinical-encounter.test.ts",
+      "status": "passed",
+      "tests": 15
+    },
+    {
+      "file": "tests/integration/declaration.test.ts",
+      "status": "passed",
+      "tests": 18
+    },
+    {
+      "file": "tests/integration/diagnosis.test.ts",
+      "status": "passed",
+      "tests": 16
+    },
+    {
+      "file": "tests/integration/encounter-procedure.test.ts",
+      "status": "passed",
+      "tests": 11
+    },
+    {
+      "file": "tests/integration/hardening.test.ts",
+      "status": "passed",
+      "tests": 6
+    },
+    {
+      "file": "tests/integration/health-live.test.ts",
+      "status": "passed",
+      "tests": 2
+    },
+    {
+      "file": "tests/integration/health-ready.test.ts",
+      "status": "passed",
+      "tests": 1
+    },
+    {
+      "file": "tests/integration/insurance.test.ts",
+      "status": "passed",
+      "tests": 17
+    },
+    {
+      "file": "tests/integration/invoice.test.ts",
+      "status": "passed",
+      "tests": 34
+    },
+    {
+      "file": "tests/integration/not-found.test.ts",
+      "status": "passed",
+      "tests": 1
+    },
+    {
+      "file": "tests/integration/number-sequence-concurrency.test.ts",
+      "status": "passed",
+      "tests": 1
+    },
+    {
+      "file": "tests/integration/number-sequence-rollback.test.ts",
+      "status": "passed",
+      "tests": 1
+    },
+    {
+      "file": "tests/integration/number-sequence.test.ts",
+      "status": "passed",
+      "tests": 1
+    },
+    {
+      "file": "tests/integration/openapi.test.ts",
+      "status": "passed",
+      "tests": 2
+    },
+    {
+      "file": "tests/integration/provider.test.ts",
+      "status": "passed",
+      "tests": 17
+    },
+    {
+      "file": "tests/integration/rbac.test.ts",
+      "status": "passed",
+      "tests": 2
+    },
+    {
+      "file": "tests/integration/svb-catalog.test.ts",
+      "status": "passed",
+      "tests": 33
+    },
+    {
+      "file": "tests/unit/api-serializer.test.ts",
+      "status": "passed",
+      "tests": 3
+    },
+    {
+      "file": "tests/unit/number-sequence-year.test.ts",
+      "status": "passed",
+      "tests": 2
+    },
+    {
+      "file": "tests/unit/number-sequence.formatter.test.ts",
+      "status": "passed",
+      "tests": 4
+    },
+    {
+      "file": "tests/unit/svb-catalog-http.test.ts",
+      "status": "passed",
+      "tests": 22
+    },
+    {
+      "file": "tests/unit/svb-catalog-schemas.test.ts",
+      "status": "passed",
+      "tests": 17
+    },
+    {
+      "file": "tests/unit/svb-catalog-service.test.ts",
+      "status": "passed",
+      "tests": 13
+    }
+  ],
+  "criticalRegressions": [
+    {
+      "test": "Encounter Procedure API preserves persisted encounter snapshots when procedure configuration and tariff change",
+      "status": "passed"
+    },
+    {
+      "test": "Invoice API keeps invoice snapshots immutable after master data changes",
+      "status": "passed"
+    },
+    {
+      "test": "SVB catalog API serializes competing tariff creates so at most one overlapping period commits",
+      "status": "passed"
+    },
+    {
+      "test": "SVB catalog API rolls back procedure and tariff creates/updates/status when transactional audit fails",
+      "status": "passed"
+    }
+  ],
+  "liveQA": {
+    "status": "PASSED",
+    "procedureCode": "TEST-SVB-M02R-LIVE-1793215293930",
+    "steps": [
+      {
+        "method": "POST",
+        "path": "",
+        "status": 201
+      },
+      {
+        "method": "GET",
+        "path": "/44",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "?q=TEST-SVB-M02R-LIVE-1793215293930&isActive=true&serviceDate=2026-10-28",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/44/tariffs",
+        "status": 201
+      },
+      {
+        "method": "GET",
+        "path": "/44/tariffs",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/44/applicable-tariff?serviceDate=2026-10-28&currencyCode=ANG",
+        "status": 200
+      },
+      {
+        "method": "PATCH",
+        "path": "/44",
+        "status": 200
+      },
+      {
+        "method": "PATCH",
+        "path": "/44/tariffs/41",
+        "status": 200
+      },
+      {
+        "method": "PATCH",
+        "path": "/44/status",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "?q=TEST-SVB-M02R-LIVE-1793215293930&isActive=true&serviceDate=2026-10-28",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/44/applicable-tariff?serviceDate=2026-10-28&currencyCode=ANG",
+        "status": 409,
+        "error": "SVB_PROCEDURE_INACTIVE"
+      },
+      {
+        "method": "PATCH",
+        "path": "/44/status",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/44/applicable-tariff?serviceDate=2026-10-28&currencyCode=ANG",
+        "status": 200
+      },
+      {
+        "method": "PATCH",
+        "path": "/44/status",
+        "status": 200
+      }
+    ],
+    "procedureId": "44",
+    "tariffId": "41",
+    "finalActiveState": false
+  }
+}

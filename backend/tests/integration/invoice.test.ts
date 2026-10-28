@@ -1270,14 +1270,18 @@ describe("Invoice API", () => {
       where: { id: patientId },
       data: { firstName: "Changed" },
     });
-    await prisma.svbProcedure.update({
-      where: { id: procedureAId },
-      data: { description: "Changed procedure" },
-    });
-    await prisma.svbTariff.update({
-      where: { id: tariffAId },
-      data: { amount: "999.99" },
-    });
+    await request(app)
+      .patch(`/api/v1/svb-procedures/${procedureAId.toString()}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ description: "Changed procedure" })
+      .expect(200);
+    await request(app)
+      .patch(
+        `/api/v1/svb-procedures/${procedureAId.toString()}/tariffs/${tariffAId.toString()}`,
+      )
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ amount: "999.99" })
+      .expect(200);
     await prisma.provider.update({
       where: { id: providerId },
       data: { svbProviderId: "TEST-INV-PROV-CHANGED" },

@@ -1,5 +1,6 @@
 import {
   CalendarDays,
+  ListChecks,
   ClipboardList,
   FileText,
   LayoutDashboard,
@@ -77,7 +78,7 @@ export const navigationGroups: NavigationGroup[] = [
       {
         label: 'Administration',
         path: '/admin',
-        permissions: ['user.read', 'provider.read', 'role.read'],
+        permissions: ['user.read', 'provider.read', 'role.read', 'svb_procedure.read'],
         icon: UserRoundCog,
       },
       {
@@ -91,6 +92,12 @@ export const navigationGroups: NavigationGroup[] = [
         path: '/admin/providers',
         permissions: ['provider.read'],
         icon: Stethoscope,
+      },
+      {
+        label: 'Services',
+        path: '/admin/services',
+        permissions: ['svb_procedure.read'],
+        icon: ListChecks,
       },
       {
         label: 'Settings',

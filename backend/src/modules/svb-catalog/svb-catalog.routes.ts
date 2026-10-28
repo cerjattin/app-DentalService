@@ -4,6 +4,11 @@ import { authenticate } from "../../shared/middleware/auth.middleware.js";
 import { requirePermission } from "../../shared/middleware/permission.middleware.js";
 
 import {
+  createSvbProcedure,
+  updateSvbProcedure,
+  setSvbProcedureStatus,
+  createSvbTariff,
+  updateSvbTariff,
   getApplicableSvbTariff,
   getSvbProcedure,
   listSvbProcedures,
@@ -36,4 +41,30 @@ svbCatalogRouter.get(
   "/:id",
   requirePermission("svb_procedure.read"),
   getSvbProcedure,
+);
+
+svbCatalogRouter.post(
+  "/",
+  requirePermission("svb_procedure.manage"),
+  createSvbProcedure,
+);
+svbCatalogRouter.patch(
+  "/:id/status",
+  requirePermission("svb_procedure.manage"),
+  setSvbProcedureStatus,
+);
+svbCatalogRouter.patch(
+  "/:id",
+  requirePermission("svb_procedure.manage"),
+  updateSvbProcedure,
+);
+svbCatalogRouter.post(
+  "/:procedureId/tariffs",
+  requirePermission("svb_tariff.manage"),
+  createSvbTariff,
+);
+svbCatalogRouter.patch(
+  "/:procedureId/tariffs/:tariffId",
+  requirePermission("svb_tariff.manage"),
+  updateSvbTariff,
 );

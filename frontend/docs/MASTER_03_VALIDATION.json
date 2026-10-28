@@ -1,0 +1,520 @@
+{
+  "status": "SERVICES ADMINISTRATION UI READY",
+  "validatedCommit": "7c6197f8dc1fb3ab7033c900988d4733243f2478",
+  "workflowRun": "https://github.com/cerjattin/app-DentalService/actions/runs/40756585601",
+  "artifactId": "12845234614",
+  "artifactDigest": "sha256:b467a04fd534a308b7223a2708da2c3fc45423eeb98aa8b3a69b878f812996a6",
+  "baseline": {
+    "frontendTests": 209,
+    "testFiles": 9
+  },
+  "validation": {
+    "lint": "PASSED",
+    "build": "PASSED",
+    "testsPassed": 267,
+    "testsFailed": 0,
+    "testsSkipped": 0,
+    "testFiles": 10,
+    "testsAdded": 58
+  },
+  "bundleMeasurement": {
+    "method": "Local Vite output raw file byte sizes; same installed dependencies/runtime for baseline and MASTER-03",
+    "impact": {
+      "baseline": {
+        "totalJsBytes": 683206,
+        "entryBytes": 310001,
+        "featureChunks": {}
+      },
+      "master03": {
+        "totalJsBytes": 706858,
+        "entryBytes": 311199,
+        "featureChunks": {
+          "svb-catalog-api-C_qp8K_e.js": {
+            "bytes": 1400
+          },
+          "service-detail-page-tKg6dnl6.js": {
+            "bytes": 7914
+          },
+          "services-page-Bm3EX5gl.js": {
+            "bytes": 5120
+          },
+          "service-ui-DofymjU6.js": {
+            "bytes": 7351
+          }
+        }
+      }
+    }
+  },
+  "browserQA": {
+    "status": "PASSED",
+    "network": [
+      {
+        "method": "POST",
+        "path": "/api/v1/auth/login",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/auth/me",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/svb-procedures",
+        "status": 201
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1/tariffs?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/svb-procedures/1/tariffs",
+        "status": 201
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1/tariffs?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "PATCH",
+        "path": "/api/v1/svb-procedures/1",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1/tariffs?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "PATCH",
+        "path": "/api/v1/svb-procedures/1/tariffs/1",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1/tariffs?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1/applicable-tariff?serviceDate=2026-10-28&currencyCode=ANG",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/appointments?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/providers?isActive=true&page=1&pageSize=100",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/appointments/1",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/patients/1/insurance",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/invoices?appointmentId=1&page=1&pageSize=1",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/appointments/1",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/appointments/1/clinical-encounter",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/patients/1/insurance",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/clinical-encounters/1/diagnoses",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/authorizations?patientId=1&page=1&pageSize=20&q=",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/clinical-encounters/1/procedures",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/clinical-encounters/1/diagnoses",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures?page=1&pageSize=20&isActive=true&serviceDate=2026-10-28",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures?q=TEST-M03-UI-1793216631350&page=1&pageSize=20&isActive=true&serviceDate=2026-10-28",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1/tariffs?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "PATCH",
+        "path": "/api/v1/svb-procedures/1/status",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1/tariffs?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/appointments?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/appointments/1",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/patients/1/insurance",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/invoices?appointmentId=1&page=1&pageSize=1",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/appointments/1",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/appointments/1/clinical-encounter",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/patients/1/insurance",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/authorizations?patientId=1&page=1&pageSize=20&q=",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/clinical-encounters/1/diagnoses",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/clinical-encounters/1/procedures",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures?page=1&pageSize=20&isActive=true&serviceDate=2026-10-28",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures?q=TEST-M03-UI-1793216631350&page=1&pageSize=20&isActive=true&serviceDate=2026-10-28",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1/tariffs?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "PATCH",
+        "path": "/api/v1/svb-procedures/1/status",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1/tariffs?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1/tariffs?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1/tariffs?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1/tariffs?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1/tariffs?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "PATCH",
+        "path": "/api/v1/svb-procedures/1/status",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/1/tariffs?page=1&pageSize=20",
+        "status": 200
+      }
+    ],
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedRequests": [],
+    "responsive": [
+      {
+        "width": 1440,
+        "height": 900,
+        "status": "PASSED",
+        "views": [
+          "list",
+          "detail",
+          "service dialog",
+          "tariff dialog"
+        ]
+      },
+      {
+        "width": 1024,
+        "height": 768,
+        "status": "PASSED",
+        "views": [
+          "list",
+          "detail",
+          "service dialog",
+          "tariff dialog"
+        ]
+      },
+      {
+        "width": 768,
+        "height": 1024,
+        "status": "PASSED",
+        "views": [
+          "list",
+          "detail",
+          "service dialog",
+          "tariff dialog"
+        ]
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "status": "PASSED",
+        "views": [
+          "list",
+          "detail",
+          "service dialog",
+          "tariff dialog"
+        ]
+      }
+    ],
+    "steps": [
+      "Service create/detail/edit; tariff create/history/edit; explicit applicable lookup; Decimal strings verified",
+      "Clinical selector includes active service; original snapshot displayed",
+      "Clinical selector excludes inactive service; original snapshot displayed",
+      "Confirmed deactivate/activate; active selector exclusion; historical UI snapshot retained"
+    ],
+    "appointmentId": "1",
+    "encounterId": "1",
+    "serviceId": "1",
+    "serviceCode": "TEST-M03-UI-1793216631350",
+    "tariffId": "1",
+    "encounterProcedureId": "1",
+    "finalActiveState": false
+  },
+  "visualReview": {
+    "screenshots": 16,
+    "reviewed": true,
+    "result": "No broken layout; wide tables scroll within accessible regions; dialogs fit the four target viewports"
+  },
+  "scope": {
+    "backendChanged": false,
+    "schemaMigrationsSeedChanged": false,
+    "dependenciesChanged": false,
+    "noHardDelete": true,
+    "database": "Disposable isolated odontho_master03_test; no clinic connection"
+  },
+  "testFiles": [
+    {
+      "file": "src/test/administration.test.tsx",
+      "status": "passed",
+      "tests": 28
+    },
+    {
+      "file": "src/test/appointments.test.tsx",
+      "status": "passed",
+      "tests": 15
+    },
+    {
+      "file": "src/test/billing.test.tsx",
+      "status": "passed",
+      "tests": 47
+    },
+    {
+      "file": "src/test/clinical.test.tsx",
+      "status": "passed",
+      "tests": 35
+    },
+    {
+      "file": "src/test/corrections.test.tsx",
+      "status": "passed",
+      "tests": 18
+    },
+    {
+      "file": "src/test/declarations.test.tsx",
+      "status": "passed",
+      "tests": 27
+    },
+    {
+      "file": "src/test/foundation.test.tsx",
+      "status": "passed",
+      "tests": 19
+    },
+    {
+      "file": "src/test/hardening.test.tsx",
+      "status": "passed",
+      "tests": 8
+    },
+    {
+      "file": "src/test/patients.test.tsx",
+      "status": "passed",
+      "tests": 12
+    },
+    {
+      "file": "src/test/services.test.tsx",
+      "status": "passed",
+      "tests": 58
+    }
+  ]
+}

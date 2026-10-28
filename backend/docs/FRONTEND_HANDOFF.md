@@ -86,3 +86,20 @@ This is the compact React/Vite integration guide for the frozen backend contract
 ## Files And Binaries
 
 Uploads use raw binary body and query params for document type/name. Downloads return binary bytes. The frontend should not parse document metadata from file paths; use document DTOs returned by the API.
+
+## MASTER-02R catalogue administration handoff
+
+The exact nine-route contract, input field matrix, error codes, pagination, validity and overlap semantics are documented in [API_FREEZE_BACKEND.md](API_FREEZE_BACKEND.md#master-02r--svb-procedure-and-tariff-administration) and exposed in `/api/openapi.json`.
+
+- `/api/v1/svb-procedures`: GET requires `svb_procedure.read`; POST requires `svb_procedure.manage`.
+- `/api/v1/svb-procedures/:id`: GET requires `svb_procedure.read`; PATCH requires `svb_procedure.manage`.
+- `/api/v1/svb-procedures/:id/status`: PATCH `{ isActive: boolean }` requires `svb_procedure.manage`.
+- `/api/v1/svb-procedures/:procedureId/tariffs`: GET requires `svb_tariff.read`; POST requires `svb_tariff.manage`.
+- `/api/v1/svb-procedures/:procedureId/tariffs/:tariffId`: PATCH requires `svb_tariff.manage`.
+- `/api/v1/svb-procedures/:procedureId/applicable-tariff`: GET with mandatory `serviceDate` and `currencyCode` requires `svb_tariff.read`.
+
+Service create accepts required `code`, `description` and optional nullable `category`, `unit`, `validFrom`, `validTo`, plus optional boolean `requiresAuthorization`, `requiresReferral`, `isActive`. Service PATCH accepts the same mutable fields, each optional, at least one required. Tariff create requires string `amount`, explicit `currencyCode`, `validFrom`; optional nullable `validTo` and boolean `isActive`. Tariff PATCH accepts those same five fields, at least one. Unknown fields, IDs, audit fields and historical fields are rejected. Dates stay YYYY-MM-DD business dates; monetary state must stay Decimal strings. `"88.80"` returns as `"88.80"`; currency has no implicit ANG default.
+
+Display activation/inactivation, never deletion. No physical DELETE exists. Retain tariff history; applicable tariff is a separate date/currency lookup. Active overlaps within one procedure/currency are rejected on create, edit and reactivation; dates are inclusive. Adjacent June 30 / July 1 periods are allowed. Duplicate start dates remain disallowed for inactive tariffs too. Map `SVB_PROCEDURE_CODE_ALREADY_EXISTS`, `INVALID_SVB_PROCEDURE_PERIOD`, `SVB_TARIFF_NOT_FOUND`, `SVB_TARIFF_ALREADY_EXISTS`, `INVALID_SVB_TARIFF_PERIOD`, `SVB_TARIFF_PERIOD_OVERLAP` and existing not-found/inactive/not-valid/ambiguous codes exactly. Inactive applicable lookup remains 409 `SVB_PROCEDURE_INACTIVE`.
+
+Clinical currently requests `isActive=true` and `serviceDate`. List filtering only checks dates when `serviceDate` is supplied. Future MASTER-03 should share this catalogue resource/cache and invalidate relevant queries after mutations. Master configuration changes preserve patient authorizations and all past clinical/billing snapshots, versions, PDFs and declarations. No Frontend work is included in MASTER-02R. Do not treat source completion as runtime QA signoff; consult `MASTER_02R_RESULTS.md`.
