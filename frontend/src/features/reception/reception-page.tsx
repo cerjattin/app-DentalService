@@ -1,5 +1,6 @@
+import { AppointmentCreateAction } from '../appointments/appointment-create-dialog'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { CalendarDays, Plus, Search, X } from 'lucide-react'
+import { CalendarDays, Search, X } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { getApiErrorMessage } from '../../api'
@@ -11,7 +12,6 @@ import { EmptyState } from '../../components/feedback/empty-state'
 import { ErrorState } from '../../components/feedback/error-state'
 import { LoadingState } from '../../components/feedback/loading-state'
 import { StatusBadge } from '../../components/feedback/status-badge'
-import { Button } from '../../components/ui/button'
 import { Input } from '../../components/ui/input'
 import { Select } from '../../components/ui/select'
 import { formatBusinessDate, formatBusinessTime } from '../../lib/timezone'
@@ -96,7 +96,7 @@ export function ReceptionPage() {
         actions={
           <div className="flex gap-2">
             <Link to="/appointments" className="inline-flex h-9 items-center gap-2 rounded-md border border-clinic-border-strong bg-white px-3 text-sm font-medium text-slate-700 hover:bg-slate-50"><CalendarDays size={16} />All appointments</Link>
-            {hasPermission(permissions, 'appointment.create') ? <Button disabled title="Appointment creation requires a clinic-location lookup endpoint that is not available in the frozen backend."><Plus size={16} />Create appointment</Button> : null}
+            <AppointmentCreateAction />
           </div>
         }
       />

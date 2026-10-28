@@ -4,7 +4,7 @@ These are frozen Backend limitations, not Frontend defects. The Frontend must no
 
 ## Scheduling And Coverage
 
-- No mounted ClinicLocation lookup exists, so appointment creation cannot obtain an authoritative `clinicLocationId`.
+- ClinicLocation lookup and shared appointment creation are available; patient/provider/location read permissions are required for selection.
 - Appointment status history is not exposed as a read endpoint.
 - Insurance verification metadata is not a service-date eligibility verdict. The Frontend must not label coverage as eligible from dates alone.
 

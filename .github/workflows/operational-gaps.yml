@@ -1,0 +1,77 @@
+name: Operational gap corrections
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'frontend/**'
+      - 'backend/**'
+      - '.github/workflows/operational-gaps.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  services-ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: isolated-master03-only
+          MYSQL_DATABASE: odontho_operational_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -pisolated-master03-only"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=30
+    env:
+      DATABASE_URL: mysql://root:isolated-master03-only@127.0.0.1:3306/odontho_operational_test
+      ACCESS_TOKEN_SECRET: isolated-master03-ci-secret-at-least-32-characters
+      LOG_LEVEL: silent
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: |
+            backend/package-lock.json
+            frontend/package-lock.json
+      - name: Install existing dependencies
+        run: |
+          npm ci --prefix backend
+          npm ci --prefix frontend
+      - name: Prepare existing Backend and isolated MySQL
+        working-directory: backend
+        run: |
+          npm run prisma:generate
+          npx prisma migrate deploy
+          npx prisma db seed
+          npm run build
+      - name: Backend full integration suite
+        working-directory: backend
+        run: npm test -- --reporter=default --reporter=json --outputFile=operational-test-results.json
+      - name: Frontend lint
+        run: npm run lint --prefix frontend
+      - name: Frontend production build
+        run: npm run build --prefix frontend
+      - name: Frontend complete test suite
+        working-directory: frontend
+        run: npm test -- --reporter=default --reporter=json --outputFile=qa/unit-results.json
+      - name: Prepare external browser test tooling
+        run: |
+          npm install --prefix "$RUNNER_TEMP/operational-browser" playwright
+          "$RUNNER_TEMP/operational-browser/node_modules/.bin/playwright" install chromium --with-deps
+      - name: Live browser QA and responsive verification
+        run: MASTER03_PLAYWRIGHT_MODULE="$RUNNER_TEMP/operational-browser/node_modules/playwright/index.mjs" node frontend/scripts/operational-gaps-browser-qa.mjs
+      - name: Save QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: operational-validation
+          path: |
+            frontend/qa
+            backend/operational-test-results.json
+          if-no-files-found: warn

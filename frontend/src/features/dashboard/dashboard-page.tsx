@@ -1,3 +1,4 @@
+import { DashboardReport } from './dashboard-report'
 import { Link } from 'react-router'
 import { hasAnyPermission } from '../../auth/permissions'
 import { PermissionGuard } from '../../auth/permission-guard'
@@ -56,8 +57,9 @@ export function DashboardPage() {
     <div>
       <PageHeader
         title="Dashboard"
-        description="Your authenticated workspace is composed from backend permissions."
+        description="Operational reports and workspace access."
       />
+      <PermissionGuard allOf={['dashboard.read']}><DashboardReport /></PermissionGuard>
       <Card className="mb-4 p-4">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>

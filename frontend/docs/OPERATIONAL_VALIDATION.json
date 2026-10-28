@@ -1,0 +1,183 @@
+{
+  "status": "APPOINTMENT CREATION AND LIVE DASHBOARD READY",
+  "base": "b6cf48d0056994354d10fcb01d7c70f9a04f84fc",
+  "validatedCommit": "5759e33f7a4e7fad78f6f4d9644cc9c8aeaef0f1",
+  "runs": {
+    "operational": "https://github.com/cerjattin/app-DentalService/actions/runs/40776906896",
+    "master02": "https://github.com/cerjattin/app-DentalService/actions/runs/40776906776",
+    "master03": "https://github.com/cerjattin/app-DentalService/actions/runs/40776906752"
+  },
+  "backend": {
+    "tests": 290,
+    "files": 29,
+    "testsAdded": 13,
+    "typecheck": "PASSED",
+    "build": "PASSED",
+    "lint": "No script available"
+  },
+  "frontend": {
+    "tests": 289,
+    "files": 11,
+    "testsAdded": 22,
+    "lint": "PASSED",
+    "build": "PASSED"
+  },
+  "browser": {
+    "status": "PASSED",
+    "serviceId": "45",
+    "tariffId": "42",
+    "responsive": [
+      {
+        "width": 1440,
+        "height": 900,
+        "status": "PASSED",
+        "views": [
+          "list",
+          "detail",
+          "service dialog",
+          "tariff dialog"
+        ]
+      },
+      {
+        "width": 1024,
+        "height": 768,
+        "status": "PASSED",
+        "views": [
+          "list",
+          "detail",
+          "service dialog",
+          "tariff dialog"
+        ]
+      },
+      {
+        "width": 768,
+        "height": 1024,
+        "status": "PASSED",
+        "views": [
+          "list",
+          "detail",
+          "service dialog",
+          "tariff dialog"
+        ]
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "status": "PASSED",
+        "views": [
+          "list",
+          "detail",
+          "service dialog",
+          "tariff dialog"
+        ]
+      }
+    ],
+    "steps": [
+      "Created appointment 101 from Appointments using actual patient/provider/location selections",
+      "Created appointment 102 from Reception using actual patient/provider/location selections",
+      "Live Dashboard KPIs and date/provider filter verified",
+      "Service create/detail/edit; tariff create/history/edit; explicit applicable lookup; Decimal strings verified",
+      "Clinical selector includes active service; original snapshot displayed",
+      "Clinical selector excludes inactive service; original snapshot displayed",
+      "Confirmed deactivate/activate; active selector exclusion; historical UI snapshot retained",
+      "Dashboard production equals original performed snapshot 88.80 after tariff edit and service deactivation"
+    ],
+    "lastRequests": [
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/45/tariffs?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/45",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/45/tariffs?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/45",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/45/tariffs?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/45",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/45/tariffs?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "PATCH",
+        "path": "/api/v1/svb-procedures/45/status",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/45",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/svb-procedures/45/tariffs?page=1&pageSize=20",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/providers?q=&page=1&pageSize=100",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/reports/dashboard?from=2026-10-28&to=2026-10-28",
+        "status": 200
+      }
+    ],
+    "pageUrl": "http://127.0.0.1:5173/dashboard"
+  },
+  "visualReview": {
+    "desktopDashboard": "PASSED",
+    "mobileDashboard": "PASSED",
+    "master03ResponsiveAssertions": "PASSED at all four existing targets"
+  },
+  "scope": {
+    "noReset": true,
+    "noStashApplication": true,
+    "noOldTreeRestoration": true,
+    "noSchemaMigrationSeedChanges": true,
+    "noDependencyChanges": true,
+    "sharedCatalogueUnchanged": true,
+    "mainNotModified": true
+  },
+  "artifact": {
+    "id": "12856055806",
+    "sha256": "84ce038d84525f6e2014bd6186512ef2ca4f632bc0bf4d37aa17ff08c8a76958",
+    "name": "operational-validation"
+  }
+}

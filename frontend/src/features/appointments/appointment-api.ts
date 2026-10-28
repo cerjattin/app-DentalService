@@ -1,6 +1,8 @@
 import { apiFetch, apiFetchResult } from '../../api'
 import type {
   Appointment,
+  AppointmentCreateDto,
+  AppointmentLocation,
   AppointmentListFilters,
   AppointmentStatusDto,
   AppointmentUpdateDto,
@@ -16,6 +18,8 @@ export const appointmentKeys = {
     [...appointmentKeys.lists(), filters] as const,
   details: () => [...appointmentKeys.all, 'detail'] as const,
   detail: (id: EntityId) => [...appointmentKeys.details(), id] as const,
+  locations: () => [...appointmentKeys.all, 'clinic-locations'] as const,
+  providerChoices: (q: string) => [...appointmentKeys.all, 'provider-choices', q] as const,
   providers: () => [...appointmentKeys.all, 'providers'] as const,
 }
 
@@ -87,3 +91,10 @@ export function listActiveProviders(signal?: AbortSignal) {
     { signal },
   )
 }
+
+export const createAppointment = (body: AppointmentCreateDto) =>
+  apiFetch<Appointment>('/appointments', { method: 'POST', body })
+export const listClinicLocations = (signal?: AbortSignal) =>
+  apiFetch<AppointmentLocation[]>('/clinic-locations?isActive=true', { signal })
+export const searchAppointmentProviders = (q: string, signal?: AbortSignal) =>
+  apiFetchResult<Provider[], PaginationMeta>(`/providers?${new URLSearchParams({ isActive: 'true', q, page: '1', pageSize: '100' })}`, { signal })

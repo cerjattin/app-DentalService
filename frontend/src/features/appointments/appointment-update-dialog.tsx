@@ -134,7 +134,7 @@ export function AppointmentUpdateDialog({
               ))}
             </Select>
           </FormField>
-          <FormField label="Clinic location" htmlFor="appointmentLocation" hint="Location lookup is unavailable in the frozen backend.">
+          <FormField label="Clinic location" htmlFor="appointmentLocation" hint="The existing clinic location is retained when editing this appointment.">
             <Input id="appointmentLocation" value={appointment.location.name} disabled readOnly />
           </FormField>
           <FormField label="Scheduled start" htmlFor="scheduledStart" error={errors.scheduledStart?.message}>
