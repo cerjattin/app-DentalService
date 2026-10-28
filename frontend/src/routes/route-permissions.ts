@@ -5,5 +5,6 @@ export const routePermissions: Record<string, string[]> = {
   clinical: ['encounter.read'],
   invoices: ['invoice.read'],
   declarations: ['declaration.read'],
-  admin: ['user.read', 'provider.read', 'role.read'],
+  services: ['svb_procedure.read'],
+  admin: ['user.read', 'provider.read', 'role.read', 'svb_procedure.read'],
 }

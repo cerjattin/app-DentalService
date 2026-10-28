@@ -33,6 +33,9 @@ const AdminUsersPage = lazyPage(() => import('../features/administration/admin-u
 const AdminProvidersPage = lazyPage(() => import('../features/administration/admin-providers-page'), 'AdminProvidersPage')
 const AdminSettingsPage = lazyPage(() => import('../features/administration/admin-settings-page'), 'AdminSettingsPage')
 
+const ServicesPage = lazyPage(() => import('../features/administration/services/services-page'), 'ServicesPage')
+const ServiceDetailPage = lazyPage(() => import('../features/administration/services/service-detail-page'), 'ServiceDetailPage')
+
 function load(Page: ComponentType) {
   return <RouteLoadBoundary><Page /></RouteLoadBoundary>
 }
@@ -93,6 +96,10 @@ export const routes: RouteObject[] = [
               { path: '/admin/settings', element: load(AdminSettingsPage) },
             ],
           },
+          { element: <PermissionRoute anyOf={routePermissions.services} />, children: [
+            { path: '/admin/services', element: load(ServicesPage) },
+            { path: '/admin/services/:serviceId', element: load(ServiceDetailPage) },
+          ] },
           { path: '*', element: load(NotFoundPage) },
         ],
       },
