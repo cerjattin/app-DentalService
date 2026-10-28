@@ -1,6 +1,8 @@
 # MASTER-03 — Services administration UI
 
-Status: implementation complete; live browser and responsive QA pending. Do not treat source completion as final QA signoff.
+**SERVICES ADMINISTRATION UI READY**
+
+Validated source: 7c6197f8dc1fb3ab7033c900988d4733243f2478. [Successful CI run](https://github.com/cerjattin/app-DentalService/actions/runs/40756585601) and [review PR #2](https://github.com/cerjattin/app-DentalService/pull/2). The PR is based on the validated MASTER-02R branch; neither review has been merged into main. No work beyond MASTER-03 has begun.
 
 ## Scope and routes
 
@@ -69,3 +71,72 @@ Required commands: npm run lint, npm run build, npm test. Live QA is automated i
 Responsive targets: 1440×900, 1024×768, 768×1024, 390×844. Existing accessible horizontal table regions and viewport-constrained dialogs are reused. Screenshots, console/page errors, network statuses, created IDs and viewport assertions are retained as CI artifacts.
 
 The repository's missing Recursos/frontend-reference folder was reconciled with its existing Recursos/Crear basadi en archivo.zip visual reference; production components and English copy take precedence over prototype implementation. The work certifies the tested GitHub branch, not unseen/unpushed Windows changes. No Backend, schema, migration, seed, invoice, report, PDF, import/sync or Settings CRUD work is included. MASTER-03 is the stopping point.
+
+
+## Final completion report
+
+| # | Result | Evidence |
+|---|---|---|
+| 1 | Routes added | /admin/services and /admin/services/:serviceId, both lazy loaded and protected by svb_procedure.read. |
+| 2 | Sidebar change | Administration → Services, visible only with svb_procedure.read; authorized Administration landing includes a Services card. |
+| 3 | Exact endpoints | The nine GET/POST/PATCH paths and their permissions are listed in the endpoint table above; no invented endpoint. |
+| 4 | Exact permissions | svb_procedure.read, svb_procedure.manage, svb_tariff.read, svb_tariff.manage, independently enforced. |
+| 5 | Service list | Real Backend search/filter/pagination; loading, empty and safe error/retry states; active/inactive records supported; wide table scrolls accessibly. |
+| 6 | Service creation | Actual DTO, required code/description, nullable optional fields, explicit active checkbox, duplicate error handling and navigation to returned string ID. Browser POST returned 201. |
+| 7 | Service editing | Mutable fields only; successful scoped PATCH and refresh. Browser confirmed changed description/referral. |
+| 8 | Activation/deactivation | Explicit confirmation; dedicated status PATCH; service row/history retained; both transitions verified from browser. Final QA state inactive. |
+| 9 | No hard delete | No Services/tariff delete controls, API helper or DELETE request. All 68 browser API responses were successful GET/POST/PATCH calls. |
+| 10 | Tariff list | Paginated history includes inactive entries by contract; amount/currency/validity/status/actions rendered, independent tariff.read permission. |
+| 11 | Tariff creation | amount, currencyCode, validFrom, validTo, isActive only. Browser POST returned 201 and string 88.80. Currency explicitly entered. |
+| 12 | Tariff editing | Scoped parent+tariff PATCH supports amount, currency, dates and active flag. Browser updated exact amount to string 89.90; status edit covered by automated UI test. |
+| 13 | Decimal behavior | Text/string state and payload; no authoritative floating-point conversion. Trailing zeros and maximum valid Decimal strings covered. |
+| 14 | Errors mapped | Six requested MASTER-02 mutation/not-found errors plus existing procedure not-found/inactive/not-valid and ambiguous tariff errors; exact codes, safe English messages. |
+| 15 | Query strategy | Centralized svbServiceKeys family and shared catalogue API; Clinical delegates existing lookups to the same module. |
+| 16 | Clinical cache | Procedure mutations invalidate shared lists and selected detail subtree. Tariff mutations invalidate that parent's history/applicable queries. Unrelated clinical/invoice snapshots remain untouched. Browser active/inactive selector and original snapshot regression passed. |
+| 17 | Files | Inventory below. All implementation changes are under frontend/, plus the dedicated validation workflow; Backend/database files untouched. |
+| 18 | Tests added | 58 automated tests in services.test.tsx. |
+| 19 | Total tests | 267 passed, 0 failed, 0 skipped, 10 test files. Actual baseline was 209 tests in 9 files, not the 232 count quoted externally. |
+| 20 | Lint | npm run lint: PASS locally and in CI. |
+| 21 | Build | npm run build: PASS locally and in CI; TypeScript checks included. |
+| 22 | Bundle | Raw entry JS 310,001 → 311,199 bytes (+1,198 / 0.39%). Total distributed JS 683,206 → 706,858 bytes (+23,652 / 3.46%). New lazy list 5,120 bytes; detail 7,914; shared service UI/forms 7,351; shared catalogue API 1,400. No dependency additions and no chunk-size warning. See MASTER_03_VALIDATION.json for measurement scope. |
+| 23 | Live QA | PASS with real MySQL 8.0.46, actual Backend, Chromium browser and normal login. UI create/detail/edit/status, tariff history/create/edit/applicable lookup and Clinical regression all passed. |
+| 24 | QA IDs | Service 1, code TEST-M03-UI-1793216631350, tariff 1, appointment 1, encounter 1, encounter procedure 1. IDs belong to disposable CI data, not the clinic. Final service state inactive. No QA DELETE. |
+| 25 | Browser console/network | 68 API responses, only HTTP 200/201. Zero console errors, console warnings, page exceptions or failed non-aborted requests. Normal React development aborts are excluded from transport-failure classification. |
+| 26 | Responsive | PASS at 1440×900, 1024×768, 768×1024 and 390×844. List, detail, service form and tariff form checked at every size; 16 screenshots visually reviewed; document overflow/dialog bounds assertions passed. |
+| 27 | Limitations | Certifies this GitHub branch, not unseen Windows changes. Existing login lands on Dashboard; QA therefore uses real Sidebar/Appointment navigation. No global authentication redesign. Tariff overlap remains Backend-authoritative. No imports/sync/private catalogue/Settings CRUD or unrelated modules. Live environment is disposable. |
+| 28 | Final status | **SERVICES ADMINISTRATION UI READY**. Stop after MASTER-03; no next sprint implemented. |
+
+The initial browser harness incorrectly assumed login would remain at a requested Services deep link. That run stopped before master mutations. The harness was corrected to enter Services through the Sidebar and Clinical through Appointments → View → Open clinical workspace. The final passing run exercised normal single-session navigation and the shared cache. No authentication production code was changed.
+
+### Evidence and files
+
+`MASTER_03_VALIDATION.json` preserves counts, exact QA IDs, all browser API statuses, console/network results, responsive outcomes and bundle measurements. The successful workflow's master-03-validation artifact contains full Vitest JSON, browser report and all 16 screenshots. Artifact ID: 12845234614; SHA-256: b467a04fd534a308b7223a2708da2c3fc45423eeb98aa8b3a69b878f812996a6.
+
+Created:
+
+- .github/workflows/master-03.yml
+- frontend/docs/MASTER_03_SERVICES_UI.md
+- frontend/docs/MASTER_03_VALIDATION.json
+- frontend/scripts/master03-browser-qa.mjs
+- frontend/src/features/administration/services/services-page.tsx
+- frontend/src/features/administration/services/service-detail-page.tsx
+- frontend/src/features/administration/services/service-dialogs.tsx
+- frontend/src/features/administration/services/service-model.ts
+- frontend/src/features/administration/services/service-ui.tsx
+- frontend/src/features/svb-catalog/svb-catalog-api.ts
+- frontend/src/types/svb-catalog.ts
+- frontend/src/test/services.test.tsx
+
+Modified:
+
+- frontend/.gitignore (generated QA evidence excluded)
+- frontend/src/api/error-messages.ts
+- frontend/src/components/app-shell/app-shell.tsx
+- frontend/src/components/app-shell/navigation.ts
+- frontend/src/features/administration/admin-page.tsx
+- frontend/src/features/clinical/clinical-api.ts
+- frontend/src/routes/route-permissions.ts
+- frontend/src/routes/router.tsx
+- frontend/src/types/clinical.ts (catalogue types moved without changing clinical contracts)
+
+No Backend/database, package.json, package-lock, invoice, reporting, PDF or Settings CRUD changes. No hard delete, unsafe type suppression, role shortcut or identity/financial float conversion introduced. git diff --check passed.
