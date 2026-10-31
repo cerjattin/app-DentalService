@@ -440,6 +440,7 @@ export type InvoiceItemWhereInput = {
   additionalNote?: Prisma.StringNullableFilter<"InvoiceItem"> | string | null
   createdAt?: Prisma.DateTimeFilter<"InvoiceItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"InvoiceItem"> | Date | string
+  activeDeclarationAssignment?: Prisma.XOR<Prisma.DeclarationActiveAssignmentNullableScalarRelationFilter, Prisma.DeclarationActiveAssignmentWhereInput> | null
   declarationItems?: Prisma.DeclarationItemListRelationFilter
   encounterProcedure?: Prisma.XOR<Prisma.EncounterProcedureScalarRelationFilter, Prisma.EncounterProcedureWhereInput>
   sourceInvoiceItem?: Prisma.XOR<Prisma.InvoiceItemNullableScalarRelationFilter, Prisma.InvoiceItemWhereInput> | null
@@ -478,6 +479,7 @@ export type InvoiceItemOrderByWithRelationInput = {
   additionalNote?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentOrderByWithRelationInput
   declarationItems?: Prisma.DeclarationItemOrderByRelationAggregateInput
   encounterProcedure?: Prisma.EncounterProcedureOrderByWithRelationInput
   sourceInvoiceItem?: Prisma.InvoiceItemOrderByWithRelationInput
@@ -485,7 +487,6 @@ export type InvoiceItemOrderByWithRelationInput = {
   svbProcedure?: Prisma.SvbProcedureOrderByWithRelationInput
   svbTariff?: Prisma.SvbTariffOrderByWithRelationInput
   invoiceVersion?: Prisma.InvoiceVersionOrderByWithRelationInput
-  _relevance?: Prisma.InvoiceItemOrderByRelevanceInput
 }
 
 export type InvoiceItemWhereUniqueInput = Prisma.AtLeast<{
@@ -523,6 +524,7 @@ export type InvoiceItemWhereUniqueInput = Prisma.AtLeast<{
   additionalNote?: Prisma.StringNullableFilter<"InvoiceItem"> | string | null
   createdAt?: Prisma.DateTimeFilter<"InvoiceItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"InvoiceItem"> | Date | string
+  activeDeclarationAssignment?: Prisma.XOR<Prisma.DeclarationActiveAssignmentNullableScalarRelationFilter, Prisma.DeclarationActiveAssignmentWhereInput> | null
   declarationItems?: Prisma.DeclarationItemListRelationFilter
   encounterProcedure?: Prisma.XOR<Prisma.EncounterProcedureScalarRelationFilter, Prisma.EncounterProcedureWhereInput>
   sourceInvoiceItem?: Prisma.XOR<Prisma.InvoiceItemNullableScalarRelationFilter, Prisma.InvoiceItemWhereInput> | null
@@ -626,6 +628,7 @@ export type InvoiceItemCreateInput = {
   additionalNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentCreateNestedOneWithoutInvoiceItemInput
   declarationItems?: Prisma.DeclarationItemCreateNestedManyWithoutInvoiceItemInput
   encounterProcedure: Prisma.EncounterProcedureCreateNestedOneWithoutInvoiceItemsInput
   sourceInvoiceItem?: Prisma.InvoiceItemCreateNestedOneWithoutDerivedItemsInput
@@ -664,6 +667,7 @@ export type InvoiceItemUncheckedCreateInput = {
   additionalNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentUncheckedCreateNestedOneWithoutInvoiceItemInput
   declarationItems?: Prisma.DeclarationItemUncheckedCreateNestedManyWithoutInvoiceItemInput
   derivedItems?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutSourceInvoiceItemInput
 }
@@ -692,6 +696,7 @@ export type InvoiceItemUpdateInput = {
   additionalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentUpdateOneWithoutInvoiceItemNestedInput
   declarationItems?: Prisma.DeclarationItemUpdateManyWithoutInvoiceItemNestedInput
   encounterProcedure?: Prisma.EncounterProcedureUpdateOneRequiredWithoutInvoiceItemsNestedInput
   sourceInvoiceItem?: Prisma.InvoiceItemUpdateOneWithoutDerivedItemsNestedInput
@@ -730,6 +735,7 @@ export type InvoiceItemUncheckedUpdateInput = {
   additionalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentUncheckedUpdateOneWithoutInvoiceItemNestedInput
   declarationItems?: Prisma.DeclarationItemUncheckedUpdateManyWithoutInvoiceItemNestedInput
   derivedItems?: Prisma.InvoiceItemUncheckedUpdateManyWithoutSourceInvoiceItemNestedInput
 }
@@ -840,12 +846,6 @@ export type InvoiceItemOrderByRelationAggregateInput = {
 export type InvoiceItemNullableScalarRelationFilter = {
   is?: Prisma.InvoiceItemWhereInput | null
   isNot?: Prisma.InvoiceItemWhereInput | null
-}
-
-export type InvoiceItemOrderByRelevanceInput = {
-  fields: Prisma.InvoiceItemOrderByRelevanceFieldEnum | Prisma.InvoiceItemOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type InvoiceItemInvoiceVersionIdDetailInvoiceNumberCompoundUniqueInput = {
@@ -996,6 +996,20 @@ export type InvoiceItemUpdateOneRequiredWithoutDeclarationItemsNestedInput = {
   upsert?: Prisma.InvoiceItemUpsertWithoutDeclarationItemsInput
   connect?: Prisma.InvoiceItemWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.InvoiceItemUpdateToOneWithWhereWithoutDeclarationItemsInput, Prisma.InvoiceItemUpdateWithoutDeclarationItemsInput>, Prisma.InvoiceItemUncheckedUpdateWithoutDeclarationItemsInput>
+}
+
+export type InvoiceItemCreateNestedOneWithoutActiveDeclarationAssignmentInput = {
+  create?: Prisma.XOR<Prisma.InvoiceItemCreateWithoutActiveDeclarationAssignmentInput, Prisma.InvoiceItemUncheckedCreateWithoutActiveDeclarationAssignmentInput>
+  connectOrCreate?: Prisma.InvoiceItemCreateOrConnectWithoutActiveDeclarationAssignmentInput
+  connect?: Prisma.InvoiceItemWhereUniqueInput
+}
+
+export type InvoiceItemUpdateOneRequiredWithoutActiveDeclarationAssignmentNestedInput = {
+  create?: Prisma.XOR<Prisma.InvoiceItemCreateWithoutActiveDeclarationAssignmentInput, Prisma.InvoiceItemUncheckedCreateWithoutActiveDeclarationAssignmentInput>
+  connectOrCreate?: Prisma.InvoiceItemCreateOrConnectWithoutActiveDeclarationAssignmentInput
+  upsert?: Prisma.InvoiceItemUpsertWithoutActiveDeclarationAssignmentInput
+  connect?: Prisma.InvoiceItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InvoiceItemUpdateToOneWithWhereWithoutActiveDeclarationAssignmentInput, Prisma.InvoiceItemUpdateWithoutActiveDeclarationAssignmentInput>, Prisma.InvoiceItemUncheckedUpdateWithoutActiveDeclarationAssignmentInput>
 }
 
 export type InvoiceItemCreateNestedManyWithoutEncounterProcedureInput = {
@@ -1248,6 +1262,7 @@ export type InvoiceItemCreateWithoutDeclarationItemsInput = {
   additionalNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentCreateNestedOneWithoutInvoiceItemInput
   encounterProcedure: Prisma.EncounterProcedureCreateNestedOneWithoutInvoiceItemsInput
   sourceInvoiceItem?: Prisma.InvoiceItemCreateNestedOneWithoutDerivedItemsInput
   derivedItems?: Prisma.InvoiceItemCreateNestedManyWithoutSourceInvoiceItemInput
@@ -1285,6 +1300,7 @@ export type InvoiceItemUncheckedCreateWithoutDeclarationItemsInput = {
   additionalNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentUncheckedCreateNestedOneWithoutInvoiceItemInput
   derivedItems?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutSourceInvoiceItemInput
 }
 
@@ -1328,6 +1344,7 @@ export type InvoiceItemUpdateWithoutDeclarationItemsInput = {
   additionalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentUpdateOneWithoutInvoiceItemNestedInput
   encounterProcedure?: Prisma.EncounterProcedureUpdateOneRequiredWithoutInvoiceItemsNestedInput
   sourceInvoiceItem?: Prisma.InvoiceItemUpdateOneWithoutDerivedItemsNestedInput
   derivedItems?: Prisma.InvoiceItemUpdateManyWithoutSourceInvoiceItemNestedInput
@@ -1365,6 +1382,155 @@ export type InvoiceItemUncheckedUpdateWithoutDeclarationItemsInput = {
   additionalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentUncheckedUpdateOneWithoutInvoiceItemNestedInput
+  derivedItems?: Prisma.InvoiceItemUncheckedUpdateManyWithoutSourceInvoiceItemNestedInput
+}
+
+export type InvoiceItemCreateWithoutActiveDeclarationAssignmentInput = {
+  id?: bigint | number
+  lineNumber: number
+  detailInvoiceNumber?: string | null
+  serviceDateSnapshot: Date | string
+  procedureCodeSnapshot: string
+  procedureDescriptionSnapshot: string
+  providerIdSnapshot: string
+  insuredIdSnapshot: string
+  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currencyCodeSnapshot: string
+  quantity: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  authorizationIdSnapshot?: string | null
+  diagnosticCodeSnapshot?: string | null
+  treatmentIdSnapshot?: string | null
+  accidentFormNumberSnapshot?: string | null
+  numberOfTreatmentsSnapshot?: number | null
+  assistanceSnapshot?: string | null
+  referrerIdSnapshot?: string | null
+  policlinicSnapshot?: string | null
+  additionalNote?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  declarationItems?: Prisma.DeclarationItemCreateNestedManyWithoutInvoiceItemInput
+  encounterProcedure: Prisma.EncounterProcedureCreateNestedOneWithoutInvoiceItemsInput
+  sourceInvoiceItem?: Prisma.InvoiceItemCreateNestedOneWithoutDerivedItemsInput
+  derivedItems?: Prisma.InvoiceItemCreateNestedManyWithoutSourceInvoiceItemInput
+  svbProcedure: Prisma.SvbProcedureCreateNestedOneWithoutInvoiceItemsInput
+  svbTariff: Prisma.SvbTariffCreateNestedOneWithoutInvoiceItemsInput
+  invoiceVersion: Prisma.InvoiceVersionCreateNestedOneWithoutItemsInput
+}
+
+export type InvoiceItemUncheckedCreateWithoutActiveDeclarationAssignmentInput = {
+  id?: bigint | number
+  invoiceVersionId: bigint | number
+  lineNumber: number
+  detailInvoiceNumber?: string | null
+  encounterProcedureId: bigint | number
+  sourceInvoiceItemId?: bigint | number | null
+  svbProcedureId: bigint | number
+  svbTariffId: bigint | number
+  serviceDateSnapshot: Date | string
+  procedureCodeSnapshot: string
+  procedureDescriptionSnapshot: string
+  providerIdSnapshot: string
+  insuredIdSnapshot: string
+  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currencyCodeSnapshot: string
+  quantity: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  authorizationIdSnapshot?: string | null
+  diagnosticCodeSnapshot?: string | null
+  treatmentIdSnapshot?: string | null
+  accidentFormNumberSnapshot?: string | null
+  numberOfTreatmentsSnapshot?: number | null
+  assistanceSnapshot?: string | null
+  referrerIdSnapshot?: string | null
+  policlinicSnapshot?: string | null
+  additionalNote?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  declarationItems?: Prisma.DeclarationItemUncheckedCreateNestedManyWithoutInvoiceItemInput
+  derivedItems?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutSourceInvoiceItemInput
+}
+
+export type InvoiceItemCreateOrConnectWithoutActiveDeclarationAssignmentInput = {
+  where: Prisma.InvoiceItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.InvoiceItemCreateWithoutActiveDeclarationAssignmentInput, Prisma.InvoiceItemUncheckedCreateWithoutActiveDeclarationAssignmentInput>
+}
+
+export type InvoiceItemUpsertWithoutActiveDeclarationAssignmentInput = {
+  update: Prisma.XOR<Prisma.InvoiceItemUpdateWithoutActiveDeclarationAssignmentInput, Prisma.InvoiceItemUncheckedUpdateWithoutActiveDeclarationAssignmentInput>
+  create: Prisma.XOR<Prisma.InvoiceItemCreateWithoutActiveDeclarationAssignmentInput, Prisma.InvoiceItemUncheckedCreateWithoutActiveDeclarationAssignmentInput>
+  where?: Prisma.InvoiceItemWhereInput
+}
+
+export type InvoiceItemUpdateToOneWithWhereWithoutActiveDeclarationAssignmentInput = {
+  where?: Prisma.InvoiceItemWhereInput
+  data: Prisma.XOR<Prisma.InvoiceItemUpdateWithoutActiveDeclarationAssignmentInput, Prisma.InvoiceItemUncheckedUpdateWithoutActiveDeclarationAssignmentInput>
+}
+
+export type InvoiceItemUpdateWithoutActiveDeclarationAssignmentInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  lineNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  detailInvoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceDateSnapshot?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  providerIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accidentFormNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  numberOfTreatmentsSnapshot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  assistanceSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  policlinicSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  additionalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  declarationItems?: Prisma.DeclarationItemUpdateManyWithoutInvoiceItemNestedInput
+  encounterProcedure?: Prisma.EncounterProcedureUpdateOneRequiredWithoutInvoiceItemsNestedInput
+  sourceInvoiceItem?: Prisma.InvoiceItemUpdateOneWithoutDerivedItemsNestedInput
+  derivedItems?: Prisma.InvoiceItemUpdateManyWithoutSourceInvoiceItemNestedInput
+  svbProcedure?: Prisma.SvbProcedureUpdateOneRequiredWithoutInvoiceItemsNestedInput
+  svbTariff?: Prisma.SvbTariffUpdateOneRequiredWithoutInvoiceItemsNestedInput
+  invoiceVersion?: Prisma.InvoiceVersionUpdateOneRequiredWithoutItemsNestedInput
+}
+
+export type InvoiceItemUncheckedUpdateWithoutActiveDeclarationAssignmentInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  invoiceVersionId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  lineNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  detailInvoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  encounterProcedureId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  sourceInvoiceItemId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  svbProcedureId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  svbTariffId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  serviceDateSnapshot?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  providerIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accidentFormNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  numberOfTreatmentsSnapshot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  assistanceSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  policlinicSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  additionalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  declarationItems?: Prisma.DeclarationItemUncheckedUpdateManyWithoutInvoiceItemNestedInput
   derivedItems?: Prisma.InvoiceItemUncheckedUpdateManyWithoutSourceInvoiceItemNestedInput
 }
 
@@ -1392,6 +1558,7 @@ export type InvoiceItemCreateWithoutEncounterProcedureInput = {
   additionalNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentCreateNestedOneWithoutInvoiceItemInput
   declarationItems?: Prisma.DeclarationItemCreateNestedManyWithoutInvoiceItemInput
   sourceInvoiceItem?: Prisma.InvoiceItemCreateNestedOneWithoutDerivedItemsInput
   derivedItems?: Prisma.InvoiceItemCreateNestedManyWithoutSourceInvoiceItemInput
@@ -1428,6 +1595,7 @@ export type InvoiceItemUncheckedCreateWithoutEncounterProcedureInput = {
   additionalNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentUncheckedCreateNestedOneWithoutInvoiceItemInput
   declarationItems?: Prisma.DeclarationItemUncheckedCreateNestedManyWithoutInvoiceItemInput
   derivedItems?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutSourceInvoiceItemInput
 }
@@ -1516,6 +1684,7 @@ export type InvoiceItemCreateWithoutDerivedItemsInput = {
   additionalNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentCreateNestedOneWithoutInvoiceItemInput
   declarationItems?: Prisma.DeclarationItemCreateNestedManyWithoutInvoiceItemInput
   encounterProcedure: Prisma.EncounterProcedureCreateNestedOneWithoutInvoiceItemsInput
   sourceInvoiceItem?: Prisma.InvoiceItemCreateNestedOneWithoutDerivedItemsInput
@@ -1553,6 +1722,7 @@ export type InvoiceItemUncheckedCreateWithoutDerivedItemsInput = {
   additionalNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentUncheckedCreateNestedOneWithoutInvoiceItemInput
   declarationItems?: Prisma.DeclarationItemUncheckedCreateNestedManyWithoutInvoiceItemInput
 }
 
@@ -1585,6 +1755,7 @@ export type InvoiceItemCreateWithoutSourceInvoiceItemInput = {
   additionalNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentCreateNestedOneWithoutInvoiceItemInput
   declarationItems?: Prisma.DeclarationItemCreateNestedManyWithoutInvoiceItemInput
   encounterProcedure: Prisma.EncounterProcedureCreateNestedOneWithoutInvoiceItemsInput
   derivedItems?: Prisma.InvoiceItemCreateNestedManyWithoutSourceInvoiceItemInput
@@ -1621,6 +1792,7 @@ export type InvoiceItemUncheckedCreateWithoutSourceInvoiceItemInput = {
   additionalNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentUncheckedCreateNestedOneWithoutInvoiceItemInput
   declarationItems?: Prisma.DeclarationItemUncheckedCreateNestedManyWithoutInvoiceItemInput
   derivedItems?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutSourceInvoiceItemInput
 }
@@ -1670,6 +1842,7 @@ export type InvoiceItemUpdateWithoutDerivedItemsInput = {
   additionalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentUpdateOneWithoutInvoiceItemNestedInput
   declarationItems?: Prisma.DeclarationItemUpdateManyWithoutInvoiceItemNestedInput
   encounterProcedure?: Prisma.EncounterProcedureUpdateOneRequiredWithoutInvoiceItemsNestedInput
   sourceInvoiceItem?: Prisma.InvoiceItemUpdateOneWithoutDerivedItemsNestedInput
@@ -1707,6 +1880,7 @@ export type InvoiceItemUncheckedUpdateWithoutDerivedItemsInput = {
   additionalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentUncheckedUpdateOneWithoutInvoiceItemNestedInput
   declarationItems?: Prisma.DeclarationItemUncheckedUpdateManyWithoutInvoiceItemNestedInput
 }
 
@@ -1750,6 +1924,7 @@ export type InvoiceItemCreateWithoutInvoiceVersionInput = {
   additionalNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentCreateNestedOneWithoutInvoiceItemInput
   declarationItems?: Prisma.DeclarationItemCreateNestedManyWithoutInvoiceItemInput
   encounterProcedure: Prisma.EncounterProcedureCreateNestedOneWithoutInvoiceItemsInput
   sourceInvoiceItem?: Prisma.InvoiceItemCreateNestedOneWithoutDerivedItemsInput
@@ -1786,6 +1961,7 @@ export type InvoiceItemUncheckedCreateWithoutInvoiceVersionInput = {
   additionalNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentUncheckedCreateNestedOneWithoutInvoiceItemInput
   declarationItems?: Prisma.DeclarationItemUncheckedCreateNestedManyWithoutInvoiceItemInput
   derivedItems?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutSourceInvoiceItemInput
 }
@@ -1840,6 +2016,7 @@ export type InvoiceItemCreateWithoutSvbProcedureInput = {
   additionalNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentCreateNestedOneWithoutInvoiceItemInput
   declarationItems?: Prisma.DeclarationItemCreateNestedManyWithoutInvoiceItemInput
   encounterProcedure: Prisma.EncounterProcedureCreateNestedOneWithoutInvoiceItemsInput
   sourceInvoiceItem?: Prisma.InvoiceItemCreateNestedOneWithoutDerivedItemsInput
@@ -1876,6 +2053,7 @@ export type InvoiceItemUncheckedCreateWithoutSvbProcedureInput = {
   additionalNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentUncheckedCreateNestedOneWithoutInvoiceItemInput
   declarationItems?: Prisma.DeclarationItemUncheckedCreateNestedManyWithoutInvoiceItemInput
   derivedItems?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutSourceInvoiceItemInput
 }
@@ -1930,6 +2108,7 @@ export type InvoiceItemCreateWithoutSvbTariffInput = {
   additionalNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentCreateNestedOneWithoutInvoiceItemInput
   declarationItems?: Prisma.DeclarationItemCreateNestedManyWithoutInvoiceItemInput
   encounterProcedure: Prisma.EncounterProcedureCreateNestedOneWithoutInvoiceItemsInput
   sourceInvoiceItem?: Prisma.InvoiceItemCreateNestedOneWithoutDerivedItemsInput
@@ -1966,6 +2145,7 @@ export type InvoiceItemUncheckedCreateWithoutSvbTariffInput = {
   additionalNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentUncheckedCreateNestedOneWithoutInvoiceItemInput
   declarationItems?: Prisma.DeclarationItemUncheckedCreateNestedManyWithoutInvoiceItemInput
   derivedItems?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutSourceInvoiceItemInput
 }
@@ -2050,6 +2230,7 @@ export type InvoiceItemUpdateWithoutEncounterProcedureInput = {
   additionalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentUpdateOneWithoutInvoiceItemNestedInput
   declarationItems?: Prisma.DeclarationItemUpdateManyWithoutInvoiceItemNestedInput
   sourceInvoiceItem?: Prisma.InvoiceItemUpdateOneWithoutDerivedItemsNestedInput
   derivedItems?: Prisma.InvoiceItemUpdateManyWithoutSourceInvoiceItemNestedInput
@@ -2086,6 +2267,7 @@ export type InvoiceItemUncheckedUpdateWithoutEncounterProcedureInput = {
   additionalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentUncheckedUpdateOneWithoutInvoiceItemNestedInput
   declarationItems?: Prisma.DeclarationItemUncheckedUpdateManyWithoutInvoiceItemNestedInput
   derivedItems?: Prisma.InvoiceItemUncheckedUpdateManyWithoutSourceInvoiceItemNestedInput
 }
@@ -2174,6 +2356,7 @@ export type InvoiceItemUpdateWithoutSourceInvoiceItemInput = {
   additionalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentUpdateOneWithoutInvoiceItemNestedInput
   declarationItems?: Prisma.DeclarationItemUpdateManyWithoutInvoiceItemNestedInput
   encounterProcedure?: Prisma.EncounterProcedureUpdateOneRequiredWithoutInvoiceItemsNestedInput
   derivedItems?: Prisma.InvoiceItemUpdateManyWithoutSourceInvoiceItemNestedInput
@@ -2210,6 +2393,7 @@ export type InvoiceItemUncheckedUpdateWithoutSourceInvoiceItemInput = {
   additionalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentUncheckedUpdateOneWithoutInvoiceItemNestedInput
   declarationItems?: Prisma.DeclarationItemUncheckedUpdateManyWithoutInvoiceItemNestedInput
   derivedItems?: Prisma.InvoiceItemUncheckedUpdateManyWithoutSourceInvoiceItemNestedInput
 }
@@ -2298,6 +2482,7 @@ export type InvoiceItemUpdateWithoutInvoiceVersionInput = {
   additionalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentUpdateOneWithoutInvoiceItemNestedInput
   declarationItems?: Prisma.DeclarationItemUpdateManyWithoutInvoiceItemNestedInput
   encounterProcedure?: Prisma.EncounterProcedureUpdateOneRequiredWithoutInvoiceItemsNestedInput
   sourceInvoiceItem?: Prisma.InvoiceItemUpdateOneWithoutDerivedItemsNestedInput
@@ -2334,6 +2519,7 @@ export type InvoiceItemUncheckedUpdateWithoutInvoiceVersionInput = {
   additionalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentUncheckedUpdateOneWithoutInvoiceItemNestedInput
   declarationItems?: Prisma.DeclarationItemUncheckedUpdateManyWithoutInvoiceItemNestedInput
   derivedItems?: Prisma.InvoiceItemUncheckedUpdateManyWithoutSourceInvoiceItemNestedInput
 }
@@ -2422,6 +2608,7 @@ export type InvoiceItemUpdateWithoutSvbProcedureInput = {
   additionalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentUpdateOneWithoutInvoiceItemNestedInput
   declarationItems?: Prisma.DeclarationItemUpdateManyWithoutInvoiceItemNestedInput
   encounterProcedure?: Prisma.EncounterProcedureUpdateOneRequiredWithoutInvoiceItemsNestedInput
   sourceInvoiceItem?: Prisma.InvoiceItemUpdateOneWithoutDerivedItemsNestedInput
@@ -2458,6 +2645,7 @@ export type InvoiceItemUncheckedUpdateWithoutSvbProcedureInput = {
   additionalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentUncheckedUpdateOneWithoutInvoiceItemNestedInput
   declarationItems?: Prisma.DeclarationItemUncheckedUpdateManyWithoutInvoiceItemNestedInput
   derivedItems?: Prisma.InvoiceItemUncheckedUpdateManyWithoutSourceInvoiceItemNestedInput
 }
@@ -2546,6 +2734,7 @@ export type InvoiceItemUpdateWithoutSvbTariffInput = {
   additionalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentUpdateOneWithoutInvoiceItemNestedInput
   declarationItems?: Prisma.DeclarationItemUpdateManyWithoutInvoiceItemNestedInput
   encounterProcedure?: Prisma.EncounterProcedureUpdateOneRequiredWithoutInvoiceItemsNestedInput
   sourceInvoiceItem?: Prisma.InvoiceItemUpdateOneWithoutDerivedItemsNestedInput
@@ -2582,6 +2771,7 @@ export type InvoiceItemUncheckedUpdateWithoutSvbTariffInput = {
   additionalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activeDeclarationAssignment?: Prisma.DeclarationActiveAssignmentUncheckedUpdateOneWithoutInvoiceItemNestedInput
   declarationItems?: Prisma.DeclarationItemUncheckedUpdateManyWithoutInvoiceItemNestedInput
   derivedItems?: Prisma.InvoiceItemUncheckedUpdateManyWithoutSourceInvoiceItemNestedInput
 }
@@ -2685,6 +2875,7 @@ export type InvoiceItemSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   additionalNote?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  activeDeclarationAssignment?: boolean | Prisma.InvoiceItem$activeDeclarationAssignmentArgs<ExtArgs>
   declarationItems?: boolean | Prisma.InvoiceItem$declarationItemsArgs<ExtArgs>
   encounterProcedure?: boolean | Prisma.EncounterProcedureDefaultArgs<ExtArgs>
   sourceInvoiceItem?: boolean | Prisma.InvoiceItem$sourceInvoiceItemArgs<ExtArgs>
@@ -2695,7 +2886,77 @@ export type InvoiceItemSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   _count?: boolean | Prisma.InvoiceItemCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["invoiceItem"]>
 
+export type InvoiceItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  invoiceVersionId?: boolean
+  lineNumber?: boolean
+  detailInvoiceNumber?: boolean
+  encounterProcedureId?: boolean
+  sourceInvoiceItemId?: boolean
+  svbProcedureId?: boolean
+  svbTariffId?: boolean
+  serviceDateSnapshot?: boolean
+  procedureCodeSnapshot?: boolean
+  procedureDescriptionSnapshot?: boolean
+  providerIdSnapshot?: boolean
+  insuredIdSnapshot?: boolean
+  unitTariffSnapshot?: boolean
+  currencyCodeSnapshot?: boolean
+  quantity?: boolean
+  amount?: boolean
+  authorizationIdSnapshot?: boolean
+  diagnosticCodeSnapshot?: boolean
+  treatmentIdSnapshot?: boolean
+  accidentFormNumberSnapshot?: boolean
+  numberOfTreatmentsSnapshot?: boolean
+  assistanceSnapshot?: boolean
+  referrerIdSnapshot?: boolean
+  policlinicSnapshot?: boolean
+  additionalNote?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  encounterProcedure?: boolean | Prisma.EncounterProcedureDefaultArgs<ExtArgs>
+  sourceInvoiceItem?: boolean | Prisma.InvoiceItem$sourceInvoiceItemArgs<ExtArgs>
+  svbProcedure?: boolean | Prisma.SvbProcedureDefaultArgs<ExtArgs>
+  svbTariff?: boolean | Prisma.SvbTariffDefaultArgs<ExtArgs>
+  invoiceVersion?: boolean | Prisma.InvoiceVersionDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["invoiceItem"]>
 
+export type InvoiceItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  invoiceVersionId?: boolean
+  lineNumber?: boolean
+  detailInvoiceNumber?: boolean
+  encounterProcedureId?: boolean
+  sourceInvoiceItemId?: boolean
+  svbProcedureId?: boolean
+  svbTariffId?: boolean
+  serviceDateSnapshot?: boolean
+  procedureCodeSnapshot?: boolean
+  procedureDescriptionSnapshot?: boolean
+  providerIdSnapshot?: boolean
+  insuredIdSnapshot?: boolean
+  unitTariffSnapshot?: boolean
+  currencyCodeSnapshot?: boolean
+  quantity?: boolean
+  amount?: boolean
+  authorizationIdSnapshot?: boolean
+  diagnosticCodeSnapshot?: boolean
+  treatmentIdSnapshot?: boolean
+  accidentFormNumberSnapshot?: boolean
+  numberOfTreatmentsSnapshot?: boolean
+  assistanceSnapshot?: boolean
+  referrerIdSnapshot?: boolean
+  policlinicSnapshot?: boolean
+  additionalNote?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  encounterProcedure?: boolean | Prisma.EncounterProcedureDefaultArgs<ExtArgs>
+  sourceInvoiceItem?: boolean | Prisma.InvoiceItem$sourceInvoiceItemArgs<ExtArgs>
+  svbProcedure?: boolean | Prisma.SvbProcedureDefaultArgs<ExtArgs>
+  svbTariff?: boolean | Prisma.SvbTariffDefaultArgs<ExtArgs>
+  invoiceVersion?: boolean | Prisma.InvoiceVersionDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["invoiceItem"]>
 
 export type InvoiceItemSelectScalar = {
   id?: boolean
@@ -2730,6 +2991,7 @@ export type InvoiceItemSelectScalar = {
 
 export type InvoiceItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "invoiceVersionId" | "lineNumber" | "detailInvoiceNumber" | "encounterProcedureId" | "sourceInvoiceItemId" | "svbProcedureId" | "svbTariffId" | "serviceDateSnapshot" | "procedureCodeSnapshot" | "procedureDescriptionSnapshot" | "providerIdSnapshot" | "insuredIdSnapshot" | "unitTariffSnapshot" | "currencyCodeSnapshot" | "quantity" | "amount" | "authorizationIdSnapshot" | "diagnosticCodeSnapshot" | "treatmentIdSnapshot" | "accidentFormNumberSnapshot" | "numberOfTreatmentsSnapshot" | "assistanceSnapshot" | "referrerIdSnapshot" | "policlinicSnapshot" | "additionalNote" | "createdAt" | "updatedAt", ExtArgs["result"]["invoiceItem"]>
 export type InvoiceItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  activeDeclarationAssignment?: boolean | Prisma.InvoiceItem$activeDeclarationAssignmentArgs<ExtArgs>
   declarationItems?: boolean | Prisma.InvoiceItem$declarationItemsArgs<ExtArgs>
   encounterProcedure?: boolean | Prisma.EncounterProcedureDefaultArgs<ExtArgs>
   sourceInvoiceItem?: boolean | Prisma.InvoiceItem$sourceInvoiceItemArgs<ExtArgs>
@@ -2739,10 +3001,25 @@ export type InvoiceItemInclude<ExtArgs extends runtime.Types.Extensions.Internal
   invoiceVersion?: boolean | Prisma.InvoiceVersionDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.InvoiceItemCountOutputTypeDefaultArgs<ExtArgs>
 }
+export type InvoiceItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  encounterProcedure?: boolean | Prisma.EncounterProcedureDefaultArgs<ExtArgs>
+  sourceInvoiceItem?: boolean | Prisma.InvoiceItem$sourceInvoiceItemArgs<ExtArgs>
+  svbProcedure?: boolean | Prisma.SvbProcedureDefaultArgs<ExtArgs>
+  svbTariff?: boolean | Prisma.SvbTariffDefaultArgs<ExtArgs>
+  invoiceVersion?: boolean | Prisma.InvoiceVersionDefaultArgs<ExtArgs>
+}
+export type InvoiceItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  encounterProcedure?: boolean | Prisma.EncounterProcedureDefaultArgs<ExtArgs>
+  sourceInvoiceItem?: boolean | Prisma.InvoiceItem$sourceInvoiceItemArgs<ExtArgs>
+  svbProcedure?: boolean | Prisma.SvbProcedureDefaultArgs<ExtArgs>
+  svbTariff?: boolean | Prisma.SvbTariffDefaultArgs<ExtArgs>
+  invoiceVersion?: boolean | Prisma.InvoiceVersionDefaultArgs<ExtArgs>
+}
 
 export type $InvoiceItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "InvoiceItem"
   objects: {
+    activeDeclarationAssignment: Prisma.$DeclarationActiveAssignmentPayload<ExtArgs> | null
     declarationItems: Prisma.$DeclarationItemPayload<ExtArgs>[]
     encounterProcedure: Prisma.$EncounterProcedurePayload<ExtArgs>
     sourceInvoiceItem: Prisma.$InvoiceItemPayload<ExtArgs> | null
@@ -2898,6 +3175,30 @@ export interface InvoiceItemDelegate<ExtArgs extends runtime.Types.Extensions.In
   createMany<T extends InvoiceItemCreateManyArgs>(args?: Prisma.SelectSubset<T, InvoiceItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many InvoiceItems and returns the data saved in the database.
+   * @param {InvoiceItemCreateManyAndReturnArgs} args - Arguments to create many InvoiceItems.
+   * @example
+   * // Create many InvoiceItems
+   * const invoiceItem = await prisma.invoiceItem.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many InvoiceItems and only return the `id`
+   * const invoiceItemWithIdOnly = await prisma.invoiceItem.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends InvoiceItemCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, InvoiceItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoiceItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a InvoiceItem.
    * @param {InvoiceItemDeleteArgs} args - Arguments to delete one InvoiceItem.
    * @example
@@ -2960,6 +3261,36 @@ export interface InvoiceItemDelegate<ExtArgs extends runtime.Types.Extensions.In
    * 
    */
   updateMany<T extends InvoiceItemUpdateManyArgs>(args: Prisma.SelectSubset<T, InvoiceItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more InvoiceItems and returns the data updated in the database.
+   * @param {InvoiceItemUpdateManyAndReturnArgs} args - Arguments to update many InvoiceItems.
+   * @example
+   * // Update many InvoiceItems
+   * const invoiceItem = await prisma.invoiceItem.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more InvoiceItems and only return the `id`
+   * const invoiceItemWithIdOnly = await prisma.invoiceItem.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends InvoiceItemUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, InvoiceItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoiceItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one InvoiceItem.
@@ -3120,6 +3451,7 @@ readonly fields: InvoiceItemFieldRefs;
  */
 export interface Prisma__InvoiceItemClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  activeDeclarationAssignment<T extends Prisma.InvoiceItem$activeDeclarationAssignmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InvoiceItem$activeDeclarationAssignmentArgs<ExtArgs>>): Prisma.Prisma__DeclarationActiveAssignmentClient<runtime.Types.Result.GetResult<Prisma.$DeclarationActiveAssignmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   declarationItems<T extends Prisma.InvoiceItem$declarationItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InvoiceItem$declarationItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeclarationItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   encounterProcedure<T extends Prisma.EncounterProcedureDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EncounterProcedureDefaultArgs<ExtArgs>>): Prisma.Prisma__EncounterProcedureClient<runtime.Types.Result.GetResult<Prisma.$EncounterProcedurePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   sourceInvoiceItem<T extends Prisma.InvoiceItem$sourceInvoiceItemArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InvoiceItem$sourceInvoiceItemArgs<ExtArgs>>): Prisma.Prisma__InvoiceItemClient<runtime.Types.Result.GetResult<Prisma.$InvoiceItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -3422,6 +3754,29 @@ export type InvoiceItemCreateManyArgs<ExtArgs extends runtime.Types.Extensions.I
 }
 
 /**
+ * InvoiceItem createManyAndReturn
+ */
+export type InvoiceItemCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InvoiceItem
+   */
+  select?: Prisma.InvoiceItemSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the InvoiceItem
+   */
+  omit?: Prisma.InvoiceItemOmit<ExtArgs> | null
+  /**
+   * The data used to create many InvoiceItems.
+   */
+  data: Prisma.InvoiceItemCreateManyInput | Prisma.InvoiceItemCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InvoiceItemIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * InvoiceItem update
  */
 export type InvoiceItemUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3463,6 +3818,36 @@ export type InvoiceItemUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Limit how many InvoiceItems to update.
    */
   limit?: number
+}
+
+/**
+ * InvoiceItem updateManyAndReturn
+ */
+export type InvoiceItemUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InvoiceItem
+   */
+  select?: Prisma.InvoiceItemSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the InvoiceItem
+   */
+  omit?: Prisma.InvoiceItemOmit<ExtArgs> | null
+  /**
+   * The data used to update InvoiceItems.
+   */
+  data: Prisma.XOR<Prisma.InvoiceItemUpdateManyMutationInput, Prisma.InvoiceItemUncheckedUpdateManyInput>
+  /**
+   * Filter which InvoiceItems to update
+   */
+  where?: Prisma.InvoiceItemWhereInput
+  /**
+   * Limit how many InvoiceItems to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InvoiceItemIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -3529,6 +3914,25 @@ export type InvoiceItemDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Limit how many InvoiceItems to delete.
    */
   limit?: number
+}
+
+/**
+ * InvoiceItem.activeDeclarationAssignment
+ */
+export type InvoiceItem$activeDeclarationAssignmentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeclarationActiveAssignment
+   */
+  select?: Prisma.DeclarationActiveAssignmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeclarationActiveAssignment
+   */
+  omit?: Prisma.DeclarationActiveAssignmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeclarationActiveAssignmentInclude<ExtArgs> | null
+  where?: Prisma.DeclarationActiveAssignmentWhereInput
 }
 
 /**

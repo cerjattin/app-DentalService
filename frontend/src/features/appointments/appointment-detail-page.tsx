@@ -30,6 +30,8 @@ import {
 } from './appointment-model'
 import { AppointmentUpdateDialog } from './appointment-update-dialog'
 import { AppointmentBilling } from '../billing/appointment-billing'
+import { treatmentCaseKeys } from '../treatment-cases/treatment-case-api'
+import { dashboardKeys } from '../dashboard/dashboard-api'
 
 function Field({ label, value }: { label: string; value: string | null }) {
   return <div><dt className="text-xs font-medium uppercase text-slate-500">{label}</dt><dd className="mt-1 text-sm text-slate-800">{value || 'Not provided'}</dd></div>
@@ -67,6 +69,9 @@ export function AppointmentDetailPage() {
       setEditOpen(false)
       setNotice('Appointment updated.')
       await Promise.all([
+        queryClient.invalidateQueries({ queryKey: treatmentCaseKeys.patient(appointment.patientId) }),
+        queryClient.invalidateQueries({ queryKey: patientKeys.detail(appointment.patientId) }),
+        queryClient.invalidateQueries({ queryKey: dashboardKeys.all }),
         queryClient.invalidateQueries({ queryKey: appointmentKeys.lists() }),
         queryClient.invalidateQueries({ queryKey: receptionKeys.all }),
       ])

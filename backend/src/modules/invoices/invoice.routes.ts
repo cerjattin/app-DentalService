@@ -6,6 +6,7 @@ import { requirePermission } from "../../shared/middleware/permission.middleware
 import {
   approveInvoiceCorrection,
   cancelInvoice,
+  returnInvoiceToEncounter,
   cancelInvoiceCorrectionRequest,
   createAppointmentInvoice,
   createInvoiceCorrectionReplacement,
@@ -28,6 +29,13 @@ export const invoiceRouter = Router();
 invoiceRouter.use(authenticate);
 
 invoiceRouter.get("/", requirePermission("invoice.read"), listInvoices);
+invoiceRouter.post(
+  "/:id/reopen-encounter",
+  requirePermission("invoice.apply_correction"),
+  requirePermission("encounter.update"),
+  requirePermission("procedure.update"),
+  returnInvoiceToEncounter,
+);
 invoiceRouter.get(
   "/:id/corrections",
   requirePermission("invoice.read"),

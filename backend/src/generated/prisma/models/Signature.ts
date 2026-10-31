@@ -394,7 +394,6 @@ export type SignatureOrderByWithRelationInput = {
   patient?: Prisma.PatientOrderByWithRelationInput
   invoiceVersion?: Prisma.InvoiceVersionOrderByWithRelationInput
   voidedByUser?: Prisma.UserOrderByWithRelationInput
-  _relevance?: Prisma.SignatureOrderByRelevanceInput
 }
 
 export type SignatureWhereUniqueInput = Prisma.AtLeast<{
@@ -661,12 +660,6 @@ export type SignatureListRelationFilter = {
 
 export type SignatureOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type SignatureOrderByRelevanceInput = {
-  fields: Prisma.SignatureOrderByRelevanceFieldEnum | Prisma.SignatureOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type SignatureCountOrderByAggregateInput = {
@@ -1791,7 +1784,63 @@ export type SignatureSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   voidedByUser?: boolean | Prisma.Signature$voidedByUserArgs<ExtArgs>
 }, ExtArgs["result"]["signature"]>
 
+export type SignatureSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  invoiceVersionId?: boolean
+  patientId?: boolean
+  signatureDocumentId?: boolean
+  signatureType?: boolean
+  signerName?: boolean
+  signerRelationship?: boolean
+  captureMethod?: boolean
+  signedContentHash?: boolean
+  signatureHash?: boolean
+  status?: boolean
+  signedAt?: boolean
+  capturedByUserId?: boolean
+  deviceIdentifier?: boolean
+  ipAddress?: boolean
+  userAgent?: boolean
+  metadata?: boolean
+  voidedAt?: boolean
+  voidedByUserId?: boolean
+  voidReason?: boolean
+  createdAt?: boolean
+  capturedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  signatureDocument?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+  invoiceVersion?: boolean | Prisma.InvoiceVersionDefaultArgs<ExtArgs>
+  voidedByUser?: boolean | Prisma.Signature$voidedByUserArgs<ExtArgs>
+}, ExtArgs["result"]["signature"]>
 
+export type SignatureSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  invoiceVersionId?: boolean
+  patientId?: boolean
+  signatureDocumentId?: boolean
+  signatureType?: boolean
+  signerName?: boolean
+  signerRelationship?: boolean
+  captureMethod?: boolean
+  signedContentHash?: boolean
+  signatureHash?: boolean
+  status?: boolean
+  signedAt?: boolean
+  capturedByUserId?: boolean
+  deviceIdentifier?: boolean
+  ipAddress?: boolean
+  userAgent?: boolean
+  metadata?: boolean
+  voidedAt?: boolean
+  voidedByUserId?: boolean
+  voidReason?: boolean
+  createdAt?: boolean
+  capturedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  signatureDocument?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+  invoiceVersion?: boolean | Prisma.InvoiceVersionDefaultArgs<ExtArgs>
+  voidedByUser?: boolean | Prisma.Signature$voidedByUserArgs<ExtArgs>
+}, ExtArgs["result"]["signature"]>
 
 export type SignatureSelectScalar = {
   id?: boolean
@@ -1819,6 +1868,20 @@ export type SignatureSelectScalar = {
 
 export type SignatureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "invoiceVersionId" | "patientId" | "signatureDocumentId" | "signatureType" | "signerName" | "signerRelationship" | "captureMethod" | "signedContentHash" | "signatureHash" | "status" | "signedAt" | "capturedByUserId" | "deviceIdentifier" | "ipAddress" | "userAgent" | "metadata" | "voidedAt" | "voidedByUserId" | "voidReason" | "createdAt", ExtArgs["result"]["signature"]>
 export type SignatureInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  capturedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  signatureDocument?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+  invoiceVersion?: boolean | Prisma.InvoiceVersionDefaultArgs<ExtArgs>
+  voidedByUser?: boolean | Prisma.Signature$voidedByUserArgs<ExtArgs>
+}
+export type SignatureIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  capturedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  signatureDocument?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+  invoiceVersion?: boolean | Prisma.InvoiceVersionDefaultArgs<ExtArgs>
+  voidedByUser?: boolean | Prisma.Signature$voidedByUserArgs<ExtArgs>
+}
+export type SignatureIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   capturedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   signatureDocument?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
   patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
@@ -1975,6 +2038,30 @@ export interface SignatureDelegate<ExtArgs extends runtime.Types.Extensions.Inte
   createMany<T extends SignatureCreateManyArgs>(args?: Prisma.SelectSubset<T, SignatureCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many Signatures and returns the data saved in the database.
+   * @param {SignatureCreateManyAndReturnArgs} args - Arguments to create many Signatures.
+   * @example
+   * // Create many Signatures
+   * const signature = await prisma.signature.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many Signatures and only return the `id`
+   * const signatureWithIdOnly = await prisma.signature.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends SignatureCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, SignatureCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SignaturePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a Signature.
    * @param {SignatureDeleteArgs} args - Arguments to delete one Signature.
    * @example
@@ -2037,6 +2124,36 @@ export interface SignatureDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * 
    */
   updateMany<T extends SignatureUpdateManyArgs>(args: Prisma.SelectSubset<T, SignatureUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more Signatures and returns the data updated in the database.
+   * @param {SignatureUpdateManyAndReturnArgs} args - Arguments to update many Signatures.
+   * @example
+   * // Update many Signatures
+   * const signature = await prisma.signature.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more Signatures and only return the `id`
+   * const signatureWithIdOnly = await prisma.signature.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends SignatureUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, SignatureUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SignaturePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Signature.
@@ -2490,6 +2607,29 @@ export type SignatureCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
+ * Signature createManyAndReturn
+ */
+export type SignatureCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Signature
+   */
+  select?: Prisma.SignatureSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Signature
+   */
+  omit?: Prisma.SignatureOmit<ExtArgs> | null
+  /**
+   * The data used to create many Signatures.
+   */
+  data: Prisma.SignatureCreateManyInput | Prisma.SignatureCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SignatureIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * Signature update
  */
 export type SignatureUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2531,6 +2671,36 @@ export type SignatureUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Limit how many Signatures to update.
    */
   limit?: number
+}
+
+/**
+ * Signature updateManyAndReturn
+ */
+export type SignatureUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Signature
+   */
+  select?: Prisma.SignatureSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Signature
+   */
+  omit?: Prisma.SignatureOmit<ExtArgs> | null
+  /**
+   * The data used to update Signatures.
+   */
+  data: Prisma.XOR<Prisma.SignatureUpdateManyMutationInput, Prisma.SignatureUncheckedUpdateManyInput>
+  /**
+   * Filter which Signatures to update
+   */
+  where?: Prisma.SignatureWhereInput
+  /**
+   * Limit how many Signatures to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SignatureIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

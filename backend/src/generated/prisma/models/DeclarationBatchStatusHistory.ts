@@ -259,7 +259,6 @@ export type DeclarationBatchStatusHistoryOrderByWithRelationInput = {
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   declarationBatch?: Prisma.DeclarationBatchOrderByWithRelationInput
   changedByUser?: Prisma.UserOrderByWithRelationInput
-  _relevance?: Prisma.DeclarationBatchStatusHistoryOrderByRelevanceInput
 }
 
 export type DeclarationBatchStatusHistoryWhereUniqueInput = Prisma.AtLeast<{
@@ -381,12 +380,6 @@ export type DeclarationBatchStatusHistoryUncheckedUpdateManyInput = {
   changedByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-}
-
-export type DeclarationBatchStatusHistoryOrderByRelevanceInput = {
-  fields: Prisma.DeclarationBatchStatusHistoryOrderByRelevanceFieldEnum | Prisma.DeclarationBatchStatusHistoryOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type DeclarationBatchStatusHistoryCountOrderByAggregateInput = {
@@ -735,7 +728,31 @@ export type DeclarationBatchStatusHistorySelect<ExtArgs extends runtime.Types.Ex
   changedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["declarationBatchStatusHistory"]>
 
+export type DeclarationBatchStatusHistorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  declarationBatchId?: boolean
+  oldStatus?: boolean
+  newStatus?: boolean
+  reason?: boolean
+  changedByUserId?: boolean
+  changedAt?: boolean
+  metadata?: boolean
+  declarationBatch?: boolean | Prisma.DeclarationBatchDefaultArgs<ExtArgs>
+  changedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["declarationBatchStatusHistory"]>
 
+export type DeclarationBatchStatusHistorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  declarationBatchId?: boolean
+  oldStatus?: boolean
+  newStatus?: boolean
+  reason?: boolean
+  changedByUserId?: boolean
+  changedAt?: boolean
+  metadata?: boolean
+  declarationBatch?: boolean | Prisma.DeclarationBatchDefaultArgs<ExtArgs>
+  changedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["declarationBatchStatusHistory"]>
 
 export type DeclarationBatchStatusHistorySelectScalar = {
   id?: boolean
@@ -750,6 +767,14 @@ export type DeclarationBatchStatusHistorySelectScalar = {
 
 export type DeclarationBatchStatusHistoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "declarationBatchId" | "oldStatus" | "newStatus" | "reason" | "changedByUserId" | "changedAt" | "metadata", ExtArgs["result"]["declarationBatchStatusHistory"]>
 export type DeclarationBatchStatusHistoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  declarationBatch?: boolean | Prisma.DeclarationBatchDefaultArgs<ExtArgs>
+  changedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
+export type DeclarationBatchStatusHistoryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  declarationBatch?: boolean | Prisma.DeclarationBatchDefaultArgs<ExtArgs>
+  changedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
+export type DeclarationBatchStatusHistoryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   declarationBatch?: boolean | Prisma.DeclarationBatchDefaultArgs<ExtArgs>
   changedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -887,6 +912,30 @@ export interface DeclarationBatchStatusHistoryDelegate<ExtArgs extends runtime.T
   createMany<T extends DeclarationBatchStatusHistoryCreateManyArgs>(args?: Prisma.SelectSubset<T, DeclarationBatchStatusHistoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many DeclarationBatchStatusHistories and returns the data saved in the database.
+   * @param {DeclarationBatchStatusHistoryCreateManyAndReturnArgs} args - Arguments to create many DeclarationBatchStatusHistories.
+   * @example
+   * // Create many DeclarationBatchStatusHistories
+   * const declarationBatchStatusHistory = await prisma.declarationBatchStatusHistory.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many DeclarationBatchStatusHistories and only return the `id`
+   * const declarationBatchStatusHistoryWithIdOnly = await prisma.declarationBatchStatusHistory.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends DeclarationBatchStatusHistoryCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, DeclarationBatchStatusHistoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeclarationBatchStatusHistoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a DeclarationBatchStatusHistory.
    * @param {DeclarationBatchStatusHistoryDeleteArgs} args - Arguments to delete one DeclarationBatchStatusHistory.
    * @example
@@ -949,6 +998,36 @@ export interface DeclarationBatchStatusHistoryDelegate<ExtArgs extends runtime.T
    * 
    */
   updateMany<T extends DeclarationBatchStatusHistoryUpdateManyArgs>(args: Prisma.SelectSubset<T, DeclarationBatchStatusHistoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more DeclarationBatchStatusHistories and returns the data updated in the database.
+   * @param {DeclarationBatchStatusHistoryUpdateManyAndReturnArgs} args - Arguments to update many DeclarationBatchStatusHistories.
+   * @example
+   * // Update many DeclarationBatchStatusHistories
+   * const declarationBatchStatusHistory = await prisma.declarationBatchStatusHistory.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more DeclarationBatchStatusHistories and only return the `id`
+   * const declarationBatchStatusHistoryWithIdOnly = await prisma.declarationBatchStatusHistory.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends DeclarationBatchStatusHistoryUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, DeclarationBatchStatusHistoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeclarationBatchStatusHistoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one DeclarationBatchStatusHistory.
@@ -1386,6 +1465,29 @@ export type DeclarationBatchStatusHistoryCreateManyArgs<ExtArgs extends runtime.
 }
 
 /**
+ * DeclarationBatchStatusHistory createManyAndReturn
+ */
+export type DeclarationBatchStatusHistoryCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeclarationBatchStatusHistory
+   */
+  select?: Prisma.DeclarationBatchStatusHistorySelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeclarationBatchStatusHistory
+   */
+  omit?: Prisma.DeclarationBatchStatusHistoryOmit<ExtArgs> | null
+  /**
+   * The data used to create many DeclarationBatchStatusHistories.
+   */
+  data: Prisma.DeclarationBatchStatusHistoryCreateManyInput | Prisma.DeclarationBatchStatusHistoryCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeclarationBatchStatusHistoryIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * DeclarationBatchStatusHistory update
  */
 export type DeclarationBatchStatusHistoryUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1427,6 +1529,36 @@ export type DeclarationBatchStatusHistoryUpdateManyArgs<ExtArgs extends runtime.
    * Limit how many DeclarationBatchStatusHistories to update.
    */
   limit?: number
+}
+
+/**
+ * DeclarationBatchStatusHistory updateManyAndReturn
+ */
+export type DeclarationBatchStatusHistoryUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeclarationBatchStatusHistory
+   */
+  select?: Prisma.DeclarationBatchStatusHistorySelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeclarationBatchStatusHistory
+   */
+  omit?: Prisma.DeclarationBatchStatusHistoryOmit<ExtArgs> | null
+  /**
+   * The data used to update DeclarationBatchStatusHistories.
+   */
+  data: Prisma.XOR<Prisma.DeclarationBatchStatusHistoryUpdateManyMutationInput, Prisma.DeclarationBatchStatusHistoryUncheckedUpdateManyInput>
+  /**
+   * Filter which DeclarationBatchStatusHistories to update
+   */
+  where?: Prisma.DeclarationBatchStatusHistoryWhereInput
+  /**
+   * Limit how many DeclarationBatchStatusHistories to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeclarationBatchStatusHistoryIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

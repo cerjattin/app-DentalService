@@ -47,6 +47,8 @@ export type SvbProcedureMinAggregateOutputType = {
   validTo: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  codeSearch: string | null
+  descriptionSearch: string | null
 }
 
 export type SvbProcedureMaxAggregateOutputType = {
@@ -62,6 +64,8 @@ export type SvbProcedureMaxAggregateOutputType = {
   validTo: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  codeSearch: string | null
+  descriptionSearch: string | null
 }
 
 export type SvbProcedureCountAggregateOutputType = {
@@ -77,6 +81,8 @@ export type SvbProcedureCountAggregateOutputType = {
   validTo: number
   createdAt: number
   updatedAt: number
+  codeSearch: number
+  descriptionSearch: number
   _all: number
 }
 
@@ -102,6 +108,8 @@ export type SvbProcedureMinAggregateInputType = {
   validTo?: true
   createdAt?: true
   updatedAt?: true
+  codeSearch?: true
+  descriptionSearch?: true
 }
 
 export type SvbProcedureMaxAggregateInputType = {
@@ -117,6 +125,8 @@ export type SvbProcedureMaxAggregateInputType = {
   validTo?: true
   createdAt?: true
   updatedAt?: true
+  codeSearch?: true
+  descriptionSearch?: true
 }
 
 export type SvbProcedureCountAggregateInputType = {
@@ -132,6 +142,8 @@ export type SvbProcedureCountAggregateInputType = {
   validTo?: true
   createdAt?: true
   updatedAt?: true
+  codeSearch?: true
+  descriptionSearch?: true
   _all?: true
 }
 
@@ -234,6 +246,8 @@ export type SvbProcedureGroupByOutputType = {
   validTo: Date | null
   createdAt: Date
   updatedAt: Date
+  codeSearch: string
+  descriptionSearch: string
   _count: SvbProcedureCountAggregateOutputType | null
   _avg: SvbProcedureAvgAggregateOutputType | null
   _sum: SvbProcedureSumAggregateOutputType | null
@@ -272,6 +286,8 @@ export type SvbProcedureWhereInput = {
   validTo?: Prisma.DateTimeNullableFilter<"SvbProcedure"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"SvbProcedure"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SvbProcedure"> | Date | string
+  codeSearch?: Prisma.StringFilter<"SvbProcedure"> | string
+  descriptionSearch?: Prisma.StringFilter<"SvbProcedure"> | string
   encounterProcedures?: Prisma.EncounterProcedureListRelationFilter
   invoiceItems?: Prisma.InvoiceItemListRelationFilter
   svbAuthorizationItems?: Prisma.SvbAuthorizationItemListRelationFilter
@@ -291,11 +307,12 @@ export type SvbProcedureOrderByWithRelationInput = {
   validTo?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  codeSearch?: Prisma.SortOrder
+  descriptionSearch?: Prisma.SortOrder
   encounterProcedures?: Prisma.EncounterProcedureOrderByRelationAggregateInput
   invoiceItems?: Prisma.InvoiceItemOrderByRelationAggregateInput
   svbAuthorizationItems?: Prisma.SvbAuthorizationItemOrderByRelationAggregateInput
   tariffs?: Prisma.SvbTariffOrderByRelationAggregateInput
-  _relevance?: Prisma.SvbProcedureOrderByRelevanceInput
 }
 
 export type SvbProcedureWhereUniqueInput = Prisma.AtLeast<{
@@ -314,6 +331,8 @@ export type SvbProcedureWhereUniqueInput = Prisma.AtLeast<{
   validTo?: Prisma.DateTimeNullableFilter<"SvbProcedure"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"SvbProcedure"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SvbProcedure"> | Date | string
+  codeSearch?: Prisma.StringFilter<"SvbProcedure"> | string
+  descriptionSearch?: Prisma.StringFilter<"SvbProcedure"> | string
   encounterProcedures?: Prisma.EncounterProcedureListRelationFilter
   invoiceItems?: Prisma.InvoiceItemListRelationFilter
   svbAuthorizationItems?: Prisma.SvbAuthorizationItemListRelationFilter
@@ -333,6 +352,8 @@ export type SvbProcedureOrderByWithAggregationInput = {
   validTo?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  codeSearch?: Prisma.SortOrder
+  descriptionSearch?: Prisma.SortOrder
   _count?: Prisma.SvbProcedureCountOrderByAggregateInput
   _avg?: Prisma.SvbProcedureAvgOrderByAggregateInput
   _max?: Prisma.SvbProcedureMaxOrderByAggregateInput
@@ -356,6 +377,8 @@ export type SvbProcedureScalarWhereWithAggregatesInput = {
   validTo?: Prisma.DateTimeNullableWithAggregatesFilter<"SvbProcedure"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SvbProcedure"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"SvbProcedure"> | Date | string
+  codeSearch?: Prisma.StringWithAggregatesFilter<"SvbProcedure"> | string
+  descriptionSearch?: Prisma.StringWithAggregatesFilter<"SvbProcedure"> | string
 }
 
 export type SvbProcedureCreateInput = {
@@ -371,6 +394,8 @@ export type SvbProcedureCreateInput = {
   validTo?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  codeSearch?: string
+  descriptionSearch?: string
   encounterProcedures?: Prisma.EncounterProcedureCreateNestedManyWithoutSvbProcedureInput
   invoiceItems?: Prisma.InvoiceItemCreateNestedManyWithoutSvbProcedureInput
   svbAuthorizationItems?: Prisma.SvbAuthorizationItemCreateNestedManyWithoutSvbProcedureInput
@@ -390,6 +415,8 @@ export type SvbProcedureUncheckedCreateInput = {
   validTo?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  codeSearch?: string
+  descriptionSearch?: string
   encounterProcedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutSvbProcedureInput
   invoiceItems?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutSvbProcedureInput
   svbAuthorizationItems?: Prisma.SvbAuthorizationItemUncheckedCreateNestedManyWithoutSvbProcedureInput
@@ -409,6 +436,8 @@ export type SvbProcedureUpdateInput = {
   validTo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionSearch?: Prisma.StringFieldUpdateOperationsInput | string
   encounterProcedures?: Prisma.EncounterProcedureUpdateManyWithoutSvbProcedureNestedInput
   invoiceItems?: Prisma.InvoiceItemUpdateManyWithoutSvbProcedureNestedInput
   svbAuthorizationItems?: Prisma.SvbAuthorizationItemUpdateManyWithoutSvbProcedureNestedInput
@@ -428,6 +457,8 @@ export type SvbProcedureUncheckedUpdateInput = {
   validTo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionSearch?: Prisma.StringFieldUpdateOperationsInput | string
   encounterProcedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutSvbProcedureNestedInput
   invoiceItems?: Prisma.InvoiceItemUncheckedUpdateManyWithoutSvbProcedureNestedInput
   svbAuthorizationItems?: Prisma.SvbAuthorizationItemUncheckedUpdateManyWithoutSvbProcedureNestedInput
@@ -447,6 +478,8 @@ export type SvbProcedureCreateManyInput = {
   validTo?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  codeSearch?: string
+  descriptionSearch?: string
 }
 
 export type SvbProcedureUpdateManyMutationInput = {
@@ -462,6 +495,8 @@ export type SvbProcedureUpdateManyMutationInput = {
   validTo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type SvbProcedureUncheckedUpdateManyInput = {
@@ -477,6 +512,8 @@ export type SvbProcedureUncheckedUpdateManyInput = {
   validTo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type SvbProcedureScalarRelationFilter = {
@@ -487,12 +524,6 @@ export type SvbProcedureScalarRelationFilter = {
 export type SvbProcedureNullableScalarRelationFilter = {
   is?: Prisma.SvbProcedureWhereInput | null
   isNot?: Prisma.SvbProcedureWhereInput | null
-}
-
-export type SvbProcedureOrderByRelevanceInput = {
-  fields: Prisma.SvbProcedureOrderByRelevanceFieldEnum | Prisma.SvbProcedureOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type SvbProcedureCountOrderByAggregateInput = {
@@ -508,6 +539,8 @@ export type SvbProcedureCountOrderByAggregateInput = {
   validTo?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  codeSearch?: Prisma.SortOrder
+  descriptionSearch?: Prisma.SortOrder
 }
 
 export type SvbProcedureAvgOrderByAggregateInput = {
@@ -527,6 +560,8 @@ export type SvbProcedureMaxOrderByAggregateInput = {
   validTo?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  codeSearch?: Prisma.SortOrder
+  descriptionSearch?: Prisma.SortOrder
 }
 
 export type SvbProcedureMinOrderByAggregateInput = {
@@ -542,6 +577,8 @@ export type SvbProcedureMinOrderByAggregateInput = {
   validTo?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  codeSearch?: Prisma.SortOrder
+  descriptionSearch?: Prisma.SortOrder
 }
 
 export type SvbProcedureSumOrderByAggregateInput = {
@@ -619,6 +656,8 @@ export type SvbProcedureCreateWithoutEncounterProceduresInput = {
   validTo?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  codeSearch?: string
+  descriptionSearch?: string
   invoiceItems?: Prisma.InvoiceItemCreateNestedManyWithoutSvbProcedureInput
   svbAuthorizationItems?: Prisma.SvbAuthorizationItemCreateNestedManyWithoutSvbProcedureInput
   tariffs?: Prisma.SvbTariffCreateNestedManyWithoutSvbProcedureInput
@@ -637,6 +676,8 @@ export type SvbProcedureUncheckedCreateWithoutEncounterProceduresInput = {
   validTo?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  codeSearch?: string
+  descriptionSearch?: string
   invoiceItems?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutSvbProcedureInput
   svbAuthorizationItems?: Prisma.SvbAuthorizationItemUncheckedCreateNestedManyWithoutSvbProcedureInput
   tariffs?: Prisma.SvbTariffUncheckedCreateNestedManyWithoutSvbProcedureInput
@@ -671,6 +712,8 @@ export type SvbProcedureUpdateWithoutEncounterProceduresInput = {
   validTo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionSearch?: Prisma.StringFieldUpdateOperationsInput | string
   invoiceItems?: Prisma.InvoiceItemUpdateManyWithoutSvbProcedureNestedInput
   svbAuthorizationItems?: Prisma.SvbAuthorizationItemUpdateManyWithoutSvbProcedureNestedInput
   tariffs?: Prisma.SvbTariffUpdateManyWithoutSvbProcedureNestedInput
@@ -689,6 +732,8 @@ export type SvbProcedureUncheckedUpdateWithoutEncounterProceduresInput = {
   validTo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionSearch?: Prisma.StringFieldUpdateOperationsInput | string
   invoiceItems?: Prisma.InvoiceItemUncheckedUpdateManyWithoutSvbProcedureNestedInput
   svbAuthorizationItems?: Prisma.SvbAuthorizationItemUncheckedUpdateManyWithoutSvbProcedureNestedInput
   tariffs?: Prisma.SvbTariffUncheckedUpdateManyWithoutSvbProcedureNestedInput
@@ -707,6 +752,8 @@ export type SvbProcedureCreateWithoutInvoiceItemsInput = {
   validTo?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  codeSearch?: string
+  descriptionSearch?: string
   encounterProcedures?: Prisma.EncounterProcedureCreateNestedManyWithoutSvbProcedureInput
   svbAuthorizationItems?: Prisma.SvbAuthorizationItemCreateNestedManyWithoutSvbProcedureInput
   tariffs?: Prisma.SvbTariffCreateNestedManyWithoutSvbProcedureInput
@@ -725,6 +772,8 @@ export type SvbProcedureUncheckedCreateWithoutInvoiceItemsInput = {
   validTo?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  codeSearch?: string
+  descriptionSearch?: string
   encounterProcedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutSvbProcedureInput
   svbAuthorizationItems?: Prisma.SvbAuthorizationItemUncheckedCreateNestedManyWithoutSvbProcedureInput
   tariffs?: Prisma.SvbTariffUncheckedCreateNestedManyWithoutSvbProcedureInput
@@ -759,6 +808,8 @@ export type SvbProcedureUpdateWithoutInvoiceItemsInput = {
   validTo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionSearch?: Prisma.StringFieldUpdateOperationsInput | string
   encounterProcedures?: Prisma.EncounterProcedureUpdateManyWithoutSvbProcedureNestedInput
   svbAuthorizationItems?: Prisma.SvbAuthorizationItemUpdateManyWithoutSvbProcedureNestedInput
   tariffs?: Prisma.SvbTariffUpdateManyWithoutSvbProcedureNestedInput
@@ -777,6 +828,8 @@ export type SvbProcedureUncheckedUpdateWithoutInvoiceItemsInput = {
   validTo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionSearch?: Prisma.StringFieldUpdateOperationsInput | string
   encounterProcedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutSvbProcedureNestedInput
   svbAuthorizationItems?: Prisma.SvbAuthorizationItemUncheckedUpdateManyWithoutSvbProcedureNestedInput
   tariffs?: Prisma.SvbTariffUncheckedUpdateManyWithoutSvbProcedureNestedInput
@@ -795,6 +848,8 @@ export type SvbProcedureCreateWithoutSvbAuthorizationItemsInput = {
   validTo?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  codeSearch?: string
+  descriptionSearch?: string
   encounterProcedures?: Prisma.EncounterProcedureCreateNestedManyWithoutSvbProcedureInput
   invoiceItems?: Prisma.InvoiceItemCreateNestedManyWithoutSvbProcedureInput
   tariffs?: Prisma.SvbTariffCreateNestedManyWithoutSvbProcedureInput
@@ -813,6 +868,8 @@ export type SvbProcedureUncheckedCreateWithoutSvbAuthorizationItemsInput = {
   validTo?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  codeSearch?: string
+  descriptionSearch?: string
   encounterProcedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutSvbProcedureInput
   invoiceItems?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutSvbProcedureInput
   tariffs?: Prisma.SvbTariffUncheckedCreateNestedManyWithoutSvbProcedureInput
@@ -847,6 +904,8 @@ export type SvbProcedureUpdateWithoutSvbAuthorizationItemsInput = {
   validTo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionSearch?: Prisma.StringFieldUpdateOperationsInput | string
   encounterProcedures?: Prisma.EncounterProcedureUpdateManyWithoutSvbProcedureNestedInput
   invoiceItems?: Prisma.InvoiceItemUpdateManyWithoutSvbProcedureNestedInput
   tariffs?: Prisma.SvbTariffUpdateManyWithoutSvbProcedureNestedInput
@@ -865,6 +924,8 @@ export type SvbProcedureUncheckedUpdateWithoutSvbAuthorizationItemsInput = {
   validTo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionSearch?: Prisma.StringFieldUpdateOperationsInput | string
   encounterProcedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutSvbProcedureNestedInput
   invoiceItems?: Prisma.InvoiceItemUncheckedUpdateManyWithoutSvbProcedureNestedInput
   tariffs?: Prisma.SvbTariffUncheckedUpdateManyWithoutSvbProcedureNestedInput
@@ -883,6 +944,8 @@ export type SvbProcedureCreateWithoutTariffsInput = {
   validTo?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  codeSearch?: string
+  descriptionSearch?: string
   encounterProcedures?: Prisma.EncounterProcedureCreateNestedManyWithoutSvbProcedureInput
   invoiceItems?: Prisma.InvoiceItemCreateNestedManyWithoutSvbProcedureInput
   svbAuthorizationItems?: Prisma.SvbAuthorizationItemCreateNestedManyWithoutSvbProcedureInput
@@ -901,6 +964,8 @@ export type SvbProcedureUncheckedCreateWithoutTariffsInput = {
   validTo?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  codeSearch?: string
+  descriptionSearch?: string
   encounterProcedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutSvbProcedureInput
   invoiceItems?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutSvbProcedureInput
   svbAuthorizationItems?: Prisma.SvbAuthorizationItemUncheckedCreateNestedManyWithoutSvbProcedureInput
@@ -935,6 +1000,8 @@ export type SvbProcedureUpdateWithoutTariffsInput = {
   validTo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionSearch?: Prisma.StringFieldUpdateOperationsInput | string
   encounterProcedures?: Prisma.EncounterProcedureUpdateManyWithoutSvbProcedureNestedInput
   invoiceItems?: Prisma.InvoiceItemUpdateManyWithoutSvbProcedureNestedInput
   svbAuthorizationItems?: Prisma.SvbAuthorizationItemUpdateManyWithoutSvbProcedureNestedInput
@@ -953,6 +1020,8 @@ export type SvbProcedureUncheckedUpdateWithoutTariffsInput = {
   validTo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionSearch?: Prisma.StringFieldUpdateOperationsInput | string
   encounterProcedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutSvbProcedureNestedInput
   invoiceItems?: Prisma.InvoiceItemUncheckedUpdateManyWithoutSvbProcedureNestedInput
   svbAuthorizationItems?: Prisma.SvbAuthorizationItemUncheckedUpdateManyWithoutSvbProcedureNestedInput
@@ -1029,6 +1098,8 @@ export type SvbProcedureSelect<ExtArgs extends runtime.Types.Extensions.Internal
   validTo?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  codeSearch?: boolean
+  descriptionSearch?: boolean
   encounterProcedures?: boolean | Prisma.SvbProcedure$encounterProceduresArgs<ExtArgs>
   invoiceItems?: boolean | Prisma.SvbProcedure$invoiceItemsArgs<ExtArgs>
   svbAuthorizationItems?: boolean | Prisma.SvbProcedure$svbAuthorizationItemsArgs<ExtArgs>
@@ -1036,7 +1107,39 @@ export type SvbProcedureSelect<ExtArgs extends runtime.Types.Extensions.Internal
   _count?: boolean | Prisma.SvbProcedureCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["svbProcedure"]>
 
+export type SvbProcedureSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  code?: boolean
+  description?: boolean
+  category?: boolean
+  unit?: boolean
+  requiresAuthorization?: boolean
+  requiresReferral?: boolean
+  isActive?: boolean
+  validFrom?: boolean
+  validTo?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  codeSearch?: boolean
+  descriptionSearch?: boolean
+}, ExtArgs["result"]["svbProcedure"]>
 
+export type SvbProcedureSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  code?: boolean
+  description?: boolean
+  category?: boolean
+  unit?: boolean
+  requiresAuthorization?: boolean
+  requiresReferral?: boolean
+  isActive?: boolean
+  validFrom?: boolean
+  validTo?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  codeSearch?: boolean
+  descriptionSearch?: boolean
+}, ExtArgs["result"]["svbProcedure"]>
 
 export type SvbProcedureSelectScalar = {
   id?: boolean
@@ -1051,9 +1154,11 @@ export type SvbProcedureSelectScalar = {
   validTo?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  codeSearch?: boolean
+  descriptionSearch?: boolean
 }
 
-export type SvbProcedureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "description" | "category" | "unit" | "requiresAuthorization" | "requiresReferral" | "isActive" | "validFrom" | "validTo" | "createdAt" | "updatedAt", ExtArgs["result"]["svbProcedure"]>
+export type SvbProcedureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "description" | "category" | "unit" | "requiresAuthorization" | "requiresReferral" | "isActive" | "validFrom" | "validTo" | "createdAt" | "updatedAt" | "codeSearch" | "descriptionSearch", ExtArgs["result"]["svbProcedure"]>
 export type SvbProcedureInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   encounterProcedures?: boolean | Prisma.SvbProcedure$encounterProceduresArgs<ExtArgs>
   invoiceItems?: boolean | Prisma.SvbProcedure$invoiceItemsArgs<ExtArgs>
@@ -1061,6 +1166,8 @@ export type SvbProcedureInclude<ExtArgs extends runtime.Types.Extensions.Interna
   tariffs?: boolean | Prisma.SvbProcedure$tariffsArgs<ExtArgs>
   _count?: boolean | Prisma.SvbProcedureCountOutputTypeDefaultArgs<ExtArgs>
 }
+export type SvbProcedureIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type SvbProcedureIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $SvbProcedurePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SvbProcedure"
@@ -1083,6 +1190,8 @@ export type $SvbProcedurePayload<ExtArgs extends runtime.Types.Extensions.Intern
     validTo: Date | null
     createdAt: Date
     updatedAt: Date
+    codeSearch: string
+    descriptionSearch: string
   }, ExtArgs["result"]["svbProcedure"]>
   composites: {}
 }
@@ -1201,6 +1310,30 @@ export interface SvbProcedureDelegate<ExtArgs extends runtime.Types.Extensions.I
   createMany<T extends SvbProcedureCreateManyArgs>(args?: Prisma.SelectSubset<T, SvbProcedureCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many SvbProcedures and returns the data saved in the database.
+   * @param {SvbProcedureCreateManyAndReturnArgs} args - Arguments to create many SvbProcedures.
+   * @example
+   * // Create many SvbProcedures
+   * const svbProcedure = await prisma.svbProcedure.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many SvbProcedures and only return the `id`
+   * const svbProcedureWithIdOnly = await prisma.svbProcedure.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends SvbProcedureCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, SvbProcedureCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SvbProcedurePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a SvbProcedure.
    * @param {SvbProcedureDeleteArgs} args - Arguments to delete one SvbProcedure.
    * @example
@@ -1263,6 +1396,36 @@ export interface SvbProcedureDelegate<ExtArgs extends runtime.Types.Extensions.I
    * 
    */
   updateMany<T extends SvbProcedureUpdateManyArgs>(args: Prisma.SelectSubset<T, SvbProcedureUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more SvbProcedures and returns the data updated in the database.
+   * @param {SvbProcedureUpdateManyAndReturnArgs} args - Arguments to update many SvbProcedures.
+   * @example
+   * // Update many SvbProcedures
+   * const svbProcedure = await prisma.svbProcedure.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more SvbProcedures and only return the `id`
+   * const svbProcedureWithIdOnly = await prisma.svbProcedure.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends SvbProcedureUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, SvbProcedureUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SvbProcedurePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one SvbProcedure.
@@ -1468,6 +1631,8 @@ export interface SvbProcedureFieldRefs {
   readonly validTo: Prisma.FieldRef<"SvbProcedure", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"SvbProcedure", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"SvbProcedure", 'DateTime'>
+  readonly codeSearch: Prisma.FieldRef<"SvbProcedure", 'String'>
+  readonly descriptionSearch: Prisma.FieldRef<"SvbProcedure", 'String'>
 }
     
 
@@ -1706,6 +1871,25 @@ export type SvbProcedureCreateManyArgs<ExtArgs extends runtime.Types.Extensions.
 }
 
 /**
+ * SvbProcedure createManyAndReturn
+ */
+export type SvbProcedureCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SvbProcedure
+   */
+  select?: Prisma.SvbProcedureSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the SvbProcedure
+   */
+  omit?: Prisma.SvbProcedureOmit<ExtArgs> | null
+  /**
+   * The data used to create many SvbProcedures.
+   */
+  data: Prisma.SvbProcedureCreateManyInput | Prisma.SvbProcedureCreateManyInput[]
+  skipDuplicates?: boolean
+}
+
+/**
  * SvbProcedure update
  */
 export type SvbProcedureUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1735,6 +1919,32 @@ export type SvbProcedureUpdateArgs<ExtArgs extends runtime.Types.Extensions.Inte
  * SvbProcedure updateMany
  */
 export type SvbProcedureUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * The data used to update SvbProcedures.
+   */
+  data: Prisma.XOR<Prisma.SvbProcedureUpdateManyMutationInput, Prisma.SvbProcedureUncheckedUpdateManyInput>
+  /**
+   * Filter which SvbProcedures to update
+   */
+  where?: Prisma.SvbProcedureWhereInput
+  /**
+   * Limit how many SvbProcedures to update.
+   */
+  limit?: number
+}
+
+/**
+ * SvbProcedure updateManyAndReturn
+ */
+export type SvbProcedureUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SvbProcedure
+   */
+  select?: Prisma.SvbProcedureSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the SvbProcedure
+   */
+  omit?: Prisma.SvbProcedureOmit<ExtArgs> | null
   /**
    * The data used to update SvbProcedures.
    */

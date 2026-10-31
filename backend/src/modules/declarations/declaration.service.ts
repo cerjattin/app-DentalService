@@ -1,3 +1,6 @@
+import { isTransactionConflict } from "../../infrastructure/database/transaction-conflict.js";
+import { assertDeclarationIdentity, invoiceDeclarant, declarationSnapshot } from "./declaration-identity.js";
+import { normalizeSearch } from "../../infrastructure/database/text-search.js";
 import { Prisma } from "../../generated/prisma/client.js";
 
 import { prisma } from "../../infrastructure/database/prisma.js";
@@ -92,13 +95,15 @@ async function serializableTransaction<T>(
       });
     } catch (error) {
       if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === "P2034" &&
+        isTransactionConflict(error) &&
         attempt < 3
       ) {
         continue;
       }
 
+      if (isTransactionConflict(error)) {
+        throw new AppError(409, "TRANSACTION_CONFLICT", "Declaration changed concurrently; reload before retrying");
+      }
       throw error;
     }
   }
@@ -222,8 +227,10 @@ function declarationSubmissionAuditValues(row: DeclarationSubmissionRecord) {
 
 function declarationItemAuditValues(row: DeclarationItemRecord) {
   return {
+    declarationBatchId: row.declarationBatchId.toString(),
     invoiceItemId: row.invoiceItemId.toString(),
     sequenceNumber: row.sequenceNumber,
+    declarantIdSnapshot: row.declarantIdSnapshot,
     invoiceNumberSnapshot: row.invoiceNumberSnapshot,
     detailInvoiceNumberSnapshot: row.detailInvoiceNumberSnapshot,
     amountSnapshot: row.amountSnapshot.toFixed(2),
@@ -392,17 +399,6 @@ function assertInvoiceItemEligible(
   }
 }
 
-function snapshotDeclarant(
-  batch: DeclarationBatchRecord,
-  invoiceItem: InvoiceItemForDeclarationRecord,
-) {
-  return (
-    batch.declarantIdSnapshot ??
-    invoiceItem.invoiceVersion.declarantIdSnapshot ??
-    ""
-  );
-}
-
 export class DeclarationService {
   private submissionAdapter: DeclarationSubmissionAdapter | null = null;
 
@@ -411,29 +407,31 @@ export class DeclarationService {
   }
 
   async list(query: ListDeclarationsQuery, actor: AuthenticatedRequestContext) {
+    const searchQuery = await normalizeSearch(query.q);
+
     const where: Prisma.DeclarationBatchWhereInput = {
       organizationId: actor.organizationId,
       ...(query.status !== undefined ? { status: query.status } : {}),
       ...(query.payerId !== undefined ? { payerId: BigInt(query.payerId) } : {}),
-      ...(query.q !== undefined
+      ...(searchQuery !== undefined
         ? {
             OR: [
               {
-                declarationNumber: {
-                  contains: query.q,
+                declarationNumberSearch: {
+                  contains: searchQuery,
                 },
               },
               {
                 payer: {
-                  name: {
-                    contains: query.q,
+                  nameSearch: {
+                    contains: searchQuery,
                   },
                 },
               },
               {
                 payer: {
-                  code: {
-                    contains: query.q,
+                  codeSearch: {
+                    contains: searchQuery,
                   },
                 },
               },
@@ -517,6 +515,9 @@ export class DeclarationService {
     actor: AuthenticatedRequestContext,
     metadata: RequestSecurityMetadata,
   ) {
+    if (input.declarantIdSnapshot != null) {
+      throw new AppError(400, "DECLARATION_DECLARANT_SERVER_MANAGED", "Declarant ID is taken from closed invoice snapshots");
+    }
     const periodStart =
       parseNullableDateOnly(input.periodStart, "periodStart") ?? null;
     const periodEnd =
@@ -556,7 +557,7 @@ export class DeclarationService {
           status: "DRAFT",
           periodStart,
           periodEnd,
-          declarantIdSnapshot: input.declarantIdSnapshot ?? null,
+          declarantIdSnapshot: null,
           notes: input.notes ?? null,
           createdByUserId: actor.userId,
         },
@@ -619,11 +620,7 @@ export class DeclarationService {
 
     try {
       const item = await serializableTransaction(async (tx) => {
-        const declaration = await declarationRepository.findById(
-          declarationId,
-          actor.organizationId,
-          tx,
-        );
+        const declaration = await declarationRepository.lockBatch(tx, declarationId, actor.organizationId);
 
         if (!declaration) {
           throw new AppError(
@@ -634,6 +631,7 @@ export class DeclarationService {
         }
 
         assertEditableDraft(declaration);
+        assertDeclarationIdentity(declaration);
 
         const duplicate = await declarationRepository.findItemByInvoiceItem(
           declaration.id,
@@ -649,6 +647,7 @@ export class DeclarationService {
           );
         }
 
+        await declarationRepository.lockInvoiceForItem(tx, invoiceItemId, actor.organizationId);
         const invoiceItem =
           await declarationRepository.findInvoiceItemForDeclaration(
             invoiceItemId,
@@ -657,42 +656,21 @@ export class DeclarationService {
 
         assertInvoiceItemEligible(declaration, invoiceItem);
 
-        const maxSequence = await tx.declarationItem.aggregate({
-          where: {
-            declarationBatchId: declaration.id,
-          },
-          _max: {
-            sequenceNumber: true,
-          },
+        const assigned = await tx.declarationItem.findFirst({
+          where: { invoiceItemId, declarationBatch: { status: { not: "CANCELLED" } } }, select: { id: true },
         });
-
+        if (assigned) throw new AppError(409, "DECLARATION_ITEM_ASSIGNED", "Invoice item is assigned to an active declaration");
+        const declarant = invoiceDeclarant(invoiceItem);
+        if (declaration.declarantIdSnapshot !== null && declaration.declarantIdSnapshot !== declarant) {
+          throw new AppError(409, "DECLARATION_DECLARANT_MISMATCH", "Invoice Declarant ID does not match this declaration");
+        }
+        if (declaration.declarantIdSnapshot === null) {
+          await tx.declarationBatch.update({ where: { id: declaration.id }, data: { declarantIdSnapshot: declarant } });
+        }
+        const ordinal = await declarationRepository.allocateOrdinal(tx, declaration.id);
         const created = await tx.declarationItem.create({
-          data: {
-            declarationBatchId: declaration.id,
-            invoiceItemId,
-            sequenceNumber: (maxSequence._max.sequenceNumber ?? 0) + 1,
-            lineStatus: "PENDING",
-            declarantIdSnapshot: snapshotDeclarant(declaration, invoiceItem),
-            invoiceNumberSnapshot:
-              invoiceItem.invoiceVersion.invoice.invoiceNumber ?? "",
-            detailInvoiceNumberSnapshot:
-              invoiceItem.detailInvoiceNumber ?? "",
-            providerIdSnapshot: invoiceItem.providerIdSnapshot,
-            serviceDateSnapshot: invoiceItem.serviceDateSnapshot,
-            insuredIdSnapshot: invoiceItem.insuredIdSnapshot,
-            accidentFormNumberSnapshot:
-              invoiceItem.accidentFormNumberSnapshot,
-            treatmentIdSnapshot: invoiceItem.treatmentIdSnapshot,
-            amountSnapshot: invoiceItem.amount,
-            authorizationIdSnapshot: invoiceItem.authorizationIdSnapshot,
-            numberOfTreatmentsSnapshot:
-              invoiceItem.numberOfTreatmentsSnapshot,
-            assistanceSnapshot: invoiceItem.assistanceSnapshot,
-            referrerIdSnapshot: invoiceItem.referrerIdSnapshot,
-            diagnosticCodeSnapshot: invoiceItem.diagnosticCodeSnapshot,
-            policlinicSnapshot: invoiceItem.policlinicSnapshot,
-            additionalNoteSnapshot: invoiceItem.additionalNote,
-          },
+          data: { declarationBatchId: declaration.id, invoiceItemId, sequenceNumber: ordinal.lastItemSequence,
+            lineStatus: "PENDING", ...declarationSnapshot(invoiceItem, declarant) },
           select: declarationItemSelect,
         });
 
@@ -712,6 +690,10 @@ export class DeclarationService {
 
       return toDeclarationItemResponse(item);
     } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002" &&
+          JSON.stringify(error.meta ?? {}).includes("declaration_active")) {
+        throw new AppError(409, "DECLARATION_ITEM_ASSIGNED", "Invoice item is assigned to an active declaration");
+      }
       mapDuplicateItemError(error);
     }
   }
@@ -722,11 +704,7 @@ export class DeclarationService {
     metadata: RequestSecurityMetadata,
   ) {
     const declaration = await serializableTransaction(async (tx) => {
-      const current = await declarationRepository.findById(
-        declarationId,
-        actor.organizationId,
-        tx,
-      );
+      const current = await declarationRepository.lockBatch(tx, declarationId, actor.organizationId);
 
       if (!current) {
         throw new AppError(
@@ -737,6 +715,7 @@ export class DeclarationService {
       }
 
       assertEditableDraft(current);
+      assertDeclarationIdentity(current);
 
       if (current.items.length === 0) {
         throw new AppError(
@@ -1006,11 +985,7 @@ export class DeclarationService {
     metadata: RequestSecurityMetadata,
   ) {
     const submission = await serializableTransaction(async (tx) => {
-      const current = await declarationRepository.findById(
-        declarationId,
-        actor.organizationId,
-        tx,
-      );
+      const current = await declarationRepository.lockBatch(tx, declarationId, actor.organizationId);
 
       if (!current) {
         throw new AppError(

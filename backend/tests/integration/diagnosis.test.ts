@@ -61,8 +61,8 @@ async function cleanupDiagnosisFixture() {
     where: {
       OR: [
         {
-          appointmentNumber: {
-            startsWith: "TEST-DX-APT",
+          appointmentNumberSearch: {
+            startsWith: ("TEST-DX-APT").toLowerCase(),
           },
         },
         {
@@ -111,8 +111,8 @@ async function cleanupDiagnosisFixture() {
         },
         {
           diagnosisCode: {
-            code: {
-              startsWith: "TEST-DX",
+            codeSearch: {
+              startsWith: ("TEST-DX").toLowerCase(),
             },
           },
         },
@@ -143,8 +143,8 @@ async function cleanupDiagnosisFixture() {
         },
         {
           entityType: "ENCOUNTER_DIAGNOSIS",
-          entityKey: {
-            contains: "TEST-DX",
+          entityKeySearch: {
+            contains: ("TEST-DX").toLowerCase(),
           },
         },
         {
@@ -192,8 +192,8 @@ async function cleanupDiagnosisFixture() {
     where: {
       OR: [
         {
-          svbProviderId: {
-            startsWith: "TEST-DX-PROV",
+          svbProviderIdSearch: {
+            startsWith: ("TEST-DX-PROV").toLowerCase(),
           },
         },
         {
@@ -209,8 +209,8 @@ async function cleanupDiagnosisFixture() {
     where: {
       OR: [
         {
-          patientNumber: {
-            startsWith: "TEST-DX-PAT",
+          patientNumberSearch: {
+            startsWith: ("TEST-DX-PAT").toLowerCase(),
           },
         },
         {
@@ -226,8 +226,8 @@ async function cleanupDiagnosisFixture() {
     where: {
       OR: [
         {
-          code: {
-            startsWith: "TEST-DX-LOC",
+          codeSearch: {
+            startsWith: ("TEST-DX-LOC").toLowerCase(),
           },
         },
         {
@@ -264,8 +264,8 @@ async function cleanupDiagnosisFixture() {
   await prisma.diagnosisCode.deleteMany({
     where: {
       codeSystem: "TEST",
-      code: {
-        startsWith: "TEST-DX",
+      codeSearch: {
+        startsWith: ("TEST-DX").toLowerCase(),
       },
     },
   });
@@ -971,8 +971,8 @@ describe("Diagnosis API", () => {
     const auditLogs = await prisma.auditLog.findMany({
       where: {
         entityType: "ENCOUNTER_DIAGNOSIS",
-        entityKey: {
-          contains: "TEST-DX",
+        entityKeySearch: {
+          contains: ("TEST-DX").toLowerCase(),
         },
       },
       select: {

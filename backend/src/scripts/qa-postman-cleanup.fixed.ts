@@ -20,13 +20,13 @@ async function main() {
     where: {
       OR: [
         {
-          legalName: {
-            startsWith: QA_PREFIX,
+          legalNameSearch: {
+            startsWith: (QA_PREFIX).toLowerCase(),
           },
         },
         {
-          declarantId: {
-            startsWith: QA_PREFIX,
+          declarantIdSearch: {
+            startsWith: (QA_PREFIX).toLowerCase(),
           },
         },
       ],
@@ -438,16 +438,16 @@ async function main() {
     await tx.svbTariff.deleteMany({
       where: {
         svbProcedure: {
-          code: {
-            startsWith: "QA-",
+          codeSearch: {
+            startsWith: ("QA-").toLowerCase(),
           },
         },
       },
     });
     await tx.svbProcedure.deleteMany({
       where: {
-        code: {
-          startsWith: "QA-",
+        codeSearch: {
+          startsWith: ("QA-").toLowerCase(),
         },
       },
     });

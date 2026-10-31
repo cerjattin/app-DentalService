@@ -48,6 +48,8 @@ import { invoiceSignatureRouter } from "./modules/signatures/signature.routes.js
 import { svbCatalogRouter } from "./modules/svb-catalog/svb-catalog.routes.js";
 import { dashboardRouter } from "./modules/reports/dashboard.routes.js";
 import { clinicLocationRouter } from "./modules/clinic-locations/clinic-location.routes.js";
+import { organizationRouter } from "./modules/organization/organization.routes.js";
+import { treatmentCaseRouter } from "./modules/treatment-cases/treatment-case.routes.js";
 export const app = express();
 
 app.disable("x-powered-by");
@@ -120,9 +122,11 @@ app.use("/api/v1/payers", payerRouter);
 app.use("/api/v1/svb-procedures", svbCatalogRouter);
 app.use("/api/v1/patients/:patientId/insurance", insuranceRouter);
 app.use("/api/v1/patients", patientRouter);
+app.use("/api/v1/patients/:patientId/treatment-cases", treatmentCaseRouter);
 app.use("/api/v1/providers", providerRouter);
 app.use("/api/v1/clinic-locations", clinicLocationRouter);
 app.use("/api/v1/reports", dashboardRouter);
+app.use("/api/v1/organization", organizationRouter);
 app.use(notFoundMiddleware);
 
 app.use(errorHandler);

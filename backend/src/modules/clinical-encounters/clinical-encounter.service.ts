@@ -1,3 +1,4 @@
+import { normalizeSearch } from "../../infrastructure/database/text-search.js";
 import {
   Prisma,
   type ClinicalEncounterStatus,
@@ -121,6 +122,8 @@ export class ClinicalEncounterService {
   ) {
     const skip = (query.page - 1) * query.pageSize;
 
+    const searchQuery = await normalizeSearch(query.q);
+
     const where: Prisma.ClinicalEncounterWhereInput = {
       appointment: {
         organizationId: actor.organizationId,
@@ -178,21 +181,21 @@ export class ClinicalEncounterService {
           }
         : {}),
 
-      ...(query.q !== undefined
+      ...(searchQuery !== undefined
         ? {
             OR: [
               {
                 appointment: {
-                  appointmentNumber: {
-                    contains: query.q,
+                  appointmentNumberSearch: {
+                    contains: searchQuery,
                   },
                 },
               },
               {
                 appointment: {
                   patient: {
-                    patientNumber: {
-                      contains: query.q,
+                    patientNumberSearch: {
+                      contains: searchQuery,
                     },
                   },
                 },
@@ -200,8 +203,8 @@ export class ClinicalEncounterService {
               {
                 appointment: {
                   patient: {
-                    firstName: {
-                      contains: query.q,
+                    firstNameSearch: {
+                      contains: searchQuery,
                     },
                   },
                 },
@@ -209,8 +212,8 @@ export class ClinicalEncounterService {
               {
                 appointment: {
                   patient: {
-                    lastName: {
-                      contains: query.q,
+                    lastNameSearch: {
+                      contains: searchQuery,
                     },
                   },
                 },

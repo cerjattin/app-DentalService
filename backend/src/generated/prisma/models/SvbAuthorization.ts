@@ -53,6 +53,7 @@ export type SvbAuthorizationMinAggregateOutputType = {
   createdByUserId: bigint | null
   createdAt: Date | null
   updatedAt: Date | null
+  authorizationIdSearch: string | null
 }
 
 export type SvbAuthorizationMaxAggregateOutputType = {
@@ -68,6 +69,7 @@ export type SvbAuthorizationMaxAggregateOutputType = {
   createdByUserId: bigint | null
   createdAt: Date | null
   updatedAt: Date | null
+  authorizationIdSearch: string | null
 }
 
 export type SvbAuthorizationCountAggregateOutputType = {
@@ -84,6 +86,7 @@ export type SvbAuthorizationCountAggregateOutputType = {
   createdByUserId: number
   createdAt: number
   updatedAt: number
+  authorizationIdSearch: number
   _all: number
 }
 
@@ -115,6 +118,7 @@ export type SvbAuthorizationMinAggregateInputType = {
   createdByUserId?: true
   createdAt?: true
   updatedAt?: true
+  authorizationIdSearch?: true
 }
 
 export type SvbAuthorizationMaxAggregateInputType = {
@@ -130,6 +134,7 @@ export type SvbAuthorizationMaxAggregateInputType = {
   createdByUserId?: true
   createdAt?: true
   updatedAt?: true
+  authorizationIdSearch?: true
 }
 
 export type SvbAuthorizationCountAggregateInputType = {
@@ -146,6 +151,7 @@ export type SvbAuthorizationCountAggregateInputType = {
   createdByUserId?: true
   createdAt?: true
   updatedAt?: true
+  authorizationIdSearch?: true
   _all?: true
 }
 
@@ -249,6 +255,7 @@ export type SvbAuthorizationGroupByOutputType = {
   createdByUserId: bigint
   createdAt: Date
   updatedAt: Date
+  authorizationIdSearch: string
   _count: SvbAuthorizationCountAggregateOutputType | null
   _avg: SvbAuthorizationAvgAggregateOutputType | null
   _sum: SvbAuthorizationSumAggregateOutputType | null
@@ -288,6 +295,7 @@ export type SvbAuthorizationWhereInput = {
   createdByUserId?: Prisma.BigIntFilter<"SvbAuthorization"> | bigint | number
   createdAt?: Prisma.DateTimeFilter<"SvbAuthorization"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SvbAuthorization"> | Date | string
+  authorizationIdSearch?: Prisma.StringFilter<"SvbAuthorization"> | string
   items?: Prisma.SvbAuthorizationItemListRelationFilter
   createdByUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   patientInsurance?: Prisma.XOR<Prisma.PatientInsuranceScalarRelationFilter, Prisma.PatientInsuranceWhereInput>
@@ -308,11 +316,11 @@ export type SvbAuthorizationOrderByWithRelationInput = {
   createdByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  authorizationIdSearch?: Prisma.SortOrder
   items?: Prisma.SvbAuthorizationItemOrderByRelationAggregateInput
   createdByUser?: Prisma.UserOrderByWithRelationInput
   patientInsurance?: Prisma.PatientInsuranceOrderByWithRelationInput
   patient?: Prisma.PatientOrderByWithRelationInput
-  _relevance?: Prisma.SvbAuthorizationOrderByRelevanceInput
 }
 
 export type SvbAuthorizationWhereUniqueInput = Prisma.AtLeast<{
@@ -333,6 +341,7 @@ export type SvbAuthorizationWhereUniqueInput = Prisma.AtLeast<{
   createdByUserId?: Prisma.BigIntFilter<"SvbAuthorization"> | bigint | number
   createdAt?: Prisma.DateTimeFilter<"SvbAuthorization"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SvbAuthorization"> | Date | string
+  authorizationIdSearch?: Prisma.StringFilter<"SvbAuthorization"> | string
   items?: Prisma.SvbAuthorizationItemListRelationFilter
   createdByUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   patientInsurance?: Prisma.XOR<Prisma.PatientInsuranceScalarRelationFilter, Prisma.PatientInsuranceWhereInput>
@@ -353,6 +362,7 @@ export type SvbAuthorizationOrderByWithAggregationInput = {
   createdByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  authorizationIdSearch?: Prisma.SortOrder
   _count?: Prisma.SvbAuthorizationCountOrderByAggregateInput
   _avg?: Prisma.SvbAuthorizationAvgOrderByAggregateInput
   _max?: Prisma.SvbAuthorizationMaxOrderByAggregateInput
@@ -377,6 +387,7 @@ export type SvbAuthorizationScalarWhereWithAggregatesInput = {
   createdByUserId?: Prisma.BigIntWithAggregatesFilter<"SvbAuthorization"> | bigint | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SvbAuthorization"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"SvbAuthorization"> | Date | string
+  authorizationIdSearch?: Prisma.StringWithAggregatesFilter<"SvbAuthorization"> | string
 }
 
 export type SvbAuthorizationCreateInput = {
@@ -390,6 +401,7 @@ export type SvbAuthorizationCreateInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  authorizationIdSearch?: string
   items?: Prisma.SvbAuthorizationItemCreateNestedManyWithoutAuthorizationInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedSvbAuthorizationsInput
   patientInsurance: Prisma.PatientInsuranceCreateNestedOneWithoutSvbAuthorizationsInput
@@ -410,6 +422,7 @@ export type SvbAuthorizationUncheckedCreateInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  authorizationIdSearch?: string
   items?: Prisma.SvbAuthorizationItemUncheckedCreateNestedManyWithoutAuthorizationInput
 }
 
@@ -424,6 +437,7 @@ export type SvbAuthorizationUpdateInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  authorizationIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   items?: Prisma.SvbAuthorizationItemUpdateManyWithoutAuthorizationNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedSvbAuthorizationsNestedInput
   patientInsurance?: Prisma.PatientInsuranceUpdateOneRequiredWithoutSvbAuthorizationsNestedInput
@@ -444,6 +458,7 @@ export type SvbAuthorizationUncheckedUpdateInput = {
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  authorizationIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   items?: Prisma.SvbAuthorizationItemUncheckedUpdateManyWithoutAuthorizationNestedInput
 }
 
@@ -461,6 +476,7 @@ export type SvbAuthorizationCreateManyInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  authorizationIdSearch?: string
 }
 
 export type SvbAuthorizationUpdateManyMutationInput = {
@@ -474,6 +490,7 @@ export type SvbAuthorizationUpdateManyMutationInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  authorizationIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type SvbAuthorizationUncheckedUpdateManyInput = {
@@ -490,6 +507,7 @@ export type SvbAuthorizationUncheckedUpdateManyInput = {
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  authorizationIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type SvbAuthorizationListRelationFilter = {
@@ -505,12 +523,6 @@ export type SvbAuthorizationOrderByRelationAggregateInput = {
 export type SvbAuthorizationScalarRelationFilter = {
   is?: Prisma.SvbAuthorizationWhereInput
   isNot?: Prisma.SvbAuthorizationWhereInput
-}
-
-export type SvbAuthorizationOrderByRelevanceInput = {
-  fields: Prisma.SvbAuthorizationOrderByRelevanceFieldEnum | Prisma.SvbAuthorizationOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type SvbAuthorizationPatientInsuranceIdAuthorizationIdCompoundUniqueInput = {
@@ -532,6 +544,7 @@ export type SvbAuthorizationCountOrderByAggregateInput = {
   createdByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  authorizationIdSearch?: Prisma.SortOrder
 }
 
 export type SvbAuthorizationAvgOrderByAggregateInput = {
@@ -554,6 +567,7 @@ export type SvbAuthorizationMaxOrderByAggregateInput = {
   createdByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  authorizationIdSearch?: Prisma.SortOrder
 }
 
 export type SvbAuthorizationMinOrderByAggregateInput = {
@@ -569,6 +583,7 @@ export type SvbAuthorizationMinOrderByAggregateInput = {
   createdByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  authorizationIdSearch?: Prisma.SortOrder
 }
 
 export type SvbAuthorizationSumOrderByAggregateInput = {
@@ -733,6 +748,7 @@ export type SvbAuthorizationCreateWithoutPatientInsuranceInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  authorizationIdSearch?: string
   items?: Prisma.SvbAuthorizationItemCreateNestedManyWithoutAuthorizationInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedSvbAuthorizationsInput
   patient: Prisma.PatientCreateNestedOneWithoutSvbAuthorizationsInput
@@ -751,6 +767,7 @@ export type SvbAuthorizationUncheckedCreateWithoutPatientInsuranceInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  authorizationIdSearch?: string
   items?: Prisma.SvbAuthorizationItemUncheckedCreateNestedManyWithoutAuthorizationInput
 }
 
@@ -797,6 +814,7 @@ export type SvbAuthorizationScalarWhereInput = {
   createdByUserId?: Prisma.BigIntFilter<"SvbAuthorization"> | bigint | number
   createdAt?: Prisma.DateTimeFilter<"SvbAuthorization"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SvbAuthorization"> | Date | string
+  authorizationIdSearch?: Prisma.StringFilter<"SvbAuthorization"> | string
 }
 
 export type SvbAuthorizationCreateWithoutPatientInput = {
@@ -810,6 +828,7 @@ export type SvbAuthorizationCreateWithoutPatientInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  authorizationIdSearch?: string
   items?: Prisma.SvbAuthorizationItemCreateNestedManyWithoutAuthorizationInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedSvbAuthorizationsInput
   patientInsurance: Prisma.PatientInsuranceCreateNestedOneWithoutSvbAuthorizationsInput
@@ -828,6 +847,7 @@ export type SvbAuthorizationUncheckedCreateWithoutPatientInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  authorizationIdSearch?: string
   items?: Prisma.SvbAuthorizationItemUncheckedCreateNestedManyWithoutAuthorizationInput
 }
 
@@ -868,6 +888,7 @@ export type SvbAuthorizationCreateWithoutItemsInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  authorizationIdSearch?: string
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedSvbAuthorizationsInput
   patientInsurance: Prisma.PatientInsuranceCreateNestedOneWithoutSvbAuthorizationsInput
   patient: Prisma.PatientCreateNestedOneWithoutSvbAuthorizationsInput
@@ -887,6 +908,7 @@ export type SvbAuthorizationUncheckedCreateWithoutItemsInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  authorizationIdSearch?: string
 }
 
 export type SvbAuthorizationCreateOrConnectWithoutItemsInput = {
@@ -916,6 +938,7 @@ export type SvbAuthorizationUpdateWithoutItemsInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  authorizationIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedSvbAuthorizationsNestedInput
   patientInsurance?: Prisma.PatientInsuranceUpdateOneRequiredWithoutSvbAuthorizationsNestedInput
   patient?: Prisma.PatientUpdateOneRequiredWithoutSvbAuthorizationsNestedInput
@@ -935,6 +958,7 @@ export type SvbAuthorizationUncheckedUpdateWithoutItemsInput = {
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  authorizationIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type SvbAuthorizationCreateWithoutCreatedByUserInput = {
@@ -948,6 +972,7 @@ export type SvbAuthorizationCreateWithoutCreatedByUserInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  authorizationIdSearch?: string
   items?: Prisma.SvbAuthorizationItemCreateNestedManyWithoutAuthorizationInput
   patientInsurance: Prisma.PatientInsuranceCreateNestedOneWithoutSvbAuthorizationsInput
   patient: Prisma.PatientCreateNestedOneWithoutSvbAuthorizationsInput
@@ -966,6 +991,7 @@ export type SvbAuthorizationUncheckedCreateWithoutCreatedByUserInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  authorizationIdSearch?: string
   items?: Prisma.SvbAuthorizationItemUncheckedCreateNestedManyWithoutAuthorizationInput
 }
 
@@ -1008,6 +1034,7 @@ export type SvbAuthorizationCreateManyPatientInsuranceInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  authorizationIdSearch?: string
 }
 
 export type SvbAuthorizationUpdateWithoutPatientInsuranceInput = {
@@ -1021,6 +1048,7 @@ export type SvbAuthorizationUpdateWithoutPatientInsuranceInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  authorizationIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   items?: Prisma.SvbAuthorizationItemUpdateManyWithoutAuthorizationNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedSvbAuthorizationsNestedInput
   patient?: Prisma.PatientUpdateOneRequiredWithoutSvbAuthorizationsNestedInput
@@ -1039,6 +1067,7 @@ export type SvbAuthorizationUncheckedUpdateWithoutPatientInsuranceInput = {
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  authorizationIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   items?: Prisma.SvbAuthorizationItemUncheckedUpdateManyWithoutAuthorizationNestedInput
 }
 
@@ -1055,6 +1084,7 @@ export type SvbAuthorizationUncheckedUpdateManyWithoutPatientInsuranceInput = {
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  authorizationIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type SvbAuthorizationCreateManyPatientInput = {
@@ -1070,6 +1100,7 @@ export type SvbAuthorizationCreateManyPatientInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  authorizationIdSearch?: string
 }
 
 export type SvbAuthorizationUpdateWithoutPatientInput = {
@@ -1083,6 +1114,7 @@ export type SvbAuthorizationUpdateWithoutPatientInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  authorizationIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   items?: Prisma.SvbAuthorizationItemUpdateManyWithoutAuthorizationNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedSvbAuthorizationsNestedInput
   patientInsurance?: Prisma.PatientInsuranceUpdateOneRequiredWithoutSvbAuthorizationsNestedInput
@@ -1101,6 +1133,7 @@ export type SvbAuthorizationUncheckedUpdateWithoutPatientInput = {
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  authorizationIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   items?: Prisma.SvbAuthorizationItemUncheckedUpdateManyWithoutAuthorizationNestedInput
 }
 
@@ -1117,6 +1150,7 @@ export type SvbAuthorizationUncheckedUpdateManyWithoutPatientInput = {
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  authorizationIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type SvbAuthorizationCreateManyCreatedByUserInput = {
@@ -1132,6 +1166,7 @@ export type SvbAuthorizationCreateManyCreatedByUserInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  authorizationIdSearch?: string
 }
 
 export type SvbAuthorizationUpdateWithoutCreatedByUserInput = {
@@ -1145,6 +1180,7 @@ export type SvbAuthorizationUpdateWithoutCreatedByUserInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  authorizationIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   items?: Prisma.SvbAuthorizationItemUpdateManyWithoutAuthorizationNestedInput
   patientInsurance?: Prisma.PatientInsuranceUpdateOneRequiredWithoutSvbAuthorizationsNestedInput
   patient?: Prisma.PatientUpdateOneRequiredWithoutSvbAuthorizationsNestedInput
@@ -1163,6 +1199,7 @@ export type SvbAuthorizationUncheckedUpdateWithoutCreatedByUserInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  authorizationIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   items?: Prisma.SvbAuthorizationItemUncheckedUpdateManyWithoutAuthorizationNestedInput
 }
 
@@ -1179,6 +1216,7 @@ export type SvbAuthorizationUncheckedUpdateManyWithoutCreatedByUserInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  authorizationIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -1226,6 +1264,7 @@ export type SvbAuthorizationSelect<ExtArgs extends runtime.Types.Extensions.Inte
   createdByUserId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  authorizationIdSearch?: boolean
   items?: boolean | Prisma.SvbAuthorization$itemsArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   patientInsurance?: boolean | Prisma.PatientInsuranceDefaultArgs<ExtArgs>
@@ -1233,7 +1272,45 @@ export type SvbAuthorizationSelect<ExtArgs extends runtime.Types.Extensions.Inte
   _count?: boolean | Prisma.SvbAuthorizationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["svbAuthorization"]>
 
+export type SvbAuthorizationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  patientId?: boolean
+  patientInsuranceId?: boolean
+  authorizationId?: boolean
+  status?: boolean
+  validFrom?: boolean
+  validTo?: boolean
+  issuedAt?: boolean
+  notes?: boolean
+  metadata?: boolean
+  createdByUserId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  authorizationIdSearch?: boolean
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  patientInsurance?: boolean | Prisma.PatientInsuranceDefaultArgs<ExtArgs>
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["svbAuthorization"]>
 
+export type SvbAuthorizationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  patientId?: boolean
+  patientInsuranceId?: boolean
+  authorizationId?: boolean
+  status?: boolean
+  validFrom?: boolean
+  validTo?: boolean
+  issuedAt?: boolean
+  notes?: boolean
+  metadata?: boolean
+  createdByUserId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  authorizationIdSearch?: boolean
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  patientInsurance?: boolean | Prisma.PatientInsuranceDefaultArgs<ExtArgs>
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["svbAuthorization"]>
 
 export type SvbAuthorizationSelectScalar = {
   id?: boolean
@@ -1249,15 +1326,26 @@ export type SvbAuthorizationSelectScalar = {
   createdByUserId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  authorizationIdSearch?: boolean
 }
 
-export type SvbAuthorizationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "patientId" | "patientInsuranceId" | "authorizationId" | "status" | "validFrom" | "validTo" | "issuedAt" | "notes" | "metadata" | "createdByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["svbAuthorization"]>
+export type SvbAuthorizationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "patientId" | "patientInsuranceId" | "authorizationId" | "status" | "validFrom" | "validTo" | "issuedAt" | "notes" | "metadata" | "createdByUserId" | "createdAt" | "updatedAt" | "authorizationIdSearch", ExtArgs["result"]["svbAuthorization"]>
 export type SvbAuthorizationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   items?: boolean | Prisma.SvbAuthorization$itemsArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   patientInsurance?: boolean | Prisma.PatientInsuranceDefaultArgs<ExtArgs>
   patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.SvbAuthorizationCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type SvbAuthorizationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  patientInsurance?: boolean | Prisma.PatientInsuranceDefaultArgs<ExtArgs>
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+}
+export type SvbAuthorizationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  patientInsurance?: boolean | Prisma.PatientInsuranceDefaultArgs<ExtArgs>
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
 }
 
 export type $SvbAuthorizationPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1282,6 +1370,7 @@ export type $SvbAuthorizationPayload<ExtArgs extends runtime.Types.Extensions.In
     createdByUserId: bigint
     createdAt: Date
     updatedAt: Date
+    authorizationIdSearch: string
   }, ExtArgs["result"]["svbAuthorization"]>
   composites: {}
 }
@@ -1400,6 +1489,30 @@ export interface SvbAuthorizationDelegate<ExtArgs extends runtime.Types.Extensio
   createMany<T extends SvbAuthorizationCreateManyArgs>(args?: Prisma.SelectSubset<T, SvbAuthorizationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many SvbAuthorizations and returns the data saved in the database.
+   * @param {SvbAuthorizationCreateManyAndReturnArgs} args - Arguments to create many SvbAuthorizations.
+   * @example
+   * // Create many SvbAuthorizations
+   * const svbAuthorization = await prisma.svbAuthorization.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many SvbAuthorizations and only return the `id`
+   * const svbAuthorizationWithIdOnly = await prisma.svbAuthorization.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends SvbAuthorizationCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, SvbAuthorizationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SvbAuthorizationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a SvbAuthorization.
    * @param {SvbAuthorizationDeleteArgs} args - Arguments to delete one SvbAuthorization.
    * @example
@@ -1462,6 +1575,36 @@ export interface SvbAuthorizationDelegate<ExtArgs extends runtime.Types.Extensio
    * 
    */
   updateMany<T extends SvbAuthorizationUpdateManyArgs>(args: Prisma.SelectSubset<T, SvbAuthorizationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more SvbAuthorizations and returns the data updated in the database.
+   * @param {SvbAuthorizationUpdateManyAndReturnArgs} args - Arguments to update many SvbAuthorizations.
+   * @example
+   * // Update many SvbAuthorizations
+   * const svbAuthorization = await prisma.svbAuthorization.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more SvbAuthorizations and only return the `id`
+   * const svbAuthorizationWithIdOnly = await prisma.svbAuthorization.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends SvbAuthorizationUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, SvbAuthorizationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SvbAuthorizationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one SvbAuthorization.
@@ -1668,6 +1811,7 @@ export interface SvbAuthorizationFieldRefs {
   readonly createdByUserId: Prisma.FieldRef<"SvbAuthorization", 'BigInt'>
   readonly createdAt: Prisma.FieldRef<"SvbAuthorization", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"SvbAuthorization", 'DateTime'>
+  readonly authorizationIdSearch: Prisma.FieldRef<"SvbAuthorization", 'String'>
 }
     
 
@@ -1906,6 +2050,29 @@ export type SvbAuthorizationCreateManyArgs<ExtArgs extends runtime.Types.Extensi
 }
 
 /**
+ * SvbAuthorization createManyAndReturn
+ */
+export type SvbAuthorizationCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SvbAuthorization
+   */
+  select?: Prisma.SvbAuthorizationSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the SvbAuthorization
+   */
+  omit?: Prisma.SvbAuthorizationOmit<ExtArgs> | null
+  /**
+   * The data used to create many SvbAuthorizations.
+   */
+  data: Prisma.SvbAuthorizationCreateManyInput | Prisma.SvbAuthorizationCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SvbAuthorizationIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * SvbAuthorization update
  */
 export type SvbAuthorizationUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1947,6 +2114,36 @@ export type SvbAuthorizationUpdateManyArgs<ExtArgs extends runtime.Types.Extensi
    * Limit how many SvbAuthorizations to update.
    */
   limit?: number
+}
+
+/**
+ * SvbAuthorization updateManyAndReturn
+ */
+export type SvbAuthorizationUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SvbAuthorization
+   */
+  select?: Prisma.SvbAuthorizationSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the SvbAuthorization
+   */
+  omit?: Prisma.SvbAuthorizationOmit<ExtArgs> | null
+  /**
+   * The data used to update SvbAuthorizations.
+   */
+  data: Prisma.XOR<Prisma.SvbAuthorizationUpdateManyMutationInput, Prisma.SvbAuthorizationUncheckedUpdateManyInput>
+  /**
+   * Filter which SvbAuthorizations to update
+   */
+  where?: Prisma.SvbAuthorizationWhereInput
+  /**
+   * Limit how many SvbAuthorizations to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SvbAuthorizationIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

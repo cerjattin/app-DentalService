@@ -9,10 +9,8 @@ import { Select } from '../../components/ui/select'
 import { Textarea } from '../../components/ui/textarea'
 import { listPayers, patientKeys } from '../patients/patient-api'
 import {
-  addItemSchema,
   createDeclarationSchema,
   submissionResultSchema,
-  type AddItemValues,
   type CreateDeclarationValues,
   type SubmissionResultValues,
 } from './declaration-model'
@@ -33,7 +31,7 @@ export function CreateDeclarationDialog({
   const payers = useQuery({ queryKey: patientKeys.payers(), queryFn: ({ signal }) => listPayers(signal), enabled: open })
   const { register, handleSubmit, formState: { errors } } = useForm<CreateDeclarationValues>({
     resolver: zodResolver(createDeclarationSchema),
-    defaultValues: { payerId: '', periodStart: '', periodEnd: '', declarantIdSnapshot: '', notes: '' },
+    defaultValues: { payerId: '', periodStart: '', periodEnd: '', notes: '' },
   })
   return (
     <Dialog open={open} onOpenChange={(next) => !next && onClose()} title="Create declaration" description="Create a draft batch for one payer and an optional service period.">
@@ -48,9 +46,7 @@ export function CreateDeclarationDialog({
           <FormField label="Period start" htmlFor="declaration-start"><Input id="declaration-start" type="date" {...register('periodStart')} /></FormField>
           <FormField label="Period end" htmlFor="declaration-end" error={errors.periodEnd?.message}><Input id="declaration-end" type="date" {...register('periodEnd')} /></FormField>
         </div>
-        <FormField label="Declarant ID" htmlFor="declarant-id" error={errors.declarantIdSnapshot?.message} hint="Optional snapshot used by the Backend export validator.">
-          <Input id="declarant-id" maxLength={64} {...register('declarantIdSnapshot')} />
-        </FormField>
+        <p className="text-sm text-slate-500">The Declarant ID is assigned by the server from the first closed invoice item and then retained for this batch.</p>
         <FormField label="Notes" htmlFor="declaration-notes" error={errors.notes?.message}>
           <Textarea id="declaration-notes" maxLength={5000} rows={3} {...register('notes')} />
         </FormField>
@@ -62,16 +58,7 @@ export function CreateDeclarationDialog({
   )
 }
 
-export function AddDeclarationItemDialog({ open, pending, error, onClose, onSubmit }: { open: boolean; pending: boolean; error?: string; onClose: () => void; onSubmit: (values: AddItemValues) => void }) {
-  const { register, handleSubmit, formState: { errors } } = useForm<AddItemValues>({ resolver: zodResolver(addItemSchema), defaultValues: { invoiceItemId: '' } })
-  return <Dialog open={open} onOpenChange={(next) => !next && onClose()} title="Add invoice item" description="Enter an invoice item ID. The Backend accepts only an item from the current eligible invoice version.">
-    <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-      <FormField label="Invoice item ID" htmlFor="invoice-item-id" error={errors.invoiceItemId?.message} hint="Superseded and otherwise ineligible versions are rejected by the Backend."><Input id="invoice-item-id" inputMode="numeric" {...register('invoiceItemId')} /></FormField>
-      {error ? <p role="alert" className="text-sm text-clinic-danger">{error}</p> : null}
-      <div className="flex justify-end gap-2"><Button variant="secondary" onClick={onClose}>Cancel</Button><Button type="submit" disabled={pending}>{pending ? 'Adding...' : 'Add item'}</Button></div>
-    </form>
-  </Dialog>
-}
+export { AddDeclarationItemDialog } from './declaration-candidate-dialog'
 
 export function SubmissionResultDialog({ open, pending, error, onClose, onSubmit }: { open: boolean; pending: boolean; error?: string; onClose: () => void; onSubmit: (values: SubmissionResultValues) => void }) {
   const { register, handleSubmit, formState: { errors } } = useForm<SubmissionResultValues>({ resolver: zodResolver(submissionResultSchema), defaultValues: { status: 'ACCEPTED', externalReference: '' } })

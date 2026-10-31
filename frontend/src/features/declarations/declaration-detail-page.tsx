@@ -1,7 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useIsMutating, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ArrowLeft, Download, FileOutput, Plus, Send, ShieldCheck } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
-import { Link, useParams } from 'react-router'
+import { Link, useParams, useSearchParams } from 'react-router'
 import { getApiErrorMessage } from '../../api'
 import { hasPermission } from '../../auth/permissions'
 import { useAuth } from '../../auth/use-auth'
@@ -32,13 +32,18 @@ import {
 } from './declaration-api'
 import { AddDeclarationItemDialog, SubmissionResultDialog } from './declaration-dialogs'
 import { declarationLabel, declarationTone, type AddItemValues, type SubmissionResultValues } from './declaration-model'
+import { DeclarationDraftAction } from './declaration-draft-actions'
+import { refreshDeclarationResources } from './declaration-cache'
 
 const formats: DeclarationExportFormat[] = ['CSV', 'TXT', 'JSON', 'XML']
 
 export function DeclarationDetailPage() {
   const { declarationId = '' } = useParams()
+  const [searchParams] = useSearchParams()
+  const returnInvoiceId = searchParams.get('returnInvoiceId') ?? ''
   const { permissions } = useAuth()
   const client = useQueryClient()
+  const busy = useIsMutating({ mutationKey: ['declaration-write', declarationId] }) > 0
   const [addOpen, setAddOpen] = useState(false)
   const [readyOpen, setReadyOpen] = useState(false)
   const [submitOpen, setSubmitOpen] = useState(false)
@@ -49,14 +54,15 @@ export function DeclarationDetailPage() {
   const exportsQuery = useQuery({ queryKey: declarationKeys.exports(declarationId), queryFn: ({ signal }) => listDeclarationExports(declarationId, signal), enabled: Boolean(declarationId) })
   const submissions = useQuery({ queryKey: declarationKeys.submissions(declarationId), queryFn: ({ signal }) => listDeclarationSubmissions(declarationId, signal), enabled: Boolean(declarationId) })
   const refresh = async () => { await Promise.all([
+    refreshDeclarationResources(client, declarationId),
     client.invalidateQueries({ queryKey: declarationKeys.detail(declarationId) }),
     client.invalidateQueries({ queryKey: declarationKeys.items(declarationId) }),
     client.invalidateQueries({ queryKey: declarationKeys.exports(declarationId) }),
     client.invalidateQueries({ queryKey: declarationKeys.submissions(declarationId) }),
     client.invalidateQueries({ queryKey: declarationKeys.lists() }),
   ]) }
-  const add = useMutation({ mutationFn: (values: AddItemValues) => addDeclarationItem(declarationId, values.invoiceItemId), onSuccess: async () => { setAddOpen(false); await refresh() } })
-  const ready = useMutation({ mutationFn: () => markDeclarationReady(declarationId), onSuccess: async () => { setReadyOpen(false); await refresh() } })
+  const add = useMutation({ mutationKey: ['declaration-write', declarationId], mutationFn: (values: AddItemValues) => addDeclarationItem(declarationId, values.invoiceItemId), onSuccess: async () => { setAddOpen(false); await refreshDeclarationResources(client, declarationId) }, onError: () => { void refreshDeclarationResources(client, declarationId) } })
+  const ready = useMutation({ mutationKey: ['declaration-write', declarationId], mutationFn: () => markDeclarationReady(declarationId), onSuccess: async () => { setReadyOpen(false); await refreshDeclarationResources(client, declarationId) } })
   const generate = useMutation({ mutationFn: () => createDeclarationExport(declarationId, format), onSuccess: refresh })
   const send = useMutation({ mutationFn: () => submitDeclaration(declarationId), onSuccess: async () => { setSubmitOpen(false); await refresh() } })
   const result = useMutation({ mutationFn: (values: SubmissionResultValues) => recordSubmissionResult(declarationId, resultFor?.id ?? '', { status: values.status, ...(values.externalReference ? { externalReference: values.externalReference } : {}) }), onSuccess: async () => { setResultFor(null); await refresh() } })
@@ -71,13 +77,13 @@ export function DeclarationDetailPage() {
     <PageHeader title={declaration.declarationNumber ?? `Declaration ${declaration.id}`} description={`${declaration.payer.code} - ${declaration.payer.name}`} actions={<StatusBadge tone={declarationTone(declaration.status)}>{declarationLabel(declaration.status)}</StatusBadge>} />
     <Card className="mb-5 grid gap-4 p-4 sm:grid-cols-2 lg:grid-cols-4">
       <Field label="Period">{declaration.periodStart || declaration.periodEnd ? `${declaration.periodStart ?? 'Open'} - ${declaration.periodEnd ?? 'Open'}` : 'Not specified'}</Field>
-      <Field label="Declarant ID">{declaration.declarantIdSnapshot ?? 'Not provided'}</Field>
+      <Field label="Declarant ID">{declaration.declarantIdSnapshot ?? 'Not assigned — set by the first invoice item'}</Field>
       <Field label="Submission reference">{declaration.submissionReference ?? 'Not submitted'}</Field>
       <Field label="Created">{formatBusinessDateTime(declaration.createdAt)}</Field>
     </Card>
     {mutationError ? <p role="alert" className="mb-4 rounded-md bg-red-50 p-3 text-sm text-clinic-danger">{getApiErrorMessage(mutationError)}</p> : null}
 
-    <Section title="Declaration items" actions={declaration.status === 'DRAFT' ? <div className="flex gap-2">{hasPermission(permissions, 'declaration.update') ? <><Button variant="secondary" onClick={() => setAddOpen(true)}><Plus size={16} />Add item</Button><Button disabled={!items.data?.length} onClick={() => setReadyOpen(true)}><ShieldCheck size={16} />Validate and mark ready</Button></> : null}</div> : null}>
+    <Section title="Declaration items" actions={declaration.status === 'DRAFT' ? <div className="flex gap-2">{hasPermission(permissions, 'declaration.update') ? <><Button variant="secondary" disabled={busy || !hasPermission(permissions, 'invoice.read')} title="Invoice read permission is required to select candidates." onClick={() => setAddOpen(true)}><Plus size={16} />Add item</Button><Button disabled={busy || !items.data?.length} onClick={() => setReadyOpen(true)}><ShieldCheck size={16} />Validate and mark ready</Button></> : null}</div> : null}>
       <p className="mb-3 text-sm text-slate-500">Items are immutable snapshots of the exact invoice version accepted by the Backend.</p>
       {items.isPending ? <LoadingState label="Loading declaration items" /> : items.isError ? <ErrorState title="Unable to load declaration items" description={getApiErrorMessage(items.error)} onRetry={() => void items.refetch()} /> : <DataTable rows={items.data} getRowKey={(row) => row.id} emptyMessage="No declaration items" columns={[
         { key: 'sequence', header: '#', render: (row) => row.sequenceNumber },
@@ -87,6 +93,7 @@ export function DeclarationDetailPage() {
         { key: 'treatment', header: 'Treatment ID', render: (row) => row.treatmentIdSnapshot ?? 'Not provided' },
         { key: 'amount', header: 'Amount', render: (row) => <span className="font-mono">{row.amountSnapshot}</span> },
         { key: 'status', header: 'Line status', render: (row) => <StatusBadge tone={row.lineStatus === 'ACCEPTED' ? 'success' : row.lineStatus === 'REJECTED' ? 'danger' : 'neutral'}>{declarationLabel(row.lineStatus)}</StatusBadge> },
+        { key: 'actions', header: 'Actions', render: (row) => <DeclarationDraftAction declaration={declaration} item={row} /> },
       ]} />}
     </Section>
 
@@ -112,9 +119,10 @@ export function DeclarationDetailPage() {
       ]} /> : <p className="text-sm text-slate-500">No submission attempts recorded.</p>}
     </Section>
 
-    <AddDeclarationItemDialog open={addOpen} pending={add.isPending} error={add.error ? getApiErrorMessage(add.error) : undefined} onClose={() => { setAddOpen(false); add.reset() }} onSubmit={(values) => add.mutate(values)} />
-    <ConfirmDialog open={readyOpen} title="Validate declaration" description="The Backend will validate every SVB snapshot and freeze the declaration in READY state if all requirements pass." confirmLabel={ready.isPending ? 'Validating...' : 'Validate and mark ready'} pending={ready.isPending} onCancel={() => setReadyOpen(false)} onConfirm={() => ready.mutate()} />
-    <ConfirmDialog open={submitOpen} title="Submit declaration" description="The configured Backend adapter will transmit or record this exported declaration. No submission is created if no adapter is configured." confirmLabel={send.isPending ? 'Submitting...' : 'Submit declaration'} pending={send.isPending} onCancel={() => setSubmitOpen(false)} onConfirm={() => send.mutate()} />
+    {addOpen ? <AddDeclarationItemDialog declaration={declaration} pending={add.isPending} error={add.error ? getApiErrorMessage(add.error) : undefined} onClose={() => { setAddOpen(false); add.reset() }} onSubmit={(values) => { if (!add.isPending) add.mutate(values) }} /> : null}
+    <div className="my-4 flex flex-wrap gap-3"><DeclarationDraftAction declaration={declaration} />{/^[1-9]\d*$/.test(returnInvoiceId) && hasPermission(permissions, 'invoice.read') ? <Link className="text-clinic-blue underline" to={`/invoices/${returnInvoiceId}`}>Back to invoice</Link> : null}</div>
+    <ConfirmDialog open={readyOpen} title="Validate declaration" description="The Backend will validate every SVB snapshot and freeze the declaration in READY state if all requirements pass." confirmLabel={ready.isPending ? 'Validating...' : 'Validate and mark ready'} pending={ready.isPending} error={ready.error ? getApiErrorMessage(ready.error) : undefined} onCancel={() => { setReadyOpen(false); ready.reset() }} onConfirm={() => ready.mutate()} />
+    <ConfirmDialog open={submitOpen} title="Submit declaration" description="The configured Backend adapter will transmit or record this exported declaration. No submission is created if no adapter is configured." confirmLabel={send.isPending ? 'Submitting...' : 'Submit declaration'} pending={send.isPending} error={send.error ? getApiErrorMessage(send.error) : undefined} onCancel={() => { setSubmitOpen(false); send.reset() }} onConfirm={() => send.mutate()} />
     <SubmissionResultDialog open={Boolean(resultFor)} pending={result.isPending} error={result.error ? getApiErrorMessage(result.error) : undefined} onClose={() => { setResultFor(null); result.reset() }} onSubmit={(values) => result.mutate(values)} />
   </div>
 }

@@ -1,8 +1,14 @@
 # Frontend Handoff
 
+## NEG-FUNC-03/04/05 — API publicada 2026-10-31
+
+Integrar FE03/04/05 con el [contrato Backend publicado](NEG_FUNC_03_04_05.md): Settings con revisión/motivo, Declarant ID administrado desde snapshots de factura, selección paginada de candidatos y casos por paciente. POST `/declarations` ahora rechaza Declarant ID no nulo del cliente; enviar ausencia/null. Los permisos nuevos `treatment_case.read/manage` requieren sincronización persistida antes de habilitar controles. DELETE Draft recibe body JSON `{ reason }`; cancelación conserva historial; ambos retornan Declaration completo. Candidates requiere declaración e invoice read. `isEditable` de casos es calculado por servidor. Aplicar las nuevas migraciones antes de usar estas rutas en otro entorno; no se ejecutaron sobre Supabase operativo desde esta entrega.
+
 This is the compact React/Vite integration guide for the frozen backend contract.
 
 ## Runtime
+
+PostgreSQL preparation: no Frontend API change. The local backend can be started with `npm run dev:supabase` after the database rollout; the browser still calls Express and never receives the database URL. Search support columns are internal and do not appear in DTOs. See [the rollout guide](../../docs/base-de-datos/MIGRACION_POSTGRESQL.md) for actual validation and pending Supabase/Postman steps.
 
 - API base: `${VITE_API_BASE_URL}/api/v1`.
 - Health: `${VITE_API_BASE_URL}/health/live` and `/health/ready`.
@@ -108,3 +114,15 @@ Clinical currently requests `isActive=true` and `serviceDate`. List filtering on
 ## Operational forward corrections
 
 Appointment creation is now available through the existing POST /api/v1/appointments plus GET /api/v1/clinic-locations?isActive=true (clinic_location.read). Shared Frontend creation requires independent patient/provider/location read permissions and appointment.create. Dashboard now consumes GET /api/v1/reports/dashboard (dashboard.read) with inclusive Curacao from/to dates and optional organization-scoped providerId. Exact request/response fields, Decimal string/currency rules, metric/date/correction/assignment semantics and errors are documented in [OPERATIONAL_CORRECTIONS.md](OPERATIONAL_CORRECTIONS.md). No schema, migration, seed or existing catalogue contract changes.
+
+## Supplied invoice form and confirmed fixes — 2026-10-30
+
+The appointment `date` filter now denotes the Curaçao business day. Frontend keeps sending the existing YYYY-MM-DD value. Declaration confirmation errors are shown within the active modal.
+
+PDF generation uses the existing endpoint and now returns a stored SVB form with visible saved signature, layout metadata `svb_notaform_v1` and filename ending `-svb.pdf`. Older technical PDFs remain separate downloadable records; keep filtering documents by the exact invoice version. No new signature or snapshot edit is needed to generate the new layout for an eligible CLOSED version. Blank historical fields remain blank; Aantal is procedure quantity as confirmed by the user. [Mapping, integrity and fresh validation](SVB_FORM_AND_OPERATIONAL_FIXES.md).
+
+## Return to clinical care — 2026-10-30
+
+Admin's complete seeded permission set includes the permissions for **Return to clinical care** on eligible invoice detail pages. UI uses permissions, never role names. The action requires a reason and sends the expected current version as a string to `POST /invoices/:id/reopen-encounter`; the existing invoice DTO is returned. An active declaration assignment or correction produces a visible conflict in the modal.
+
+Navigate to `/clinical/:appointmentId`, remove/add services, and complete the clinical encounter. The appointment remains completed. **Rebuild invoice from corrected services** calls the existing appointment invoice endpoint; one logical invoice/number is retained. Until rebuilding, the empty replacement cannot be prepared for signature. A new signature and authorized close complete the correction. Historical versions/signatures/documents remain available. Before initial clinical completion, professionals can already remove an unbilled mistake and add the right service using `procedure.update`. [Full Backend rules and limitations](CLINICAL_REBILLING.md).

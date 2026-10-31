@@ -28,6 +28,12 @@ export const cancelInvoiceSchema = z.object({
   reason: z.string().trim().min(1).max(500),
 });
 
+export const reopenInvoiceEncounterSchema = z.object({
+  reason: z.string().trim().min(1).max(500),
+  expectedVersionId: bigintId,
+}).strict();
+export type ReopenInvoiceEncounterInput = z.infer<typeof reopenInvoiceEncounterSchema>;
+
 export const requestInvoiceCorrectionSchema = z.object({
   reasonCode: z.string().trim().min(1).max(50),
   reasonText: z.string().trim().min(1).max(2_000),

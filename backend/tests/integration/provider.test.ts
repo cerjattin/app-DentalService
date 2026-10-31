@@ -62,8 +62,8 @@ async function cleanupProviderFixture() {
         },
         {
           entityType: "PROVIDER",
-          entityKey: {
-            startsWith: "TEST-PROV",
+          entityKeySearch: {
+            startsWith: ("TEST-PROV").toLowerCase(),
           },
         },
         {
@@ -79,13 +79,13 @@ async function cleanupProviderFixture() {
     where: {
       OR: [
         {
-          svbProviderId: {
-            startsWith: "TEST-PROV",
+          svbProviderIdSearch: {
+            startsWith: ("TEST-PROV").toLowerCase(),
           },
         },
         {
-          licenseNumber: {
-            startsWith: "TEST-LIC",
+          licenseNumberSearch: {
+            startsWith: ("TEST-LIC").toLowerCase(),
           },
         },
         {

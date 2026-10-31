@@ -1,3 +1,4 @@
+import { normalizeSearch } from "../../infrastructure/database/text-search.js";
 import argon2 from "argon2";
 
 import { prisma } from "../../infrastructure/database/prisma.js";
@@ -497,6 +498,8 @@ export class UserService {
   async list(query: ListUsersQuery, actor: AuthenticatedRequestContext) {
     const skip = (query.page - 1) * query.pageSize;
 
+    const searchQuery = await normalizeSearch(query.q);
+
     const where: Prisma.UserWhereInput = {
       organizationId: actor.organizationId,
 
@@ -506,22 +509,22 @@ export class UserService {
           }
         : {}),
 
-      ...(query.q !== undefined
+      ...(searchQuery !== undefined
         ? {
             OR: [
               {
-                email: {
-                  contains: query.q,
+                emailSearch: {
+                  contains: searchQuery,
                 },
               },
               {
-                firstName: {
-                  contains: query.q,
+                firstNameSearch: {
+                  contains: searchQuery,
                 },
               },
               {
-                lastName: {
-                  contains: query.q,
+                lastNameSearch: {
+                  contains: searchQuery,
                 },
               },
             ],

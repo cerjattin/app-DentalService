@@ -14,20 +14,21 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     services:
-      mysql:
-        image: mysql:8.0
+      postgres:
+        image: postgres:17
         env:
-          MYSQL_ROOT_PASSWORD: isolated-master03-only
-          MYSQL_DATABASE: odontho_operational_test
+          POSTGRES_PASSWORD: isolated-master03-only
+          POSTGRES_DB: odontho_operational_test
         ports:
-          - 3306:3306
+          - 5432:5432
         options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1 -pisolated-master03-only"
+          --health-cmd="pg_isready -U postgres"
           --health-interval=5s
           --health-timeout=5s
           --health-retries=30
     env:
-      DATABASE_URL: mysql://root:isolated-master03-only@127.0.0.1:3306/odontho_operational_test
+      DATABASE_URL: postgresql://postgres:isolated-master03-only@127.0.0.1:5432/odontho_operational_test
+      TEST_DATABASE_URL: postgresql://postgres:isolated-master03-only@127.0.0.1:5432/odontho_operational_test
       ACCESS_TOKEN_SECRET: isolated-master03-ci-secret-at-least-32-characters
       LOG_LEVEL: silent
     steps:
@@ -43,7 +44,7 @@ jobs:
         run: |
           npm ci --prefix backend
           npm ci --prefix frontend
-      - name: Prepare existing Backend and isolated MySQL
+      - name: Prepare existing Backend and isolated PostgreSQL
         working-directory: backend
         run: |
           npm run prisma:generate

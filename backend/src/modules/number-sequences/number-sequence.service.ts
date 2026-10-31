@@ -22,7 +22,7 @@ export class NumberSequenceService {
     /*
      * El UPDATE es intencional.
      *
-     * InnoDB bloqueará la fila durante la
+     * PostgreSQL bloqueará la fila durante la
      * transacción, evitando que dos
      * transacciones obtengan el mismo número.
      */

@@ -54,6 +54,7 @@ export type PatientInsuranceMinAggregateOutputType = {
   verificationSource: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  insuredIdSearch: string | null
 }
 
 export type PatientInsuranceMaxAggregateOutputType = {
@@ -70,6 +71,7 @@ export type PatientInsuranceMaxAggregateOutputType = {
   verificationSource: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  insuredIdSearch: string | null
 }
 
 export type PatientInsuranceCountAggregateOutputType = {
@@ -87,6 +89,7 @@ export type PatientInsuranceCountAggregateOutputType = {
   metadata: number
   createdAt: number
   updatedAt: number
+  insuredIdSearch: number
   _all: number
 }
 
@@ -119,6 +122,7 @@ export type PatientInsuranceMinAggregateInputType = {
   verificationSource?: true
   createdAt?: true
   updatedAt?: true
+  insuredIdSearch?: true
 }
 
 export type PatientInsuranceMaxAggregateInputType = {
@@ -135,6 +139,7 @@ export type PatientInsuranceMaxAggregateInputType = {
   verificationSource?: true
   createdAt?: true
   updatedAt?: true
+  insuredIdSearch?: true
 }
 
 export type PatientInsuranceCountAggregateInputType = {
@@ -152,6 +157,7 @@ export type PatientInsuranceCountAggregateInputType = {
   metadata?: true
   createdAt?: true
   updatedAt?: true
+  insuredIdSearch?: true
   _all?: true
 }
 
@@ -256,6 +262,7 @@ export type PatientInsuranceGroupByOutputType = {
   metadata: runtime.JsonValue | null
   createdAt: Date
   updatedAt: Date
+  insuredIdSearch: string
   _count: PatientInsuranceCountAggregateOutputType | null
   _avg: PatientInsuranceAvgAggregateOutputType | null
   _sum: PatientInsuranceSumAggregateOutputType | null
@@ -296,6 +303,7 @@ export type PatientInsuranceWhereInput = {
   metadata?: Prisma.JsonNullableFilter<"PatientInsurance">
   createdAt?: Prisma.DateTimeFilter<"PatientInsurance"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PatientInsurance"> | Date | string
+  insuredIdSearch?: Prisma.StringFilter<"PatientInsurance"> | string
   accidentCases?: Prisma.AccidentCaseListRelationFilter
   encounterProcedures?: Prisma.EncounterProcedureListRelationFilter
   invoices?: Prisma.InvoiceListRelationFilter
@@ -320,6 +328,7 @@ export type PatientInsuranceOrderByWithRelationInput = {
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  insuredIdSearch?: Prisma.SortOrder
   accidentCases?: Prisma.AccidentCaseOrderByRelationAggregateInput
   encounterProcedures?: Prisma.EncounterProcedureOrderByRelationAggregateInput
   invoices?: Prisma.InvoiceOrderByRelationAggregateInput
@@ -327,7 +336,6 @@ export type PatientInsuranceOrderByWithRelationInput = {
   payer?: Prisma.PayerOrderByWithRelationInput
   verifiedByUser?: Prisma.UserOrderByWithRelationInput
   svbAuthorizations?: Prisma.SvbAuthorizationOrderByRelationAggregateInput
-  _relevance?: Prisma.PatientInsuranceOrderByRelevanceInput
 }
 
 export type PatientInsuranceWhereUniqueInput = Prisma.AtLeast<{
@@ -349,6 +357,7 @@ export type PatientInsuranceWhereUniqueInput = Prisma.AtLeast<{
   metadata?: Prisma.JsonNullableFilter<"PatientInsurance">
   createdAt?: Prisma.DateTimeFilter<"PatientInsurance"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PatientInsurance"> | Date | string
+  insuredIdSearch?: Prisma.StringFilter<"PatientInsurance"> | string
   accidentCases?: Prisma.AccidentCaseListRelationFilter
   encounterProcedures?: Prisma.EncounterProcedureListRelationFilter
   invoices?: Prisma.InvoiceListRelationFilter
@@ -373,6 +382,7 @@ export type PatientInsuranceOrderByWithAggregationInput = {
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  insuredIdSearch?: Prisma.SortOrder
   _count?: Prisma.PatientInsuranceCountOrderByAggregateInput
   _avg?: Prisma.PatientInsuranceAvgOrderByAggregateInput
   _max?: Prisma.PatientInsuranceMaxOrderByAggregateInput
@@ -398,6 +408,7 @@ export type PatientInsuranceScalarWhereWithAggregatesInput = {
   metadata?: Prisma.JsonNullableWithAggregatesFilter<"PatientInsurance">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"PatientInsurance"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"PatientInsurance"> | Date | string
+  insuredIdSearch?: Prisma.StringWithAggregatesFilter<"PatientInsurance"> | string
 }
 
 export type PatientInsuranceCreateInput = {
@@ -412,6 +423,7 @@ export type PatientInsuranceCreateInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  insuredIdSearch?: string
   accidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutPatientInsuranceInput
   encounterProcedures?: Prisma.EncounterProcedureCreateNestedManyWithoutPatientInsuranceInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutPatientInsuranceInput
@@ -436,6 +448,7 @@ export type PatientInsuranceUncheckedCreateInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  insuredIdSearch?: string
   accidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutPatientInsuranceInput
   encounterProcedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutPatientInsuranceInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPatientInsuranceInput
@@ -454,6 +467,7 @@ export type PatientInsuranceUpdateInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuredIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   accidentCases?: Prisma.AccidentCaseUpdateManyWithoutPatientInsuranceNestedInput
   encounterProcedures?: Prisma.EncounterProcedureUpdateManyWithoutPatientInsuranceNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutPatientInsuranceNestedInput
@@ -478,6 +492,7 @@ export type PatientInsuranceUncheckedUpdateInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuredIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   accidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutPatientInsuranceNestedInput
   encounterProcedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutPatientInsuranceNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPatientInsuranceNestedInput
@@ -499,6 +514,7 @@ export type PatientInsuranceCreateManyInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  insuredIdSearch?: string
 }
 
 export type PatientInsuranceUpdateManyMutationInput = {
@@ -513,6 +529,7 @@ export type PatientInsuranceUpdateManyMutationInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuredIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type PatientInsuranceUncheckedUpdateManyInput = {
@@ -530,6 +547,7 @@ export type PatientInsuranceUncheckedUpdateManyInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuredIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type PatientInsuranceNullableScalarRelationFilter = {
@@ -540,12 +558,6 @@ export type PatientInsuranceNullableScalarRelationFilter = {
 export type PatientInsuranceScalarRelationFilter = {
   is?: Prisma.PatientInsuranceWhereInput
   isNot?: Prisma.PatientInsuranceWhereInput
-}
-
-export type PatientInsuranceOrderByRelevanceInput = {
-  fields: Prisma.PatientInsuranceOrderByRelevanceFieldEnum | Prisma.PatientInsuranceOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type PatientInsurancePatientIdPayerIdInsuredIdValidFromCompoundUniqueInput = {
@@ -570,6 +582,7 @@ export type PatientInsuranceCountOrderByAggregateInput = {
   metadata?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  insuredIdSearch?: Prisma.SortOrder
 }
 
 export type PatientInsuranceAvgOrderByAggregateInput = {
@@ -593,6 +606,7 @@ export type PatientInsuranceMaxOrderByAggregateInput = {
   verificationSource?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  insuredIdSearch?: Prisma.SortOrder
 }
 
 export type PatientInsuranceMinOrderByAggregateInput = {
@@ -609,6 +623,7 @@ export type PatientInsuranceMinOrderByAggregateInput = {
   verificationSource?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  insuredIdSearch?: Prisma.SortOrder
 }
 
 export type PatientInsuranceSumOrderByAggregateInput = {
@@ -828,6 +843,7 @@ export type PatientInsuranceCreateWithoutAccidentCasesInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  insuredIdSearch?: string
   encounterProcedures?: Prisma.EncounterProcedureCreateNestedManyWithoutPatientInsuranceInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutPatientInsuranceInput
   patient: Prisma.PatientCreateNestedOneWithoutInsuranceCoveragesInput
@@ -851,6 +867,7 @@ export type PatientInsuranceUncheckedCreateWithoutAccidentCasesInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  insuredIdSearch?: string
   encounterProcedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutPatientInsuranceInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPatientInsuranceInput
   svbAuthorizations?: Prisma.SvbAuthorizationUncheckedCreateNestedManyWithoutPatientInsuranceInput
@@ -884,6 +901,7 @@ export type PatientInsuranceUpdateWithoutAccidentCasesInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuredIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   encounterProcedures?: Prisma.EncounterProcedureUpdateManyWithoutPatientInsuranceNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutPatientInsuranceNestedInput
   patient?: Prisma.PatientUpdateOneRequiredWithoutInsuranceCoveragesNestedInput
@@ -907,6 +925,7 @@ export type PatientInsuranceUncheckedUpdateWithoutAccidentCasesInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuredIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   encounterProcedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutPatientInsuranceNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPatientInsuranceNestedInput
   svbAuthorizations?: Prisma.SvbAuthorizationUncheckedUpdateManyWithoutPatientInsuranceNestedInput
@@ -924,6 +943,7 @@ export type PatientInsuranceCreateWithoutEncounterProceduresInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  insuredIdSearch?: string
   accidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutPatientInsuranceInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutPatientInsuranceInput
   patient: Prisma.PatientCreateNestedOneWithoutInsuranceCoveragesInput
@@ -947,6 +967,7 @@ export type PatientInsuranceUncheckedCreateWithoutEncounterProceduresInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  insuredIdSearch?: string
   accidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutPatientInsuranceInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPatientInsuranceInput
   svbAuthorizations?: Prisma.SvbAuthorizationUncheckedCreateNestedManyWithoutPatientInsuranceInput
@@ -980,6 +1001,7 @@ export type PatientInsuranceUpdateWithoutEncounterProceduresInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuredIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   accidentCases?: Prisma.AccidentCaseUpdateManyWithoutPatientInsuranceNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutPatientInsuranceNestedInput
   patient?: Prisma.PatientUpdateOneRequiredWithoutInsuranceCoveragesNestedInput
@@ -1003,6 +1025,7 @@ export type PatientInsuranceUncheckedUpdateWithoutEncounterProceduresInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuredIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   accidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutPatientInsuranceNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPatientInsuranceNestedInput
   svbAuthorizations?: Prisma.SvbAuthorizationUncheckedUpdateManyWithoutPatientInsuranceNestedInput
@@ -1020,6 +1043,7 @@ export type PatientInsuranceCreateWithoutInvoicesInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  insuredIdSearch?: string
   accidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutPatientInsuranceInput
   encounterProcedures?: Prisma.EncounterProcedureCreateNestedManyWithoutPatientInsuranceInput
   patient: Prisma.PatientCreateNestedOneWithoutInsuranceCoveragesInput
@@ -1043,6 +1067,7 @@ export type PatientInsuranceUncheckedCreateWithoutInvoicesInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  insuredIdSearch?: string
   accidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutPatientInsuranceInput
   encounterProcedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutPatientInsuranceInput
   svbAuthorizations?: Prisma.SvbAuthorizationUncheckedCreateNestedManyWithoutPatientInsuranceInput
@@ -1076,6 +1101,7 @@ export type PatientInsuranceUpdateWithoutInvoicesInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuredIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   accidentCases?: Prisma.AccidentCaseUpdateManyWithoutPatientInsuranceNestedInput
   encounterProcedures?: Prisma.EncounterProcedureUpdateManyWithoutPatientInsuranceNestedInput
   patient?: Prisma.PatientUpdateOneRequiredWithoutInsuranceCoveragesNestedInput
@@ -1099,6 +1125,7 @@ export type PatientInsuranceUncheckedUpdateWithoutInvoicesInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuredIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   accidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutPatientInsuranceNestedInput
   encounterProcedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutPatientInsuranceNestedInput
   svbAuthorizations?: Prisma.SvbAuthorizationUncheckedUpdateManyWithoutPatientInsuranceNestedInput
@@ -1116,6 +1143,7 @@ export type PatientInsuranceCreateWithoutPatientInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  insuredIdSearch?: string
   accidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutPatientInsuranceInput
   encounterProcedures?: Prisma.EncounterProcedureCreateNestedManyWithoutPatientInsuranceInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutPatientInsuranceInput
@@ -1138,6 +1166,7 @@ export type PatientInsuranceUncheckedCreateWithoutPatientInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  insuredIdSearch?: string
   accidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutPatientInsuranceInput
   encounterProcedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutPatientInsuranceInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPatientInsuranceInput
@@ -1188,6 +1217,7 @@ export type PatientInsuranceScalarWhereInput = {
   metadata?: Prisma.JsonNullableFilter<"PatientInsurance">
   createdAt?: Prisma.DateTimeFilter<"PatientInsurance"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PatientInsurance"> | Date | string
+  insuredIdSearch?: Prisma.StringFilter<"PatientInsurance"> | string
 }
 
 export type PatientInsuranceCreateWithoutPayerInput = {
@@ -1202,6 +1232,7 @@ export type PatientInsuranceCreateWithoutPayerInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  insuredIdSearch?: string
   accidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutPatientInsuranceInput
   encounterProcedures?: Prisma.EncounterProcedureCreateNestedManyWithoutPatientInsuranceInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutPatientInsuranceInput
@@ -1224,6 +1255,7 @@ export type PatientInsuranceUncheckedCreateWithoutPayerInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  insuredIdSearch?: string
   accidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutPatientInsuranceInput
   encounterProcedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutPatientInsuranceInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPatientInsuranceInput
@@ -1268,6 +1300,7 @@ export type PatientInsuranceCreateWithoutSvbAuthorizationsInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  insuredIdSearch?: string
   accidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutPatientInsuranceInput
   encounterProcedures?: Prisma.EncounterProcedureCreateNestedManyWithoutPatientInsuranceInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutPatientInsuranceInput
@@ -1291,6 +1324,7 @@ export type PatientInsuranceUncheckedCreateWithoutSvbAuthorizationsInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  insuredIdSearch?: string
   accidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutPatientInsuranceInput
   encounterProcedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutPatientInsuranceInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPatientInsuranceInput
@@ -1324,6 +1358,7 @@ export type PatientInsuranceUpdateWithoutSvbAuthorizationsInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuredIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   accidentCases?: Prisma.AccidentCaseUpdateManyWithoutPatientInsuranceNestedInput
   encounterProcedures?: Prisma.EncounterProcedureUpdateManyWithoutPatientInsuranceNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutPatientInsuranceNestedInput
@@ -1347,6 +1382,7 @@ export type PatientInsuranceUncheckedUpdateWithoutSvbAuthorizationsInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuredIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   accidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutPatientInsuranceNestedInput
   encounterProcedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutPatientInsuranceNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPatientInsuranceNestedInput
@@ -1364,6 +1400,7 @@ export type PatientInsuranceCreateWithoutVerifiedByUserInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  insuredIdSearch?: string
   accidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutPatientInsuranceInput
   encounterProcedures?: Prisma.EncounterProcedureCreateNestedManyWithoutPatientInsuranceInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutPatientInsuranceInput
@@ -1386,6 +1423,7 @@ export type PatientInsuranceUncheckedCreateWithoutVerifiedByUserInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  insuredIdSearch?: string
   accidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutPatientInsuranceInput
   encounterProcedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutPatientInsuranceInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPatientInsuranceInput
@@ -1432,6 +1470,7 @@ export type PatientInsuranceCreateManyPatientInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  insuredIdSearch?: string
 }
 
 export type PatientInsuranceUpdateWithoutPatientInput = {
@@ -1446,6 +1485,7 @@ export type PatientInsuranceUpdateWithoutPatientInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuredIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   accidentCases?: Prisma.AccidentCaseUpdateManyWithoutPatientInsuranceNestedInput
   encounterProcedures?: Prisma.EncounterProcedureUpdateManyWithoutPatientInsuranceNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutPatientInsuranceNestedInput
@@ -1468,6 +1508,7 @@ export type PatientInsuranceUncheckedUpdateWithoutPatientInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuredIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   accidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutPatientInsuranceNestedInput
   encounterProcedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutPatientInsuranceNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPatientInsuranceNestedInput
@@ -1488,6 +1529,7 @@ export type PatientInsuranceUncheckedUpdateManyWithoutPatientInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuredIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type PatientInsuranceCreateManyPayerInput = {
@@ -1504,6 +1546,7 @@ export type PatientInsuranceCreateManyPayerInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  insuredIdSearch?: string
 }
 
 export type PatientInsuranceUpdateWithoutPayerInput = {
@@ -1518,6 +1561,7 @@ export type PatientInsuranceUpdateWithoutPayerInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuredIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   accidentCases?: Prisma.AccidentCaseUpdateManyWithoutPatientInsuranceNestedInput
   encounterProcedures?: Prisma.EncounterProcedureUpdateManyWithoutPatientInsuranceNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutPatientInsuranceNestedInput
@@ -1540,6 +1584,7 @@ export type PatientInsuranceUncheckedUpdateWithoutPayerInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuredIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   accidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutPatientInsuranceNestedInput
   encounterProcedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutPatientInsuranceNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPatientInsuranceNestedInput
@@ -1560,6 +1605,7 @@ export type PatientInsuranceUncheckedUpdateManyWithoutPayerInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuredIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type PatientInsuranceCreateManyVerifiedByUserInput = {
@@ -1576,6 +1622,7 @@ export type PatientInsuranceCreateManyVerifiedByUserInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  insuredIdSearch?: string
 }
 
 export type PatientInsuranceUpdateWithoutVerifiedByUserInput = {
@@ -1590,6 +1637,7 @@ export type PatientInsuranceUpdateWithoutVerifiedByUserInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuredIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   accidentCases?: Prisma.AccidentCaseUpdateManyWithoutPatientInsuranceNestedInput
   encounterProcedures?: Prisma.EncounterProcedureUpdateManyWithoutPatientInsuranceNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutPatientInsuranceNestedInput
@@ -1612,6 +1660,7 @@ export type PatientInsuranceUncheckedUpdateWithoutVerifiedByUserInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuredIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
   accidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutPatientInsuranceNestedInput
   encounterProcedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutPatientInsuranceNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPatientInsuranceNestedInput
@@ -1632,6 +1681,7 @@ export type PatientInsuranceUncheckedUpdateManyWithoutVerifiedByUserInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuredIdSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -1707,6 +1757,7 @@ export type PatientInsuranceSelect<ExtArgs extends runtime.Types.Extensions.Inte
   metadata?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  insuredIdSearch?: boolean
   accidentCases?: boolean | Prisma.PatientInsurance$accidentCasesArgs<ExtArgs>
   encounterProcedures?: boolean | Prisma.PatientInsurance$encounterProceduresArgs<ExtArgs>
   invoices?: boolean | Prisma.PatientInsurance$invoicesArgs<ExtArgs>
@@ -1717,7 +1768,47 @@ export type PatientInsuranceSelect<ExtArgs extends runtime.Types.Extensions.Inte
   _count?: boolean | Prisma.PatientInsuranceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["patientInsurance"]>
 
+export type PatientInsuranceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  patientId?: boolean
+  payerId?: boolean
+  insuredId?: boolean
+  validFrom?: boolean
+  validTo?: boolean
+  status?: boolean
+  isPrimary?: boolean
+  verifiedAt?: boolean
+  verifiedByUserId?: boolean
+  verificationSource?: boolean
+  metadata?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  insuredIdSearch?: boolean
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+  payer?: boolean | Prisma.PayerDefaultArgs<ExtArgs>
+  verifiedByUser?: boolean | Prisma.PatientInsurance$verifiedByUserArgs<ExtArgs>
+}, ExtArgs["result"]["patientInsurance"]>
 
+export type PatientInsuranceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  patientId?: boolean
+  payerId?: boolean
+  insuredId?: boolean
+  validFrom?: boolean
+  validTo?: boolean
+  status?: boolean
+  isPrimary?: boolean
+  verifiedAt?: boolean
+  verifiedByUserId?: boolean
+  verificationSource?: boolean
+  metadata?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  insuredIdSearch?: boolean
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+  payer?: boolean | Prisma.PayerDefaultArgs<ExtArgs>
+  verifiedByUser?: boolean | Prisma.PatientInsurance$verifiedByUserArgs<ExtArgs>
+}, ExtArgs["result"]["patientInsurance"]>
 
 export type PatientInsuranceSelectScalar = {
   id?: boolean
@@ -1734,9 +1825,10 @@ export type PatientInsuranceSelectScalar = {
   metadata?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  insuredIdSearch?: boolean
 }
 
-export type PatientInsuranceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "patientId" | "payerId" | "insuredId" | "validFrom" | "validTo" | "status" | "isPrimary" | "verifiedAt" | "verifiedByUserId" | "verificationSource" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["patientInsurance"]>
+export type PatientInsuranceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "patientId" | "payerId" | "insuredId" | "validFrom" | "validTo" | "status" | "isPrimary" | "verifiedAt" | "verifiedByUserId" | "verificationSource" | "metadata" | "createdAt" | "updatedAt" | "insuredIdSearch", ExtArgs["result"]["patientInsurance"]>
 export type PatientInsuranceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accidentCases?: boolean | Prisma.PatientInsurance$accidentCasesArgs<ExtArgs>
   encounterProcedures?: boolean | Prisma.PatientInsurance$encounterProceduresArgs<ExtArgs>
@@ -1746,6 +1838,16 @@ export type PatientInsuranceInclude<ExtArgs extends runtime.Types.Extensions.Int
   verifiedByUser?: boolean | Prisma.PatientInsurance$verifiedByUserArgs<ExtArgs>
   svbAuthorizations?: boolean | Prisma.PatientInsurance$svbAuthorizationsArgs<ExtArgs>
   _count?: boolean | Prisma.PatientInsuranceCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type PatientInsuranceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+  payer?: boolean | Prisma.PayerDefaultArgs<ExtArgs>
+  verifiedByUser?: boolean | Prisma.PatientInsurance$verifiedByUserArgs<ExtArgs>
+}
+export type PatientInsuranceIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+  payer?: boolean | Prisma.PayerDefaultArgs<ExtArgs>
+  verifiedByUser?: boolean | Prisma.PatientInsurance$verifiedByUserArgs<ExtArgs>
 }
 
 export type $PatientInsurancePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1774,6 +1876,7 @@ export type $PatientInsurancePayload<ExtArgs extends runtime.Types.Extensions.In
     metadata: runtime.JsonValue | null
     createdAt: Date
     updatedAt: Date
+    insuredIdSearch: string
   }, ExtArgs["result"]["patientInsurance"]>
   composites: {}
 }
@@ -1892,6 +1995,30 @@ export interface PatientInsuranceDelegate<ExtArgs extends runtime.Types.Extensio
   createMany<T extends PatientInsuranceCreateManyArgs>(args?: Prisma.SelectSubset<T, PatientInsuranceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many PatientInsurances and returns the data saved in the database.
+   * @param {PatientInsuranceCreateManyAndReturnArgs} args - Arguments to create many PatientInsurances.
+   * @example
+   * // Create many PatientInsurances
+   * const patientInsurance = await prisma.patientInsurance.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many PatientInsurances and only return the `id`
+   * const patientInsuranceWithIdOnly = await prisma.patientInsurance.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends PatientInsuranceCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, PatientInsuranceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PatientInsurancePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a PatientInsurance.
    * @param {PatientInsuranceDeleteArgs} args - Arguments to delete one PatientInsurance.
    * @example
@@ -1954,6 +2081,36 @@ export interface PatientInsuranceDelegate<ExtArgs extends runtime.Types.Extensio
    * 
    */
   updateMany<T extends PatientInsuranceUpdateManyArgs>(args: Prisma.SelectSubset<T, PatientInsuranceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more PatientInsurances and returns the data updated in the database.
+   * @param {PatientInsuranceUpdateManyAndReturnArgs} args - Arguments to update many PatientInsurances.
+   * @example
+   * // Update many PatientInsurances
+   * const patientInsurance = await prisma.patientInsurance.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more PatientInsurances and only return the `id`
+   * const patientInsuranceWithIdOnly = await prisma.patientInsurance.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends PatientInsuranceUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, PatientInsuranceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PatientInsurancePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one PatientInsurance.
@@ -2164,6 +2321,7 @@ export interface PatientInsuranceFieldRefs {
   readonly metadata: Prisma.FieldRef<"PatientInsurance", 'Json'>
   readonly createdAt: Prisma.FieldRef<"PatientInsurance", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"PatientInsurance", 'DateTime'>
+  readonly insuredIdSearch: Prisma.FieldRef<"PatientInsurance", 'String'>
 }
     
 
@@ -2402,6 +2560,29 @@ export type PatientInsuranceCreateManyArgs<ExtArgs extends runtime.Types.Extensi
 }
 
 /**
+ * PatientInsurance createManyAndReturn
+ */
+export type PatientInsuranceCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PatientInsurance
+   */
+  select?: Prisma.PatientInsuranceSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the PatientInsurance
+   */
+  omit?: Prisma.PatientInsuranceOmit<ExtArgs> | null
+  /**
+   * The data used to create many PatientInsurances.
+   */
+  data: Prisma.PatientInsuranceCreateManyInput | Prisma.PatientInsuranceCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PatientInsuranceIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * PatientInsurance update
  */
 export type PatientInsuranceUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2443,6 +2624,36 @@ export type PatientInsuranceUpdateManyArgs<ExtArgs extends runtime.Types.Extensi
    * Limit how many PatientInsurances to update.
    */
   limit?: number
+}
+
+/**
+ * PatientInsurance updateManyAndReturn
+ */
+export type PatientInsuranceUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PatientInsurance
+   */
+  select?: Prisma.PatientInsuranceSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the PatientInsurance
+   */
+  omit?: Prisma.PatientInsuranceOmit<ExtArgs> | null
+  /**
+   * The data used to update PatientInsurances.
+   */
+  data: Prisma.XOR<Prisma.PatientInsuranceUpdateManyMutationInput, Prisma.PatientInsuranceUncheckedUpdateManyInput>
+  /**
+   * Filter which PatientInsurances to update
+   */
+  where?: Prisma.PatientInsuranceWhereInput
+  /**
+   * Limit how many PatientInsurances to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PatientInsuranceIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

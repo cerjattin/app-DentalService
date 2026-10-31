@@ -629,7 +629,25 @@ export type InvoiceDocumentSelect<ExtArgs extends runtime.Types.Extensions.Inter
   invoiceVersion?: boolean | Prisma.InvoiceVersionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["invoiceDocument"]>
 
+export type InvoiceDocumentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  invoiceVersionId?: boolean
+  documentId?: boolean
+  documentRole?: boolean
+  createdAt?: boolean
+  document?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
+  invoiceVersion?: boolean | Prisma.InvoiceVersionDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["invoiceDocument"]>
 
+export type InvoiceDocumentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  invoiceVersionId?: boolean
+  documentId?: boolean
+  documentRole?: boolean
+  createdAt?: boolean
+  document?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
+  invoiceVersion?: boolean | Prisma.InvoiceVersionDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["invoiceDocument"]>
 
 export type InvoiceDocumentSelectScalar = {
   id?: boolean
@@ -641,6 +659,14 @@ export type InvoiceDocumentSelectScalar = {
 
 export type InvoiceDocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "invoiceVersionId" | "documentId" | "documentRole" | "createdAt", ExtArgs["result"]["invoiceDocument"]>
 export type InvoiceDocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  document?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
+  invoiceVersion?: boolean | Prisma.InvoiceVersionDefaultArgs<ExtArgs>
+}
+export type InvoiceDocumentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  document?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
+  invoiceVersion?: boolean | Prisma.InvoiceVersionDefaultArgs<ExtArgs>
+}
+export type InvoiceDocumentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   document?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
   invoiceVersion?: boolean | Prisma.InvoiceVersionDefaultArgs<ExtArgs>
 }
@@ -775,6 +801,30 @@ export interface InvoiceDocumentDelegate<ExtArgs extends runtime.Types.Extension
   createMany<T extends InvoiceDocumentCreateManyArgs>(args?: Prisma.SelectSubset<T, InvoiceDocumentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many InvoiceDocuments and returns the data saved in the database.
+   * @param {InvoiceDocumentCreateManyAndReturnArgs} args - Arguments to create many InvoiceDocuments.
+   * @example
+   * // Create many InvoiceDocuments
+   * const invoiceDocument = await prisma.invoiceDocument.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many InvoiceDocuments and only return the `id`
+   * const invoiceDocumentWithIdOnly = await prisma.invoiceDocument.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends InvoiceDocumentCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, InvoiceDocumentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoiceDocumentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a InvoiceDocument.
    * @param {InvoiceDocumentDeleteArgs} args - Arguments to delete one InvoiceDocument.
    * @example
@@ -837,6 +887,36 @@ export interface InvoiceDocumentDelegate<ExtArgs extends runtime.Types.Extension
    * 
    */
   updateMany<T extends InvoiceDocumentUpdateManyArgs>(args: Prisma.SelectSubset<T, InvoiceDocumentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more InvoiceDocuments and returns the data updated in the database.
+   * @param {InvoiceDocumentUpdateManyAndReturnArgs} args - Arguments to update many InvoiceDocuments.
+   * @example
+   * // Update many InvoiceDocuments
+   * const invoiceDocument = await prisma.invoiceDocument.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more InvoiceDocuments and only return the `id`
+   * const invoiceDocumentWithIdOnly = await prisma.invoiceDocument.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends InvoiceDocumentUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, InvoiceDocumentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoiceDocumentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one InvoiceDocument.
@@ -1271,6 +1351,29 @@ export type InvoiceDocumentCreateManyArgs<ExtArgs extends runtime.Types.Extensio
 }
 
 /**
+ * InvoiceDocument createManyAndReturn
+ */
+export type InvoiceDocumentCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InvoiceDocument
+   */
+  select?: Prisma.InvoiceDocumentSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the InvoiceDocument
+   */
+  omit?: Prisma.InvoiceDocumentOmit<ExtArgs> | null
+  /**
+   * The data used to create many InvoiceDocuments.
+   */
+  data: Prisma.InvoiceDocumentCreateManyInput | Prisma.InvoiceDocumentCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InvoiceDocumentIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * InvoiceDocument update
  */
 export type InvoiceDocumentUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1312,6 +1415,36 @@ export type InvoiceDocumentUpdateManyArgs<ExtArgs extends runtime.Types.Extensio
    * Limit how many InvoiceDocuments to update.
    */
   limit?: number
+}
+
+/**
+ * InvoiceDocument updateManyAndReturn
+ */
+export type InvoiceDocumentUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InvoiceDocument
+   */
+  select?: Prisma.InvoiceDocumentSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the InvoiceDocument
+   */
+  omit?: Prisma.InvoiceDocumentOmit<ExtArgs> | null
+  /**
+   * The data used to update InvoiceDocuments.
+   */
+  data: Prisma.XOR<Prisma.InvoiceDocumentUpdateManyMutationInput, Prisma.InvoiceDocumentUncheckedUpdateManyInput>
+  /**
+   * Filter which InvoiceDocuments to update
+   */
+  where?: Prisma.InvoiceDocumentWhereInput
+  /**
+   * Limit how many InvoiceDocuments to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InvoiceDocumentIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

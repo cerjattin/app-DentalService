@@ -43,7 +43,7 @@ function DeclarationList() {
   const create = useMutation({
     mutationFn: (values: CreateDeclarationValues) => {
       const parsed = createDeclarationSchema.parse(values)
-      return createDeclaration({ payerId: parsed.payerId, ...(parsed.periodStart ? { periodStart: parsed.periodStart } : {}), ...(parsed.periodEnd ? { periodEnd: parsed.periodEnd } : {}), ...(parsed.declarantIdSnapshot ? { declarantIdSnapshot: parsed.declarantIdSnapshot } : {}), ...(parsed.notes ? { notes: parsed.notes } : {}) })
+      return createDeclaration({ payerId: parsed.payerId, ...(parsed.periodStart ? { periodStart: parsed.periodStart } : {}), ...(parsed.periodEnd ? { periodEnd: parsed.periodEnd } : {}), ...(parsed.notes ? { notes: parsed.notes } : {}) })
     },
     onSuccess: async (row) => { await client.invalidateQueries({ queryKey: declarationKeys.lists() }); navigate(`/declarations/${row.id}`) },
   })

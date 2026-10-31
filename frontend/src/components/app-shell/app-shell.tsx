@@ -16,7 +16,7 @@ const pageTitles: Record<string, { title: string; subtitle?: string }> = {
   '/admin/users': { title: 'Users', subtitle: 'Profiles, status and role assignments' },
   '/admin/providers': { title: 'Providers', subtitle: 'Professional and user relationships' },
   '/admin/services': { title: 'Services', subtitle: 'SVB catalogue and tariffs' },
-  '/admin/settings': { title: 'Settings', subtitle: 'Unavailable in the Backend contract' },
+  '/admin/settings': { title: 'Settings', subtitle: 'Organization configuration' },
 }
 
 function titleForPath(pathname: string) {

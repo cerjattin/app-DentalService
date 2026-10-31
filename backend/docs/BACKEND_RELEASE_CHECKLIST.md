@@ -30,6 +30,10 @@ Use this checklist before handing a build to Frontend, QA, staging, or productio
 
 ## Data And Master Dependencies
 
+- [ ] Apply the PostgreSQL baseline and minimal seed in the intended Supabase project.
+- [ ] Validate the Supabase/Postman flows; local PostgreSQL tests alone do not complete destination acceptance.
+- [ ] Preserve manual CHECK constraints, collations, search/timestamp triggers and RLS in future migrations.
+
 - [ ] Official SVB procedure/tariff master data import process is defined.
 - [ ] Production organization declarant and policlinic codes are configured.
 - [ ] Provider SVB IDs are loaded as real master data.

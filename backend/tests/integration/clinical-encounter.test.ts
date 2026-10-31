@@ -58,8 +58,8 @@ async function cleanupClinicalEncounterFixture() {
     where: {
       OR: [
         {
-          appointmentNumber: {
-            startsWith: "TEST-ENC",
+          appointmentNumberSearch: {
+            startsWith: ("TEST-ENC").toLowerCase(),
           },
         },
         {
@@ -114,8 +114,8 @@ async function cleanupClinicalEncounterFixture() {
         },
         {
           entityType: "CLINICAL_ENCOUNTER",
-          entityKey: {
-            startsWith: "TEST-ENC",
+          entityKeySearch: {
+            startsWith: ("TEST-ENC").toLowerCase(),
           },
         },
         {
@@ -155,8 +155,8 @@ async function cleanupClinicalEncounterFixture() {
     where: {
       OR: [
         {
-          svbProviderId: {
-            startsWith: "TEST-ENC-PROV",
+          svbProviderIdSearch: {
+            startsWith: ("TEST-ENC-PROV").toLowerCase(),
           },
         },
         {
@@ -172,8 +172,8 @@ async function cleanupClinicalEncounterFixture() {
     where: {
       OR: [
         {
-          patientNumber: {
-            startsWith: "TEST-ENC-PAT",
+          patientNumberSearch: {
+            startsWith: ("TEST-ENC-PAT").toLowerCase(),
           },
         },
         {
@@ -189,8 +189,8 @@ async function cleanupClinicalEncounterFixture() {
     where: {
       OR: [
         {
-          code: {
-            startsWith: "TEST-ENC-LOC",
+          codeSearch: {
+            startsWith: ("TEST-ENC-LOC").toLowerCase(),
           },
         },
         {

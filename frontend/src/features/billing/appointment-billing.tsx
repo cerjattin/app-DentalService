@@ -42,6 +42,8 @@ function BillingEntry({ appointment }: { appointment: Appointment }) {
     },
   })
   const existing = query.data?.data[0]
+  const rebuild = existing?.status === 'CORRECTION_REQUIRED' &&
+    existing.currentVersion?.status === 'DRAFT' && existing.currentVersion.items.length === 0
   return (
     <BillingSection title="Billing">
       {query.isPending ? (
@@ -53,7 +55,7 @@ function BillingEntry({ appointment }: { appointment: Appointment }) {
             Retry invoice lookup
           </Button>
         </>
-      ) : existing ? (
+      ) : existing && !rebuild ? (
         <Link
           className="text-sm font-medium text-clinic-blue hover:underline"
           to={`/invoices/${existing.id}`}
@@ -69,7 +71,7 @@ function BillingEntry({ appointment }: { appointment: Appointment }) {
         >
           <Button onClick={() => setConfirm(true)}>
             <FileText size={16} />
-            Create invoice
+            {rebuild ? 'Rebuild invoice from corrected services' : 'Create invoice'}
           </Button>
         </PermissionGuard>
       ) : (
@@ -77,11 +79,11 @@ function BillingEntry({ appointment }: { appointment: Appointment }) {
           Complete the appointment and clinical encounter before billing.
         </p>
       )}
-      {confirm && !existing ? (
+      {confirm && (!existing || rebuild) ? (
         <Dialog
           open
-          title="Create invoice?"
-          description={`Create one invoice from the billable procedures for appointment ${appointment.appointmentNumber}.`}
+          title={rebuild ? 'Rebuild invoice?' : 'Create invoice?'}
+          description={rebuild ? 'Use the corrected clinical services in the new invoice version. The invoice number and prior history are retained. A new signature is required.' : `Create one invoice from the billable procedures for appointment ${appointment.appointmentNumber}.`}
           onOpenChange={(open) => {
             if (!open && !create.isPending) setConfirm(false)
           }}
@@ -96,7 +98,7 @@ function BillingEntry({ appointment }: { appointment: Appointment }) {
               Cancel
             </Button>
             <Button disabled={create.isPending} onClick={() => create.mutate()}>
-              {create.isPending ? 'Creating...' : 'Confirm creation'}
+              {create.isPending ? 'Creating...' : rebuild ? 'Confirm rebuild' : 'Confirm creation'}
             </Button>
           </div>
         </Dialog>

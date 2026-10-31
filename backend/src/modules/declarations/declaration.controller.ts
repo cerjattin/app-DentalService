@@ -13,6 +13,23 @@ import {
   listDeclarationsQuerySchema,
 } from "./declaration.schemas.js";
 import { declarationService } from "./declaration.service.js";
+import { declarationCandidatesQuerySchema, declarationReasonSchema } from "./declaration.schemas.js";
+import { listDeclarationCandidates } from "./declaration-candidates.service.js";
+import { changeDraftDeclaration } from "./declaration-draft.service.js";
+
+export const getDeclarationCandidates: RequestHandler = async (req, res) => {
+  const result = await listDeclarationCandidates(parseBigIntId(req.params.id, "declarationId"), declarationCandidatesQuerySchema.parse(req.query), requireAuth(req));
+  res.json(successResponse(result.candidates, result.pagination));
+};
+export const removeDeclarationItem: RequestHandler = async (req, res) => {
+  const { reason } = declarationReasonSchema.parse(req.body);
+  res.json(successResponse(await changeDraftDeclaration(parseBigIntId(req.params.id, "declarationId"),
+    parseBigIntId(req.params.itemId, "declarationItemId"), reason, requireAuth(req), securityMetadata(req, res))));
+};
+export const cancelDraftDeclaration: RequestHandler = async (req, res) => {
+  const { reason } = declarationReasonSchema.parse(req.body);
+  res.json(successResponse(await changeDraftDeclaration(parseBigIntId(req.params.id, "declarationId"), null, reason, requireAuth(req), securityMetadata(req, res))));
+};
 
 function requireAuth(req: Parameters<RequestHandler>[0]) {
   if (!req.auth) {

@@ -295,7 +295,6 @@ export type ReferrerOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   encounterProcedures?: Prisma.EncounterProcedureOrderByRelationAggregateInput
   organization?: Prisma.OrganizationOrderByWithRelationInput
-  _relevance?: Prisma.ReferrerOrderByRelevanceInput
 }
 
 export type ReferrerWhereUniqueInput = Prisma.AtLeast<{
@@ -478,12 +477,6 @@ export type ReferrerListRelationFilter = {
 
 export type ReferrerOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type ReferrerOrderByRelevanceInput = {
-  fields: Prisma.ReferrerOrderByRelevanceFieldEnum | Prisma.ReferrerOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type ReferrerOrganizationIdReferrerIdentifierCompoundUniqueInput = {
@@ -861,7 +854,37 @@ export type ReferrerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   _count?: boolean | Prisma.ReferrerCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["referrer"]>
 
+export type ReferrerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  organizationId?: boolean
+  referrerIdentifier?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  organizationName?: boolean
+  providerType?: boolean
+  phone?: boolean
+  email?: boolean
+  isActive?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["referrer"]>
 
+export type ReferrerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  organizationId?: boolean
+  referrerIdentifier?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  organizationName?: boolean
+  providerType?: boolean
+  phone?: boolean
+  email?: boolean
+  isActive?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["referrer"]>
 
 export type ReferrerSelectScalar = {
   id?: boolean
@@ -883,6 +906,12 @@ export type ReferrerInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   encounterProcedures?: boolean | Prisma.Referrer$encounterProceduresArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.ReferrerCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type ReferrerIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+}
+export type ReferrerIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }
 
 export type $ReferrerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1022,6 +1051,30 @@ export interface ReferrerDelegate<ExtArgs extends runtime.Types.Extensions.Inter
   createMany<T extends ReferrerCreateManyArgs>(args?: Prisma.SelectSubset<T, ReferrerCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many Referrers and returns the data saved in the database.
+   * @param {ReferrerCreateManyAndReturnArgs} args - Arguments to create many Referrers.
+   * @example
+   * // Create many Referrers
+   * const referrer = await prisma.referrer.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many Referrers and only return the `id`
+   * const referrerWithIdOnly = await prisma.referrer.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends ReferrerCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, ReferrerCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReferrerPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a Referrer.
    * @param {ReferrerDeleteArgs} args - Arguments to delete one Referrer.
    * @example
@@ -1084,6 +1137,36 @@ export interface ReferrerDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * 
    */
   updateMany<T extends ReferrerUpdateManyArgs>(args: Prisma.SelectSubset<T, ReferrerUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more Referrers and returns the data updated in the database.
+   * @param {ReferrerUpdateManyAndReturnArgs} args - Arguments to update many Referrers.
+   * @example
+   * // Update many Referrers
+   * const referrer = await prisma.referrer.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more Referrers and only return the `id`
+   * const referrerWithIdOnly = await prisma.referrer.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends ReferrerUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, ReferrerUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReferrerPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Referrer.
@@ -1525,6 +1608,29 @@ export type ReferrerCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
+ * Referrer createManyAndReturn
+ */
+export type ReferrerCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Referrer
+   */
+  select?: Prisma.ReferrerSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Referrer
+   */
+  omit?: Prisma.ReferrerOmit<ExtArgs> | null
+  /**
+   * The data used to create many Referrers.
+   */
+  data: Prisma.ReferrerCreateManyInput | Prisma.ReferrerCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReferrerIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * Referrer update
  */
 export type ReferrerUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1566,6 +1672,36 @@ export type ReferrerUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Limit how many Referrers to update.
    */
   limit?: number
+}
+
+/**
+ * Referrer updateManyAndReturn
+ */
+export type ReferrerUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Referrer
+   */
+  select?: Prisma.ReferrerSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Referrer
+   */
+  omit?: Prisma.ReferrerOmit<ExtArgs> | null
+  /**
+   * The data used to update Referrers.
+   */
+  data: Prisma.XOR<Prisma.ReferrerUpdateManyMutationInput, Prisma.ReferrerUncheckedUpdateManyInput>
+  /**
+   * Filter which Referrers to update
+   */
+  where?: Prisma.ReferrerWhereInput
+  /**
+   * Limit how many Referrers to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReferrerIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

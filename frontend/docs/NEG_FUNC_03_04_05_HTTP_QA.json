@@ -1,0 +1,10 @@
+{
+  "database": "odontho_neg_func_test",
+  "backend": "http://127.0.0.1:3406/api/v1",
+  "organizationId": "43",
+  "concurrentSettingsPatch": 200,
+  "revisionChanged": true,
+  "receptionCasesRead": 200,
+  "receptionCasesCreate": 403,
+  "receptionCreateCode": "PERMISSION_DENIED"
+}

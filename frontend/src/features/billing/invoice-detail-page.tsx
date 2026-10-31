@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { getApiErrorMessage } from '../../api'
 import { PermissionGuard } from '../../auth/permission-guard'
+import { hasPermission } from '../../auth/permissions'
+import { useAuth } from '../../auth/use-auth'
 import { PageHeader } from '../../components/app-shell/page-header'
 import { DataTable } from '../../components/data-table/data-table'
 import { ErrorState } from '../../components/feedback/error-state'
@@ -36,6 +38,7 @@ import { InvoiceDocuments } from './invoice-documents'
 import { SignatureDialog } from './signature-dialog'
 import { CorrectionWorkflow } from './correction-workflow'
 import { CorrectionItemDialog } from './correction-item-dialog'
+import { ReturnToCare } from './return-to-care'
 
 export function InvoiceDetailPage() {
   const { invoiceId = '' } = useParams()
@@ -79,7 +82,7 @@ function InvoiceDetail({ id }: { id: string }) {
       <PageHeader
         title={invoice.invoiceNumber ?? `Invoice ${invoice.id}`}
         description={`${invoice.patient.firstName} ${invoice.patient.lastName} / ${invoice.appointment.appointmentNumber}`}
-        actions={<BillingStatus status={invoice.status} />}
+        actions={<>{!historical ? <ReturnToCare invoice={invoice} /> : null}<BillingStatus status={invoice.status} /></>}
       />
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <label className="min-w-0 max-w-full text-sm">
@@ -135,6 +138,7 @@ function VersionWorkspace({
   version: InvoiceVersion
 }) {
   const client = useQueryClient()
+  const { permissions } = useAuth()
   const [operation, setOperation] = useState<InvoiceOperation | null>(null)
   const [capture, setCapture] = useState(false)
   const [editingItem, setEditingItem] = useState<InvoiceItem | null>(null)
@@ -172,7 +176,7 @@ function VersionWorkspace({
       ? draft
       : operation === 'sign'
         ? pending && valid
-        : signed
+        : signed && (version.versionType !== 'CORRECTION' || hasPermission(permissions, 'invoice.apply_correction'))
   const operationPermission =
     operation === 'prepare-signature'
       ? 'invoice.prepare_signature'
@@ -234,7 +238,7 @@ function VersionWorkspace({
           <BillingStatus status={version.status} />
         </div>
         <div className="flex flex-wrap gap-2">
-          {draft ? (
+          {draft && version.items.length > 0 ? (
             <PermissionGuard allOf={['invoice.prepare_signature']}>
               <Button
                 onClick={() => {
@@ -269,7 +273,7 @@ function VersionWorkspace({
             </PermissionGuard>
           ) : null}
           {signed ? (
-            <PermissionGuard allOf={['invoice.close']}>
+            <PermissionGuard allOf={version.versionType === 'CORRECTION' ? ['invoice.close', 'invoice.apply_correction'] : ['invoice.close']}>
               <Button
                 onClick={() => {
                   transition.reset()
@@ -286,6 +290,14 @@ function VersionWorkspace({
       {!draft ? (
         <p className="mb-4 text-sm text-slate-500">
           This version is read only.
+        </p>
+      ) : null}
+      {draft && version.versionType === 'CORRECTION' && version.items.length === 0 ? (
+        <p className="mb-4 rounded-md bg-amber-50 p-3 text-sm text-amber-900">
+          Complete the corrected clinical encounter, then rebuild the invoice from the clinical workspace before signing.{' '}
+          <PermissionGuard allOf={['encounter.read', 'appointment.read']}>
+            <Link className="underline" to={`/clinical/${invoice.appointmentId}`}>Open clinical workspace</Link>
+          </PermissionGuard>
         </p>
       ) : null}
       <BillingSection title="Invoice snapshot">

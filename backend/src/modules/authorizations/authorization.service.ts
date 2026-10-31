@@ -1,3 +1,4 @@
+import { normalizeSearch } from "../../infrastructure/database/text-search.js";
 import { Prisma } from "../../generated/prisma/client.js";
 
 import { prisma } from "../../infrastructure/database/prisma.js";
@@ -313,6 +314,8 @@ export class AuthorizationService {
         ? parseDateOnly(query.serviceDate, "serviceDate")
         : undefined;
 
+    const searchQuery = await normalizeSearch(query.q);
+
     const where: Prisma.SvbAuthorizationWhereInput = {
       patient: {
         organizationId: actor.organizationId,
@@ -336,39 +339,39 @@ export class AuthorizationService {
           }
         : {}),
 
-      ...(query.q !== undefined
+      ...(searchQuery !== undefined
         ? {
             OR: [
               {
-                authorizationId: {
-                  contains: query.q,
+                authorizationIdSearch: {
+                  contains: searchQuery,
                 },
               },
               {
                 patientInsurance: {
-                  insuredId: {
-                    contains: query.q,
+                  insuredIdSearch: {
+                    contains: searchQuery,
                   },
                 },
               },
               {
                 patient: {
-                  patientNumber: {
-                    contains: query.q,
+                  patientNumberSearch: {
+                    contains: searchQuery,
                   },
                 },
               },
               {
                 patient: {
-                  firstName: {
-                    contains: query.q,
+                  firstNameSearch: {
+                    contains: searchQuery,
                   },
                 },
               },
               {
                 patient: {
-                  lastName: {
-                    contains: query.q,
+                  lastNameSearch: {
+                    contains: searchQuery,
                   },
                 },
               },

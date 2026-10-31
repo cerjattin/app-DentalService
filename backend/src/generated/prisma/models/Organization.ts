@@ -51,6 +51,8 @@ export type OrganizationMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   archivedAt: Date | null
+  legalNameSearch: string | null
+  declarantIdSearch: string | null
 }
 
 export type OrganizationMaxAggregateOutputType = {
@@ -70,6 +72,8 @@ export type OrganizationMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   archivedAt: Date | null
+  legalNameSearch: string | null
+  declarantIdSearch: string | null
 }
 
 export type OrganizationCountAggregateOutputType = {
@@ -89,6 +93,8 @@ export type OrganizationCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   archivedAt: number
+  legalNameSearch: number
+  declarantIdSearch: number
   _all: number
 }
 
@@ -118,6 +124,8 @@ export type OrganizationMinAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   archivedAt?: true
+  legalNameSearch?: true
+  declarantIdSearch?: true
 }
 
 export type OrganizationMaxAggregateInputType = {
@@ -137,6 +145,8 @@ export type OrganizationMaxAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   archivedAt?: true
+  legalNameSearch?: true
+  declarantIdSearch?: true
 }
 
 export type OrganizationCountAggregateInputType = {
@@ -156,6 +166,8 @@ export type OrganizationCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   archivedAt?: true
+  legalNameSearch?: true
+  declarantIdSearch?: true
   _all?: true
 }
 
@@ -262,6 +274,8 @@ export type OrganizationGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   archivedAt: Date | null
+  legalNameSearch: string
+  declarantIdSearch: string | null
   _count: OrganizationCountAggregateOutputType | null
   _avg: OrganizationAvgAggregateOutputType | null
   _sum: OrganizationSumAggregateOutputType | null
@@ -304,6 +318,8 @@ export type OrganizationWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Organization"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Organization"> | Date | string
   archivedAt?: Prisma.DateTimeNullableFilter<"Organization"> | Date | string | null
+  legalNameSearch?: Prisma.StringFilter<"Organization"> | string
+  declarantIdSearch?: Prisma.StringNullableFilter<"Organization"> | string | null
   appointments?: Prisma.AppointmentListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
   clinicLocations?: Prisma.ClinicLocationListRelationFilter
@@ -336,6 +352,8 @@ export type OrganizationOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  legalNameSearch?: Prisma.SortOrder
+  declarantIdSearch?: Prisma.SortOrderInput | Prisma.SortOrder
   appointments?: Prisma.AppointmentOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
   clinicLocations?: Prisma.ClinicLocationOrderByRelationAggregateInput
@@ -349,7 +367,6 @@ export type OrganizationOrderByWithRelationInput = {
   systemSettings?: Prisma.SystemSettingOrderByRelationAggregateInput
   treatmentCases?: Prisma.TreatmentCaseOrderByRelationAggregateInput
   users?: Prisma.UserOrderByRelationAggregateInput
-  _relevance?: Prisma.OrganizationOrderByRelevanceInput
 }
 
 export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
@@ -372,6 +389,8 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Organization"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Organization"> | Date | string
   archivedAt?: Prisma.DateTimeNullableFilter<"Organization"> | Date | string | null
+  legalNameSearch?: Prisma.StringFilter<"Organization"> | string
+  declarantIdSearch?: Prisma.StringNullableFilter<"Organization"> | string | null
   appointments?: Prisma.AppointmentListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
   clinicLocations?: Prisma.ClinicLocationListRelationFilter
@@ -404,6 +423,8 @@ export type OrganizationOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  legalNameSearch?: Prisma.SortOrder
+  declarantIdSearch?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.OrganizationCountOrderByAggregateInput
   _avg?: Prisma.OrganizationAvgOrderByAggregateInput
   _max?: Prisma.OrganizationMaxOrderByAggregateInput
@@ -431,6 +452,8 @@ export type OrganizationScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Organization"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Organization"> | Date | string
   archivedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Organization"> | Date | string | null
+  legalNameSearch?: Prisma.StringWithAggregatesFilter<"Organization"> | string
+  declarantIdSearch?: Prisma.StringNullableWithAggregatesFilter<"Organization"> | string | null
 }
 
 export type OrganizationCreateInput = {
@@ -450,6 +473,8 @@ export type OrganizationCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationCreateNestedManyWithoutOrganizationInput
@@ -482,6 +507,8 @@ export type OrganizationUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationUncheckedCreateNestedManyWithoutOrganizationInput
@@ -514,6 +541,8 @@ export type OrganizationUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUpdateManyWithoutOrganizationNestedInput
@@ -546,6 +575,8 @@ export type OrganizationUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -578,6 +609,8 @@ export type OrganizationCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
 }
 
 export type OrganizationUpdateManyMutationInput = {
@@ -597,6 +630,8 @@ export type OrganizationUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type OrganizationUncheckedUpdateManyInput = {
@@ -616,17 +651,13 @@ export type OrganizationUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type OrganizationScalarRelationFilter = {
   is?: Prisma.OrganizationWhereInput
   isNot?: Prisma.OrganizationWhereInput
-}
-
-export type OrganizationOrderByRelevanceInput = {
-  fields: Prisma.OrganizationOrderByRelevanceFieldEnum | Prisma.OrganizationOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type OrganizationCountOrderByAggregateInput = {
@@ -646,6 +677,8 @@ export type OrganizationCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
+  legalNameSearch?: Prisma.SortOrder
+  declarantIdSearch?: Prisma.SortOrder
 }
 
 export type OrganizationAvgOrderByAggregateInput = {
@@ -669,6 +702,8 @@ export type OrganizationMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
+  legalNameSearch?: Prisma.SortOrder
+  declarantIdSearch?: Prisma.SortOrder
 }
 
 export type OrganizationMinOrderByAggregateInput = {
@@ -688,6 +723,8 @@ export type OrganizationMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
+  legalNameSearch?: Prisma.SortOrder
+  declarantIdSearch?: Prisma.SortOrder
 }
 
 export type OrganizationSumOrderByAggregateInput = {
@@ -893,6 +930,8 @@ export type OrganizationCreateWithoutAppointmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationCreateNestedManyWithoutOrganizationInput
   declarationBatches?: Prisma.DeclarationBatchCreateNestedManyWithoutOrganizationInput
@@ -924,6 +963,8 @@ export type OrganizationUncheckedCreateWithoutAppointmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationUncheckedCreateNestedManyWithoutOrganizationInput
   declarationBatches?: Prisma.DeclarationBatchUncheckedCreateNestedManyWithoutOrganizationInput
@@ -971,6 +1012,8 @@ export type OrganizationUpdateWithoutAppointmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUpdateManyWithoutOrganizationNestedInput
   declarationBatches?: Prisma.DeclarationBatchUpdateManyWithoutOrganizationNestedInput
@@ -1002,6 +1045,8 @@ export type OrganizationUncheckedUpdateWithoutAppointmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUncheckedUpdateManyWithoutOrganizationNestedInput
   declarationBatches?: Prisma.DeclarationBatchUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1033,6 +1078,8 @@ export type OrganizationCreateWithoutAuditLogsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationCreateNestedManyWithoutOrganizationInput
   declarationBatches?: Prisma.DeclarationBatchCreateNestedManyWithoutOrganizationInput
@@ -1064,6 +1111,8 @@ export type OrganizationUncheckedCreateWithoutAuditLogsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationUncheckedCreateNestedManyWithoutOrganizationInput
   declarationBatches?: Prisma.DeclarationBatchUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1111,6 +1160,8 @@ export type OrganizationUpdateWithoutAuditLogsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUpdateManyWithoutOrganizationNestedInput
   declarationBatches?: Prisma.DeclarationBatchUpdateManyWithoutOrganizationNestedInput
@@ -1142,6 +1193,8 @@ export type OrganizationUncheckedUpdateWithoutAuditLogsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUncheckedUpdateManyWithoutOrganizationNestedInput
   declarationBatches?: Prisma.DeclarationBatchUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1173,6 +1226,8 @@ export type OrganizationCreateWithoutClinicLocationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
   declarationBatches?: Prisma.DeclarationBatchCreateNestedManyWithoutOrganizationInput
@@ -1204,6 +1259,8 @@ export type OrganizationUncheckedCreateWithoutClinicLocationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
   declarationBatches?: Prisma.DeclarationBatchUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1251,6 +1308,8 @@ export type OrganizationUpdateWithoutClinicLocationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
   declarationBatches?: Prisma.DeclarationBatchUpdateManyWithoutOrganizationNestedInput
@@ -1282,6 +1341,8 @@ export type OrganizationUncheckedUpdateWithoutClinicLocationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
   declarationBatches?: Prisma.DeclarationBatchUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1313,6 +1374,8 @@ export type OrganizationCreateWithoutDeclarationBatchesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationCreateNestedManyWithoutOrganizationInput
@@ -1344,6 +1407,8 @@ export type OrganizationUncheckedCreateWithoutDeclarationBatchesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1391,6 +1456,8 @@ export type OrganizationUpdateWithoutDeclarationBatchesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUpdateManyWithoutOrganizationNestedInput
@@ -1422,6 +1489,8 @@ export type OrganizationUncheckedUpdateWithoutDeclarationBatchesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1453,6 +1522,8 @@ export type OrganizationCreateWithoutDocumentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationCreateNestedManyWithoutOrganizationInput
@@ -1484,6 +1555,8 @@ export type OrganizationUncheckedCreateWithoutDocumentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1531,6 +1604,8 @@ export type OrganizationUpdateWithoutDocumentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUpdateManyWithoutOrganizationNestedInput
@@ -1562,6 +1637,8 @@ export type OrganizationUncheckedUpdateWithoutDocumentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1593,6 +1670,8 @@ export type OrganizationCreateWithoutInvoicesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationCreateNestedManyWithoutOrganizationInput
@@ -1624,6 +1703,8 @@ export type OrganizationUncheckedCreateWithoutInvoicesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1671,6 +1752,8 @@ export type OrganizationUpdateWithoutInvoicesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUpdateManyWithoutOrganizationNestedInput
@@ -1702,6 +1785,8 @@ export type OrganizationUncheckedUpdateWithoutInvoicesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1733,6 +1818,8 @@ export type OrganizationCreateWithoutNumberSequencesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationCreateNestedManyWithoutOrganizationInput
@@ -1764,6 +1851,8 @@ export type OrganizationUncheckedCreateWithoutNumberSequencesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1811,6 +1900,8 @@ export type OrganizationUpdateWithoutNumberSequencesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUpdateManyWithoutOrganizationNestedInput
@@ -1842,6 +1933,8 @@ export type OrganizationUncheckedUpdateWithoutNumberSequencesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1873,6 +1966,8 @@ export type OrganizationCreateWithoutPatientsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationCreateNestedManyWithoutOrganizationInput
@@ -1904,6 +1999,8 @@ export type OrganizationUncheckedCreateWithoutPatientsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1951,6 +2048,8 @@ export type OrganizationUpdateWithoutPatientsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUpdateManyWithoutOrganizationNestedInput
@@ -1982,6 +2081,8 @@ export type OrganizationUncheckedUpdateWithoutPatientsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2013,6 +2114,8 @@ export type OrganizationCreateWithoutProvidersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationCreateNestedManyWithoutOrganizationInput
@@ -2044,6 +2147,8 @@ export type OrganizationUncheckedCreateWithoutProvidersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2091,6 +2196,8 @@ export type OrganizationUpdateWithoutProvidersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUpdateManyWithoutOrganizationNestedInput
@@ -2122,6 +2229,8 @@ export type OrganizationUncheckedUpdateWithoutProvidersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2153,6 +2262,8 @@ export type OrganizationCreateWithoutReferrersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationCreateNestedManyWithoutOrganizationInput
@@ -2184,6 +2295,8 @@ export type OrganizationUncheckedCreateWithoutReferrersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2231,6 +2344,8 @@ export type OrganizationUpdateWithoutReferrersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUpdateManyWithoutOrganizationNestedInput
@@ -2262,6 +2377,8 @@ export type OrganizationUncheckedUpdateWithoutReferrersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2293,6 +2410,8 @@ export type OrganizationCreateWithoutSystemSettingsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationCreateNestedManyWithoutOrganizationInput
@@ -2324,6 +2443,8 @@ export type OrganizationUncheckedCreateWithoutSystemSettingsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2371,6 +2492,8 @@ export type OrganizationUpdateWithoutSystemSettingsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUpdateManyWithoutOrganizationNestedInput
@@ -2402,6 +2525,8 @@ export type OrganizationUncheckedUpdateWithoutSystemSettingsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2433,6 +2558,8 @@ export type OrganizationCreateWithoutTreatmentCasesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationCreateNestedManyWithoutOrganizationInput
@@ -2464,6 +2591,8 @@ export type OrganizationUncheckedCreateWithoutTreatmentCasesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2511,6 +2640,8 @@ export type OrganizationUpdateWithoutTreatmentCasesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUpdateManyWithoutOrganizationNestedInput
@@ -2542,6 +2673,8 @@ export type OrganizationUncheckedUpdateWithoutTreatmentCasesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2573,6 +2706,8 @@ export type OrganizationCreateWithoutUsersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationCreateNestedManyWithoutOrganizationInput
@@ -2604,6 +2739,8 @@ export type OrganizationUncheckedCreateWithoutUsersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  legalNameSearch?: string
+  declarantIdSearch?: string | null
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutOrganizationInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
   clinicLocations?: Prisma.ClinicLocationUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2651,6 +2788,8 @@ export type OrganizationUpdateWithoutUsersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUpdateManyWithoutOrganizationNestedInput
@@ -2682,6 +2821,8 @@ export type OrganizationUncheckedUpdateWithoutUsersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  legalNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  declarantIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrganizationNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
   clinicLocations?: Prisma.ClinicLocationUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2852,6 +2993,8 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   createdAt?: boolean
   updatedAt?: boolean
   archivedAt?: boolean
+  legalNameSearch?: boolean
+  declarantIdSearch?: boolean
   appointments?: boolean | Prisma.Organization$appointmentsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Organization$auditLogsArgs<ExtArgs>
   clinicLocations?: boolean | Prisma.Organization$clinicLocationsArgs<ExtArgs>
@@ -2868,7 +3011,47 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["organization"]>
 
+export type OrganizationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  legalName?: boolean
+  tradeName?: boolean
+  declarantId?: boolean
+  registrationNumber?: boolean
+  email?: boolean
+  phone?: boolean
+  addressLine1?: boolean
+  addressLine2?: boolean
+  city?: boolean
+  countryCode?: boolean
+  timezone?: boolean
+  isActive?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  archivedAt?: boolean
+  legalNameSearch?: boolean
+  declarantIdSearch?: boolean
+}, ExtArgs["result"]["organization"]>
 
+export type OrganizationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  legalName?: boolean
+  tradeName?: boolean
+  declarantId?: boolean
+  registrationNumber?: boolean
+  email?: boolean
+  phone?: boolean
+  addressLine1?: boolean
+  addressLine2?: boolean
+  city?: boolean
+  countryCode?: boolean
+  timezone?: boolean
+  isActive?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  archivedAt?: boolean
+  legalNameSearch?: boolean
+  declarantIdSearch?: boolean
+}, ExtArgs["result"]["organization"]>
 
 export type OrganizationSelectScalar = {
   id?: boolean
@@ -2887,9 +3070,11 @@ export type OrganizationSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   archivedAt?: boolean
+  legalNameSearch?: boolean
+  declarantIdSearch?: boolean
 }
 
-export type OrganizationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "legalName" | "tradeName" | "declarantId" | "registrationNumber" | "email" | "phone" | "addressLine1" | "addressLine2" | "city" | "countryCode" | "timezone" | "isActive" | "createdAt" | "updatedAt" | "archivedAt", ExtArgs["result"]["organization"]>
+export type OrganizationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "legalName" | "tradeName" | "declarantId" | "registrationNumber" | "email" | "phone" | "addressLine1" | "addressLine2" | "city" | "countryCode" | "timezone" | "isActive" | "createdAt" | "updatedAt" | "archivedAt" | "legalNameSearch" | "declarantIdSearch", ExtArgs["result"]["organization"]>
 export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   appointments?: boolean | Prisma.Organization$appointmentsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Organization$auditLogsArgs<ExtArgs>
@@ -2906,6 +3091,8 @@ export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.Interna
   users?: boolean | Prisma.Organization$usersArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }
+export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type OrganizationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Organization"
@@ -2941,6 +3128,8 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     createdAt: Date
     updatedAt: Date
     archivedAt: Date | null
+    legalNameSearch: string
+    declarantIdSearch: string | null
   }, ExtArgs["result"]["organization"]>
   composites: {}
 }
@@ -3059,6 +3248,30 @@ export interface OrganizationDelegate<ExtArgs extends runtime.Types.Extensions.I
   createMany<T extends OrganizationCreateManyArgs>(args?: Prisma.SelectSubset<T, OrganizationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many Organizations and returns the data saved in the database.
+   * @param {OrganizationCreateManyAndReturnArgs} args - Arguments to create many Organizations.
+   * @example
+   * // Create many Organizations
+   * const organization = await prisma.organization.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many Organizations and only return the `id`
+   * const organizationWithIdOnly = await prisma.organization.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends OrganizationCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, OrganizationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a Organization.
    * @param {OrganizationDeleteArgs} args - Arguments to delete one Organization.
    * @example
@@ -3121,6 +3334,36 @@ export interface OrganizationDelegate<ExtArgs extends runtime.Types.Extensions.I
    * 
    */
   updateMany<T extends OrganizationUpdateManyArgs>(args: Prisma.SelectSubset<T, OrganizationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more Organizations and returns the data updated in the database.
+   * @param {OrganizationUpdateManyAndReturnArgs} args - Arguments to update many Organizations.
+   * @example
+   * // Update many Organizations
+   * const organization = await prisma.organization.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more Organizations and only return the `id`
+   * const organizationWithIdOnly = await prisma.organization.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends OrganizationUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, OrganizationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Organization.
@@ -3339,6 +3582,8 @@ export interface OrganizationFieldRefs {
   readonly createdAt: Prisma.FieldRef<"Organization", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Organization", 'DateTime'>
   readonly archivedAt: Prisma.FieldRef<"Organization", 'DateTime'>
+  readonly legalNameSearch: Prisma.FieldRef<"Organization", 'String'>
+  readonly declarantIdSearch: Prisma.FieldRef<"Organization", 'String'>
 }
     
 
@@ -3577,6 +3822,25 @@ export type OrganizationCreateManyArgs<ExtArgs extends runtime.Types.Extensions.
 }
 
 /**
+ * Organization createManyAndReturn
+ */
+export type OrganizationCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Organization
+   */
+  select?: Prisma.OrganizationSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Organization
+   */
+  omit?: Prisma.OrganizationOmit<ExtArgs> | null
+  /**
+   * The data used to create many Organizations.
+   */
+  data: Prisma.OrganizationCreateManyInput | Prisma.OrganizationCreateManyInput[]
+  skipDuplicates?: boolean
+}
+
+/**
  * Organization update
  */
 export type OrganizationUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3606,6 +3870,32 @@ export type OrganizationUpdateArgs<ExtArgs extends runtime.Types.Extensions.Inte
  * Organization updateMany
  */
 export type OrganizationUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * The data used to update Organizations.
+   */
+  data: Prisma.XOR<Prisma.OrganizationUpdateManyMutationInput, Prisma.OrganizationUncheckedUpdateManyInput>
+  /**
+   * Filter which Organizations to update
+   */
+  where?: Prisma.OrganizationWhereInput
+  /**
+   * Limit how many Organizations to update.
+   */
+  limit?: number
+}
+
+/**
+ * Organization updateManyAndReturn
+ */
+export type OrganizationUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Organization
+   */
+  select?: Prisma.OrganizationSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Organization
+   */
+  omit?: Prisma.OrganizationOmit<ExtArgs> | null
   /**
    * The data used to update Organizations.
    */

@@ -268,7 +268,6 @@ export type SystemSettingOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   organization?: Prisma.OrganizationOrderByWithRelationInput
   updatedByUser?: Prisma.UserOrderByWithRelationInput
-  _relevance?: Prisma.SystemSettingOrderByRelevanceInput
 }
 
 export type SystemSettingWhereUniqueInput = Prisma.AtLeast<{
@@ -411,12 +410,6 @@ export type SystemSettingListRelationFilter = {
 
 export type SystemSettingOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type SystemSettingOrderByRelevanceInput = {
-  fields: Prisma.SystemSettingOrderByRelevanceFieldEnum | Prisma.SystemSettingOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type SystemSettingOrganizationIdSettingKeyCompoundUniqueInput = {
@@ -769,7 +762,33 @@ export type SystemSettingSelect<ExtArgs extends runtime.Types.Extensions.Interna
   updatedByUser?: boolean | Prisma.SystemSetting$updatedByUserArgs<ExtArgs>
 }, ExtArgs["result"]["systemSetting"]>
 
+export type SystemSettingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  organizationId?: boolean
+  settingKey?: boolean
+  settingValue?: boolean
+  description?: boolean
+  isSecret?: boolean
+  updatedByUserId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  updatedByUser?: boolean | Prisma.SystemSetting$updatedByUserArgs<ExtArgs>
+}, ExtArgs["result"]["systemSetting"]>
 
+export type SystemSettingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  organizationId?: boolean
+  settingKey?: boolean
+  settingValue?: boolean
+  description?: boolean
+  isSecret?: boolean
+  updatedByUserId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  updatedByUser?: boolean | Prisma.SystemSetting$updatedByUserArgs<ExtArgs>
+}, ExtArgs["result"]["systemSetting"]>
 
 export type SystemSettingSelectScalar = {
   id?: boolean
@@ -785,6 +804,14 @@ export type SystemSettingSelectScalar = {
 
 export type SystemSettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "settingKey" | "settingValue" | "description" | "isSecret" | "updatedByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["systemSetting"]>
 export type SystemSettingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  updatedByUser?: boolean | Prisma.SystemSetting$updatedByUserArgs<ExtArgs>
+}
+export type SystemSettingIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  updatedByUser?: boolean | Prisma.SystemSetting$updatedByUserArgs<ExtArgs>
+}
+export type SystemSettingIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   updatedByUser?: boolean | Prisma.SystemSetting$updatedByUserArgs<ExtArgs>
 }
@@ -923,6 +950,30 @@ export interface SystemSettingDelegate<ExtArgs extends runtime.Types.Extensions.
   createMany<T extends SystemSettingCreateManyArgs>(args?: Prisma.SelectSubset<T, SystemSettingCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many SystemSettings and returns the data saved in the database.
+   * @param {SystemSettingCreateManyAndReturnArgs} args - Arguments to create many SystemSettings.
+   * @example
+   * // Create many SystemSettings
+   * const systemSetting = await prisma.systemSetting.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many SystemSettings and only return the `id`
+   * const systemSettingWithIdOnly = await prisma.systemSetting.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends SystemSettingCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, SystemSettingCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SystemSettingPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a SystemSetting.
    * @param {SystemSettingDeleteArgs} args - Arguments to delete one SystemSetting.
    * @example
@@ -985,6 +1036,36 @@ export interface SystemSettingDelegate<ExtArgs extends runtime.Types.Extensions.
    * 
    */
   updateMany<T extends SystemSettingUpdateManyArgs>(args: Prisma.SelectSubset<T, SystemSettingUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more SystemSettings and returns the data updated in the database.
+   * @param {SystemSettingUpdateManyAndReturnArgs} args - Arguments to update many SystemSettings.
+   * @example
+   * // Update many SystemSettings
+   * const systemSetting = await prisma.systemSetting.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more SystemSettings and only return the `id`
+   * const systemSettingWithIdOnly = await prisma.systemSetting.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends SystemSettingUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, SystemSettingUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SystemSettingPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one SystemSetting.
@@ -1423,6 +1504,29 @@ export type SystemSettingCreateManyArgs<ExtArgs extends runtime.Types.Extensions
 }
 
 /**
+ * SystemSetting createManyAndReturn
+ */
+export type SystemSettingCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SystemSetting
+   */
+  select?: Prisma.SystemSettingSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the SystemSetting
+   */
+  omit?: Prisma.SystemSettingOmit<ExtArgs> | null
+  /**
+   * The data used to create many SystemSettings.
+   */
+  data: Prisma.SystemSettingCreateManyInput | Prisma.SystemSettingCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SystemSettingIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * SystemSetting update
  */
 export type SystemSettingUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1464,6 +1568,36 @@ export type SystemSettingUpdateManyArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many SystemSettings to update.
    */
   limit?: number
+}
+
+/**
+ * SystemSetting updateManyAndReturn
+ */
+export type SystemSettingUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SystemSetting
+   */
+  select?: Prisma.SystemSettingSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the SystemSetting
+   */
+  omit?: Prisma.SystemSettingOmit<ExtArgs> | null
+  /**
+   * The data used to update SystemSettings.
+   */
+  data: Prisma.XOR<Prisma.SystemSettingUpdateManyMutationInput, Prisma.SystemSettingUncheckedUpdateManyInput>
+  /**
+   * Filter which SystemSettings to update
+   */
+  where?: Prisma.SystemSettingWhereInput
+  /**
+   * Limit how many SystemSettings to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SystemSettingIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

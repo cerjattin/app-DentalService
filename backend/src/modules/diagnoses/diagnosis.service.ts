@@ -1,3 +1,4 @@
+import { normalizeSearch } from "../../infrastructure/database/text-search.js";
 import { Prisma } from "../../generated/prisma/client.js";
 
 import { prisma } from "../../infrastructure/database/prisma.js";
@@ -169,6 +170,8 @@ export class DiagnosisService {
   async listCodes(query: ListDiagnosisCodesQuery) {
     const skip = (query.page - 1) * query.pageSize;
 
+    const searchQuery = await normalizeSearch(query.q);
+
     const where: Prisma.DiagnosisCodeWhereInput = {
       ...(query.codeSystem !== undefined
         ? {
@@ -182,17 +185,17 @@ export class DiagnosisService {
           }
         : {}),
 
-      ...(query.q !== undefined
+      ...(searchQuery !== undefined
         ? {
             OR: [
               {
-                code: {
-                  contains: query.q,
+                codeSearch: {
+                  contains: searchQuery,
                 },
               },
               {
-                description: {
-                  contains: query.q,
+                descriptionSearch: {
+                  contains: searchQuery,
                 },
               },
             ],

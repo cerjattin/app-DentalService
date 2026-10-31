@@ -62,7 +62,7 @@ async function main() {
   console.log("\nPayers:");
   console.dir(payers, { depth: null });
 
-  console.log("\n✅ Prisma → MySQL connection OK");
+  console.log("\n✅ Prisma → PostgreSQL connection OK");
 }
 
 main()

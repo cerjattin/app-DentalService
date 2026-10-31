@@ -37,7 +37,7 @@ export const listDeclarationsQuerySchema = z.object({
   pageSize: z.coerce.number().int().positive().max(100).default(20),
 });
 
-export const createDeclarationSchema = z.object({
+export const createDeclarationSchema = z.strictObject({
   payerId: bigintId,
   periodStart: dateOnly.nullable().optional(),
   periodEnd: dateOnly.nullable().optional(),
@@ -45,7 +45,7 @@ export const createDeclarationSchema = z.object({
   notes: z.string().trim().max(5000).nullable().optional(),
 });
 
-export const addDeclarationItemSchema = z.object({
+export const addDeclarationItemSchema = z.strictObject({
   invoiceItemId: bigintId,
 });
 
@@ -74,3 +74,12 @@ export type DeclarationSubmissionResultInput = z.infer<
 >;
 
 export { booleanQuery };
+
+export const declarationReasonSchema = z.strictObject({ reason: z.string().trim().min(1).max(500) });
+export const declarationCandidatesQuerySchema = z.strictObject({
+  q: z.string().trim().max(120).optional(),
+  from: dateOnly.optional(), to: dateOnly.optional(),
+  page: z.coerce.number().int().positive().default(1),
+  pageSize: z.coerce.number().int().positive().max(100).default(20),
+});
+export type DeclarationCandidatesQuery = z.infer<typeof declarationCandidatesQuerySchema>;

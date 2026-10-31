@@ -12,6 +12,11 @@ import type {
   UserFilters,
 } from '../../types/administration'
 import type { EntityId } from '../../types/core'
+import type { OrganizationSettings, OrganizationPatch } from '../../types/administration'
+
+export const organizationKeys = { all: ['organization'] as const }
+export const getOrganization = (signal?: AbortSignal) => apiFetch<OrganizationSettings>('/organization', { signal })
+export const updateOrganization = (body: OrganizationPatch) => apiFetch<OrganizationSettings>('/organization', { method: 'PATCH', body })
 import type { PaginationMeta } from '../../types/patient'
 
 function pathWithFilters<T extends object>(path: string, filters: T) {

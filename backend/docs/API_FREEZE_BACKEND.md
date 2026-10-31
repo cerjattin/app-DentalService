@@ -1,5 +1,9 @@
 # API Freeze Backend
 
+## NEG-FUNC-03/04/05 — 2026-10-31
+
+Backend publica GET/PATCH `/api/v1/organization`, GET `/api/v1/declarations/:id/candidates`, DELETE `/api/v1/declarations/:id/items/:itemId`, POST `/api/v1/declarations/:id/cancel` y GET/list/POST/PATCH de `/api/v1/patients/:patientId/treatment-cases`. Nuevos lotes no aceptan Declarant ID cliente no nulo: se vincula desde la primera factura CLOSED vigente. Asignación activa exclusiva, contador persistente y primera utilización de caso requieren las migraciones nuevas. [Contrato publicado, DTO, errores, permisos, integridad, archivos y evidencia](NEG_FUNC_03_04_05.md). Esta adición sustituye las limitaciones históricas sobre organización; no acredita entrega Frontend ni despliegue operativo.
+
 Status: frozen for Frontend integration after Sprint 19 QA Postman. This file documents implemented and tested behavior only. Do not infer future SVB semantics from this contract.
 
 ## Platform Contract
@@ -9,7 +13,7 @@ Status: frozen for Frontend integration after Sprint 19 QA Postman. This file do
 - Auth: `POST /api/v1/auth/login`, `GET /api/v1/auth/me`.
 - Success envelope: `{ "success": true, "data": ..., "meta"?: ... }`.
 - Error envelope: `{ "success": false, "error": { "code", "message", "details"?, "correlationId"? } }`.
-- MySQL `BIGINT` values are returned as strings.
+- Entity `BIGINT` values are returned as strings, including with PostgreSQL.
 - Money and quantity `Decimal` values are returned as fixed-scale strings.
 - Date-only fields use `YYYY-MM-DD`; timestamps use ISO 8601 with timezone.
 - Business timezone: `America/Curacao`.
@@ -44,8 +48,8 @@ Authorization is permission-based through `requirePermission(...)`, not role-nam
 
 - Appointment: `SCHEDULED -> CONFIRMED/CHECKED_IN/CANCELLED/NO_SHOW`; `CONFIRMED -> CHECKED_IN/CANCELLED/NO_SHOW`; `CHECKED_IN -> IN_PROGRESS/CANCELLED/NO_SHOW`; `IN_PROGRESS -> COMPLETED/CANCELLED`. Final: `COMPLETED`, `CANCELLED`, `NO_SHOW`.
 - Blocking appointment statuses for provider overlap: `SCHEDULED`, `CONFIRMED`, `CHECKED_IN`, `IN_PROGRESS`.
-- Clinical encounter: `OPEN -> COMPLETED`; `VOID` is readable if present. Completed/void encounters are not editable.
-- Encounter procedure: created as `PERFORMED`; delete route voids logically. Billed procedures cannot be modified.
+- Clinical encounter: `OPEN -> COMPLETED`; `VOID` is readable if present. Completed encounters can return to OPEN only through the authorized invoice clinical-return workflow documented below. VOID encounters are not editable.
+- Encounter procedure: created as `PERFORMED`. Unbilled deletion physically removes the record. Previously invoiced removal requires an approved clinical return and voids the record while preserving invoice links and snapshots.
 - Invoice: `DRAFT -> PENDING_SIGNATURE -> SIGNED -> CLOSED`; draft can be `CANCELLED`. `CLOSED` can enter `CORRECTION_REQUIRED`; correction replacement closes back to `CLOSED` and supersedes the prior version.
 - Invoice version: `DRAFT`, `PENDING_SIGNATURE`, `SIGNED`, `CLOSED`, `SUPERSEDED`, `VOID`.
 - Correction: `REQUESTED -> APPROVED -> APPLIED` or `REJECTED`/`CANCELLED`.
@@ -153,3 +157,19 @@ Master mutations touch only `SvbProcedure`/`SvbTariff` and `AuditLog`. They do n
 ## Operational forward corrections
 
 Appointment creation is now available through the existing POST /api/v1/appointments plus GET /api/v1/clinic-locations?isActive=true (clinic_location.read). Shared Frontend creation requires independent patient/provider/location read permissions and appointment.create. Dashboard now consumes GET /api/v1/reports/dashboard (dashboard.read) with inclusive Curacao from/to dates and optional organization-scoped providerId. Exact request/response fields, Decimal string/currency rules, metric/date/correction/assignment semantics and errors are documented in [OPERATIONAL_CORRECTIONS.md](OPERATIONAL_CORRECTIONS.md). No schema, migration, seed or existing catalogue contract changes.
+
+## PostgreSQL preparation — 2026-10-30
+
+The implementation now targets PostgreSQL through PrismaPg. HTTP routes, permission checks, JWT authentication, DTOs, Decimal strings and Curacao business-date semantics remain unchanged. Text equality/uniqueness ignores case and accents; text searches use internal normalized columns while original text/snapshots remain authoritative. Internal `*Search` fields are never request or response fields. Database limits and the separate migration history are documented in [the PostgreSQL rollout guide](../../docs/base-de-datos/MIGRACION_POSTGRESQL.md). Validated on a dedicated local PostgreSQL 17.11 database; Supabase schema application and Postman acceptance remain pending. This does not introduce Supabase Auth, revocable sessions, remote document storage or live SVB submission.
+
+## Business-day correction and supplied SVB form — 2026-10-30
+
+`GET /appointments?date=YYYY-MM-DD` now bounds that date in `America/Curacao`, inclusive midnight to exclusive next midnight; `from`/`to` retain timestamp semantics. No DTO or permission change.
+
+The existing closed-version PDF endpoint now generates layout `svb_notaform_v1` from the user-supplied form with verified saved signature image and frozen snapshots. `Aantal` displays procedure quantity by explicit user decision; unresolved SVB fields receive no inferred defaults. New filenames end in `-svb.pdf` and storage/cache keys include the layout suffix. Previously stored PDFs remain immutable and available. Invalid image bytes/MIME/hash use existing `SIGNATURE_EVIDENCE_INVALID`. See [exact mapping and validation](SVB_FORM_AND_OPERATIONAL_FIXES.md).
+
+## Clinical correction and rebilling — 2026-10-30
+
+`POST /api/v1/invoices/:id/reopen-encounter` requires `invoice.apply_correction`, `encounter.update` and `procedure.update`, with strict body `{ reason: string, expectedVersionId: string }`. Eligible current states: DRAFT/PENDING_SIGNATURE/SIGNED/CLOSED, with a completed encounter/appointment, no active correction and no active declaration assignment. It reopens only the clinical encounter and creates an empty unsigned correction version; it preserves the logical invoice and original history.
+
+After correcting services and completing care, the existing `POST /appointments/:appointmentId/invoice` rebuilds that empty clinical replacement with the same invoice ID/number, insurance and currency. Other duplicate invoices remain rejected. Capture a new signature before closing; closing supersedes the source and applies the correction. This controlled workflow additionally permits a non-CLOSED source version; ordinary correction requests retain their CLOSED requirement. No schema, seed or role-name bypass is introduced. [Full rules, errors, files and acceptance](CLINICAL_REBILLING.md).

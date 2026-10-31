@@ -11,7 +11,7 @@ describe("GET /health/ready", () => {
     await prisma.$disconnect();
   });
 
-  it("returns ready when MySQL is reachable", async () => {
+  it("returns ready when PostgreSQL is reachable", async () => {
     const response = await request(app).get("/health/ready").expect(200);
 
     expect(response.body).toEqual({

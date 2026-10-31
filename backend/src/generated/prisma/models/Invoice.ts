@@ -63,6 +63,7 @@ export type InvoiceMinAggregateOutputType = {
   cancellationReason: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  invoiceNumberSearch: string | null
 }
 
 export type InvoiceMaxAggregateOutputType = {
@@ -80,6 +81,7 @@ export type InvoiceMaxAggregateOutputType = {
   cancellationReason: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  invoiceNumberSearch: string | null
 }
 
 export type InvoiceCountAggregateOutputType = {
@@ -97,6 +99,7 @@ export type InvoiceCountAggregateOutputType = {
   cancellationReason: number
   createdAt: number
   updatedAt: number
+  invoiceNumberSearch: number
   _all: number
 }
 
@@ -138,6 +141,7 @@ export type InvoiceMinAggregateInputType = {
   cancellationReason?: true
   createdAt?: true
   updatedAt?: true
+  invoiceNumberSearch?: true
 }
 
 export type InvoiceMaxAggregateInputType = {
@@ -155,6 +159,7 @@ export type InvoiceMaxAggregateInputType = {
   cancellationReason?: true
   createdAt?: true
   updatedAt?: true
+  invoiceNumberSearch?: true
 }
 
 export type InvoiceCountAggregateInputType = {
@@ -172,6 +177,7 @@ export type InvoiceCountAggregateInputType = {
   cancellationReason?: true
   createdAt?: true
   updatedAt?: true
+  invoiceNumberSearch?: true
   _all?: true
 }
 
@@ -276,6 +282,7 @@ export type InvoiceGroupByOutputType = {
   cancellationReason: string | null
   createdAt: Date
   updatedAt: Date
+  invoiceNumberSearch: string | null
   _count: InvoiceCountAggregateOutputType | null
   _avg: InvoiceAvgAggregateOutputType | null
   _sum: InvoiceSumAggregateOutputType | null
@@ -316,6 +323,7 @@ export type InvoiceWhereInput = {
   cancellationReason?: Prisma.StringNullableFilter<"Invoice"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Invoice"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Invoice"> | Date | string
+  invoiceNumberSearch?: Prisma.StringNullableFilter<"Invoice"> | string | null
   corrections?: Prisma.InvoiceCorrectionListRelationFilter
   statusHistory?: Prisma.InvoiceStatusHistoryListRelationFilter
   versions?: Prisma.InvoiceVersionListRelationFilter
@@ -343,6 +351,7 @@ export type InvoiceOrderByWithRelationInput = {
   cancellationReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  invoiceNumberSearch?: Prisma.SortOrderInput | Prisma.SortOrder
   corrections?: Prisma.InvoiceCorrectionOrderByRelationAggregateInput
   statusHistory?: Prisma.InvoiceStatusHistoryOrderByRelationAggregateInput
   versions?: Prisma.InvoiceVersionOrderByRelationAggregateInput
@@ -353,7 +362,6 @@ export type InvoiceOrderByWithRelationInput = {
   patientInsurance?: Prisma.PatientInsuranceOrderByWithRelationInput
   organization?: Prisma.OrganizationOrderByWithRelationInput
   patient?: Prisma.PatientOrderByWithRelationInput
-  _relevance?: Prisma.InvoiceOrderByRelevanceInput
 }
 
 export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
@@ -375,6 +383,7 @@ export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
   cancellationReason?: Prisma.StringNullableFilter<"Invoice"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Invoice"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Invoice"> | Date | string
+  invoiceNumberSearch?: Prisma.StringNullableFilter<"Invoice"> | string | null
   corrections?: Prisma.InvoiceCorrectionListRelationFilter
   statusHistory?: Prisma.InvoiceStatusHistoryListRelationFilter
   versions?: Prisma.InvoiceVersionListRelationFilter
@@ -402,6 +411,7 @@ export type InvoiceOrderByWithAggregationInput = {
   cancellationReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  invoiceNumberSearch?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.InvoiceCountOrderByAggregateInput
   _avg?: Prisma.InvoiceAvgOrderByAggregateInput
   _max?: Prisma.InvoiceMaxOrderByAggregateInput
@@ -427,6 +437,7 @@ export type InvoiceScalarWhereWithAggregatesInput = {
   cancellationReason?: Prisma.StringNullableWithAggregatesFilter<"Invoice"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Invoice"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Invoice"> | Date | string
+  invoiceNumberSearch?: Prisma.StringNullableWithAggregatesFilter<"Invoice"> | string | null
 }
 
 export type InvoiceCreateInput = {
@@ -437,6 +448,7 @@ export type InvoiceCreateInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
   corrections?: Prisma.InvoiceCorrectionCreateNestedManyWithoutInvoiceInput
   statusHistory?: Prisma.InvoiceStatusHistoryCreateNestedManyWithoutInvoiceInput
   versions?: Prisma.InvoiceVersionCreateNestedManyWithoutInvoiceInput
@@ -464,6 +476,7 @@ export type InvoiceUncheckedCreateInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
   corrections?: Prisma.InvoiceCorrectionUncheckedCreateNestedManyWithoutInvoiceInput
   statusHistory?: Prisma.InvoiceStatusHistoryUncheckedCreateNestedManyWithoutInvoiceInput
   versions?: Prisma.InvoiceVersionUncheckedCreateNestedManyWithoutInvoiceInput
@@ -477,6 +490,7 @@ export type InvoiceUpdateInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   corrections?: Prisma.InvoiceCorrectionUpdateManyWithoutInvoiceNestedInput
   statusHistory?: Prisma.InvoiceStatusHistoryUpdateManyWithoutInvoiceNestedInput
   versions?: Prisma.InvoiceVersionUpdateManyWithoutInvoiceNestedInput
@@ -504,6 +518,7 @@ export type InvoiceUncheckedUpdateInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   corrections?: Prisma.InvoiceCorrectionUncheckedUpdateManyWithoutInvoiceNestedInput
   statusHistory?: Prisma.InvoiceStatusHistoryUncheckedUpdateManyWithoutInvoiceNestedInput
   versions?: Prisma.InvoiceVersionUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -524,6 +539,7 @@ export type InvoiceCreateManyInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
 }
 
 export type InvoiceUpdateManyMutationInput = {
@@ -534,6 +550,7 @@ export type InvoiceUpdateManyMutationInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type InvoiceUncheckedUpdateManyInput = {
@@ -551,6 +568,7 @@ export type InvoiceUncheckedUpdateManyInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type InvoiceNullableScalarRelationFilter = {
@@ -573,12 +591,6 @@ export type InvoiceOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type InvoiceOrderByRelevanceInput = {
-  fields: Prisma.InvoiceOrderByRelevanceFieldEnum | Prisma.InvoiceOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
-}
-
 export type InvoiceOrganizationIdInvoiceNumberCompoundUniqueInput = {
   organizationId: bigint | number
   invoiceNumber: string
@@ -599,6 +611,7 @@ export type InvoiceCountOrderByAggregateInput = {
   cancellationReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  invoiceNumberSearch?: Prisma.SortOrder
 }
 
 export type InvoiceAvgOrderByAggregateInput = {
@@ -627,6 +640,7 @@ export type InvoiceMaxOrderByAggregateInput = {
   cancellationReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  invoiceNumberSearch?: Prisma.SortOrder
 }
 
 export type InvoiceMinOrderByAggregateInput = {
@@ -644,6 +658,7 @@ export type InvoiceMinOrderByAggregateInput = {
   cancellationReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  invoiceNumberSearch?: Prisma.SortOrder
 }
 
 export type InvoiceSumOrderByAggregateInput = {
@@ -995,6 +1010,7 @@ export type InvoiceCreateWithoutAppointmentInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
   corrections?: Prisma.InvoiceCorrectionCreateNestedManyWithoutInvoiceInput
   statusHistory?: Prisma.InvoiceStatusHistoryCreateNestedManyWithoutInvoiceInput
   versions?: Prisma.InvoiceVersionCreateNestedManyWithoutInvoiceInput
@@ -1020,6 +1036,7 @@ export type InvoiceUncheckedCreateWithoutAppointmentInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
   corrections?: Prisma.InvoiceCorrectionUncheckedCreateNestedManyWithoutInvoiceInput
   statusHistory?: Prisma.InvoiceStatusHistoryUncheckedCreateNestedManyWithoutInvoiceInput
   versions?: Prisma.InvoiceVersionUncheckedCreateNestedManyWithoutInvoiceInput
@@ -1049,6 +1066,7 @@ export type InvoiceUpdateWithoutAppointmentInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   corrections?: Prisma.InvoiceCorrectionUpdateManyWithoutInvoiceNestedInput
   statusHistory?: Prisma.InvoiceStatusHistoryUpdateManyWithoutInvoiceNestedInput
   versions?: Prisma.InvoiceVersionUpdateManyWithoutInvoiceNestedInput
@@ -1074,6 +1092,7 @@ export type InvoiceUncheckedUpdateWithoutAppointmentInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   corrections?: Prisma.InvoiceCorrectionUncheckedUpdateManyWithoutInvoiceNestedInput
   statusHistory?: Prisma.InvoiceStatusHistoryUncheckedUpdateManyWithoutInvoiceNestedInput
   versions?: Prisma.InvoiceVersionUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -1087,6 +1106,7 @@ export type InvoiceCreateWithoutCorrectionsInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
   statusHistory?: Prisma.InvoiceStatusHistoryCreateNestedManyWithoutInvoiceInput
   versions?: Prisma.InvoiceVersionCreateNestedManyWithoutInvoiceInput
   appointment: Prisma.AppointmentCreateNestedOneWithoutInvoiceInput
@@ -1113,6 +1133,7 @@ export type InvoiceUncheckedCreateWithoutCorrectionsInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
   statusHistory?: Prisma.InvoiceStatusHistoryUncheckedCreateNestedManyWithoutInvoiceInput
   versions?: Prisma.InvoiceVersionUncheckedCreateNestedManyWithoutInvoiceInput
 }
@@ -1141,6 +1162,7 @@ export type InvoiceUpdateWithoutCorrectionsInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusHistory?: Prisma.InvoiceStatusHistoryUpdateManyWithoutInvoiceNestedInput
   versions?: Prisma.InvoiceVersionUpdateManyWithoutInvoiceNestedInput
   appointment?: Prisma.AppointmentUpdateOneRequiredWithoutInvoiceNestedInput
@@ -1167,6 +1189,7 @@ export type InvoiceUncheckedUpdateWithoutCorrectionsInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusHistory?: Prisma.InvoiceStatusHistoryUncheckedUpdateManyWithoutInvoiceNestedInput
   versions?: Prisma.InvoiceVersionUncheckedUpdateManyWithoutInvoiceNestedInput
 }
@@ -1179,6 +1202,7 @@ export type InvoiceCreateWithoutStatusHistoryInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
   corrections?: Prisma.InvoiceCorrectionCreateNestedManyWithoutInvoiceInput
   versions?: Prisma.InvoiceVersionCreateNestedManyWithoutInvoiceInput
   appointment: Prisma.AppointmentCreateNestedOneWithoutInvoiceInput
@@ -1205,6 +1229,7 @@ export type InvoiceUncheckedCreateWithoutStatusHistoryInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
   corrections?: Prisma.InvoiceCorrectionUncheckedCreateNestedManyWithoutInvoiceInput
   versions?: Prisma.InvoiceVersionUncheckedCreateNestedManyWithoutInvoiceInput
 }
@@ -1233,6 +1258,7 @@ export type InvoiceUpdateWithoutStatusHistoryInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   corrections?: Prisma.InvoiceCorrectionUpdateManyWithoutInvoiceNestedInput
   versions?: Prisma.InvoiceVersionUpdateManyWithoutInvoiceNestedInput
   appointment?: Prisma.AppointmentUpdateOneRequiredWithoutInvoiceNestedInput
@@ -1259,6 +1285,7 @@ export type InvoiceUncheckedUpdateWithoutStatusHistoryInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   corrections?: Prisma.InvoiceCorrectionUncheckedUpdateManyWithoutInvoiceNestedInput
   versions?: Prisma.InvoiceVersionUncheckedUpdateManyWithoutInvoiceNestedInput
 }
@@ -1271,6 +1298,7 @@ export type InvoiceCreateWithoutVersionsInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
   corrections?: Prisma.InvoiceCorrectionCreateNestedManyWithoutInvoiceInput
   statusHistory?: Prisma.InvoiceStatusHistoryCreateNestedManyWithoutInvoiceInput
   appointment: Prisma.AppointmentCreateNestedOneWithoutInvoiceInput
@@ -1297,6 +1325,7 @@ export type InvoiceUncheckedCreateWithoutVersionsInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
   corrections?: Prisma.InvoiceCorrectionUncheckedCreateNestedManyWithoutInvoiceInput
   statusHistory?: Prisma.InvoiceStatusHistoryUncheckedCreateNestedManyWithoutInvoiceInput
 }
@@ -1314,6 +1343,7 @@ export type InvoiceCreateWithoutCurrentVersionInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
   corrections?: Prisma.InvoiceCorrectionCreateNestedManyWithoutInvoiceInput
   statusHistory?: Prisma.InvoiceStatusHistoryCreateNestedManyWithoutInvoiceInput
   versions?: Prisma.InvoiceVersionCreateNestedManyWithoutInvoiceInput
@@ -1339,6 +1369,7 @@ export type InvoiceUncheckedCreateWithoutCurrentVersionInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
   corrections?: Prisma.InvoiceCorrectionUncheckedCreateNestedManyWithoutInvoiceInput
   statusHistory?: Prisma.InvoiceStatusHistoryUncheckedCreateNestedManyWithoutInvoiceInput
   versions?: Prisma.InvoiceVersionUncheckedCreateNestedManyWithoutInvoiceInput
@@ -1373,6 +1404,7 @@ export type InvoiceUpdateWithoutVersionsInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   corrections?: Prisma.InvoiceCorrectionUpdateManyWithoutInvoiceNestedInput
   statusHistory?: Prisma.InvoiceStatusHistoryUpdateManyWithoutInvoiceNestedInput
   appointment?: Prisma.AppointmentUpdateOneRequiredWithoutInvoiceNestedInput
@@ -1399,6 +1431,7 @@ export type InvoiceUncheckedUpdateWithoutVersionsInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   corrections?: Prisma.InvoiceCorrectionUncheckedUpdateManyWithoutInvoiceNestedInput
   statusHistory?: Prisma.InvoiceStatusHistoryUncheckedUpdateManyWithoutInvoiceNestedInput
 }
@@ -1437,6 +1470,7 @@ export type InvoiceScalarWhereInput = {
   cancellationReason?: Prisma.StringNullableFilter<"Invoice"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Invoice"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Invoice"> | Date | string
+  invoiceNumberSearch?: Prisma.StringNullableFilter<"Invoice"> | string | null
 }
 
 export type InvoiceCreateWithoutOrganizationInput = {
@@ -1447,6 +1481,7 @@ export type InvoiceCreateWithoutOrganizationInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
   corrections?: Prisma.InvoiceCorrectionCreateNestedManyWithoutInvoiceInput
   statusHistory?: Prisma.InvoiceStatusHistoryCreateNestedManyWithoutInvoiceInput
   versions?: Prisma.InvoiceVersionCreateNestedManyWithoutInvoiceInput
@@ -1472,6 +1507,7 @@ export type InvoiceUncheckedCreateWithoutOrganizationInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
   corrections?: Prisma.InvoiceCorrectionUncheckedCreateNestedManyWithoutInvoiceInput
   statusHistory?: Prisma.InvoiceStatusHistoryUncheckedCreateNestedManyWithoutInvoiceInput
   versions?: Prisma.InvoiceVersionUncheckedCreateNestedManyWithoutInvoiceInput
@@ -1511,6 +1547,7 @@ export type InvoiceCreateWithoutPatientInsuranceInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
   corrections?: Prisma.InvoiceCorrectionCreateNestedManyWithoutInvoiceInput
   statusHistory?: Prisma.InvoiceStatusHistoryCreateNestedManyWithoutInvoiceInput
   versions?: Prisma.InvoiceVersionCreateNestedManyWithoutInvoiceInput
@@ -1536,6 +1573,7 @@ export type InvoiceUncheckedCreateWithoutPatientInsuranceInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
   corrections?: Prisma.InvoiceCorrectionUncheckedCreateNestedManyWithoutInvoiceInput
   statusHistory?: Prisma.InvoiceStatusHistoryUncheckedCreateNestedManyWithoutInvoiceInput
   versions?: Prisma.InvoiceVersionUncheckedCreateNestedManyWithoutInvoiceInput
@@ -1575,6 +1613,7 @@ export type InvoiceCreateWithoutPatientInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
   corrections?: Prisma.InvoiceCorrectionCreateNestedManyWithoutInvoiceInput
   statusHistory?: Prisma.InvoiceStatusHistoryCreateNestedManyWithoutInvoiceInput
   versions?: Prisma.InvoiceVersionCreateNestedManyWithoutInvoiceInput
@@ -1600,6 +1639,7 @@ export type InvoiceUncheckedCreateWithoutPatientInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
   corrections?: Prisma.InvoiceCorrectionUncheckedCreateNestedManyWithoutInvoiceInput
   statusHistory?: Prisma.InvoiceStatusHistoryUncheckedCreateNestedManyWithoutInvoiceInput
   versions?: Prisma.InvoiceVersionUncheckedCreateNestedManyWithoutInvoiceInput
@@ -1639,6 +1679,7 @@ export type InvoiceCreateWithoutCancelledByUserInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
   corrections?: Prisma.InvoiceCorrectionCreateNestedManyWithoutInvoiceInput
   statusHistory?: Prisma.InvoiceStatusHistoryCreateNestedManyWithoutInvoiceInput
   versions?: Prisma.InvoiceVersionCreateNestedManyWithoutInvoiceInput
@@ -1664,6 +1705,7 @@ export type InvoiceUncheckedCreateWithoutCancelledByUserInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
   corrections?: Prisma.InvoiceCorrectionUncheckedCreateNestedManyWithoutInvoiceInput
   statusHistory?: Prisma.InvoiceStatusHistoryUncheckedCreateNestedManyWithoutInvoiceInput
   versions?: Prisma.InvoiceVersionUncheckedCreateNestedManyWithoutInvoiceInput
@@ -1687,6 +1729,7 @@ export type InvoiceCreateWithoutCreatedByUserInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
   corrections?: Prisma.InvoiceCorrectionCreateNestedManyWithoutInvoiceInput
   statusHistory?: Prisma.InvoiceStatusHistoryCreateNestedManyWithoutInvoiceInput
   versions?: Prisma.InvoiceVersionCreateNestedManyWithoutInvoiceInput
@@ -1712,6 +1755,7 @@ export type InvoiceUncheckedCreateWithoutCreatedByUserInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
   corrections?: Prisma.InvoiceCorrectionUncheckedCreateNestedManyWithoutInvoiceInput
   statusHistory?: Prisma.InvoiceStatusHistoryUncheckedCreateNestedManyWithoutInvoiceInput
   versions?: Prisma.InvoiceVersionUncheckedCreateNestedManyWithoutInvoiceInput
@@ -1773,6 +1817,7 @@ export type InvoiceCreateManyCurrentVersionInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
 }
 
 export type InvoiceUpdateWithoutCurrentVersionInput = {
@@ -1783,6 +1828,7 @@ export type InvoiceUpdateWithoutCurrentVersionInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   corrections?: Prisma.InvoiceCorrectionUpdateManyWithoutInvoiceNestedInput
   statusHistory?: Prisma.InvoiceStatusHistoryUpdateManyWithoutInvoiceNestedInput
   versions?: Prisma.InvoiceVersionUpdateManyWithoutInvoiceNestedInput
@@ -1808,6 +1854,7 @@ export type InvoiceUncheckedUpdateWithoutCurrentVersionInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   corrections?: Prisma.InvoiceCorrectionUncheckedUpdateManyWithoutInvoiceNestedInput
   statusHistory?: Prisma.InvoiceStatusHistoryUncheckedUpdateManyWithoutInvoiceNestedInput
   versions?: Prisma.InvoiceVersionUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -1827,6 +1874,7 @@ export type InvoiceUncheckedUpdateManyWithoutCurrentVersionInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type InvoiceCreateManyOrganizationInput = {
@@ -1843,6 +1891,7 @@ export type InvoiceCreateManyOrganizationInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
 }
 
 export type InvoiceUpdateWithoutOrganizationInput = {
@@ -1853,6 +1902,7 @@ export type InvoiceUpdateWithoutOrganizationInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   corrections?: Prisma.InvoiceCorrectionUpdateManyWithoutInvoiceNestedInput
   statusHistory?: Prisma.InvoiceStatusHistoryUpdateManyWithoutInvoiceNestedInput
   versions?: Prisma.InvoiceVersionUpdateManyWithoutInvoiceNestedInput
@@ -1878,6 +1928,7 @@ export type InvoiceUncheckedUpdateWithoutOrganizationInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   corrections?: Prisma.InvoiceCorrectionUncheckedUpdateManyWithoutInvoiceNestedInput
   statusHistory?: Prisma.InvoiceStatusHistoryUncheckedUpdateManyWithoutInvoiceNestedInput
   versions?: Prisma.InvoiceVersionUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -1897,6 +1948,7 @@ export type InvoiceUncheckedUpdateManyWithoutOrganizationInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type InvoiceCreateManyPatientInsuranceInput = {
@@ -1913,6 +1965,7 @@ export type InvoiceCreateManyPatientInsuranceInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
 }
 
 export type InvoiceUpdateWithoutPatientInsuranceInput = {
@@ -1923,6 +1976,7 @@ export type InvoiceUpdateWithoutPatientInsuranceInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   corrections?: Prisma.InvoiceCorrectionUpdateManyWithoutInvoiceNestedInput
   statusHistory?: Prisma.InvoiceStatusHistoryUpdateManyWithoutInvoiceNestedInput
   versions?: Prisma.InvoiceVersionUpdateManyWithoutInvoiceNestedInput
@@ -1948,6 +2002,7 @@ export type InvoiceUncheckedUpdateWithoutPatientInsuranceInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   corrections?: Prisma.InvoiceCorrectionUncheckedUpdateManyWithoutInvoiceNestedInput
   statusHistory?: Prisma.InvoiceStatusHistoryUncheckedUpdateManyWithoutInvoiceNestedInput
   versions?: Prisma.InvoiceVersionUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -1967,6 +2022,7 @@ export type InvoiceUncheckedUpdateManyWithoutPatientInsuranceInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type InvoiceCreateManyPatientInput = {
@@ -1983,6 +2039,7 @@ export type InvoiceCreateManyPatientInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
 }
 
 export type InvoiceUpdateWithoutPatientInput = {
@@ -1993,6 +2050,7 @@ export type InvoiceUpdateWithoutPatientInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   corrections?: Prisma.InvoiceCorrectionUpdateManyWithoutInvoiceNestedInput
   statusHistory?: Prisma.InvoiceStatusHistoryUpdateManyWithoutInvoiceNestedInput
   versions?: Prisma.InvoiceVersionUpdateManyWithoutInvoiceNestedInput
@@ -2018,6 +2076,7 @@ export type InvoiceUncheckedUpdateWithoutPatientInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   corrections?: Prisma.InvoiceCorrectionUncheckedUpdateManyWithoutInvoiceNestedInput
   statusHistory?: Prisma.InvoiceStatusHistoryUncheckedUpdateManyWithoutInvoiceNestedInput
   versions?: Prisma.InvoiceVersionUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -2037,6 +2096,7 @@ export type InvoiceUncheckedUpdateManyWithoutPatientInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type InvoiceCreateManyCancelledByUserInput = {
@@ -2053,6 +2113,7 @@ export type InvoiceCreateManyCancelledByUserInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
 }
 
 export type InvoiceCreateManyCreatedByUserInput = {
@@ -2069,6 +2130,7 @@ export type InvoiceCreateManyCreatedByUserInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoiceNumberSearch?: string | null
 }
 
 export type InvoiceUpdateWithoutCancelledByUserInput = {
@@ -2079,6 +2141,7 @@ export type InvoiceUpdateWithoutCancelledByUserInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   corrections?: Prisma.InvoiceCorrectionUpdateManyWithoutInvoiceNestedInput
   statusHistory?: Prisma.InvoiceStatusHistoryUpdateManyWithoutInvoiceNestedInput
   versions?: Prisma.InvoiceVersionUpdateManyWithoutInvoiceNestedInput
@@ -2104,6 +2167,7 @@ export type InvoiceUncheckedUpdateWithoutCancelledByUserInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   corrections?: Prisma.InvoiceCorrectionUncheckedUpdateManyWithoutInvoiceNestedInput
   statusHistory?: Prisma.InvoiceStatusHistoryUncheckedUpdateManyWithoutInvoiceNestedInput
   versions?: Prisma.InvoiceVersionUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -2123,6 +2187,7 @@ export type InvoiceUncheckedUpdateManyWithoutCancelledByUserInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type InvoiceUpdateWithoutCreatedByUserInput = {
@@ -2133,6 +2198,7 @@ export type InvoiceUpdateWithoutCreatedByUserInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   corrections?: Prisma.InvoiceCorrectionUpdateManyWithoutInvoiceNestedInput
   statusHistory?: Prisma.InvoiceStatusHistoryUpdateManyWithoutInvoiceNestedInput
   versions?: Prisma.InvoiceVersionUpdateManyWithoutInvoiceNestedInput
@@ -2158,6 +2224,7 @@ export type InvoiceUncheckedUpdateWithoutCreatedByUserInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   corrections?: Prisma.InvoiceCorrectionUncheckedUpdateManyWithoutInvoiceNestedInput
   statusHistory?: Prisma.InvoiceStatusHistoryUncheckedUpdateManyWithoutInvoiceNestedInput
   versions?: Prisma.InvoiceVersionUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -2177,6 +2244,7 @@ export type InvoiceUncheckedUpdateManyWithoutCreatedByUserInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoiceNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -2243,6 +2311,7 @@ export type InvoiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   cancellationReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  invoiceNumberSearch?: boolean
   corrections?: boolean | Prisma.Invoice$correctionsArgs<ExtArgs>
   statusHistory?: boolean | Prisma.Invoice$statusHistoryArgs<ExtArgs>
   versions?: boolean | Prisma.Invoice$versionsArgs<ExtArgs>
@@ -2256,7 +2325,55 @@ export type InvoiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   _count?: boolean | Prisma.InvoiceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["invoice"]>
 
+export type InvoiceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  organizationId?: boolean
+  appointmentId?: boolean
+  patientId?: boolean
+  patientInsuranceId?: boolean
+  invoiceNumber?: boolean
+  status?: boolean
+  currentVersionId?: boolean
+  createdByUserId?: boolean
+  cancelledByUserId?: boolean
+  cancelledAt?: boolean
+  cancellationReason?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  invoiceNumberSearch?: boolean
+  appointment?: boolean | Prisma.AppointmentDefaultArgs<ExtArgs>
+  cancelledByUser?: boolean | Prisma.Invoice$cancelledByUserArgs<ExtArgs>
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  currentVersion?: boolean | Prisma.Invoice$currentVersionArgs<ExtArgs>
+  patientInsurance?: boolean | Prisma.PatientInsuranceDefaultArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["invoice"]>
 
+export type InvoiceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  organizationId?: boolean
+  appointmentId?: boolean
+  patientId?: boolean
+  patientInsuranceId?: boolean
+  invoiceNumber?: boolean
+  status?: boolean
+  currentVersionId?: boolean
+  createdByUserId?: boolean
+  cancelledByUserId?: boolean
+  cancelledAt?: boolean
+  cancellationReason?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  invoiceNumberSearch?: boolean
+  appointment?: boolean | Prisma.AppointmentDefaultArgs<ExtArgs>
+  cancelledByUser?: boolean | Prisma.Invoice$cancelledByUserArgs<ExtArgs>
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  currentVersion?: boolean | Prisma.Invoice$currentVersionArgs<ExtArgs>
+  patientInsurance?: boolean | Prisma.PatientInsuranceDefaultArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["invoice"]>
 
 export type InvoiceSelectScalar = {
   id?: boolean
@@ -2273,9 +2390,10 @@ export type InvoiceSelectScalar = {
   cancellationReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  invoiceNumberSearch?: boolean
 }
 
-export type InvoiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "appointmentId" | "patientId" | "patientInsuranceId" | "invoiceNumber" | "status" | "currentVersionId" | "createdByUserId" | "cancelledByUserId" | "cancelledAt" | "cancellationReason" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
+export type InvoiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "appointmentId" | "patientId" | "patientInsuranceId" | "invoiceNumber" | "status" | "currentVersionId" | "createdByUserId" | "cancelledByUserId" | "cancelledAt" | "cancellationReason" | "createdAt" | "updatedAt" | "invoiceNumberSearch", ExtArgs["result"]["invoice"]>
 export type InvoiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   corrections?: boolean | Prisma.Invoice$correctionsArgs<ExtArgs>
   statusHistory?: boolean | Prisma.Invoice$statusHistoryArgs<ExtArgs>
@@ -2288,6 +2406,24 @@ export type InvoiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.InvoiceCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type InvoiceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  appointment?: boolean | Prisma.AppointmentDefaultArgs<ExtArgs>
+  cancelledByUser?: boolean | Prisma.Invoice$cancelledByUserArgs<ExtArgs>
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  currentVersion?: boolean | Prisma.Invoice$currentVersionArgs<ExtArgs>
+  patientInsurance?: boolean | Prisma.PatientInsuranceDefaultArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+}
+export type InvoiceIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  appointment?: boolean | Prisma.AppointmentDefaultArgs<ExtArgs>
+  cancelledByUser?: boolean | Prisma.Invoice$cancelledByUserArgs<ExtArgs>
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  currentVersion?: boolean | Prisma.Invoice$currentVersionArgs<ExtArgs>
+  patientInsurance?: boolean | Prisma.PatientInsuranceDefaultArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
 }
 
 export type $InvoicePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2319,6 +2455,7 @@ export type $InvoicePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     cancellationReason: string | null
     createdAt: Date
     updatedAt: Date
+    invoiceNumberSearch: string | null
   }, ExtArgs["result"]["invoice"]>
   composites: {}
 }
@@ -2437,6 +2574,30 @@ export interface InvoiceDelegate<ExtArgs extends runtime.Types.Extensions.Intern
   createMany<T extends InvoiceCreateManyArgs>(args?: Prisma.SelectSubset<T, InvoiceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many Invoices and returns the data saved in the database.
+   * @param {InvoiceCreateManyAndReturnArgs} args - Arguments to create many Invoices.
+   * @example
+   * // Create many Invoices
+   * const invoice = await prisma.invoice.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many Invoices and only return the `id`
+   * const invoiceWithIdOnly = await prisma.invoice.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends InvoiceCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, InvoiceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a Invoice.
    * @param {InvoiceDeleteArgs} args - Arguments to delete one Invoice.
    * @example
@@ -2499,6 +2660,36 @@ export interface InvoiceDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * 
    */
   updateMany<T extends InvoiceUpdateManyArgs>(args: Prisma.SelectSubset<T, InvoiceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more Invoices and returns the data updated in the database.
+   * @param {InvoiceUpdateManyAndReturnArgs} args - Arguments to update many Invoices.
+   * @example
+   * // Update many Invoices
+   * const invoice = await prisma.invoice.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more Invoices and only return the `id`
+   * const invoiceWithIdOnly = await prisma.invoice.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends InvoiceUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, InvoiceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Invoice.
@@ -2712,6 +2903,7 @@ export interface InvoiceFieldRefs {
   readonly cancellationReason: Prisma.FieldRef<"Invoice", 'String'>
   readonly createdAt: Prisma.FieldRef<"Invoice", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Invoice", 'DateTime'>
+  readonly invoiceNumberSearch: Prisma.FieldRef<"Invoice", 'String'>
 }
     
 
@@ -2950,6 +3142,29 @@ export type InvoiceCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
+ * Invoice createManyAndReturn
+ */
+export type InvoiceCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Invoice
+   */
+  select?: Prisma.InvoiceSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Invoice
+   */
+  omit?: Prisma.InvoiceOmit<ExtArgs> | null
+  /**
+   * The data used to create many Invoices.
+   */
+  data: Prisma.InvoiceCreateManyInput | Prisma.InvoiceCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InvoiceIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * Invoice update
  */
 export type InvoiceUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2991,6 +3206,36 @@ export type InvoiceUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Invoices to update.
    */
   limit?: number
+}
+
+/**
+ * Invoice updateManyAndReturn
+ */
+export type InvoiceUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Invoice
+   */
+  select?: Prisma.InvoiceSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Invoice
+   */
+  omit?: Prisma.InvoiceOmit<ExtArgs> | null
+  /**
+   * The data used to update Invoices.
+   */
+  data: Prisma.XOR<Prisma.InvoiceUpdateManyMutationInput, Prisma.InvoiceUncheckedUpdateManyInput>
+  /**
+   * Filter which Invoices to update
+   */
+  where?: Prisma.InvoiceWhereInput
+  /**
+   * Limit how many Invoices to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InvoiceIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

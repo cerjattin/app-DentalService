@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -65,7 +65,7 @@ function ok(data: unknown, meta?: unknown) {
 function fail(code: string, status = 409) {
   return new Response(JSON.stringify({ success: false, error: { code, message: 'RAW BACKEND MESSAGE' } }), { status, headers: { 'Content-Type': 'application/json' } })
 }
-function boundary(initialStatus: DeclarationStatus = 'DRAFT') {
+function boundary(initialStatus: DeclarationStatus = 'DRAFT', errors: { ready?: string; submit?: string; add?: string } = {}) {
   let status = initialStatus
   let rows = initialStatus === 'DRAFT' ? [item] : declaration(initialStatus).items
   let exports = declaration(initialStatus).exports
@@ -81,17 +81,19 @@ function boundary(initialStatus: DeclarationStatus = 'DRAFT') {
     if (path === '/declarations' && method === 'GET') return ok([declaration(status)], { page: 1, pageSize: 20, total: 1, totalPages: 1 })
     if (path === '/declarations' && method === 'POST') return ok(declaration())
     if (path === `/declarations/${declarationId}`) return ok({ ...declaration(status), items: rows, exports, submissions })
+    if (path.endsWith('/candidates')) return ok([{ invoiceId: '22', invoiceVersionId: '23', invoiceItemId: supersededInvoiceItemId, invoiceNumber: 'QAI-CANDIDATE', versionNumber: 2, detailInvoiceNumber: 'QAI-2-1', serviceDate: '2027-06-02', procedureCode: '001', procedureDescription: 'QA service', providerIdSnapshot: '001', insuredIdSnapshot: '002', amount: '200.50', currencyCode: 'ANG', svbReadiness: 'COMPLETE', issues: [] }], { page: 1, pageSize: 20, total: 1, totalPages: 1 })
     if (path.endsWith('/items') && method === 'GET') return ok(rows)
     if (path.endsWith('/items') && method === 'POST') {
+      if (errors.add) return fail(errors.add)
       if ((body as { invoiceItemId: string }).invoiceItemId === supersededInvoiceItemId) return fail('DECLARATION_ITEM_NOT_ELIGIBLE')
       rows = [item]
       return ok(item)
     }
-    if (path.endsWith('/ready')) { status = 'READY'; return ok(declaration(status)) }
+    if (path.endsWith('/ready')) { if (errors.ready) return fail(errors.ready); status = 'READY'; return ok(declaration(status)) }
     if (path.endsWith('/exports') && method === 'GET') return ok(exports)
     if (path.endsWith('/exports') && method === 'POST') { status = 'EXPORTED'; exports = [exportRow]; return ok(exportRow) }
     if (path.endsWith('/submissions') && method === 'GET') return ok(submissions)
-    if (path.endsWith('/submit')) { status = 'SUBMITTED'; submissions = [submission]; return ok(submission) }
+    if (path.endsWith('/submit')) { if (errors.submit) return fail(errors.submit, 503); status = 'SUBMITTED'; submissions = [submission]; return ok(submission) }
     if (path.endsWith(`/submissions/${submissionId}/result`)) { status = (body as { status: DeclarationStatus }).status; return ok({ ...submission, ...body, status, respondedAt: now }) }
     if (path.endsWith(`/documents/${documentId}/download`)) return new Response('{"invoice":"QAI-000002"}', { headers: { 'Content-Type': 'application/json' } })
     throw new Error(`Unexpected ${method} ${path}`)
@@ -100,7 +102,7 @@ function boundary(initialStatus: DeclarationStatus = 'DRAFT') {
 }
 
 const readPermissions = ['declaration.read']
-const allPermissions = ['declaration.read', 'declaration.create', 'declaration.update', 'declaration.export', 'declaration.submit', 'document.read', 'insurance.read']
+const allPermissions = ['invoice.read', 'declaration.read', 'declaration.create', 'declaration.update', 'declaration.export', 'declaration.submit', 'document.read', 'insurance.read']
 function session(permissions = allPermissions) {
   authStore.setSession('memory-f08', { id: '1', organizationId: '1', email: 'qa@example.test', firstName: 'QA', lastName: 'Admin', roles: [], permissions })
 }
@@ -128,6 +130,38 @@ describe('F08 declaration API contract', () => {
 })
 
 describe('F08 declaration workflow UI', () => {
+  it('retains the candidate dialog and refetches availability on an assignment conflict without retrying POST', async () => {
+    const { calls } = boundary('DRAFT', { add: 'DECLARATION_ITEM_ASSIGNED' }); renderDetail()
+    await screen.findByText('QAI-000002'); await userEvent.click(screen.getByRole('button', { name: 'Add item' }));
+    await userEvent.click(await screen.findByRole('button', { name: `Add item ${supersededInvoiceItemId}` }))
+    const dialog = screen.getByRole('dialog', { name: 'Add invoice item' }); expect(await within(dialog).findByRole('alert')).toHaveTextContent('assigned to another active declaration')
+    await waitFor(() => expect(calls.filter((call) => call.path.endsWith('/candidates')).length).toBeGreaterThanOrEqual(2))
+    expect(calls.filter((call) => call.method === 'POST' && call.path.endsWith('/items'))).toHaveLength(1)
+    expect(screen.queryByText('RAW BACKEND MESSAGE')).not.toBeInTheDocument()
+  })
+
+  it('announces incomplete SVB snapshots inside the active validation dialog and permits retry', async () => {
+    boundary('DRAFT', { ready: 'DECLARATION_SVB_DATA_INCOMPLETE' }); renderDetail()
+    await screen.findByText('QAI-000002')
+    await userEvent.click(screen.getByRole('button', { name: 'Validate and mark ready' }))
+    const dialog = screen.getByRole('dialog', { name: 'Validate declaration' })
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Validate and mark ready' }))
+    expect(await within(dialog).findByRole('alert')).toHaveTextContent('Required SVB snapshot data is missing.')
+    expect(within(dialog).getByRole('button', { name: 'Validate and mark ready' })).toBeEnabled()
+    expect(screen.queryByText('RAW BACKEND MESSAGE')).not.toBeInTheDocument()
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Cancel' }))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
+  it('announces missing submission adapter inside the submission dialog', async () => {
+    boundary('EXPORTED', { submit: 'SUBMISSION_ADAPTER_NOT_CONFIGURED' }); renderDetail()
+    await screen.findByText('QAI-000002')
+    await userEvent.click(screen.getByRole('button', { name: 'Submit declaration' }))
+    const dialog = screen.getByRole('dialog', { name: 'Submit declaration' })
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Submit declaration' }))
+    expect(await within(dialog).findByRole('alert')).toHaveTextContent('adapter')
+    expect(authStore.getAccessToken()).toBe('memory-f08')
+  })
   it('renders declaration loading', () => { session(); vi.stubGlobal('fetch', vi.fn(() => new Promise(() => undefined))); renderList(); expect(screen.getByText('Loading declarations')).toBeInTheDocument() })
   it('renders an empty declaration list', async () => { session(); vi.stubGlobal('fetch', vi.fn(async () => ok([], { page: 1, pageSize: 20, total: 0, totalPages: 0 }))); renderList(); expect(await screen.findByText('No declarations found')).toBeInTheDocument() })
   it('renders a safe declaration list error', async () => { session(); vi.stubGlobal('fetch', vi.fn(async () => fail('DECLARATION_NOT_FOUND', 404))); renderList(); expect(await screen.findByText('The declaration could not be found.')).toBeInTheDocument() })
@@ -136,7 +170,7 @@ describe('F08 declaration workflow UI', () => {
   it('hides declaration creation without its independent permission', async () => { boundary(); renderList(readPermissions); await screen.findByText('QAD-000001'); expect(screen.queryByRole('button', { name: 'Create declaration' })).not.toBeInTheDocument() })
   it('renders declaration snapshots and item data', async () => { boundary(); renderDetail(); expect(await screen.findByText('QAI-000002')).toBeInTheDocument(); expect(screen.getByText('200.50')).toBeInTheDocument(); expect(screen.getByText('QA-TREATMENT')).toBeInTheDocument() })
   it('does not expose draft mutation actions without update permission', async () => { boundary(); renderDetail(readPermissions); await screen.findByText('QAI-000002'); expect(screen.queryByRole('button', { name: 'Add item' })).not.toBeInTheDocument(); expect(screen.queryByRole('button', { name: 'Validate and mark ready' })).not.toBeInTheDocument() })
-  it('surfaces corrected-version eligibility errors without Backend messages', async () => { const user = userEvent.setup(); boundary(); renderDetail(); await screen.findByText('QAI-000002'); await user.click(screen.getByRole('button', { name: 'Add item' })); await user.type(screen.getByLabelText('Invoice item ID'), supersededInvoiceItemId); await user.click(screen.getByRole('button', { name: 'Add item' })); expect(await screen.findAllByText('This item is not from the current closed invoice version.')).toHaveLength(2); expect(screen.queryByText('RAW BACKEND MESSAGE')).not.toBeInTheDocument() })
+  it('surfaces corrected-version eligibility errors without Backend messages', async () => { const user = userEvent.setup(); boundary(); renderDetail(); await screen.findByText('QAI-000002'); await user.click(screen.getByRole('button', { name: 'Add item' })); await user.click(await screen.findByRole('button', { name: `Add item ${supersededInvoiceItemId}` })); expect(await screen.findAllByText('This item is not from the current closed invoice version.')).toHaveLength(2); expect(screen.queryByText('RAW BACKEND MESSAGE')).not.toBeInTheDocument() })
   it('keeps READY declarations immutable and exposes export only with permission', async () => { boundary('READY'); renderDetail(); await screen.findByText('QAI-000002'); expect(screen.queryByRole('button', { name: 'Add item' })).not.toBeInTheDocument(); expect(screen.getByRole('button', { name: 'Generate export' })).toBeInTheDocument() })
   it('renders export metadata and an authenticated download action', async () => { boundary('EXPORTED'); renderDetail(); expect(await screen.findByText('QAD-000001.csv')).toBeInTheDocument(); expect(screen.getByRole('button', { name: 'Download' })).toBeInTheDocument() })
   it('renders immutable submission history and terminal result action', async () => { boundary('SUBMITTED'); renderDetail(); expect(await screen.findByText('EXT-QA')).toBeInTheDocument(); expect(screen.getByRole('button', { name: 'Record result' })).toBeInTheDocument() })

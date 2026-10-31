@@ -50,6 +50,7 @@ export type EncounterDiagnosisMinAggregateOutputType = {
   notes: string | null
   createdByUserId: bigint | null
   createdAt: Date | null
+  codeSnapshotSearch: string | null
 }
 
 export type EncounterDiagnosisMaxAggregateOutputType = {
@@ -62,6 +63,7 @@ export type EncounterDiagnosisMaxAggregateOutputType = {
   notes: string | null
   createdByUserId: bigint | null
   createdAt: Date | null
+  codeSnapshotSearch: string | null
 }
 
 export type EncounterDiagnosisCountAggregateOutputType = {
@@ -74,6 +76,7 @@ export type EncounterDiagnosisCountAggregateOutputType = {
   notes: number
   createdByUserId: number
   createdAt: number
+  codeSnapshotSearch: number
   _all: number
 }
 
@@ -102,6 +105,7 @@ export type EncounterDiagnosisMinAggregateInputType = {
   notes?: true
   createdByUserId?: true
   createdAt?: true
+  codeSnapshotSearch?: true
 }
 
 export type EncounterDiagnosisMaxAggregateInputType = {
@@ -114,6 +118,7 @@ export type EncounterDiagnosisMaxAggregateInputType = {
   notes?: true
   createdByUserId?: true
   createdAt?: true
+  codeSnapshotSearch?: true
 }
 
 export type EncounterDiagnosisCountAggregateInputType = {
@@ -126,6 +131,7 @@ export type EncounterDiagnosisCountAggregateInputType = {
   notes?: true
   createdByUserId?: true
   createdAt?: true
+  codeSnapshotSearch?: true
   _all?: true
 }
 
@@ -225,6 +231,7 @@ export type EncounterDiagnosisGroupByOutputType = {
   notes: string | null
   createdByUserId: bigint
   createdAt: Date
+  codeSnapshotSearch: string
   _count: EncounterDiagnosisCountAggregateOutputType | null
   _avg: EncounterDiagnosisAvgAggregateOutputType | null
   _sum: EncounterDiagnosisSumAggregateOutputType | null
@@ -260,6 +267,7 @@ export type EncounterDiagnosisWhereInput = {
   notes?: Prisma.StringNullableFilter<"EncounterDiagnosis"> | string | null
   createdByUserId?: Prisma.BigIntFilter<"EncounterDiagnosis"> | bigint | number
   createdAt?: Prisma.DateTimeFilter<"EncounterDiagnosis"> | Date | string
+  codeSnapshotSearch?: Prisma.StringFilter<"EncounterDiagnosis"> | string
   diagnosisCode?: Prisma.XOR<Prisma.DiagnosisCodeScalarRelationFilter, Prisma.DiagnosisCodeWhereInput>
   encounter?: Prisma.XOR<Prisma.ClinicalEncounterScalarRelationFilter, Prisma.ClinicalEncounterWhereInput>
   createdByUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -276,11 +284,11 @@ export type EncounterDiagnosisOrderByWithRelationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  codeSnapshotSearch?: Prisma.SortOrder
   diagnosisCode?: Prisma.DiagnosisCodeOrderByWithRelationInput
   encounter?: Prisma.ClinicalEncounterOrderByWithRelationInput
   createdByUser?: Prisma.UserOrderByWithRelationInput
   procedures?: Prisma.EncounterProcedureOrderByRelationAggregateInput
-  _relevance?: Prisma.EncounterDiagnosisOrderByRelevanceInput
 }
 
 export type EncounterDiagnosisWhereUniqueInput = Prisma.AtLeast<{
@@ -297,6 +305,7 @@ export type EncounterDiagnosisWhereUniqueInput = Prisma.AtLeast<{
   notes?: Prisma.StringNullableFilter<"EncounterDiagnosis"> | string | null
   createdByUserId?: Prisma.BigIntFilter<"EncounterDiagnosis"> | bigint | number
   createdAt?: Prisma.DateTimeFilter<"EncounterDiagnosis"> | Date | string
+  codeSnapshotSearch?: Prisma.StringFilter<"EncounterDiagnosis"> | string
   diagnosisCode?: Prisma.XOR<Prisma.DiagnosisCodeScalarRelationFilter, Prisma.DiagnosisCodeWhereInput>
   encounter?: Prisma.XOR<Prisma.ClinicalEncounterScalarRelationFilter, Prisma.ClinicalEncounterWhereInput>
   createdByUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -313,6 +322,7 @@ export type EncounterDiagnosisOrderByWithAggregationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  codeSnapshotSearch?: Prisma.SortOrder
   _count?: Prisma.EncounterDiagnosisCountOrderByAggregateInput
   _avg?: Prisma.EncounterDiagnosisAvgOrderByAggregateInput
   _max?: Prisma.EncounterDiagnosisMaxOrderByAggregateInput
@@ -333,6 +343,7 @@ export type EncounterDiagnosisScalarWhereWithAggregatesInput = {
   notes?: Prisma.StringNullableWithAggregatesFilter<"EncounterDiagnosis"> | string | null
   createdByUserId?: Prisma.BigIntWithAggregatesFilter<"EncounterDiagnosis"> | bigint | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"EncounterDiagnosis"> | Date | string
+  codeSnapshotSearch?: Prisma.StringWithAggregatesFilter<"EncounterDiagnosis"> | string
 }
 
 export type EncounterDiagnosisCreateInput = {
@@ -342,6 +353,7 @@ export type EncounterDiagnosisCreateInput = {
   descriptionSnapshot: string
   notes?: string | null
   createdAt?: Date | string
+  codeSnapshotSearch?: string
   diagnosisCode: Prisma.DiagnosisCodeCreateNestedOneWithoutEncounterDiagnosesInput
   encounter: Prisma.ClinicalEncounterCreateNestedOneWithoutDiagnosesInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedEncounterDiagnosesInput
@@ -358,6 +370,7 @@ export type EncounterDiagnosisUncheckedCreateInput = {
   notes?: string | null
   createdByUserId: bigint | number
   createdAt?: Date | string
+  codeSnapshotSearch?: string
   procedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutDiagnosisInput
 }
 
@@ -368,6 +381,7 @@ export type EncounterDiagnosisUpdateInput = {
   descriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   diagnosisCode?: Prisma.DiagnosisCodeUpdateOneRequiredWithoutEncounterDiagnosesNestedInput
   encounter?: Prisma.ClinicalEncounterUpdateOneRequiredWithoutDiagnosesNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedEncounterDiagnosesNestedInput
@@ -384,6 +398,7 @@ export type EncounterDiagnosisUncheckedUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   procedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutDiagnosisNestedInput
 }
 
@@ -397,6 +412,7 @@ export type EncounterDiagnosisCreateManyInput = {
   notes?: string | null
   createdByUserId: bigint | number
   createdAt?: Date | string
+  codeSnapshotSearch?: string
 }
 
 export type EncounterDiagnosisUpdateManyMutationInput = {
@@ -406,6 +422,7 @@ export type EncounterDiagnosisUpdateManyMutationInput = {
   descriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type EncounterDiagnosisUncheckedUpdateManyInput = {
@@ -418,6 +435,7 @@ export type EncounterDiagnosisUncheckedUpdateManyInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type EncounterDiagnosisListRelationFilter = {
@@ -428,12 +446,6 @@ export type EncounterDiagnosisListRelationFilter = {
 
 export type EncounterDiagnosisOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type EncounterDiagnosisOrderByRelevanceInput = {
-  fields: Prisma.EncounterDiagnosisOrderByRelevanceFieldEnum | Prisma.EncounterDiagnosisOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type EncounterDiagnosisEncounterIdDiagnosisCodeIdCompoundUniqueInput = {
@@ -451,6 +463,7 @@ export type EncounterDiagnosisCountOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  codeSnapshotSearch?: Prisma.SortOrder
 }
 
 export type EncounterDiagnosisAvgOrderByAggregateInput = {
@@ -470,6 +483,7 @@ export type EncounterDiagnosisMaxOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  codeSnapshotSearch?: Prisma.SortOrder
 }
 
 export type EncounterDiagnosisMinOrderByAggregateInput = {
@@ -482,6 +496,7 @@ export type EncounterDiagnosisMinOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  codeSnapshotSearch?: Prisma.SortOrder
 }
 
 export type EncounterDiagnosisSumOrderByAggregateInput = {
@@ -645,6 +660,7 @@ export type EncounterDiagnosisCreateWithoutEncounterInput = {
   descriptionSnapshot: string
   notes?: string | null
   createdAt?: Date | string
+  codeSnapshotSearch?: string
   diagnosisCode: Prisma.DiagnosisCodeCreateNestedOneWithoutEncounterDiagnosesInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedEncounterDiagnosesInput
   procedures?: Prisma.EncounterProcedureCreateNestedManyWithoutDiagnosisInput
@@ -659,6 +675,7 @@ export type EncounterDiagnosisUncheckedCreateWithoutEncounterInput = {
   notes?: string | null
   createdByUserId: bigint | number
   createdAt?: Date | string
+  codeSnapshotSearch?: string
   procedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutDiagnosisInput
 }
 
@@ -701,6 +718,7 @@ export type EncounterDiagnosisScalarWhereInput = {
   notes?: Prisma.StringNullableFilter<"EncounterDiagnosis"> | string | null
   createdByUserId?: Prisma.BigIntFilter<"EncounterDiagnosis"> | bigint | number
   createdAt?: Prisma.DateTimeFilter<"EncounterDiagnosis"> | Date | string
+  codeSnapshotSearch?: Prisma.StringFilter<"EncounterDiagnosis"> | string
 }
 
 export type EncounterDiagnosisCreateWithoutDiagnosisCodeInput = {
@@ -710,6 +728,7 @@ export type EncounterDiagnosisCreateWithoutDiagnosisCodeInput = {
   descriptionSnapshot: string
   notes?: string | null
   createdAt?: Date | string
+  codeSnapshotSearch?: string
   encounter: Prisma.ClinicalEncounterCreateNestedOneWithoutDiagnosesInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedEncounterDiagnosesInput
   procedures?: Prisma.EncounterProcedureCreateNestedManyWithoutDiagnosisInput
@@ -724,6 +743,7 @@ export type EncounterDiagnosisUncheckedCreateWithoutDiagnosisCodeInput = {
   notes?: string | null
   createdByUserId: bigint | number
   createdAt?: Date | string
+  codeSnapshotSearch?: string
   procedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutDiagnosisInput
 }
 
@@ -760,6 +780,7 @@ export type EncounterDiagnosisCreateWithoutProceduresInput = {
   descriptionSnapshot: string
   notes?: string | null
   createdAt?: Date | string
+  codeSnapshotSearch?: string
   diagnosisCode: Prisma.DiagnosisCodeCreateNestedOneWithoutEncounterDiagnosesInput
   encounter: Prisma.ClinicalEncounterCreateNestedOneWithoutDiagnosesInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedEncounterDiagnosesInput
@@ -775,6 +796,7 @@ export type EncounterDiagnosisUncheckedCreateWithoutProceduresInput = {
   notes?: string | null
   createdByUserId: bigint | number
   createdAt?: Date | string
+  codeSnapshotSearch?: string
 }
 
 export type EncounterDiagnosisCreateOrConnectWithoutProceduresInput = {
@@ -800,6 +822,7 @@ export type EncounterDiagnosisUpdateWithoutProceduresInput = {
   descriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   diagnosisCode?: Prisma.DiagnosisCodeUpdateOneRequiredWithoutEncounterDiagnosesNestedInput
   encounter?: Prisma.ClinicalEncounterUpdateOneRequiredWithoutDiagnosesNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedEncounterDiagnosesNestedInput
@@ -815,6 +838,7 @@ export type EncounterDiagnosisUncheckedUpdateWithoutProceduresInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type EncounterDiagnosisCreateWithoutCreatedByUserInput = {
@@ -824,6 +848,7 @@ export type EncounterDiagnosisCreateWithoutCreatedByUserInput = {
   descriptionSnapshot: string
   notes?: string | null
   createdAt?: Date | string
+  codeSnapshotSearch?: string
   diagnosisCode: Prisma.DiagnosisCodeCreateNestedOneWithoutEncounterDiagnosesInput
   encounter: Prisma.ClinicalEncounterCreateNestedOneWithoutDiagnosesInput
   procedures?: Prisma.EncounterProcedureCreateNestedManyWithoutDiagnosisInput
@@ -838,6 +863,7 @@ export type EncounterDiagnosisUncheckedCreateWithoutCreatedByUserInput = {
   descriptionSnapshot: string
   notes?: string | null
   createdAt?: Date | string
+  codeSnapshotSearch?: string
   procedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutDiagnosisInput
 }
 
@@ -876,6 +902,7 @@ export type EncounterDiagnosisCreateManyEncounterInput = {
   notes?: string | null
   createdByUserId: bigint | number
   createdAt?: Date | string
+  codeSnapshotSearch?: string
 }
 
 export type EncounterDiagnosisUpdateWithoutEncounterInput = {
@@ -885,6 +912,7 @@ export type EncounterDiagnosisUpdateWithoutEncounterInput = {
   descriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   diagnosisCode?: Prisma.DiagnosisCodeUpdateOneRequiredWithoutEncounterDiagnosesNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedEncounterDiagnosesNestedInput
   procedures?: Prisma.EncounterProcedureUpdateManyWithoutDiagnosisNestedInput
@@ -899,6 +927,7 @@ export type EncounterDiagnosisUncheckedUpdateWithoutEncounterInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   procedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutDiagnosisNestedInput
 }
 
@@ -911,6 +940,7 @@ export type EncounterDiagnosisUncheckedUpdateManyWithoutEncounterInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type EncounterDiagnosisCreateManyDiagnosisCodeInput = {
@@ -922,6 +952,7 @@ export type EncounterDiagnosisCreateManyDiagnosisCodeInput = {
   notes?: string | null
   createdByUserId: bigint | number
   createdAt?: Date | string
+  codeSnapshotSearch?: string
 }
 
 export type EncounterDiagnosisUpdateWithoutDiagnosisCodeInput = {
@@ -931,6 +962,7 @@ export type EncounterDiagnosisUpdateWithoutDiagnosisCodeInput = {
   descriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   encounter?: Prisma.ClinicalEncounterUpdateOneRequiredWithoutDiagnosesNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedEncounterDiagnosesNestedInput
   procedures?: Prisma.EncounterProcedureUpdateManyWithoutDiagnosisNestedInput
@@ -945,6 +977,7 @@ export type EncounterDiagnosisUncheckedUpdateWithoutDiagnosisCodeInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   procedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutDiagnosisNestedInput
 }
 
@@ -957,6 +990,7 @@ export type EncounterDiagnosisUncheckedUpdateManyWithoutDiagnosisCodeInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type EncounterDiagnosisCreateManyCreatedByUserInput = {
@@ -968,6 +1002,7 @@ export type EncounterDiagnosisCreateManyCreatedByUserInput = {
   descriptionSnapshot: string
   notes?: string | null
   createdAt?: Date | string
+  codeSnapshotSearch?: string
 }
 
 export type EncounterDiagnosisUpdateWithoutCreatedByUserInput = {
@@ -977,6 +1012,7 @@ export type EncounterDiagnosisUpdateWithoutCreatedByUserInput = {
   descriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   diagnosisCode?: Prisma.DiagnosisCodeUpdateOneRequiredWithoutEncounterDiagnosesNestedInput
   encounter?: Prisma.ClinicalEncounterUpdateOneRequiredWithoutDiagnosesNestedInput
   procedures?: Prisma.EncounterProcedureUpdateManyWithoutDiagnosisNestedInput
@@ -991,6 +1027,7 @@ export type EncounterDiagnosisUncheckedUpdateWithoutCreatedByUserInput = {
   descriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   procedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutDiagnosisNestedInput
 }
 
@@ -1003,6 +1040,7 @@ export type EncounterDiagnosisUncheckedUpdateManyWithoutCreatedByUserInput = {
   descriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -1046,6 +1084,7 @@ export type EncounterDiagnosisSelect<ExtArgs extends runtime.Types.Extensions.In
   notes?: boolean
   createdByUserId?: boolean
   createdAt?: boolean
+  codeSnapshotSearch?: boolean
   diagnosisCode?: boolean | Prisma.DiagnosisCodeDefaultArgs<ExtArgs>
   encounter?: boolean | Prisma.ClinicalEncounterDefaultArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1053,7 +1092,37 @@ export type EncounterDiagnosisSelect<ExtArgs extends runtime.Types.Extensions.In
   _count?: boolean | Prisma.EncounterDiagnosisCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["encounterDiagnosis"]>
 
+export type EncounterDiagnosisSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  encounterId?: boolean
+  diagnosisCodeId?: boolean
+  isPrimary?: boolean
+  codeSnapshot?: boolean
+  descriptionSnapshot?: boolean
+  notes?: boolean
+  createdByUserId?: boolean
+  createdAt?: boolean
+  codeSnapshotSearch?: boolean
+  diagnosisCode?: boolean | Prisma.DiagnosisCodeDefaultArgs<ExtArgs>
+  encounter?: boolean | Prisma.ClinicalEncounterDefaultArgs<ExtArgs>
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["encounterDiagnosis"]>
 
+export type EncounterDiagnosisSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  encounterId?: boolean
+  diagnosisCodeId?: boolean
+  isPrimary?: boolean
+  codeSnapshot?: boolean
+  descriptionSnapshot?: boolean
+  notes?: boolean
+  createdByUserId?: boolean
+  createdAt?: boolean
+  codeSnapshotSearch?: boolean
+  diagnosisCode?: boolean | Prisma.DiagnosisCodeDefaultArgs<ExtArgs>
+  encounter?: boolean | Prisma.ClinicalEncounterDefaultArgs<ExtArgs>
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["encounterDiagnosis"]>
 
 export type EncounterDiagnosisSelectScalar = {
   id?: boolean
@@ -1065,15 +1134,26 @@ export type EncounterDiagnosisSelectScalar = {
   notes?: boolean
   createdByUserId?: boolean
   createdAt?: boolean
+  codeSnapshotSearch?: boolean
 }
 
-export type EncounterDiagnosisOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "encounterId" | "diagnosisCodeId" | "isPrimary" | "codeSnapshot" | "descriptionSnapshot" | "notes" | "createdByUserId" | "createdAt", ExtArgs["result"]["encounterDiagnosis"]>
+export type EncounterDiagnosisOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "encounterId" | "diagnosisCodeId" | "isPrimary" | "codeSnapshot" | "descriptionSnapshot" | "notes" | "createdByUserId" | "createdAt" | "codeSnapshotSearch", ExtArgs["result"]["encounterDiagnosis"]>
 export type EncounterDiagnosisInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   diagnosisCode?: boolean | Prisma.DiagnosisCodeDefaultArgs<ExtArgs>
   encounter?: boolean | Prisma.ClinicalEncounterDefaultArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   procedures?: boolean | Prisma.EncounterDiagnosis$proceduresArgs<ExtArgs>
   _count?: boolean | Prisma.EncounterDiagnosisCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type EncounterDiagnosisIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  diagnosisCode?: boolean | Prisma.DiagnosisCodeDefaultArgs<ExtArgs>
+  encounter?: boolean | Prisma.ClinicalEncounterDefaultArgs<ExtArgs>
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
+export type EncounterDiagnosisIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  diagnosisCode?: boolean | Prisma.DiagnosisCodeDefaultArgs<ExtArgs>
+  encounter?: boolean | Prisma.ClinicalEncounterDefaultArgs<ExtArgs>
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $EncounterDiagnosisPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1094,6 +1174,7 @@ export type $EncounterDiagnosisPayload<ExtArgs extends runtime.Types.Extensions.
     notes: string | null
     createdByUserId: bigint
     createdAt: Date
+    codeSnapshotSearch: string
   }, ExtArgs["result"]["encounterDiagnosis"]>
   composites: {}
 }
@@ -1212,6 +1293,30 @@ export interface EncounterDiagnosisDelegate<ExtArgs extends runtime.Types.Extens
   createMany<T extends EncounterDiagnosisCreateManyArgs>(args?: Prisma.SelectSubset<T, EncounterDiagnosisCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many EncounterDiagnoses and returns the data saved in the database.
+   * @param {EncounterDiagnosisCreateManyAndReturnArgs} args - Arguments to create many EncounterDiagnoses.
+   * @example
+   * // Create many EncounterDiagnoses
+   * const encounterDiagnosis = await prisma.encounterDiagnosis.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many EncounterDiagnoses and only return the `id`
+   * const encounterDiagnosisWithIdOnly = await prisma.encounterDiagnosis.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends EncounterDiagnosisCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, EncounterDiagnosisCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EncounterDiagnosisPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a EncounterDiagnosis.
    * @param {EncounterDiagnosisDeleteArgs} args - Arguments to delete one EncounterDiagnosis.
    * @example
@@ -1274,6 +1379,36 @@ export interface EncounterDiagnosisDelegate<ExtArgs extends runtime.Types.Extens
    * 
    */
   updateMany<T extends EncounterDiagnosisUpdateManyArgs>(args: Prisma.SelectSubset<T, EncounterDiagnosisUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more EncounterDiagnoses and returns the data updated in the database.
+   * @param {EncounterDiagnosisUpdateManyAndReturnArgs} args - Arguments to update many EncounterDiagnoses.
+   * @example
+   * // Update many EncounterDiagnoses
+   * const encounterDiagnosis = await prisma.encounterDiagnosis.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more EncounterDiagnoses and only return the `id`
+   * const encounterDiagnosisWithIdOnly = await prisma.encounterDiagnosis.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends EncounterDiagnosisUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, EncounterDiagnosisUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EncounterDiagnosisPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one EncounterDiagnosis.
@@ -1476,6 +1611,7 @@ export interface EncounterDiagnosisFieldRefs {
   readonly notes: Prisma.FieldRef<"EncounterDiagnosis", 'String'>
   readonly createdByUserId: Prisma.FieldRef<"EncounterDiagnosis", 'BigInt'>
   readonly createdAt: Prisma.FieldRef<"EncounterDiagnosis", 'DateTime'>
+  readonly codeSnapshotSearch: Prisma.FieldRef<"EncounterDiagnosis", 'String'>
 }
     
 
@@ -1714,6 +1850,29 @@ export type EncounterDiagnosisCreateManyArgs<ExtArgs extends runtime.Types.Exten
 }
 
 /**
+ * EncounterDiagnosis createManyAndReturn
+ */
+export type EncounterDiagnosisCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EncounterDiagnosis
+   */
+  select?: Prisma.EncounterDiagnosisSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the EncounterDiagnosis
+   */
+  omit?: Prisma.EncounterDiagnosisOmit<ExtArgs> | null
+  /**
+   * The data used to create many EncounterDiagnoses.
+   */
+  data: Prisma.EncounterDiagnosisCreateManyInput | Prisma.EncounterDiagnosisCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EncounterDiagnosisIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * EncounterDiagnosis update
  */
 export type EncounterDiagnosisUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1755,6 +1914,36 @@ export type EncounterDiagnosisUpdateManyArgs<ExtArgs extends runtime.Types.Exten
    * Limit how many EncounterDiagnoses to update.
    */
   limit?: number
+}
+
+/**
+ * EncounterDiagnosis updateManyAndReturn
+ */
+export type EncounterDiagnosisUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EncounterDiagnosis
+   */
+  select?: Prisma.EncounterDiagnosisSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the EncounterDiagnosis
+   */
+  omit?: Prisma.EncounterDiagnosisOmit<ExtArgs> | null
+  /**
+   * The data used to update EncounterDiagnoses.
+   */
+  data: Prisma.XOR<Prisma.EncounterDiagnosisUpdateManyMutationInput, Prisma.EncounterDiagnosisUncheckedUpdateManyInput>
+  /**
+   * Filter which EncounterDiagnoses to update
+   */
+  where?: Prisma.EncounterDiagnosisWhereInput
+  /**
+   * Limit how many EncounterDiagnoses to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EncounterDiagnosisIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

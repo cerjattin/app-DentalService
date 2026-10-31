@@ -1,5 +1,7 @@
 # ODONTHO SVB Backend Postman QA
 
+NEG-FUNC-03/04/05 (2026-10-31): la colección principal ya no envía `declarantIdSnapshot` al crear declaraciones. Backend rechaza un string cliente y vincula la identidad desde la primera factura CLOSED. Consultar [rutas y escenarios nuevos](../docs/NEG_FUNC_03_04_05.md); la colección complementaria `NEG_FUNC_03_04_05.postman_collection.json` cubre las nuevas operaciones. No se ejecutó Postman contra clínica/Supabase operativo como parte de esta entrega.
+
 Sprint 19A/B prepara aceptación manual end-to-end del backend. No modifica `prisma/seed.ts`, schema, migraciones ni permisos.
 
 La colección contiene 96 requests organizados por flujo funcional.
@@ -13,9 +15,11 @@ npm run typecheck
 npm test -- --reporter=dot
 ```
 
-Baseline esperado: 25 archivos de test y 201 tests.
+Los conteos del sprint original son históricos. Para la preparación PostgreSQL, la ejecución local dedicada verificó 31 archivos y 298 tests. Las pruebas de integración requieren `TEST_DATABASE_URL` local con sufijo `_test`; no apuntarlas a Supabase ni a la base operativa. Ver [procedimiento PostgreSQL](../../docs/base-de-datos/MIGRACION_POSTGRESQL.md).
 
 ## Dataset QA
+
+Para el proyecto Supabase de pruebas, después del baseline y seed mínimo: `npm run db:qa-seed:supabase`. Para arrancar el backend con esa conexión: `npm run dev:supabase`. El proyecto Supabase y la ejecución Postman aún no se dieron por migrados/validados en la preparación local.
 
 Crear dataset aislado:
 

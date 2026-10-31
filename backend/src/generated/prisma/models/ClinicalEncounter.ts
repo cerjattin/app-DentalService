@@ -300,7 +300,6 @@ export type ClinicalEncounterOrderByWithRelationInput = {
   provider?: Prisma.ProviderOrderByWithRelationInput
   diagnoses?: Prisma.EncounterDiagnosisOrderByRelationAggregateInput
   procedures?: Prisma.EncounterProcedureOrderByRelationAggregateInput
-  _relevance?: Prisma.ClinicalEncounterOrderByRelevanceInput
 }
 
 export type ClinicalEncounterWhereUniqueInput = Prisma.AtLeast<{
@@ -467,12 +466,6 @@ export type ClinicalEncounterUncheckedUpdateManyInput = {
 export type ClinicalEncounterNullableScalarRelationFilter = {
   is?: Prisma.ClinicalEncounterWhereInput | null
   isNot?: Prisma.ClinicalEncounterWhereInput | null
-}
-
-export type ClinicalEncounterOrderByRelevanceInput = {
-  fields: Prisma.ClinicalEncounterOrderByRelevanceFieldEnum | Prisma.ClinicalEncounterOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type ClinicalEncounterCountOrderByAggregateInput = {
@@ -1223,7 +1216,39 @@ export type ClinicalEncounterSelect<ExtArgs extends runtime.Types.Extensions.Int
   _count?: boolean | Prisma.ClinicalEncounterCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["clinicalEncounter"]>
 
+export type ClinicalEncounterSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  appointmentId?: boolean
+  providerId?: boolean
+  status?: boolean
+  startedAt?: boolean
+  completedAt?: boolean
+  chiefComplaint?: boolean
+  clinicalNotes?: boolean
+  createdByUserId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  appointment?: boolean | Prisma.AppointmentDefaultArgs<ExtArgs>
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  provider?: boolean | Prisma.ProviderDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["clinicalEncounter"]>
 
+export type ClinicalEncounterSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  appointmentId?: boolean
+  providerId?: boolean
+  status?: boolean
+  startedAt?: boolean
+  completedAt?: boolean
+  chiefComplaint?: boolean
+  clinicalNotes?: boolean
+  createdByUserId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  appointment?: boolean | Prisma.AppointmentDefaultArgs<ExtArgs>
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  provider?: boolean | Prisma.ProviderDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["clinicalEncounter"]>
 
 export type ClinicalEncounterSelectScalar = {
   id?: boolean
@@ -1247,6 +1272,16 @@ export type ClinicalEncounterInclude<ExtArgs extends runtime.Types.Extensions.In
   diagnoses?: boolean | Prisma.ClinicalEncounter$diagnosesArgs<ExtArgs>
   procedures?: boolean | Prisma.ClinicalEncounter$proceduresArgs<ExtArgs>
   _count?: boolean | Prisma.ClinicalEncounterCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type ClinicalEncounterIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  appointment?: boolean | Prisma.AppointmentDefaultArgs<ExtArgs>
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  provider?: boolean | Prisma.ProviderDefaultArgs<ExtArgs>
+}
+export type ClinicalEncounterIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  appointment?: boolean | Prisma.AppointmentDefaultArgs<ExtArgs>
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  provider?: boolean | Prisma.ProviderDefaultArgs<ExtArgs>
 }
 
 export type $ClinicalEncounterPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1388,6 +1423,30 @@ export interface ClinicalEncounterDelegate<ExtArgs extends runtime.Types.Extensi
   createMany<T extends ClinicalEncounterCreateManyArgs>(args?: Prisma.SelectSubset<T, ClinicalEncounterCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many ClinicalEncounters and returns the data saved in the database.
+   * @param {ClinicalEncounterCreateManyAndReturnArgs} args - Arguments to create many ClinicalEncounters.
+   * @example
+   * // Create many ClinicalEncounters
+   * const clinicalEncounter = await prisma.clinicalEncounter.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many ClinicalEncounters and only return the `id`
+   * const clinicalEncounterWithIdOnly = await prisma.clinicalEncounter.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends ClinicalEncounterCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, ClinicalEncounterCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ClinicalEncounterPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a ClinicalEncounter.
    * @param {ClinicalEncounterDeleteArgs} args - Arguments to delete one ClinicalEncounter.
    * @example
@@ -1450,6 +1509,36 @@ export interface ClinicalEncounterDelegate<ExtArgs extends runtime.Types.Extensi
    * 
    */
   updateMany<T extends ClinicalEncounterUpdateManyArgs>(args: Prisma.SelectSubset<T, ClinicalEncounterUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more ClinicalEncounters and returns the data updated in the database.
+   * @param {ClinicalEncounterUpdateManyAndReturnArgs} args - Arguments to update many ClinicalEncounters.
+   * @example
+   * // Update many ClinicalEncounters
+   * const clinicalEncounter = await prisma.clinicalEncounter.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more ClinicalEncounters and only return the `id`
+   * const clinicalEncounterWithIdOnly = await prisma.clinicalEncounter.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends ClinicalEncounterUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, ClinicalEncounterUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ClinicalEncounterPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one ClinicalEncounter.
@@ -1893,6 +1982,29 @@ export type ClinicalEncounterCreateManyArgs<ExtArgs extends runtime.Types.Extens
 }
 
 /**
+ * ClinicalEncounter createManyAndReturn
+ */
+export type ClinicalEncounterCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ClinicalEncounter
+   */
+  select?: Prisma.ClinicalEncounterSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the ClinicalEncounter
+   */
+  omit?: Prisma.ClinicalEncounterOmit<ExtArgs> | null
+  /**
+   * The data used to create many ClinicalEncounters.
+   */
+  data: Prisma.ClinicalEncounterCreateManyInput | Prisma.ClinicalEncounterCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ClinicalEncounterIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * ClinicalEncounter update
  */
 export type ClinicalEncounterUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1934,6 +2046,36 @@ export type ClinicalEncounterUpdateManyArgs<ExtArgs extends runtime.Types.Extens
    * Limit how many ClinicalEncounters to update.
    */
   limit?: number
+}
+
+/**
+ * ClinicalEncounter updateManyAndReturn
+ */
+export type ClinicalEncounterUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ClinicalEncounter
+   */
+  select?: Prisma.ClinicalEncounterSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the ClinicalEncounter
+   */
+  omit?: Prisma.ClinicalEncounterOmit<ExtArgs> | null
+  /**
+   * The data used to update ClinicalEncounters.
+   */
+  data: Prisma.XOR<Prisma.ClinicalEncounterUpdateManyMutationInput, Prisma.ClinicalEncounterUncheckedUpdateManyInput>
+  /**
+   * Filter which ClinicalEncounters to update
+   */
+  where?: Prisma.ClinicalEncounterWhereInput
+  /**
+   * Limit how many ClinicalEncounters to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ClinicalEncounterIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

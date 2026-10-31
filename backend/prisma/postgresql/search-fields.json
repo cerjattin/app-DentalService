@@ -1,0 +1,196 @@
+{
+  "appointments": [
+    {
+      "field": "appointmentNumber",
+      "column": "appointment_number"
+    },
+    {
+      "field": "reason",
+      "column": "reason"
+    }
+  ],
+  "audit_logs": [
+    {
+      "field": "entityKey",
+      "column": "entity_key"
+    },
+    {
+      "field": "entityType",
+      "column": "entity_type"
+    }
+  ],
+  "clinic_locations": [
+    {
+      "field": "code",
+      "column": "code"
+    }
+  ],
+  "declaration_batches": [
+    {
+      "field": "declarationNumber",
+      "column": "declaration_number"
+    },
+    {
+      "field": "notes",
+      "column": "notes"
+    }
+  ],
+  "diagnosis_codes": [
+    {
+      "field": "code",
+      "column": "code"
+    },
+    {
+      "field": "description",
+      "column": "description"
+    }
+  ],
+  "documents": [
+    {
+      "field": "originalFilename",
+      "column": "original_filename"
+    },
+    {
+      "field": "storageUri",
+      "column": "storage_uri"
+    }
+  ],
+  "encounter_diagnoses": [
+    {
+      "field": "codeSnapshot",
+      "column": "code_snapshot"
+    }
+  ],
+  "encounter_procedures": [
+    {
+      "field": "procedureCodeSnapshot",
+      "column": "procedure_code_snapshot"
+    }
+  ],
+  "invoices": [
+    {
+      "field": "invoiceNumber",
+      "column": "invoice_number"
+    }
+  ],
+  "organizations": [
+    {
+      "field": "legalName",
+      "column": "legal_name"
+    },
+    {
+      "field": "declarantId",
+      "column": "declarant_id"
+    }
+  ],
+  "patient_insurance": [
+    {
+      "field": "insuredId",
+      "column": "insured_id"
+    }
+  ],
+  "patients": [
+    {
+      "field": "patientNumber",
+      "column": "patient_number"
+    },
+    {
+      "field": "firstName",
+      "column": "first_name"
+    },
+    {
+      "field": "middleName",
+      "column": "middle_name"
+    },
+    {
+      "field": "lastName",
+      "column": "last_name"
+    },
+    {
+      "field": "secondLastName",
+      "column": "second_last_name"
+    },
+    {
+      "field": "documentNumber",
+      "column": "document_number"
+    },
+    {
+      "field": "phone",
+      "column": "phone"
+    },
+    {
+      "field": "mobilePhone",
+      "column": "mobile_phone"
+    }
+  ],
+  "payers": [
+    {
+      "field": "code",
+      "column": "code"
+    },
+    {
+      "field": "name",
+      "column": "name"
+    }
+  ],
+  "providers": [
+    {
+      "field": "firstName",
+      "column": "first_name"
+    },
+    {
+      "field": "lastName",
+      "column": "last_name"
+    },
+    {
+      "field": "svbProviderId",
+      "column": "svb_provider_id"
+    },
+    {
+      "field": "licenseNumber",
+      "column": "license_number"
+    },
+    {
+      "field": "email",
+      "column": "email"
+    },
+    {
+      "field": "phone",
+      "column": "phone"
+    },
+    {
+      "field": "specialty",
+      "column": "specialty"
+    }
+  ],
+  "svb_authorizations": [
+    {
+      "field": "authorizationId",
+      "column": "authorization_id"
+    }
+  ],
+  "svb_procedures": [
+    {
+      "field": "code",
+      "column": "code"
+    },
+    {
+      "field": "description",
+      "column": "description"
+    }
+  ],
+  "users": [
+    {
+      "field": "email",
+      "column": "email"
+    },
+    {
+      "field": "firstName",
+      "column": "first_name"
+    },
+    {
+      "field": "lastName",
+      "column": "last_name"
+    }
+  ]
+}

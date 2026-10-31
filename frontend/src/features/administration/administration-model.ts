@@ -2,6 +2,12 @@ import { z } from 'zod'
 
 const optionalText = (max: number) => z.string().trim().max(max)
 const optionalEmail = z.string().trim().max(320).refine((value) => !value || z.email().safeParse(value).success, 'Enter a valid email address.')
+export const organizationSchema = z.object({
+  legalName: z.string().trim().min(1, 'Legal name is required.').max(200),
+  tradeName: optionalText(200), declarantId: z.string().trim().regex(/^\d{1,5}$|^$/, 'Enter 1 to 5 digits or leave empty.'),
+  email: optionalEmail, phone: optionalText(40), reason: z.string().trim().min(1, 'A reason is required.').max(500),
+})
+export type OrganizationValues = z.infer<typeof organizationSchema>
 export const createUserSchema = z.object({
   email: z.email('Enter a valid email address.').max(320),
   firstName: z.string().trim().min(1, 'First name is required.').max(120),

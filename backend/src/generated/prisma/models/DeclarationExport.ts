@@ -289,7 +289,6 @@ export type DeclarationExportOrderByWithRelationInput = {
   document?: Prisma.DocumentOrderByWithRelationInput
   exportedByUser?: Prisma.UserOrderByWithRelationInput
   submissions?: Prisma.DeclarationSubmissionOrderByRelationAggregateInput
-  _relevance?: Prisma.DeclarationExportOrderByRelevanceInput
 }
 
 export type DeclarationExportWhereUniqueInput = Prisma.AtLeast<{
@@ -448,12 +447,6 @@ export type DeclarationExportOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type DeclarationExportOrderByRelevanceInput = {
-  fields: Prisma.DeclarationExportOrderByRelevanceFieldEnum | Prisma.DeclarationExportOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
-}
-
 export type DeclarationExportCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   declarationBatchId?: Prisma.SortOrder
@@ -556,14 +549,6 @@ export type DeclarationExportUncheckedUpdateManyWithoutDeclarationBatchNestedInp
 
 export type EnumDeclarationExportFormatFieldUpdateOperationsInput = {
   set?: $Enums.DeclarationExportFormat
-}
-
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
 }
 
 export type DeclarationExportCreateNestedOneWithoutSubmissionsInput = {
@@ -1061,7 +1046,37 @@ export type DeclarationExportSelect<ExtArgs extends runtime.Types.Extensions.Int
   _count?: boolean | Prisma.DeclarationExportCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["declarationExport"]>
 
+export type DeclarationExportSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  declarationBatchId?: boolean
+  documentId?: boolean
+  format?: boolean
+  schemaVersion?: boolean
+  adapterVersion?: boolean
+  recordCount?: boolean
+  exportedByUserId?: boolean
+  exportedAt?: boolean
+  metadata?: boolean
+  declarationBatch?: boolean | Prisma.DeclarationBatchDefaultArgs<ExtArgs>
+  document?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
+  exportedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["declarationExport"]>
 
+export type DeclarationExportSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  declarationBatchId?: boolean
+  documentId?: boolean
+  format?: boolean
+  schemaVersion?: boolean
+  adapterVersion?: boolean
+  recordCount?: boolean
+  exportedByUserId?: boolean
+  exportedAt?: boolean
+  metadata?: boolean
+  declarationBatch?: boolean | Prisma.DeclarationBatchDefaultArgs<ExtArgs>
+  document?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
+  exportedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["declarationExport"]>
 
 export type DeclarationExportSelectScalar = {
   id?: boolean
@@ -1083,6 +1098,16 @@ export type DeclarationExportInclude<ExtArgs extends runtime.Types.Extensions.In
   exportedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   submissions?: boolean | Prisma.DeclarationExport$submissionsArgs<ExtArgs>
   _count?: boolean | Prisma.DeclarationExportCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type DeclarationExportIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  declarationBatch?: boolean | Prisma.DeclarationBatchDefaultArgs<ExtArgs>
+  document?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
+  exportedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
+export type DeclarationExportIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  declarationBatch?: boolean | Prisma.DeclarationBatchDefaultArgs<ExtArgs>
+  document?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
+  exportedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $DeclarationExportPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1222,6 +1247,30 @@ export interface DeclarationExportDelegate<ExtArgs extends runtime.Types.Extensi
   createMany<T extends DeclarationExportCreateManyArgs>(args?: Prisma.SelectSubset<T, DeclarationExportCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many DeclarationExports and returns the data saved in the database.
+   * @param {DeclarationExportCreateManyAndReturnArgs} args - Arguments to create many DeclarationExports.
+   * @example
+   * // Create many DeclarationExports
+   * const declarationExport = await prisma.declarationExport.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many DeclarationExports and only return the `id`
+   * const declarationExportWithIdOnly = await prisma.declarationExport.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends DeclarationExportCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, DeclarationExportCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeclarationExportPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a DeclarationExport.
    * @param {DeclarationExportDeleteArgs} args - Arguments to delete one DeclarationExport.
    * @example
@@ -1284,6 +1333,36 @@ export interface DeclarationExportDelegate<ExtArgs extends runtime.Types.Extensi
    * 
    */
   updateMany<T extends DeclarationExportUpdateManyArgs>(args: Prisma.SelectSubset<T, DeclarationExportUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more DeclarationExports and returns the data updated in the database.
+   * @param {DeclarationExportUpdateManyAndReturnArgs} args - Arguments to update many DeclarationExports.
+   * @example
+   * // Update many DeclarationExports
+   * const declarationExport = await prisma.declarationExport.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more DeclarationExports and only return the `id`
+   * const declarationExportWithIdOnly = await prisma.declarationExport.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends DeclarationExportUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, DeclarationExportUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeclarationExportPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one DeclarationExport.
@@ -1725,6 +1804,29 @@ export type DeclarationExportCreateManyArgs<ExtArgs extends runtime.Types.Extens
 }
 
 /**
+ * DeclarationExport createManyAndReturn
+ */
+export type DeclarationExportCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeclarationExport
+   */
+  select?: Prisma.DeclarationExportSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeclarationExport
+   */
+  omit?: Prisma.DeclarationExportOmit<ExtArgs> | null
+  /**
+   * The data used to create many DeclarationExports.
+   */
+  data: Prisma.DeclarationExportCreateManyInput | Prisma.DeclarationExportCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeclarationExportIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * DeclarationExport update
  */
 export type DeclarationExportUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1766,6 +1868,36 @@ export type DeclarationExportUpdateManyArgs<ExtArgs extends runtime.Types.Extens
    * Limit how many DeclarationExports to update.
    */
   limit?: number
+}
+
+/**
+ * DeclarationExport updateManyAndReturn
+ */
+export type DeclarationExportUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeclarationExport
+   */
+  select?: Prisma.DeclarationExportSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeclarationExport
+   */
+  omit?: Prisma.DeclarationExportOmit<ExtArgs> | null
+  /**
+   * The data used to update DeclarationExports.
+   */
+  data: Prisma.XOR<Prisma.DeclarationExportUpdateManyMutationInput, Prisma.DeclarationExportUncheckedUpdateManyInput>
+  /**
+   * Filter which DeclarationExports to update
+   */
+  where?: Prisma.DeclarationExportWhereInput
+  /**
+   * Limit how many DeclarationExports to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeclarationExportIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

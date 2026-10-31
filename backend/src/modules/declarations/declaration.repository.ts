@@ -1,4 +1,4 @@
-import type { Prisma } from "../../generated/prisma/client.js";
+import { Prisma } from "../../generated/prisma/client.js";
 
 import { prisma } from "../../infrastructure/database/prisma.js";
 import { documentSelect } from "../documents/document.repository.js";
@@ -29,6 +29,7 @@ export const declarationItemSelect = {
   responseMessage: true,
   createdAt: true,
   updatedAt: true,
+  invoiceItem: { select: { invoiceVersion: { select: { declarantIdSnapshot: true } } } },
 } satisfies Prisma.DeclarationItemSelect;
 
 export const declarationExportSelect = {
@@ -118,6 +119,8 @@ export const invoiceItemForDeclarationSelect = {
   sourceInvoiceItemId: true,
   serviceDateSnapshot: true,
   procedureCodeSnapshot: true,
+  procedureDescriptionSnapshot: true,
+  currencyCodeSnapshot: true,
   providerIdSnapshot: true,
   insuredIdSnapshot: true,
   amount: true,
@@ -135,6 +138,7 @@ export const invoiceItemForDeclarationSelect = {
       id: true,
       status: true,
       versionType: true,
+      versionNumber: true,
       invoiceId: true,
       declarantIdSnapshot: true,
       invoice: {
@@ -179,6 +183,32 @@ export type InvoiceItemForDeclarationRecord = Prisma.InvoiceItemGetPayload<{
 }>;
 
 export class DeclarationRepository {
+  async candidatePage(tx: Prisma.TransactionClient, filter: Prisma.Sql, page: number, pageSize: number) {
+    const from = Prisma.sql`FROM invoice_items ii JOIN invoice_versions iv ON iv.id = ii.invoice_version_id
+      JOIN invoices i ON i.current_version_id = iv.id AND i.id = iv.invoice_id
+      JOIN patient_insurance pi ON pi.id = i.patient_insurance_id`;
+    const counts = await tx.$queryRaw<Array<{ total: bigint }>>(Prisma.sql`SELECT count(*) AS total ${from} WHERE ${filter}`);
+    const ids = await tx.$queryRaw<Array<{ id: bigint }>>(Prisma.sql`SELECT ii.id ${from} WHERE ${filter}
+      ORDER BY ii.service_date_snapshot DESC, ii.id DESC LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}`);
+    const items = await tx.invoiceItem.findMany({ where: { id: { in: ids.map((v) => v.id) } },
+      select: invoiceItemForDeclarationSelect, orderBy: [{ serviceDateSnapshot: "desc" }, { id: "desc" }] });
+    return { total: Number(counts[0]?.total ?? 0n), items };
+  }
+  async lockBatch(tx: Prisma.TransactionClient, id: bigint, organizationId: bigint) {
+    await tx.$queryRaw`SELECT id FROM declaration_batches WHERE id = ${id} AND organization_id = ${organizationId} FOR UPDATE`;
+    return this.findById(id, organizationId, tx);
+  }
+
+  async lockInvoiceForItem(tx: Prisma.TransactionClient, itemId: bigint, organizationId: bigint) {
+    await tx.$queryRaw`SELECT i.id FROM invoices i JOIN invoice_versions iv ON iv.invoice_id = i.id
+      JOIN invoice_items ii ON ii.invoice_version_id = iv.id
+      WHERE ii.id = ${itemId} AND i.organization_id = ${organizationId} FOR UPDATE OF i`;
+  }
+
+  allocateOrdinal(tx: Prisma.TransactionClient, id: bigint) {
+    return tx.declarationBatch.update({ where: { id }, data: { lastItemSequence: { increment: 1 } }, select: { lastItemSequence: true } });
+  }
+
   findById(
     declarationId: bigint,
     organizationId: bigint,

@@ -3541,7 +3541,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"payerId\": \"{{payerId}}\",\n  \"periodStart\": \"2027-03-01\",\n  \"periodEnd\": \"2027-03-31\",\n  \"declarantIdSnapshot\": \"{{qaDeclarantId}}\",\n  \"notes\": \"QA Postman declaration\"\n}",
+              "raw": "{\n  \"payerId\": \"{{payerId}}\",\n  \"periodStart\": \"2027-03-01\",\n  \"periodEnd\": \"2027-03-31\",\n  \"notes\": \"QA Postman declaration\"\n}",
               "options": {
                 "raw": {
                   "language": "json"

@@ -64,8 +64,8 @@ async function cleanupInsuranceFixture() {
         },
         {
           entityType: "PATIENT_INSURANCE",
-          entityKey: {
-            startsWith: "SVB-TEST-INS",
+          entityKeySearch: {
+            startsWith: ("SVB-TEST-INS").toLowerCase(),
           },
         },
       ],

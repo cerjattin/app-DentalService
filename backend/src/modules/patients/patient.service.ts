@@ -1,3 +1,4 @@
+import { normalizeSearch } from "../../infrastructure/database/text-search.js";
 import type { Prisma } from "../../generated/prisma/client.js";
 
 import { prisma } from "../../infrastructure/database/prisma.js";
@@ -209,6 +210,8 @@ export class PatientService {
         ? BigInt(query.q)
         : undefined;
 
+    const searchQuery = await normalizeSearch(query.q);
+
     const where: Prisma.PatientWhereInput = {
       organizationId: actor.organizationId,
 
@@ -218,7 +221,7 @@ export class PatientService {
           }
         : {}),
 
-      ...(query.q !== undefined
+      ...(searchQuery !== undefined
         ? {
             OR: [
               ...(numericId !== undefined
@@ -230,58 +233,58 @@ export class PatientService {
                 : []),
 
               {
-                patientNumber: {
-                  contains: query.q,
+                patientNumberSearch: {
+                  contains: searchQuery,
                 },
               },
 
               {
-                firstName: {
-                  contains: query.q,
+                firstNameSearch: {
+                  contains: searchQuery,
                 },
               },
 
               {
-                middleName: {
-                  contains: query.q,
+                middleNameSearch: {
+                  contains: searchQuery,
                 },
               },
 
               {
-                lastName: {
-                  contains: query.q,
+                lastNameSearch: {
+                  contains: searchQuery,
                 },
               },
 
               {
-                secondLastName: {
-                  contains: query.q,
+                secondLastNameSearch: {
+                  contains: searchQuery,
                 },
               },
 
               {
-                documentNumber: {
-                  contains: query.q,
+                documentNumberSearch: {
+                  contains: searchQuery,
                 },
               },
 
               {
-                phone: {
-                  contains: query.q,
+                phoneSearch: {
+                  contains: searchQuery,
                 },
               },
 
               {
-                mobilePhone: {
-                  contains: query.q,
+                mobilePhoneSearch: {
+                  contains: searchQuery,
                 },
               },
 
               {
                 insuranceCoverages: {
                   some: {
-                    insuredId: {
-                      contains: query.q,
+                    insuredIdSearch: {
+                      contains: searchQuery,
                     },
                   },
                 },

@@ -1,5 +1,18 @@
 import type { EntityId } from './core'
 
+export interface OrganizationSettings {
+  id: EntityId
+  legalName: string
+  tradeName: string | null
+  declarantId: string | null
+  email: string | null
+  phone: string | null
+  timezone: 'America/Curacao'
+  updatedAt: string
+  revision: string
+}
+export type OrganizationPatch = { expectedRevision: string; reason: string } & Partial<Pick<OrganizationSettings, 'legalName' | 'tradeName' | 'declarantId' | 'email' | 'phone'>>
+
 export type UserStatus = 'ACTIVE' | 'INACTIVE' | 'LOCKED'
 export interface UserRole {
   id: EntityId

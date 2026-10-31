@@ -1,3 +1,4 @@
+import { normalizeSearch } from "../../infrastructure/database/text-search.js";
 import { Prisma } from "../../generated/prisma/client.js";
 
 import { prisma } from "../../infrastructure/database/prisma.js";
@@ -16,8 +17,9 @@ import {
   storageUriFromKey,
 } from "../documents/document.storage.js";
 import { toInvoiceDocumentResponse } from "../documents/document.types.js";
-import { generateInvoicePdfBytes } from "../documents/invoice-pdf.generator.js";
+import { generateInvoicePdfBytes, signatureImageForPdf, INVOICE_PDF_LAYOUT, INVOICE_PDF_LAYOUT_SUFFIX } from "../documents/invoice-pdf.generator.js";
 import { numberSequenceService } from "../number-sequences/number-sequence.service.js";
+import { CLINICAL_REOPEN_REASON, findClinicalRebillingCorrection } from "./invoice-clinical-reopen.service.js";
 
 import {
   invoiceItemSelect,
@@ -622,6 +624,8 @@ async function requireValidSignatureForClose(
           documentType: true,
           sha256: true,
           sizeBytes: true,
+          storageUri: true,
+          mimeType: true,
         },
       },
     },
@@ -751,7 +755,7 @@ function invoicePdfStorageKey(input: {
     input.invoiceId.toString(),
     "versions",
     input.versionId.toString(),
-    `${input.contentHash}.pdf`,
+    `${input.contentHash}-${INVOICE_PDF_LAYOUT_SUFFIX}.pdf`,
   ].join("/");
 }
 
@@ -776,6 +780,8 @@ async function findExistingInvoicePdf(
 export class InvoiceService {
   async list(query: ListInvoicesQuery, actor: AuthenticatedRequestContext) {
     const skip = (query.page - 1) * query.pageSize;
+
+    const searchQuery = await normalizeSearch(query.q);
 
     const where: Prisma.InvoiceWhereInput = {
       organizationId: actor.organizationId,
@@ -803,15 +809,15 @@ export class InvoiceService {
           }
         : {}),
 
-      ...(query.q !== undefined
+      ...(searchQuery !== undefined
         ? {
             OR: [
-              { invoiceNumber: { contains: query.q } },
-              { appointment: { appointmentNumber: { contains: query.q } } },
-              { patient: { patientNumber: { contains: query.q } } },
-              { patient: { firstName: { contains: query.q } } },
-              { patient: { lastName: { contains: query.q } } },
-              { patientInsurance: { insuredId: { contains: query.q } } },
+              { invoiceNumberSearch: { contains: searchQuery } },
+              { appointment: { appointmentNumberSearch: { contains: searchQuery } } },
+              { patient: { patientNumberSearch: { contains: searchQuery } } },
+              { patient: { firstNameSearch: { contains: searchQuery } } },
+              { patient: { lastNameSearch: { contains: searchQuery } } },
+              { patientInsurance: { insuredIdSearch: { contains: searchQuery } } },
             ],
           }
         : {}),
@@ -1898,16 +1904,17 @@ export class InvoiceService {
           );
         }
 
-        const existingInvoice = await tx.invoice.findUnique({
-          where: {
-            appointmentId,
-          },
-          select: {
-            id: true,
-          },
-        });
+        const existingInvoice = await invoiceRepository.findByAppointmentId(appointmentId, actor.organizationId, tx);
+        const rebuildVersion = existingInvoice?.status === "CORRECTION_REQUIRED" &&
+          existingInvoice.currentVersion?.status === "DRAFT" &&
+          existingInvoice.currentVersion.versionType === "CORRECTION" &&
+          existingInvoice.currentVersion.contentHash === null &&
+          existingInvoice.currentVersion.lockedAt === null &&
+          existingInvoice.currentVersion.items.length === 0 &&
+          await findClinicalRebillingCorrection(tx, existingInvoice.id, existingInvoice.currentVersion.id)
+            ? existingInvoice.currentVersion : null;
 
-        if (existingInvoice) {
+        if (existingInvoice && !rebuildVersion) {
           throw new AppError(
             409,
             "INVOICE_ALREADY_EXISTS",
@@ -2003,11 +2010,15 @@ export class InvoiceService {
           );
         }
 
-        const allocatedNumber =
-          await numberSequenceService.allocateWithinTransaction(tx, {
+        if (existingInvoice && (existingInvoice.patientInsuranceId !== patientInsuranceId || rebuildVersion?.currencyCode !== currencyCode)) {
+          throw new AppError(409, "INVOICE_REBILLING_CONTEXT_MISMATCH", "Clinical rebilling must retain the invoice insurance and currency");
+        }
+        const invoiceNumber = existingInvoice
+          ? requireInvoiceNumber(existingInvoice.invoiceNumber)
+          : (await numberSequenceService.allocateWithinTransaction(tx, {
             organizationId: actor.organizationId,
             sequenceType: "INVOICE",
-          });
+          })).formatted;
 
         let totalAmount = new Prisma.Decimal("0.00");
 
@@ -2051,13 +2062,13 @@ export class InvoiceService {
           );
         }
 
-        const invoice = await tx.invoice.create({
+        const invoice = existingInvoice ?? await tx.invoice.create({
           data: {
             organizationId: actor.organizationId,
             appointmentId: appointment.id,
             patientId: appointment.patientId,
             patientInsuranceId,
-            invoiceNumber: allocatedNumber.formatted,
+            invoiceNumber,
             status: "DRAFT",
             createdByUserId: actor.userId,
           },
@@ -2066,7 +2077,9 @@ export class InvoiceService {
           },
         });
 
-        const version = await tx.invoiceVersion.create({
+        const version = rebuildVersion
+          ? await tx.invoiceVersion.update({ where: { id: rebuildVersion.id }, data: { totalAmount, insuredIdSnapshot: insurance.insuredId }, select: { id: true, invoiceId: true } })
+          : await tx.invoiceVersion.create({
           data: {
             invoiceId: invoice.id,
             versionNumber: 1,
@@ -2102,6 +2115,9 @@ export class InvoiceService {
           );
         }
 
+        const sourceItems = rebuildVersion?.supersedesVersionId
+          ? await tx.invoiceItem.findMany({ where: { invoiceVersionId: rebuildVersion.supersedesVersionId },
+            select: { id: true, encounterProcedureId: true } }) : [];
         let lineNumber = 1;
 
         for (const procedure of procedures) {
@@ -2110,11 +2126,11 @@ export class InvoiceService {
               invoiceVersionId: version.id,
               lineNumber,
               detailInvoiceNumber: detailInvoiceNumber(
-                allocatedNumber.formatted,
+                invoiceNumber,
                 lineNumber,
               ),
               encounterProcedureId: procedure.id,
-              sourceInvoiceItemId: null,
+              sourceInvoiceItemId: sourceItems.find((item) => item.encounterProcedureId === procedure.id)?.id ?? null,
               svbProcedureId: procedure.svbProcedureId,
               svbTariffId: procedure.svbTariffId,
               serviceDateSnapshot: serviceDateInCuracao(
@@ -2161,11 +2177,11 @@ export class InvoiceService {
           data: {
             invoiceId: invoice.id,
             invoiceVersionId: version.id,
-            oldStatus: null,
-            newStatus: "DRAFT",
+            oldStatus: existingInvoice ? "CORRECTION_REQUIRED" : null,
+            newStatus: existingInvoice ? "CORRECTION_REQUIRED" : "DRAFT",
             changedByUserId: actor.userId,
             metadata: {
-              source: "invoice.create",
+              source: existingInvoice ? "invoice.rebuild" : "invoice.create",
             },
           },
         });
@@ -2187,7 +2203,7 @@ export class InvoiceService {
         await auditService.writeWithinTransaction(tx, {
           organizationId: actor.organizationId,
           actorUserId: actor.userId,
-          action: "INVOICE_CREATE",
+          action: existingInvoice ? "INVOICE_REBUILD" : "INVOICE_CREATE",
           entityType: "INVOICE",
           entityId: created.id,
           entityKey: created.invoiceNumber ?? created.id.toString(),
@@ -2539,7 +2555,10 @@ export class InvoiceService {
           select: { id: true, status: true },
         });
 
-        if (!source || source.status !== "CLOSED") {
+        const clinicalReopen = correction.reasonCode === CLINICAL_REOPEN_REASON &&
+          await findClinicalRebillingCorrection(tx, current.id, version.id);
+        if (!source || (source.status !== "CLOSED" &&
+            !(clinicalReopen && ["DRAFT", "PENDING_SIGNATURE", "SIGNED"].includes(source.status)))) {
           throw new AppError(
             409,
             "INVOICE_CORRECTION_SOURCE_INVALID",
@@ -2689,6 +2708,11 @@ export class InvoiceService {
       version,
       contentHash,
       signature: validSignature,
+      signatureImage: await signatureImageForPdf(
+        await documentStorage.read(validSignature.signatureDocument.storageUri),
+        validSignature.signatureDocument.mimeType,
+        validSignature.signatureHash,
+      ),
     });
     const documentSha256 = sha256Hex(pdfBytes);
 
@@ -2712,7 +2736,7 @@ export class InvoiceService {
             documentType: "SIGNED_INVOICE_PDF",
             storageProvider: "LOCAL",
             storageUri,
-            originalFilename: `${invoiceNumber}-v${version.versionNumber}.pdf`,
+            originalFilename: `${invoiceNumber}-v${version.versionNumber}-svb.pdf`,
             mimeType: "application/pdf",
             sizeBytes: BigInt(pdfBytes.length),
             sha256: documentSha256,
@@ -2722,7 +2746,7 @@ export class InvoiceService {
               invoiceNumber,
               versionNumber: version.versionNumber,
               contentHash,
-              layout: "technical_invoice_document",
+              layout: INVOICE_PDF_LAYOUT,
               source: "invoice.pdf.generate",
             },
             createdByUserId: actor.userId,

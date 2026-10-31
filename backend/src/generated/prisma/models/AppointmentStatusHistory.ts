@@ -259,7 +259,6 @@ export type AppointmentStatusHistoryOrderByWithRelationInput = {
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   appointment?: Prisma.AppointmentOrderByWithRelationInput
   changedByUser?: Prisma.UserOrderByWithRelationInput
-  _relevance?: Prisma.AppointmentStatusHistoryOrderByRelevanceInput
 }
 
 export type AppointmentStatusHistoryWhereUniqueInput = Prisma.AtLeast<{
@@ -381,12 +380,6 @@ export type AppointmentStatusHistoryUncheckedUpdateManyInput = {
   changedByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-}
-
-export type AppointmentStatusHistoryOrderByRelevanceInput = {
-  fields: Prisma.AppointmentStatusHistoryOrderByRelevanceFieldEnum | Prisma.AppointmentStatusHistoryOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type AppointmentStatusHistoryCountOrderByAggregateInput = {
@@ -735,7 +728,31 @@ export type AppointmentStatusHistorySelect<ExtArgs extends runtime.Types.Extensi
   changedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["appointmentStatusHistory"]>
 
+export type AppointmentStatusHistorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  appointmentId?: boolean
+  oldStatus?: boolean
+  newStatus?: boolean
+  reason?: boolean
+  changedByUserId?: boolean
+  changedAt?: boolean
+  metadata?: boolean
+  appointment?: boolean | Prisma.AppointmentDefaultArgs<ExtArgs>
+  changedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["appointmentStatusHistory"]>
 
+export type AppointmentStatusHistorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  appointmentId?: boolean
+  oldStatus?: boolean
+  newStatus?: boolean
+  reason?: boolean
+  changedByUserId?: boolean
+  changedAt?: boolean
+  metadata?: boolean
+  appointment?: boolean | Prisma.AppointmentDefaultArgs<ExtArgs>
+  changedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["appointmentStatusHistory"]>
 
 export type AppointmentStatusHistorySelectScalar = {
   id?: boolean
@@ -750,6 +767,14 @@ export type AppointmentStatusHistorySelectScalar = {
 
 export type AppointmentStatusHistoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "appointmentId" | "oldStatus" | "newStatus" | "reason" | "changedByUserId" | "changedAt" | "metadata", ExtArgs["result"]["appointmentStatusHistory"]>
 export type AppointmentStatusHistoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  appointment?: boolean | Prisma.AppointmentDefaultArgs<ExtArgs>
+  changedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
+export type AppointmentStatusHistoryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  appointment?: boolean | Prisma.AppointmentDefaultArgs<ExtArgs>
+  changedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
+export type AppointmentStatusHistoryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   appointment?: boolean | Prisma.AppointmentDefaultArgs<ExtArgs>
   changedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -887,6 +912,30 @@ export interface AppointmentStatusHistoryDelegate<ExtArgs extends runtime.Types.
   createMany<T extends AppointmentStatusHistoryCreateManyArgs>(args?: Prisma.SelectSubset<T, AppointmentStatusHistoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many AppointmentStatusHistories and returns the data saved in the database.
+   * @param {AppointmentStatusHistoryCreateManyAndReturnArgs} args - Arguments to create many AppointmentStatusHistories.
+   * @example
+   * // Create many AppointmentStatusHistories
+   * const appointmentStatusHistory = await prisma.appointmentStatusHistory.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many AppointmentStatusHistories and only return the `id`
+   * const appointmentStatusHistoryWithIdOnly = await prisma.appointmentStatusHistory.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends AppointmentStatusHistoryCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, AppointmentStatusHistoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentStatusHistoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a AppointmentStatusHistory.
    * @param {AppointmentStatusHistoryDeleteArgs} args - Arguments to delete one AppointmentStatusHistory.
    * @example
@@ -949,6 +998,36 @@ export interface AppointmentStatusHistoryDelegate<ExtArgs extends runtime.Types.
    * 
    */
   updateMany<T extends AppointmentStatusHistoryUpdateManyArgs>(args: Prisma.SelectSubset<T, AppointmentStatusHistoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more AppointmentStatusHistories and returns the data updated in the database.
+   * @param {AppointmentStatusHistoryUpdateManyAndReturnArgs} args - Arguments to update many AppointmentStatusHistories.
+   * @example
+   * // Update many AppointmentStatusHistories
+   * const appointmentStatusHistory = await prisma.appointmentStatusHistory.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more AppointmentStatusHistories and only return the `id`
+   * const appointmentStatusHistoryWithIdOnly = await prisma.appointmentStatusHistory.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends AppointmentStatusHistoryUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, AppointmentStatusHistoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentStatusHistoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one AppointmentStatusHistory.
@@ -1386,6 +1465,29 @@ export type AppointmentStatusHistoryCreateManyArgs<ExtArgs extends runtime.Types
 }
 
 /**
+ * AppointmentStatusHistory createManyAndReturn
+ */
+export type AppointmentStatusHistoryCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AppointmentStatusHistory
+   */
+  select?: Prisma.AppointmentStatusHistorySelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the AppointmentStatusHistory
+   */
+  omit?: Prisma.AppointmentStatusHistoryOmit<ExtArgs> | null
+  /**
+   * The data used to create many AppointmentStatusHistories.
+   */
+  data: Prisma.AppointmentStatusHistoryCreateManyInput | Prisma.AppointmentStatusHistoryCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AppointmentStatusHistoryIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * AppointmentStatusHistory update
  */
 export type AppointmentStatusHistoryUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1427,6 +1529,36 @@ export type AppointmentStatusHistoryUpdateManyArgs<ExtArgs extends runtime.Types
    * Limit how many AppointmentStatusHistories to update.
    */
   limit?: number
+}
+
+/**
+ * AppointmentStatusHistory updateManyAndReturn
+ */
+export type AppointmentStatusHistoryUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AppointmentStatusHistory
+   */
+  select?: Prisma.AppointmentStatusHistorySelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the AppointmentStatusHistory
+   */
+  omit?: Prisma.AppointmentStatusHistoryOmit<ExtArgs> | null
+  /**
+   * The data used to update AppointmentStatusHistories.
+   */
+  data: Prisma.XOR<Prisma.AppointmentStatusHistoryUpdateManyMutationInput, Prisma.AppointmentStatusHistoryUncheckedUpdateManyInput>
+  /**
+   * Filter which AppointmentStatusHistories to update
+   */
+  where?: Prisma.AppointmentStatusHistoryWhereInput
+  /**
+   * Limit how many AppointmentStatusHistories to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AppointmentStatusHistoryIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

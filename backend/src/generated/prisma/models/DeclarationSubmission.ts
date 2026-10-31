@@ -301,7 +301,6 @@ export type DeclarationSubmissionOrderByWithRelationInput = {
   declarationBatch?: Prisma.DeclarationBatchOrderByWithRelationInput
   declarationExport?: Prisma.DeclarationExportOrderByWithRelationInput
   submittedByUser?: Prisma.UserOrderByWithRelationInput
-  _relevance?: Prisma.DeclarationSubmissionOrderByRelevanceInput
 }
 
 export type DeclarationSubmissionWhereUniqueInput = Prisma.AtLeast<{
@@ -474,12 +473,6 @@ export type DeclarationSubmissionListRelationFilter = {
 
 export type DeclarationSubmissionOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type DeclarationSubmissionOrderByRelevanceInput = {
-  fields: Prisma.DeclarationSubmissionOrderByRelevanceFieldEnum | Prisma.DeclarationSubmissionOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type DeclarationSubmissionDeclarationBatchIdAttemptNumberCompoundUniqueInput = {
@@ -1046,7 +1039,41 @@ export type DeclarationSubmissionSelect<ExtArgs extends runtime.Types.Extensions
   submittedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["declarationSubmission"]>
 
+export type DeclarationSubmissionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  declarationBatchId?: boolean
+  declarationExportId?: boolean
+  attemptNumber?: boolean
+  channel?: boolean
+  status?: boolean
+  externalReference?: boolean
+  requestMetadata?: boolean
+  responseMetadata?: boolean
+  submittedByUserId?: boolean
+  submittedAt?: boolean
+  respondedAt?: boolean
+  declarationBatch?: boolean | Prisma.DeclarationBatchDefaultArgs<ExtArgs>
+  declarationExport?: boolean | Prisma.DeclarationSubmission$declarationExportArgs<ExtArgs>
+  submittedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["declarationSubmission"]>
 
+export type DeclarationSubmissionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  declarationBatchId?: boolean
+  declarationExportId?: boolean
+  attemptNumber?: boolean
+  channel?: boolean
+  status?: boolean
+  externalReference?: boolean
+  requestMetadata?: boolean
+  responseMetadata?: boolean
+  submittedByUserId?: boolean
+  submittedAt?: boolean
+  respondedAt?: boolean
+  declarationBatch?: boolean | Prisma.DeclarationBatchDefaultArgs<ExtArgs>
+  declarationExport?: boolean | Prisma.DeclarationSubmission$declarationExportArgs<ExtArgs>
+  submittedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["declarationSubmission"]>
 
 export type DeclarationSubmissionSelectScalar = {
   id?: boolean
@@ -1065,6 +1092,16 @@ export type DeclarationSubmissionSelectScalar = {
 
 export type DeclarationSubmissionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "declarationBatchId" | "declarationExportId" | "attemptNumber" | "channel" | "status" | "externalReference" | "requestMetadata" | "responseMetadata" | "submittedByUserId" | "submittedAt" | "respondedAt", ExtArgs["result"]["declarationSubmission"]>
 export type DeclarationSubmissionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  declarationBatch?: boolean | Prisma.DeclarationBatchDefaultArgs<ExtArgs>
+  declarationExport?: boolean | Prisma.DeclarationSubmission$declarationExportArgs<ExtArgs>
+  submittedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
+export type DeclarationSubmissionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  declarationBatch?: boolean | Prisma.DeclarationBatchDefaultArgs<ExtArgs>
+  declarationExport?: boolean | Prisma.DeclarationSubmission$declarationExportArgs<ExtArgs>
+  submittedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
+export type DeclarationSubmissionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   declarationBatch?: boolean | Prisma.DeclarationBatchDefaultArgs<ExtArgs>
   declarationExport?: boolean | Prisma.DeclarationSubmission$declarationExportArgs<ExtArgs>
   submittedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1208,6 +1245,30 @@ export interface DeclarationSubmissionDelegate<ExtArgs extends runtime.Types.Ext
   createMany<T extends DeclarationSubmissionCreateManyArgs>(args?: Prisma.SelectSubset<T, DeclarationSubmissionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many DeclarationSubmissions and returns the data saved in the database.
+   * @param {DeclarationSubmissionCreateManyAndReturnArgs} args - Arguments to create many DeclarationSubmissions.
+   * @example
+   * // Create many DeclarationSubmissions
+   * const declarationSubmission = await prisma.declarationSubmission.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many DeclarationSubmissions and only return the `id`
+   * const declarationSubmissionWithIdOnly = await prisma.declarationSubmission.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends DeclarationSubmissionCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, DeclarationSubmissionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeclarationSubmissionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a DeclarationSubmission.
    * @param {DeclarationSubmissionDeleteArgs} args - Arguments to delete one DeclarationSubmission.
    * @example
@@ -1270,6 +1331,36 @@ export interface DeclarationSubmissionDelegate<ExtArgs extends runtime.Types.Ext
    * 
    */
   updateMany<T extends DeclarationSubmissionUpdateManyArgs>(args: Prisma.SelectSubset<T, DeclarationSubmissionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more DeclarationSubmissions and returns the data updated in the database.
+   * @param {DeclarationSubmissionUpdateManyAndReturnArgs} args - Arguments to update many DeclarationSubmissions.
+   * @example
+   * // Update many DeclarationSubmissions
+   * const declarationSubmission = await prisma.declarationSubmission.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more DeclarationSubmissions and only return the `id`
+   * const declarationSubmissionWithIdOnly = await prisma.declarationSubmission.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends DeclarationSubmissionUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, DeclarationSubmissionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeclarationSubmissionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one DeclarationSubmission.
@@ -1712,6 +1803,29 @@ export type DeclarationSubmissionCreateManyArgs<ExtArgs extends runtime.Types.Ex
 }
 
 /**
+ * DeclarationSubmission createManyAndReturn
+ */
+export type DeclarationSubmissionCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeclarationSubmission
+   */
+  select?: Prisma.DeclarationSubmissionSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeclarationSubmission
+   */
+  omit?: Prisma.DeclarationSubmissionOmit<ExtArgs> | null
+  /**
+   * The data used to create many DeclarationSubmissions.
+   */
+  data: Prisma.DeclarationSubmissionCreateManyInput | Prisma.DeclarationSubmissionCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeclarationSubmissionIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * DeclarationSubmission update
  */
 export type DeclarationSubmissionUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1753,6 +1867,36 @@ export type DeclarationSubmissionUpdateManyArgs<ExtArgs extends runtime.Types.Ex
    * Limit how many DeclarationSubmissions to update.
    */
   limit?: number
+}
+
+/**
+ * DeclarationSubmission updateManyAndReturn
+ */
+export type DeclarationSubmissionUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeclarationSubmission
+   */
+  select?: Prisma.DeclarationSubmissionSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeclarationSubmission
+   */
+  omit?: Prisma.DeclarationSubmissionOmit<ExtArgs> | null
+  /**
+   * The data used to update DeclarationSubmissions.
+   */
+  data: Prisma.XOR<Prisma.DeclarationSubmissionUpdateManyMutationInput, Prisma.DeclarationSubmissionUncheckedUpdateManyInput>
+  /**
+   * Filter which DeclarationSubmissions to update
+   */
+  where?: Prisma.DeclarationSubmissionWhereInput
+  /**
+   * Limit how many DeclarationSubmissions to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeclarationSubmissionIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

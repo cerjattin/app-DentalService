@@ -355,7 +355,6 @@ export type InvoiceCorrectionOrderByWithRelationInput = {
   requestedByUser?: Prisma.UserOrderByWithRelationInput
   resolvedByUser?: Prisma.UserOrderByWithRelationInput
   sourceVersion?: Prisma.InvoiceVersionOrderByWithRelationInput
-  _relevance?: Prisma.InvoiceCorrectionOrderByRelevanceInput
 }
 
 export type InvoiceCorrectionWhereUniqueInput = Prisma.AtLeast<{
@@ -557,12 +556,6 @@ export type InvoiceCorrectionUncheckedUpdateManyInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type InvoiceCorrectionOrderByRelevanceInput = {
-  fields: Prisma.InvoiceCorrectionOrderByRelevanceFieldEnum | Prisma.InvoiceCorrectionOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type InvoiceCorrectionCountOrderByAggregateInput = {
@@ -1708,7 +1701,55 @@ export type InvoiceCorrectionSelect<ExtArgs extends runtime.Types.Extensions.Int
   sourceVersion?: boolean | Prisma.InvoiceVersionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["invoiceCorrection"]>
 
+export type InvoiceCorrectionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  invoiceId?: boolean
+  sourceVersionId?: boolean
+  replacementVersionId?: boolean
+  reasonCode?: boolean
+  reasonText?: boolean
+  status?: boolean
+  requestedByUserId?: boolean
+  requestedAt?: boolean
+  approvedByUserId?: boolean
+  approvedAt?: boolean
+  resolvedByUserId?: boolean
+  resolvedAt?: boolean
+  metadata?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  approvedByUser?: boolean | Prisma.InvoiceCorrection$approvedByUserArgs<ExtArgs>
+  invoice?: boolean | Prisma.InvoiceDefaultArgs<ExtArgs>
+  replacementVersion?: boolean | Prisma.InvoiceCorrection$replacementVersionArgs<ExtArgs>
+  requestedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  resolvedByUser?: boolean | Prisma.InvoiceCorrection$resolvedByUserArgs<ExtArgs>
+  sourceVersion?: boolean | Prisma.InvoiceVersionDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["invoiceCorrection"]>
 
+export type InvoiceCorrectionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  invoiceId?: boolean
+  sourceVersionId?: boolean
+  replacementVersionId?: boolean
+  reasonCode?: boolean
+  reasonText?: boolean
+  status?: boolean
+  requestedByUserId?: boolean
+  requestedAt?: boolean
+  approvedByUserId?: boolean
+  approvedAt?: boolean
+  resolvedByUserId?: boolean
+  resolvedAt?: boolean
+  metadata?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  approvedByUser?: boolean | Prisma.InvoiceCorrection$approvedByUserArgs<ExtArgs>
+  invoice?: boolean | Prisma.InvoiceDefaultArgs<ExtArgs>
+  replacementVersion?: boolean | Prisma.InvoiceCorrection$replacementVersionArgs<ExtArgs>
+  requestedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  resolvedByUser?: boolean | Prisma.InvoiceCorrection$resolvedByUserArgs<ExtArgs>
+  sourceVersion?: boolean | Prisma.InvoiceVersionDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["invoiceCorrection"]>
 
 export type InvoiceCorrectionSelectScalar = {
   id?: boolean
@@ -1731,6 +1772,22 @@ export type InvoiceCorrectionSelectScalar = {
 
 export type InvoiceCorrectionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "invoiceId" | "sourceVersionId" | "replacementVersionId" | "reasonCode" | "reasonText" | "status" | "requestedByUserId" | "requestedAt" | "approvedByUserId" | "approvedAt" | "resolvedByUserId" | "resolvedAt" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["invoiceCorrection"]>
 export type InvoiceCorrectionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  approvedByUser?: boolean | Prisma.InvoiceCorrection$approvedByUserArgs<ExtArgs>
+  invoice?: boolean | Prisma.InvoiceDefaultArgs<ExtArgs>
+  replacementVersion?: boolean | Prisma.InvoiceCorrection$replacementVersionArgs<ExtArgs>
+  requestedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  resolvedByUser?: boolean | Prisma.InvoiceCorrection$resolvedByUserArgs<ExtArgs>
+  sourceVersion?: boolean | Prisma.InvoiceVersionDefaultArgs<ExtArgs>
+}
+export type InvoiceCorrectionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  approvedByUser?: boolean | Prisma.InvoiceCorrection$approvedByUserArgs<ExtArgs>
+  invoice?: boolean | Prisma.InvoiceDefaultArgs<ExtArgs>
+  replacementVersion?: boolean | Prisma.InvoiceCorrection$replacementVersionArgs<ExtArgs>
+  requestedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  resolvedByUser?: boolean | Prisma.InvoiceCorrection$resolvedByUserArgs<ExtArgs>
+  sourceVersion?: boolean | Prisma.InvoiceVersionDefaultArgs<ExtArgs>
+}
+export type InvoiceCorrectionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   approvedByUser?: boolean | Prisma.InvoiceCorrection$approvedByUserArgs<ExtArgs>
   invoice?: boolean | Prisma.InvoiceDefaultArgs<ExtArgs>
   replacementVersion?: boolean | Prisma.InvoiceCorrection$replacementVersionArgs<ExtArgs>
@@ -1884,6 +1941,30 @@ export interface InvoiceCorrectionDelegate<ExtArgs extends runtime.Types.Extensi
   createMany<T extends InvoiceCorrectionCreateManyArgs>(args?: Prisma.SelectSubset<T, InvoiceCorrectionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many InvoiceCorrections and returns the data saved in the database.
+   * @param {InvoiceCorrectionCreateManyAndReturnArgs} args - Arguments to create many InvoiceCorrections.
+   * @example
+   * // Create many InvoiceCorrections
+   * const invoiceCorrection = await prisma.invoiceCorrection.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many InvoiceCorrections and only return the `id`
+   * const invoiceCorrectionWithIdOnly = await prisma.invoiceCorrection.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends InvoiceCorrectionCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, InvoiceCorrectionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoiceCorrectionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a InvoiceCorrection.
    * @param {InvoiceCorrectionDeleteArgs} args - Arguments to delete one InvoiceCorrection.
    * @example
@@ -1946,6 +2027,36 @@ export interface InvoiceCorrectionDelegate<ExtArgs extends runtime.Types.Extensi
    * 
    */
   updateMany<T extends InvoiceCorrectionUpdateManyArgs>(args: Prisma.SelectSubset<T, InvoiceCorrectionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more InvoiceCorrections and returns the data updated in the database.
+   * @param {InvoiceCorrectionUpdateManyAndReturnArgs} args - Arguments to update many InvoiceCorrections.
+   * @example
+   * // Update many InvoiceCorrections
+   * const invoiceCorrection = await prisma.invoiceCorrection.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more InvoiceCorrections and only return the `id`
+   * const invoiceCorrectionWithIdOnly = await prisma.invoiceCorrection.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends InvoiceCorrectionUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, InvoiceCorrectionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoiceCorrectionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one InvoiceCorrection.
@@ -2395,6 +2506,29 @@ export type InvoiceCorrectionCreateManyArgs<ExtArgs extends runtime.Types.Extens
 }
 
 /**
+ * InvoiceCorrection createManyAndReturn
+ */
+export type InvoiceCorrectionCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InvoiceCorrection
+   */
+  select?: Prisma.InvoiceCorrectionSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the InvoiceCorrection
+   */
+  omit?: Prisma.InvoiceCorrectionOmit<ExtArgs> | null
+  /**
+   * The data used to create many InvoiceCorrections.
+   */
+  data: Prisma.InvoiceCorrectionCreateManyInput | Prisma.InvoiceCorrectionCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InvoiceCorrectionIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * InvoiceCorrection update
  */
 export type InvoiceCorrectionUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2436,6 +2570,36 @@ export type InvoiceCorrectionUpdateManyArgs<ExtArgs extends runtime.Types.Extens
    * Limit how many InvoiceCorrections to update.
    */
   limit?: number
+}
+
+/**
+ * InvoiceCorrection updateManyAndReturn
+ */
+export type InvoiceCorrectionUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InvoiceCorrection
+   */
+  select?: Prisma.InvoiceCorrectionSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the InvoiceCorrection
+   */
+  omit?: Prisma.InvoiceCorrectionOmit<ExtArgs> | null
+  /**
+   * The data used to update InvoiceCorrections.
+   */
+  data: Prisma.XOR<Prisma.InvoiceCorrectionUpdateManyMutationInput, Prisma.InvoiceCorrectionUncheckedUpdateManyInput>
+  /**
+   * Filter which InvoiceCorrections to update
+   */
+  where?: Prisma.InvoiceCorrectionWhereInput
+  /**
+   * Limit how many InvoiceCorrections to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InvoiceCorrectionIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

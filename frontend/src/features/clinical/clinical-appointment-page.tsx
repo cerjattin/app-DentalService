@@ -315,9 +315,10 @@ function ClinicalWorkspace({ appointmentId }: { appointmentId: string }) {
                 />
               </PermissionGuard>
               <ClinicalSection title="Treatment context">
+                <p className="mb-3 text-xs text-slate-500">Performed procedures retain their frozen external Treatment ID below.</p>
                 <dl className="space-y-2 text-sm">
                   <div>
-                    <dt className="text-slate-500">Treatment case reference</dt>
+                    <dt className="text-slate-500">Internal treatment case reference</dt>
                     <dd className="font-mono">
                       {record.treatmentCaseId ?? 'Not recorded'}
                     </dd>

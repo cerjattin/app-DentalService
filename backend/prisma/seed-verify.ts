@@ -105,25 +105,25 @@ async function main() {
   const reception = roles.find((role) => role.code === "RECEPTION");
   const provider = roles.find((role) => role.code === "PROVIDER");
 
-  if (permissionCount !== 68) {
-    throw new Error(`Expected 68 permissions, found ${permissionCount}.`);
+  if (permissionCount !== 70) {
+    throw new Error(`Expected 70 permissions, found ${permissionCount}.`);
   }
 
-  if (admin?._count.rolePermissions !== 68) {
+  if (admin?._count.rolePermissions !== 70) {
     throw new Error(
-      `Expected ADMIN to have 68 permissions, found ${admin?._count.rolePermissions}.`,
+      `Expected ADMIN to have 70 permissions, found ${admin?._count.rolePermissions}.`,
     );
   }
 
-  if (reception?._count.rolePermissions !== 35) {
+  if (reception?._count.rolePermissions !== 36) {
     throw new Error(
-      `Expected RECEPTION to have 35 permissions, found ${reception?._count.rolePermissions}.`,
+      `Expected RECEPTION to have 36 permissions, found ${reception?._count.rolePermissions}.`,
     );
   }
 
-  if (provider?._count.rolePermissions !== 29) {
+  if (provider?._count.rolePermissions !== 31) {
     throw new Error(
-      `Expected PROVIDER to have 29 permissions, found ${provider?._count.rolePermissions}.`,
+      `Expected PROVIDER to have 31 permissions, found ${provider?._count.rolePermissions}.`,
     );
   }
 

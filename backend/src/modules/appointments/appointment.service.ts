@@ -1,9 +1,11 @@
+import { isTransactionConflict } from "../../infrastructure/database/transaction-conflict.js";
+import { normalizeSearch } from "../../infrastructure/database/text-search.js";
 import { Prisma, type AppointmentStatus } from "../../generated/prisma/client.js";
 
 import { prisma } from "../../infrastructure/database/prisma.js";
 
 import { AppError } from "../../shared/errors/app-error.js";
-import { parseDateOnly } from "../../shared/utils/date-only.js";
+import { businessDayBounds } from "../../shared/utils/business-day.js";
 
 import { auditService, auditTechnicalFields } from "../audit/audit.service.js";
 
@@ -33,6 +35,7 @@ import type {
 } from "./appointment.schemas.js";
 
 import { toAppointmentResponse } from "./appointment.types.js";
+import { validateAssignableTreatmentCase } from "../treatment-cases/treatment-case.service.js";
 
 function parseTimestamp(value: string, fieldName: string): Date {
   const date = new Date(value);
@@ -135,8 +138,7 @@ function toAuditValues(appointment: {
 
 function mapConcurrencyError(error: unknown): never {
   if (
-    error instanceof Prisma.PrismaClientKnownRequestError &&
-    error.code === "P2034"
+    isTransactionConflict(error)
   ) {
     throw new AppError(
       409,
@@ -269,6 +271,8 @@ export class AppointmentService {
   async list(query: ListAppointmentsQuery, actor: AuthenticatedRequestContext) {
     const skip = (query.page - 1) * query.pageSize;
 
+    const searchQuery = await normalizeSearch(query.q);
+
     const where: Prisma.AppointmentWhereInput = {
       organizationId: actor.organizationId,
 
@@ -298,12 +302,7 @@ export class AppointmentService {
 
       ...(query.date !== undefined
         ? {
-            scheduledStartAt: {
-              gte: parseDateOnly(query.date, "date"),
-              lt: new Date(
-                parseDateOnly(query.date, "date").getTime() + 86_400_000,
-              ),
-            },
+            scheduledStartAt: businessDayBounds(query.date),
           }
         : {}),
 
@@ -324,39 +323,39 @@ export class AppointmentService {
           }
         : {}),
 
-      ...(query.q !== undefined
+      ...(searchQuery !== undefined
         ? {
             OR: [
               {
-                appointmentNumber: {
-                  contains: query.q,
+                appointmentNumberSearch: {
+                  contains: searchQuery,
                 },
               },
               {
                 patient: {
-                  patientNumber: {
-                    contains: query.q,
+                  patientNumberSearch: {
+                    contains: searchQuery,
                   },
                 },
               },
               {
                 patient: {
-                  firstName: {
-                    contains: query.q,
+                  firstNameSearch: {
+                    contains: searchQuery,
                   },
                 },
               },
               {
                 patient: {
-                  lastName: {
-                    contains: query.q,
+                  lastNameSearch: {
+                    contains: searchQuery,
                   },
                 },
               },
               {
                 patient: {
-                  documentNumber: {
-                    contains: query.q,
+                  documentNumberSearch: {
+                    contains: searchQuery,
                   },
                 },
               },
@@ -431,6 +430,7 @@ export class AppointmentService {
       const created = await prisma.$transaction(
         async (tx) => {
           await validatePatient(tx, patientId, actor.organizationId);
+          await validateAssignableTreatmentCase(tx, treatmentCaseId, patientId, actor.organizationId);
           await validateProvider(tx, providerId, actor.organizationId, true);
           await validateLocation(
             tx,
@@ -507,6 +507,7 @@ export class AppointmentService {
     try {
       const updated: AppointmentDetailRecord = await prisma.$transaction(
         async (tx) => {
+          await tx.$queryRaw`SELECT id FROM appointments WHERE id = ${appointmentId} AND organization_id = ${actor.organizationId} FOR UPDATE`;
           const current = await appointmentRepository.findById(
             appointmentId,
             actor.organizationId,
@@ -588,6 +589,14 @@ export class AppointmentService {
           }
 
           if (input.treatmentCaseId !== undefined) {
+            const nextCaseId = input.treatmentCaseId === null ? null : BigInt(input.treatmentCaseId);
+            if (nextCaseId !== current.treatmentCaseId) {
+              const clinicalData = await tx.encounterProcedure.findFirst({
+                where: { encounter: { appointmentId } }, select: { id: true },
+              });
+              if (clinicalData) throw new AppError(409, "APPOINTMENT_CLINICAL_CONTEXT_LOCKED", "Treatment context is frozen after procedures have been recorded");
+              await validateAssignableTreatmentCase(tx, nextCaseId, current.patientId, actor.organizationId);
+            }
             updateData.treatmentCaseId =
               input.treatmentCaseId === null
                 ? null

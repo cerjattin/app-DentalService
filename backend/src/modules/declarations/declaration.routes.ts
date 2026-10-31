@@ -16,11 +16,17 @@ import {
   markDeclarationReady,
   recordDeclarationSubmissionResult,
   submitDeclaration,
+  getDeclarationCandidates,
+  removeDeclarationItem,
+  cancelDraftDeclaration,
 } from "./declaration.controller.js";
 
 export const declarationRouter = Router();
 
 declarationRouter.use(authenticate);
+declarationRouter.get("/:id/candidates", requirePermission("declaration.read"), requirePermission("invoice.read"), getDeclarationCandidates);
+declarationRouter.delete("/:id/items/:itemId", requirePermission("declaration.update"), removeDeclarationItem);
+declarationRouter.post("/:id/cancel", requirePermission("declaration.update"), cancelDraftDeclaration);
 
 declarationRouter.get(
   "/",

@@ -57,15 +57,15 @@ async function cleanupEncounterProcedureFixture() {
     where: {
       OR: [
         {
-          procedureCodeSnapshot: {
-            startsWith: "TEST-EP-",
+          procedureCodeSnapshotSearch: {
+            startsWith: ("TEST-EP-").toLowerCase(),
           },
         },
         {
           encounter: {
             appointment: {
-              appointmentNumber: {
-                startsWith: "TEST-EP-APT",
+              appointmentNumberSearch: {
+                startsWith: ("TEST-EP-APT").toLowerCase(),
               },
             },
           },
@@ -93,8 +93,8 @@ async function cleanupEncounterProcedureFixture() {
           },
         },
         {
-          entityKey: {
-            contains: "TEST-EP",
+          entityKeySearch: {
+            contains: ("TEST-EP").toLowerCase(),
           },
         },
       ],
@@ -111,8 +111,8 @@ async function cleanupEncounterProcedureFixture() {
 
   const authorizations = await prisma.svbAuthorization.findMany({
     where: {
-      authorizationId: {
-        startsWith: "TEST-EP-AUTH",
+      authorizationIdSearch: {
+        startsWith: ("TEST-EP-AUTH").toLowerCase(),
       },
     },
     select: {
@@ -140,8 +140,8 @@ async function cleanupEncounterProcedureFixture() {
 
   await prisma.encounterDiagnosis.deleteMany({
     where: {
-      codeSnapshot: {
-        startsWith: "TEST-EP-DX",
+      codeSnapshotSearch: {
+        startsWith: ("TEST-EP-DX").toLowerCase(),
       },
     },
   });
@@ -150,8 +150,8 @@ async function cleanupEncounterProcedureFixture() {
     where: {
       OR: [
         {
-          appointmentNumber: {
-            startsWith: "TEST-EP-APT",
+          appointmentNumberSearch: {
+            startsWith: ("TEST-EP-APT").toLowerCase(),
           },
         },
         {
@@ -191,52 +191,52 @@ async function cleanupEncounterProcedureFixture() {
 
   await prisma.patientInsurance.deleteMany({
     where: {
-      insuredId: {
-        startsWith: "TEST-EP-INS",
+      insuredIdSearch: {
+        startsWith: ("TEST-EP-INS").toLowerCase(),
       },
     },
   });
   await prisma.svbTariff.deleteMany({
     where: {
       svbProcedure: {
-        code: {
-          startsWith: "TEST-EP-PROC",
+        codeSearch: {
+          startsWith: ("TEST-EP-PROC").toLowerCase(),
         },
       },
     },
   });
   await prisma.svbProcedure.deleteMany({
     where: {
-      code: {
-        startsWith: "TEST-EP-PROC",
+      codeSearch: {
+        startsWith: ("TEST-EP-PROC").toLowerCase(),
       },
     },
   });
   await prisma.diagnosisCode.deleteMany({
     where: {
-      code: {
-        startsWith: "TEST-EP-DX",
+      codeSearch: {
+        startsWith: ("TEST-EP-DX").toLowerCase(),
       },
     },
   });
   await prisma.provider.deleteMany({
     where: {
-      svbProviderId: {
-        startsWith: "TEST-EP-PROV",
+      svbProviderIdSearch: {
+        startsWith: ("TEST-EP-PROV").toLowerCase(),
       },
     },
   });
   await prisma.patient.deleteMany({
     where: {
-      patientNumber: {
-        startsWith: "TEST-EP-PAT",
+      patientNumberSearch: {
+        startsWith: ("TEST-EP-PAT").toLowerCase(),
       },
     },
   });
   await prisma.clinicLocation.deleteMany({
     where: {
-      code: {
-        startsWith: "TEST-EP-LOC",
+      codeSearch: {
+        startsWith: ("TEST-EP-LOC").toLowerCase(),
       },
     },
   });
@@ -1133,8 +1133,8 @@ describe("Encounter Procedure API", () => {
     const auditLogs = await prisma.auditLog.findMany({
       where: {
         entityType: "ENCOUNTER_PROCEDURE",
-        entityKey: {
-          contains: "TEST-EP",
+        entityKeySearch: {
+          contains: ("TEST-EP").toLowerCase(),
         },
       },
       select: {

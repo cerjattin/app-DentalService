@@ -11,6 +11,7 @@ import type {
   SubmissionResultDto,
 } from '../../types/declaration'
 import type { EntityId } from '../../types/core'
+import type { DeclarationCandidate, CandidateFilters } from '../../types/declaration'
 import type { PaginationMeta } from '../../types/patient'
 
 export const declarationKeys = {
@@ -24,6 +25,17 @@ export const declarationKeys = {
   submissions: (id: EntityId) =>
     [...declarationKeys.detail(id), 'submissions'] as const,
 }
+export const candidateKeys = {
+  all: ['declaration-candidates'] as const,
+  list: (id: EntityId, filters: CandidateFilters) => ['declaration-candidates', id, filters] as const,
+}
+export function listDeclarationCandidates(id: EntityId, filters: CandidateFilters, signal?: AbortSignal) {
+  const query = new URLSearchParams()
+  for (const [key, value] of Object.entries(filters)) if (value !== undefined && value !== '') query.set(key, String(value))
+  return apiFetchResult<DeclarationCandidate[], PaginationMeta>(`/declarations/${id}/candidates?${query}`, { signal })
+}
+export const removeDeclarationItem = (id: EntityId, itemId: EntityId, reason: string) => apiFetch<Declaration>(`/declarations/${id}/items/${itemId}`, { method: 'DELETE', body: { reason } })
+export const cancelDraftDeclaration = (id: EntityId, reason: string) => apiFetch<Declaration>(`/declarations/${id}/cancel`, { method: 'POST', body: { reason } })
 
 export function listDeclarations(
   filters: DeclarationFilters,

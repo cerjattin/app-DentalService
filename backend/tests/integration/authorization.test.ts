@@ -61,14 +61,14 @@ async function cleanupAuthorizationFixture() {
     where: {
       OR: [
         {
-          authorizationId: {
-            startsWith: "TEST-AUTH-",
+          authorizationIdSearch: {
+            startsWith: ("TEST-AUTH-").toLowerCase(),
           },
         },
         {
           patient: {
-            patientNumber: {
-              startsWith: "TEST-AUTH-PAT",
+            patientNumberSearch: {
+              startsWith: ("TEST-AUTH-PAT").toLowerCase(),
             },
           },
         },
@@ -118,8 +118,8 @@ async function cleanupAuthorizationFixture() {
           },
         },
         {
-          entityKey: {
-            contains: "TEST-AUTH-",
+          entityKeySearch: {
+            contains: ("TEST-AUTH-").toLowerCase(),
           },
         },
       ],
@@ -144,8 +144,8 @@ async function cleanupAuthorizationFixture() {
 
   await prisma.patientInsurance.deleteMany({
     where: {
-      insuredId: {
-        startsWith: "TEST-AUTH-INS",
+      insuredIdSearch: {
+        startsWith: ("TEST-AUTH-INS").toLowerCase(),
       },
     },
   });
@@ -154,8 +154,8 @@ async function cleanupAuthorizationFixture() {
     where: {
       OR: [
         {
-          patientNumber: {
-            startsWith: "TEST-AUTH-PAT",
+          patientNumberSearch: {
+            startsWith: ("TEST-AUTH-PAT").toLowerCase(),
           },
         },
         {
@@ -169,8 +169,8 @@ async function cleanupAuthorizationFixture() {
 
   await prisma.svbProcedure.deleteMany({
     where: {
-      code: {
-        startsWith: "TEST-AUTH-PROC",
+      codeSearch: {
+        startsWith: ("TEST-AUTH-PROC").toLowerCase(),
       },
     },
   });
@@ -996,8 +996,8 @@ describe("SVB Authorization API", () => {
         entityType: {
           in: ["SVB_AUTHORIZATION", "SVB_AUTHORIZATION_ITEM"],
         },
-        entityKey: {
-          contains: "TEST-AUTH",
+        entityKeySearch: {
+          contains: ("TEST-AUTH").toLowerCase(),
         },
       },
       select: {

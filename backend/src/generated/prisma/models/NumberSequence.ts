@@ -269,7 +269,6 @@ export type NumberSequenceOrderByWithRelationInput = {
   padding?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   organization?: Prisma.OrganizationOrderByWithRelationInput
-  _relevance?: Prisma.NumberSequenceOrderByRelevanceInput
 }
 
 export type NumberSequenceWhereUniqueInput = Prisma.AtLeast<{
@@ -392,12 +391,6 @@ export type NumberSequenceUncheckedUpdateManyInput = {
   currentValue?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   padding?: Prisma.IntFieldUpdateOperationsInput | number
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type NumberSequenceOrderByRelevanceInput = {
-  fields: Prisma.NumberSequenceOrderByRelevanceFieldEnum | Prisma.NumberSequenceOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type NumberSequenceOrganizationIdSequenceTypeSequenceYearCompoundUniqueInput = {
@@ -625,7 +618,29 @@ export type NumberSequenceSelect<ExtArgs extends runtime.Types.Extensions.Intern
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["numberSequence"]>
 
+export type NumberSequenceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  organizationId?: boolean
+  sequenceType?: boolean
+  sequenceYear?: boolean
+  prefix?: boolean
+  currentValue?: boolean
+  padding?: boolean
+  updatedAt?: boolean
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["numberSequence"]>
 
+export type NumberSequenceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  organizationId?: boolean
+  sequenceType?: boolean
+  sequenceYear?: boolean
+  prefix?: boolean
+  currentValue?: boolean
+  padding?: boolean
+  updatedAt?: boolean
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["numberSequence"]>
 
 export type NumberSequenceSelectScalar = {
   id?: boolean
@@ -640,6 +655,12 @@ export type NumberSequenceSelectScalar = {
 
 export type NumberSequenceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "sequenceType" | "sequenceYear" | "prefix" | "currentValue" | "padding" | "updatedAt", ExtArgs["result"]["numberSequence"]>
 export type NumberSequenceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+}
+export type NumberSequenceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+}
+export type NumberSequenceIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }
 
@@ -775,6 +796,30 @@ export interface NumberSequenceDelegate<ExtArgs extends runtime.Types.Extensions
   createMany<T extends NumberSequenceCreateManyArgs>(args?: Prisma.SelectSubset<T, NumberSequenceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many NumberSequences and returns the data saved in the database.
+   * @param {NumberSequenceCreateManyAndReturnArgs} args - Arguments to create many NumberSequences.
+   * @example
+   * // Create many NumberSequences
+   * const numberSequence = await prisma.numberSequence.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many NumberSequences and only return the `id`
+   * const numberSequenceWithIdOnly = await prisma.numberSequence.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends NumberSequenceCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, NumberSequenceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NumberSequencePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a NumberSequence.
    * @param {NumberSequenceDeleteArgs} args - Arguments to delete one NumberSequence.
    * @example
@@ -837,6 +882,36 @@ export interface NumberSequenceDelegate<ExtArgs extends runtime.Types.Extensions
    * 
    */
   updateMany<T extends NumberSequenceUpdateManyArgs>(args: Prisma.SelectSubset<T, NumberSequenceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more NumberSequences and returns the data updated in the database.
+   * @param {NumberSequenceUpdateManyAndReturnArgs} args - Arguments to update many NumberSequences.
+   * @example
+   * // Update many NumberSequences
+   * const numberSequence = await prisma.numberSequence.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more NumberSequences and only return the `id`
+   * const numberSequenceWithIdOnly = await prisma.numberSequence.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends NumberSequenceUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, NumberSequenceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NumberSequencePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one NumberSequence.
@@ -1273,6 +1348,29 @@ export type NumberSequenceCreateManyArgs<ExtArgs extends runtime.Types.Extension
 }
 
 /**
+ * NumberSequence createManyAndReturn
+ */
+export type NumberSequenceCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the NumberSequence
+   */
+  select?: Prisma.NumberSequenceSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the NumberSequence
+   */
+  omit?: Prisma.NumberSequenceOmit<ExtArgs> | null
+  /**
+   * The data used to create many NumberSequences.
+   */
+  data: Prisma.NumberSequenceCreateManyInput | Prisma.NumberSequenceCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NumberSequenceIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * NumberSequence update
  */
 export type NumberSequenceUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1314,6 +1412,36 @@ export type NumberSequenceUpdateManyArgs<ExtArgs extends runtime.Types.Extension
    * Limit how many NumberSequences to update.
    */
   limit?: number
+}
+
+/**
+ * NumberSequence updateManyAndReturn
+ */
+export type NumberSequenceUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the NumberSequence
+   */
+  select?: Prisma.NumberSequenceSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the NumberSequence
+   */
+  omit?: Prisma.NumberSequenceOmit<ExtArgs> | null
+  /**
+   * The data used to update NumberSequences.
+   */
+  data: Prisma.XOR<Prisma.NumberSequenceUpdateManyMutationInput, Prisma.NumberSequenceUncheckedUpdateManyInput>
+  /**
+   * Filter which NumberSequences to update
+   */
+  where?: Prisma.NumberSequenceWhereInput
+  /**
+   * Limit how many NumberSequences to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NumberSequenceIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

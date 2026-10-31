@@ -55,43 +55,43 @@ export async function getDashboard(query: DashboardQuery, organizationId: bigint
   const serviceFrom = query.from, serviceTo = query.to;
   return prisma.$transaction(async (tx) => {
     const rows = await tx.$queryRaw<ProductionRow[]>(Prisma.sql`
-      SELECT DATE_FORMAT(CONVERT_TZ(COALESCE(ep.performed_at, ce.started_at), '+00:00', '-04:00'), '%Y-%m-%d') date,
-        ep.performed_by_provider_id providerId, CONCAT(p.first_name, ' ', p.last_name) providerName,
-        ep.currency_code_snapshot currencyCode, CAST(SUM(ep.amount) AS CHAR) amount
+      SELECT TO_CHAR(COALESCE(ep.performed_at, ce.started_at) AT TIME ZONE 'America/Curacao', 'YYYY-MM-DD') date,
+        ep.performed_by_provider_id "providerId", CONCAT(p.first_name, ' ', p.last_name) "providerName",
+        ep.currency_code_snapshot "currencyCode", CAST(SUM(ep.amount) AS TEXT) amount
       FROM encounter_procedures ep JOIN clinical_encounters ce ON ce.id = ep.encounter_id
       JOIN appointments a ON a.id = ce.appointment_id JOIN providers p ON p.id = ep.performed_by_provider_id AND p.organization_id = a.organization_id
-      WHERE a.organization_id = ${organizationId} AND ep.status IN ('PERFORMED','BILLED') AND ce.status <> 'VOID'
+      WHERE a.organization_id = ${organizationId} AND ep.status = 'PERFORMED' AND ce.status <> 'VOID'
         AND COALESCE(ep.performed_at, ce.started_at) >= ${start} AND COALESCE(ep.performed_at, ce.started_at) < ${end} ${performed}
       GROUP BY date, ep.performed_by_provider_id, p.first_name, p.last_name, ep.currency_code_snapshot`);
     const billed = await tx.$queryRaw<Money[]>(Prisma.sql`
-      SELECT ii.currency_code_snapshot currencyCode, CAST(SUM(ii.amount) AS CHAR) amount
+      SELECT ii.currency_code_snapshot "currencyCode", CAST(SUM(ii.amount) AS TEXT) amount
       FROM invoice_items ii JOIN invoice_versions iv ON iv.id = ii.invoice_version_id
       JOIN invoices i ON i.id = iv.invoice_id JOIN patient_insurance pi ON pi.id = i.patient_insurance_id
       JOIN payers pay ON pay.id = pi.payer_id JOIN encounter_procedures ep ON ep.id = ii.encounter_procedure_id
       WHERE i.organization_id = ${organizationId} AND i.status <> 'CANCELLED' AND iv.status = 'CLOSED' AND pay.code = 'SVB'
-        AND ii.service_date_snapshot >= ${serviceFrom} AND ii.service_date_snapshot <= ${serviceTo} ${performed}
+        AND ii.service_date_snapshot >= ${serviceFrom}::date AND ii.service_date_snapshot <= ${serviceTo}::date ${performed}
       GROUP BY ii.currency_code_snapshot`);
     const seen = await tx.$queryRaw<Array<{ count: string }>>(Prisma.sql`
-      SELECT CAST(COUNT(*) AS CHAR) count FROM (
-        SELECT a.patient_id, DATE(CONVERT_TZ(ce.started_at, '+00:00', '-04:00')) day
+      SELECT CAST(COUNT(*) AS TEXT) count FROM (
+        SELECT a.patient_id, DATE(ce.started_at AT TIME ZONE 'America/Curacao') AS service_day
         FROM clinical_encounters ce JOIN appointments a ON a.id = ce.appointment_id
         WHERE a.organization_id = ${organizationId} AND ce.status <> 'VOID' AND ce.started_at >= ${start} AND ce.started_at < ${end} ${seenProvider}
-        GROUP BY a.patient_id, day
+        GROUP BY a.patient_id, service_day
       ) patient_days`);
     const appointments = await tx.$queryRaw<Array<{ count: string }>>(Prisma.sql`
-      SELECT CAST(COUNT(*) AS CHAR) count FROM appointments a
+      SELECT CAST(COUNT(*) AS TEXT) count FROM appointments a
       WHERE a.organization_id = ${organizationId} AND a.scheduled_start_at >= ${start} AND a.scheduled_start_at < ${end} ${assigned}`);
     const invoiceCounts = await tx.$queryRaw<Array<{ pending: string; closed: string; toDeclare: string }>>(Prisma.sql`
-      SELECT CAST(COUNT(DISTINCT CASE WHEN iv.status = 'PENDING_SIGNATURE' AND i.current_version_id = iv.id THEN i.id END) AS CHAR) pending,
-        CAST(COUNT(DISTINCT CASE WHEN iv.status = 'CLOSED' THEN i.id END) AS CHAR) closed,
+      SELECT CAST(COUNT(DISTINCT CASE WHEN iv.status = 'PENDING_SIGNATURE' AND i.current_version_id = iv.id THEN i.id END) AS TEXT) pending,
+        CAST(COUNT(DISTINCT CASE WHEN iv.status = 'CLOSED' THEN i.id END) AS TEXT) closed,
         CAST(COUNT(DISTINCT CASE WHEN i.status = 'CLOSED' AND iv.status = 'CLOSED' AND i.current_version_id = iv.id AND pay.code = 'SVB'
           AND NOT EXISTS (SELECT 1 FROM declaration_items di JOIN declaration_batches db ON db.id = di.declaration_batch_id
-            WHERE di.invoice_item_id = ii.id AND db.status <> 'CANCELLED') THEN i.id END) AS CHAR) toDeclare
+            WHERE di.invoice_item_id = ii.id AND db.status <> 'CANCELLED') THEN i.id END) AS TEXT) "toDeclare"
       FROM invoices i JOIN invoice_versions iv ON iv.invoice_id = i.id JOIN invoice_items ii ON ii.invoice_version_id = iv.id
       JOIN patient_insurance pi ON pi.id = i.patient_insurance_id JOIN payers pay ON pay.id = pi.payer_id
       JOIN encounter_procedures ep ON ep.id = ii.encounter_procedure_id
       WHERE i.organization_id = ${organizationId} AND i.status <> 'CANCELLED'
-        AND ii.service_date_snapshot >= ${serviceFrom} AND ii.service_date_snapshot <= ${serviceTo} ${performed}`);
+        AND ii.service_date_snapshot >= ${serviceFrom}::date AND ii.service_date_snapshot <= ${serviceTo}::date ${performed}`);
     const summary = summarizeProduction(rows);
     return { period: { from: query.from, to: query.to, timezone: "America/Curacao" }, providerId: query.providerId ?? null,
       kpis: { production: summary.production, svbBilled: total(billed), patientsSeen: Number(seen[0]?.count ?? 0),

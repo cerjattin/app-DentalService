@@ -18,7 +18,7 @@ export default defineConfig({
 
     /*
      * Estamos ejecutando integration tests
-     * contra la misma instancia MySQL.
+     * contra una base PostgreSQL dedicada de pruebas.
      *
      * Evitamos inicialmente que distintos
      * archivos manipulen simultáneamente

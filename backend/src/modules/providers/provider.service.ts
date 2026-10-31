@@ -1,3 +1,4 @@
+import { normalizeSearch } from "../../infrastructure/database/text-search.js";
 import { Prisma } from "../../generated/prisma/client.js";
 
 import { prisma } from "../../infrastructure/database/prisma.js";
@@ -178,6 +179,8 @@ export class ProviderService {
   async list(query: ListProvidersQuery, actor: AuthenticatedRequestContext) {
     const skip = (query.page - 1) * query.pageSize;
 
+    const searchQuery = await normalizeSearch(query.q);
+
     const where: Prisma.ProviderWhereInput = {
       organizationId: actor.organizationId,
 
@@ -187,42 +190,42 @@ export class ProviderService {
           }
         : {}),
 
-      ...(query.q !== undefined
+      ...(searchQuery !== undefined
         ? {
             OR: [
               {
-                firstName: {
-                  contains: query.q,
+                firstNameSearch: {
+                  contains: searchQuery,
                 },
               },
               {
-                lastName: {
-                  contains: query.q,
+                lastNameSearch: {
+                  contains: searchQuery,
                 },
               },
               {
-                svbProviderId: {
-                  contains: query.q,
+                svbProviderIdSearch: {
+                  contains: searchQuery,
                 },
               },
               {
-                licenseNumber: {
-                  contains: query.q,
+                licenseNumberSearch: {
+                  contains: searchQuery,
                 },
               },
               {
-                email: {
-                  contains: query.q,
+                emailSearch: {
+                  contains: searchQuery,
                 },
               },
               {
-                phone: {
-                  contains: query.q,
+                phoneSearch: {
+                  contains: searchQuery,
                 },
               },
               {
-                specialty: {
-                  contains: query.q,
+                specialtySearch: {
+                  contains: searchQuery,
                 },
               },
             ],

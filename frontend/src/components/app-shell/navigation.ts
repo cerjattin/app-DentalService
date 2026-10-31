@@ -78,7 +78,7 @@ export const navigationGroups: NavigationGroup[] = [
       {
         label: 'Administration',
         path: '/admin',
-        permissions: ['user.read', 'provider.read', 'role.read', 'svb_procedure.read'],
+        permissions: ['user.read', 'provider.read', 'role.read', 'svb_procedure.read', 'organization.read'],
         icon: UserRoundCog,
       },
       {
@@ -102,9 +102,8 @@ export const navigationGroups: NavigationGroup[] = [
       {
         label: 'Settings',
         path: '/admin/settings',
-        permissions: ['user.read', 'provider.read', 'role.read'],
+        permissions: ['organization.read'],
         icon: Settings,
-        unavailable: true,
       },
     ],
   },

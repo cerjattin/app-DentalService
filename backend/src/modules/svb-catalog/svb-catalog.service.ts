@@ -1,3 +1,4 @@
+import { normalizeSearch } from "../../infrastructure/database/text-search.js";
 import { Prisma } from "../../generated/prisma/client.js";
 
 import { prisma } from "../../infrastructure/database/prisma.js";
@@ -430,6 +431,8 @@ export class SvbCatalogService {
         ? parseDateOnly(query.serviceDate, "serviceDate")
         : undefined;
 
+    const searchQuery = await normalizeSearch(query.q);
+
     const where: Prisma.SvbProcedureWhereInput = {
       ...(query.category !== undefined
         ? {
@@ -455,17 +458,17 @@ export class SvbCatalogService {
           }
         : {}),
 
-      ...(query.q !== undefined
+      ...(searchQuery !== undefined
         ? {
             OR: [
               {
-                code: {
-                  contains: query.q,
+                codeSearch: {
+                  contains: searchQuery,
                 },
               },
               {
-                description: {
-                  contains: query.q,
+                descriptionSearch: {
+                  contains: searchQuery,
                 },
               },
             ],

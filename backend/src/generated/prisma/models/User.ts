@@ -53,6 +53,9 @@ export type UserMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   archivedAt: Date | null
+  emailSearch: string | null
+  firstNameSearch: string | null
+  lastNameSearch: string | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -70,6 +73,9 @@ export type UserMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   archivedAt: Date | null
+  emailSearch: string | null
+  firstNameSearch: string | null
+  lastNameSearch: string | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -87,6 +93,9 @@ export type UserCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   archivedAt: number
+  emailSearch: number
+  firstNameSearch: number
+  lastNameSearch: number
   _all: number
 }
 
@@ -118,6 +127,9 @@ export type UserMinAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   archivedAt?: true
+  emailSearch?: true
+  firstNameSearch?: true
+  lastNameSearch?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -135,6 +147,9 @@ export type UserMaxAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   archivedAt?: true
+  emailSearch?: true
+  firstNameSearch?: true
+  lastNameSearch?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -152,6 +167,9 @@ export type UserCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   archivedAt?: true
+  emailSearch?: true
+  firstNameSearch?: true
+  lastNameSearch?: true
   _all?: true
 }
 
@@ -256,6 +274,9 @@ export type UserGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   archivedAt: Date | null
+  emailSearch: string
+  firstNameSearch: string
+  lastNameSearch: string
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
   _sum: UserSumAggregateOutputType | null
@@ -296,6 +317,9 @@ export type UserWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   archivedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  emailSearch?: Prisma.StringFilter<"User"> | string
+  firstNameSearch?: Prisma.StringFilter<"User"> | string
+  lastNameSearch?: Prisma.StringFilter<"User"> | string
   createdAccidentCases?: Prisma.AccidentCaseListRelationFilter
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryListRelationFilter
   createdAppointments?: Prisma.AppointmentListRelationFilter
@@ -342,6 +366,9 @@ export type UserOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailSearch?: Prisma.SortOrder
+  firstNameSearch?: Prisma.SortOrder
+  lastNameSearch?: Prisma.SortOrder
   createdAccidentCases?: Prisma.AccidentCaseOrderByRelationAggregateInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryOrderByRelationAggregateInput
   createdAppointments?: Prisma.AppointmentOrderByRelationAggregateInput
@@ -371,7 +398,6 @@ export type UserOrderByWithRelationInput = {
   assignedUserRoles?: Prisma.UserRoleOrderByRelationAggregateInput
   userRoles?: Prisma.UserRoleOrderByRelationAggregateInput
   organization?: Prisma.OrganizationOrderByWithRelationInput
-  _relevance?: Prisma.UserOrderByRelevanceInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -392,6 +418,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   archivedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  emailSearch?: Prisma.StringFilter<"User"> | string
+  firstNameSearch?: Prisma.StringFilter<"User"> | string
+  lastNameSearch?: Prisma.StringFilter<"User"> | string
   createdAccidentCases?: Prisma.AccidentCaseListRelationFilter
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryListRelationFilter
   createdAppointments?: Prisma.AppointmentListRelationFilter
@@ -438,6 +467,9 @@ export type UserOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailSearch?: Prisma.SortOrder
+  firstNameSearch?: Prisma.SortOrder
+  lastNameSearch?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
@@ -463,6 +495,9 @@ export type UserScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   archivedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  emailSearch?: Prisma.StringWithAggregatesFilter<"User"> | string
+  firstNameSearch?: Prisma.StringWithAggregatesFilter<"User"> | string
+  lastNameSearch?: Prisma.StringWithAggregatesFilter<"User"> | string
 }
 
 export type UserCreateInput = {
@@ -479,6 +514,9 @@ export type UserCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -525,6 +563,9 @@ export type UserUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -569,6 +610,9 @@ export type UserUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -615,6 +659,9 @@ export type UserUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -660,6 +707,9 @@ export type UserCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
 }
 
 export type UserUpdateManyMutationInput = {
@@ -676,6 +726,9 @@ export type UserUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -693,6 +746,9 @@ export type UserUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type UserScalarRelationFilter = {
@@ -715,12 +771,6 @@ export type UserOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type UserOrderByRelevanceInput = {
-  fields: Prisma.UserOrderByRelevanceFieldEnum | Prisma.UserOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
-}
-
 export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
@@ -736,6 +786,9 @@ export type UserCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
+  emailSearch?: Prisma.SortOrder
+  firstNameSearch?: Prisma.SortOrder
+  lastNameSearch?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
@@ -759,6 +812,9 @@ export type UserMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
+  emailSearch?: Prisma.SortOrder
+  firstNameSearch?: Prisma.SortOrder
+  lastNameSearch?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -776,6 +832,9 @@ export type UserMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
+  emailSearch?: Prisma.SortOrder
+  firstNameSearch?: Prisma.SortOrder
+  lastNameSearch?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
@@ -1256,6 +1315,9 @@ export type UserCreateWithoutCreatedAccidentCasesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
@@ -1301,6 +1363,9 @@ export type UserUncheckedCreateWithoutCreatedAccidentCasesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
@@ -1360,6 +1425,9 @@ export type UserUpdateWithoutCreatedAccidentCasesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
@@ -1405,6 +1473,9 @@ export type UserUncheckedUpdateWithoutCreatedAccidentCasesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
@@ -1448,6 +1519,9 @@ export type UserCreateWithoutAppointmentStatusChangesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
@@ -1493,6 +1567,9 @@ export type UserUncheckedCreateWithoutAppointmentStatusChangesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
@@ -1552,6 +1629,9 @@ export type UserUpdateWithoutAppointmentStatusChangesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
@@ -1597,6 +1677,9 @@ export type UserUncheckedUpdateWithoutAppointmentStatusChangesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
@@ -1640,6 +1723,9 @@ export type UserCreateWithoutCreatedAppointmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
@@ -1685,6 +1771,9 @@ export type UserUncheckedCreateWithoutCreatedAppointmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
@@ -1744,6 +1833,9 @@ export type UserUpdateWithoutCreatedAppointmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
@@ -1789,6 +1881,9 @@ export type UserUncheckedUpdateWithoutCreatedAppointmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
@@ -1832,6 +1927,9 @@ export type UserCreateWithoutAuditLogsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -1877,6 +1975,9 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -1936,6 +2037,9 @@ export type UserUpdateWithoutAuditLogsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -1981,6 +2085,9 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -2024,6 +2131,9 @@ export type UserCreateWithoutCreatedClinicalEncountersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -2069,6 +2179,9 @@ export type UserUncheckedCreateWithoutCreatedClinicalEncountersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -2128,6 +2241,9 @@ export type UserUpdateWithoutCreatedClinicalEncountersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -2173,6 +2289,9 @@ export type UserUncheckedUpdateWithoutCreatedClinicalEncountersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -2216,6 +2335,9 @@ export type UserCreateWithoutDeclarationBatchStatusChangesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -2261,6 +2383,9 @@ export type UserUncheckedCreateWithoutDeclarationBatchStatusChangesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -2320,6 +2445,9 @@ export type UserUpdateWithoutDeclarationBatchStatusChangesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -2365,6 +2493,9 @@ export type UserUncheckedUpdateWithoutDeclarationBatchStatusChangesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -2408,6 +2539,9 @@ export type UserCreateWithoutCreatedDeclarationBatchesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -2453,6 +2587,9 @@ export type UserUncheckedCreateWithoutCreatedDeclarationBatchesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -2512,6 +2649,9 @@ export type UserUpdateWithoutCreatedDeclarationBatchesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -2557,6 +2697,9 @@ export type UserUncheckedUpdateWithoutCreatedDeclarationBatchesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -2600,6 +2743,9 @@ export type UserCreateWithoutDeclarationExportsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -2645,6 +2791,9 @@ export type UserUncheckedCreateWithoutDeclarationExportsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -2704,6 +2853,9 @@ export type UserUpdateWithoutDeclarationExportsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -2749,6 +2901,9 @@ export type UserUncheckedUpdateWithoutDeclarationExportsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -2792,6 +2947,9 @@ export type UserCreateWithoutDeclarationSubmissionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -2837,6 +2995,9 @@ export type UserUncheckedCreateWithoutDeclarationSubmissionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -2896,6 +3057,9 @@ export type UserUpdateWithoutDeclarationSubmissionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -2941,6 +3105,9 @@ export type UserUncheckedUpdateWithoutDeclarationSubmissionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -2984,6 +3151,9 @@ export type UserCreateWithoutCreatedDocumentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -3029,6 +3199,9 @@ export type UserUncheckedCreateWithoutCreatedDocumentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -3088,6 +3261,9 @@ export type UserUpdateWithoutCreatedDocumentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -3133,6 +3309,9 @@ export type UserUncheckedUpdateWithoutCreatedDocumentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -3176,6 +3355,9 @@ export type UserCreateWithoutCreatedEncounterDiagnosesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -3221,6 +3403,9 @@ export type UserUncheckedCreateWithoutCreatedEncounterDiagnosesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -3280,6 +3465,9 @@ export type UserUpdateWithoutCreatedEncounterDiagnosesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -3325,6 +3513,9 @@ export type UserUncheckedUpdateWithoutCreatedEncounterDiagnosesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -3368,6 +3559,9 @@ export type UserCreateWithoutCreatedEncounterProceduresInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -3413,6 +3607,9 @@ export type UserUncheckedCreateWithoutCreatedEncounterProceduresInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -3472,6 +3669,9 @@ export type UserUpdateWithoutCreatedEncounterProceduresInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -3517,6 +3717,9 @@ export type UserUncheckedUpdateWithoutCreatedEncounterProceduresInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -3560,6 +3763,9 @@ export type UserCreateWithoutApprovedInvoiceCorrectionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -3605,6 +3811,9 @@ export type UserUncheckedCreateWithoutApprovedInvoiceCorrectionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -3653,6 +3862,9 @@ export type UserCreateWithoutRequestedInvoiceCorrectionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -3698,6 +3910,9 @@ export type UserUncheckedCreateWithoutRequestedInvoiceCorrectionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -3746,6 +3961,9 @@ export type UserCreateWithoutResolvedInvoiceCorrectionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -3791,6 +4009,9 @@ export type UserUncheckedCreateWithoutResolvedInvoiceCorrectionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -3850,6 +4071,9 @@ export type UserUpdateWithoutApprovedInvoiceCorrectionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -3895,6 +4119,9 @@ export type UserUncheckedUpdateWithoutApprovedInvoiceCorrectionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -3949,6 +4176,9 @@ export type UserUpdateWithoutRequestedInvoiceCorrectionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -3994,6 +4224,9 @@ export type UserUncheckedUpdateWithoutRequestedInvoiceCorrectionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -4048,6 +4281,9 @@ export type UserUpdateWithoutResolvedInvoiceCorrectionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -4093,6 +4329,9 @@ export type UserUncheckedUpdateWithoutResolvedInvoiceCorrectionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -4136,6 +4375,9 @@ export type UserCreateWithoutInvoiceStatusChangesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -4181,6 +4423,9 @@ export type UserUncheckedCreateWithoutInvoiceStatusChangesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -4240,6 +4485,9 @@ export type UserUpdateWithoutInvoiceStatusChangesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -4285,6 +4533,9 @@ export type UserUncheckedUpdateWithoutInvoiceStatusChangesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -4328,6 +4579,9 @@ export type UserCreateWithoutPreparedInvoiceVersionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -4373,6 +4627,9 @@ export type UserUncheckedCreateWithoutPreparedInvoiceVersionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -4432,6 +4689,9 @@ export type UserUpdateWithoutPreparedInvoiceVersionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -4477,6 +4737,9 @@ export type UserUncheckedUpdateWithoutPreparedInvoiceVersionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -4520,6 +4783,9 @@ export type UserCreateWithoutCancelledInvoicesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -4565,6 +4831,9 @@ export type UserUncheckedCreateWithoutCancelledInvoicesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -4613,6 +4882,9 @@ export type UserCreateWithoutCreatedInvoicesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -4658,6 +4930,9 @@ export type UserUncheckedCreateWithoutCreatedInvoicesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -4717,6 +4992,9 @@ export type UserUpdateWithoutCancelledInvoicesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -4762,6 +5040,9 @@ export type UserUncheckedUpdateWithoutCancelledInvoicesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -4816,6 +5097,9 @@ export type UserUpdateWithoutCreatedInvoicesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -4861,6 +5145,9 @@ export type UserUncheckedUpdateWithoutCreatedInvoicesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -4904,6 +5191,9 @@ export type UserCreateWithoutOrganizationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -4948,6 +5238,9 @@ export type UserUncheckedCreateWithoutOrganizationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -5022,6 +5315,9 @@ export type UserScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   archivedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  emailSearch?: Prisma.StringFilter<"User"> | string
+  firstNameSearch?: Prisma.StringFilter<"User"> | string
+  lastNameSearch?: Prisma.StringFilter<"User"> | string
 }
 
 export type UserCreateWithoutVerifiedInsuranceRecordsInput = {
@@ -5038,6 +5334,9 @@ export type UserCreateWithoutVerifiedInsuranceRecordsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -5083,6 +5382,9 @@ export type UserUncheckedCreateWithoutVerifiedInsuranceRecordsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -5142,6 +5444,9 @@ export type UserUpdateWithoutVerifiedInsuranceRecordsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -5187,6 +5492,9 @@ export type UserUncheckedUpdateWithoutVerifiedInsuranceRecordsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -5230,6 +5538,9 @@ export type UserCreateWithoutProviderInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -5275,6 +5586,9 @@ export type UserUncheckedCreateWithoutProviderInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -5334,6 +5648,9 @@ export type UserUpdateWithoutProviderInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -5379,6 +5696,9 @@ export type UserUncheckedUpdateWithoutProviderInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -5422,6 +5742,9 @@ export type UserCreateWithoutCapturedSignaturesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -5467,6 +5790,9 @@ export type UserUncheckedCreateWithoutCapturedSignaturesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -5515,6 +5841,9 @@ export type UserCreateWithoutVoidedSignaturesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -5560,6 +5889,9 @@ export type UserUncheckedCreateWithoutVoidedSignaturesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -5619,6 +5951,9 @@ export type UserUpdateWithoutCapturedSignaturesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -5664,6 +5999,9 @@ export type UserUncheckedUpdateWithoutCapturedSignaturesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -5718,6 +6056,9 @@ export type UserUpdateWithoutVoidedSignaturesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -5763,6 +6104,9 @@ export type UserUncheckedUpdateWithoutVoidedSignaturesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -5806,6 +6150,9 @@ export type UserCreateWithoutCreatedSvbAuthorizationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -5851,6 +6198,9 @@ export type UserUncheckedCreateWithoutCreatedSvbAuthorizationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -5910,6 +6260,9 @@ export type UserUpdateWithoutCreatedSvbAuthorizationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -5955,6 +6308,9 @@ export type UserUncheckedUpdateWithoutCreatedSvbAuthorizationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -5998,6 +6354,9 @@ export type UserCreateWithoutUpdatedSystemSettingsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -6043,6 +6402,9 @@ export type UserUncheckedCreateWithoutUpdatedSystemSettingsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -6102,6 +6464,9 @@ export type UserUpdateWithoutUpdatedSystemSettingsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -6147,6 +6512,9 @@ export type UserUncheckedUpdateWithoutUpdatedSystemSettingsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -6190,6 +6558,9 @@ export type UserCreateWithoutCreatedTreatmentCasesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -6235,6 +6606,9 @@ export type UserUncheckedCreateWithoutCreatedTreatmentCasesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -6294,6 +6668,9 @@ export type UserUpdateWithoutCreatedTreatmentCasesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -6339,6 +6716,9 @@ export type UserUncheckedUpdateWithoutCreatedTreatmentCasesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -6382,6 +6762,9 @@ export type UserCreateWithoutAssignedUserRolesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -6427,6 +6810,9 @@ export type UserUncheckedCreateWithoutAssignedUserRolesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -6475,6 +6861,9 @@ export type UserCreateWithoutUserRolesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByUserInput
@@ -6520,6 +6909,9 @@ export type UserUncheckedCreateWithoutUserRolesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutCreatedByUserInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutChangedByUserInput
   createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByUserInput
@@ -6579,6 +6971,9 @@ export type UserUpdateWithoutAssignedUserRolesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -6624,6 +7019,9 @@ export type UserUncheckedUpdateWithoutAssignedUserRolesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -6678,6 +7076,9 @@ export type UserUpdateWithoutUserRolesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -6723,6 +7124,9 @@ export type UserUncheckedUpdateWithoutUserRolesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -6766,6 +7170,9 @@ export type UserCreateManyOrganizationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  emailSearch?: string
+  firstNameSearch?: string
+  lastNameSearch?: string
 }
 
 export type UserUpdateWithoutOrganizationInput = {
@@ -6782,6 +7189,9 @@ export type UserUpdateWithoutOrganizationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByUserNestedInput
@@ -6826,6 +7236,9 @@ export type UserUncheckedUpdateWithoutOrganizationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdAccidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutCreatedByUserNestedInput
   appointmentStatusChanges?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutChangedByUserNestedInput
   createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput
@@ -6870,6 +7283,9 @@ export type UserUncheckedUpdateManyWithoutOrganizationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -7152,6 +7568,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   updatedAt?: boolean
   archivedAt?: boolean
+  emailSearch?: boolean
+  firstNameSearch?: boolean
+  lastNameSearch?: boolean
   createdAccidentCases?: boolean | Prisma.User$createdAccidentCasesArgs<ExtArgs>
   appointmentStatusChanges?: boolean | Prisma.User$appointmentStatusChangesArgs<ExtArgs>
   createdAppointments?: boolean | Prisma.User$createdAppointmentsArgs<ExtArgs>
@@ -7184,7 +7603,47 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
+export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  organizationId?: boolean
+  email?: boolean
+  passwordHash?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  status?: boolean
+  lastLoginAt?: boolean
+  passwordChangedAt?: boolean
+  failedLoginAttempts?: boolean
+  lockedUntil?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  archivedAt?: boolean
+  emailSearch?: boolean
+  firstNameSearch?: boolean
+  lastNameSearch?: boolean
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["user"]>
 
+export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  organizationId?: boolean
+  email?: boolean
+  passwordHash?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  status?: boolean
+  lastLoginAt?: boolean
+  passwordChangedAt?: boolean
+  failedLoginAttempts?: boolean
+  lockedUntil?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  archivedAt?: boolean
+  emailSearch?: boolean
+  firstNameSearch?: boolean
+  lastNameSearch?: boolean
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
   id?: boolean
@@ -7201,9 +7660,12 @@ export type UserSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   archivedAt?: boolean
+  emailSearch?: boolean
+  firstNameSearch?: boolean
+  lastNameSearch?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "email" | "passwordHash" | "firstName" | "lastName" | "status" | "lastLoginAt" | "passwordChangedAt" | "failedLoginAttempts" | "lockedUntil" | "createdAt" | "updatedAt" | "archivedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "email" | "passwordHash" | "firstName" | "lastName" | "status" | "lastLoginAt" | "passwordChangedAt" | "failedLoginAttempts" | "lockedUntil" | "createdAt" | "updatedAt" | "archivedAt" | "emailSearch" | "firstNameSearch" | "lastNameSearch", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   createdAccidentCases?: boolean | Prisma.User$createdAccidentCasesArgs<ExtArgs>
   appointmentStatusChanges?: boolean | Prisma.User$appointmentStatusChangesArgs<ExtArgs>
@@ -7235,6 +7697,12 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   userRoles?: boolean | Prisma.User$userRolesArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+}
+export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -7285,6 +7753,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     createdAt: Date
     updatedAt: Date
     archivedAt: Date | null
+    emailSearch: string
+    firstNameSearch: string
+    lastNameSearch: string
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -7403,6 +7874,30 @@ export interface UserDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
   createMany<T extends UserCreateManyArgs>(args?: Prisma.SelectSubset<T, UserCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many Users and returns the data saved in the database.
+   * @param {UserCreateManyAndReturnArgs} args - Arguments to create many Users.
+   * @example
+   * // Create many Users
+   * const user = await prisma.user.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many Users and only return the `id`
+   * const userWithIdOnly = await prisma.user.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends UserCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, UserCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a User.
    * @param {UserDeleteArgs} args - Arguments to delete one User.
    * @example
@@ -7465,6 +7960,36 @@ export interface UserDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
    * 
    */
   updateMany<T extends UserUpdateManyArgs>(args: Prisma.SelectSubset<T, UserUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more Users and returns the data updated in the database.
+   * @param {UserUpdateManyAndReturnArgs} args - Arguments to update many Users.
+   * @example
+   * // Update many Users
+   * const user = await prisma.user.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more Users and only return the `id`
+   * const userWithIdOnly = await prisma.user.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends UserUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, UserUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one User.
@@ -7697,6 +8222,9 @@ export interface UserFieldRefs {
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly archivedAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly emailSearch: Prisma.FieldRef<"User", 'String'>
+  readonly firstNameSearch: Prisma.FieldRef<"User", 'String'>
+  readonly lastNameSearch: Prisma.FieldRef<"User", 'String'>
 }
     
 
@@ -7935,6 +8463,29 @@ export type UserCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
+ * User createManyAndReturn
+ */
+export type UserCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * The data used to create many Users.
+   */
+  data: Prisma.UserCreateManyInput | Prisma.UserCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * User update
  */
 export type UserUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -7976,6 +8527,36 @@ export type UserUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Limit how many Users to update.
    */
   limit?: number
+}
+
+/**
+ * User updateManyAndReturn
+ */
+export type UserUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * The data used to update Users.
+   */
+  data: Prisma.XOR<Prisma.UserUpdateManyMutationInput, Prisma.UserUncheckedUpdateManyInput>
+  /**
+   * Filter which Users to update
+   */
+  where?: Prisma.UserWhereInput
+  /**
+   * Limit how many Users to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

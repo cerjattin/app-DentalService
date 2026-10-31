@@ -1,0 +1,433 @@
+{
+  "info": {
+    "name": "ODONTHO NEG-FUNC-03/04/05 \u2014 dedicated QA only",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Run only against dedicated synthetic QA after migration/permission synchronization and ADMIN login from the main collection. baseUrl has no /api/v1 suffix. Set createdPatientId, payerId, qaExternalTreatmentId (1-7 characters supplied for QA), adminToken. Candidate GET does not reserve. Inspect selected candidate before running assignment. This collection has not been executed against clinical/Supabase operational data."
+  },
+  "variable": [
+    {
+      "key": "organizationRevision",
+      "value": ""
+    },
+    {
+      "key": "negDeclarationId",
+      "value": ""
+    },
+    {
+      "key": "candidateInvoiceItemId",
+      "value": ""
+    },
+    {
+      "key": "negDeclarationItemId",
+      "value": ""
+    },
+    {
+      "key": "negTreatmentCaseId",
+      "value": ""
+    },
+    {
+      "key": "qaExternalTreatmentId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "B03 Read current organization",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/v1/organization"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "if (pm.response.code === 200) pm.collectionVariables.set('organizationRevision', pm.response.json().data.revision);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "B03 Update current organization with revision",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/v1/organization",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"expectedRevision\": \"{{organizationRevision}}\",\n  \"reason\": \"QA organization update\",\n  \"phone\": \"QA\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "if (pm.response.code === 200) pm.collectionVariables.set('organizationRevision', pm.response.json().data.revision);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "B03 Reject client Declarant ID override",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/v1/declarations",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"payerId\": \"{{payerId}}\",\n  \"declarantIdSnapshot\": \"00123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 400', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "B03 Create unbound Draft",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/v1/declarations",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"payerId\": \"{{payerId}}\",\n  \"notes\": \"QA NEG FUNC Draft\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+              "if (pm.response.code === 201) { pm.collectionVariables.set('negDeclarationId', pm.response.json().data.id); pm.test('Identity initially unbound', () => pm.expect(pm.response.json().data.declarantIdSnapshot).to.eql(null)); }"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "B04 List candidates",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/v1/declarations/{{negDeclarationId}}/candidates?page=1&pageSize=20"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "const data = pm.response.json().data; if (pm.response.code === 200 && data.length) pm.collectionVariables.set('candidateInvoiceItemId', data[0].invoiceItemId);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "B04 Assign one selected candidate",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/v1/declarations/{{negDeclarationId}}/items",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"invoiceItemId\": \"{{candidateInvoiceItemId}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+              "if (pm.response.code === 201) pm.collectionVariables.set('negDeclarationItemId', pm.response.json().data.id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "B04 Remove Draft assignment with JSON body",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/v1/declarations/{{negDeclarationId}}/items/{{negDeclarationItemId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"reason\": \"QA release selected item\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "B04 Cancel Draft preserving history",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/v1/declarations/{{negDeclarationId}}/cancel",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"reason\": \"QA cancel synthetic Draft\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "B05 List patient treatment cases",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/v1/patients/{{createdPatientId}}/treatment-cases?page=1&pageSize=20"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "B05 Create externally supplied QA reference",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/v1/patients/{{createdPatientId}}/treatment-cases",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"treatmentId\": \"{{qaExternalTreatmentId}}\",\n  \"description\": \"QA NEG FUNC case\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+              "if (pm.response.code === 201) pm.collectionVariables.set('negTreatmentCaseId', pm.response.json().data.id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "B05 Read patient treatment case",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/v1/patients/{{createdPatientId}}/treatment-cases/{{negTreatmentCaseId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "B05 Edit unused PLANNED case",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/v1/patients/{{createdPatientId}}/treatment-cases/{{negTreatmentCaseId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"description\": \"QA updated unused case\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

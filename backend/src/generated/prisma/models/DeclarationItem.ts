@@ -398,6 +398,7 @@ export type DeclarationItemWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"DeclarationItem"> | Date | string
   declarationBatch?: Prisma.XOR<Prisma.DeclarationBatchScalarRelationFilter, Prisma.DeclarationBatchWhereInput>
   invoiceItem?: Prisma.XOR<Prisma.InvoiceItemScalarRelationFilter, Prisma.InvoiceItemWhereInput>
+  activeAssignment?: Prisma.XOR<Prisma.DeclarationActiveAssignmentNullableScalarRelationFilter, Prisma.DeclarationActiveAssignmentWhereInput> | null
 }
 
 export type DeclarationItemOrderByWithRelationInput = {
@@ -428,7 +429,7 @@ export type DeclarationItemOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   declarationBatch?: Prisma.DeclarationBatchOrderByWithRelationInput
   invoiceItem?: Prisma.InvoiceItemOrderByWithRelationInput
-  _relevance?: Prisma.DeclarationItemOrderByRelevanceInput
+  activeAssignment?: Prisma.DeclarationActiveAssignmentOrderByWithRelationInput
 }
 
 export type DeclarationItemWhereUniqueInput = Prisma.AtLeast<{
@@ -464,6 +465,7 @@ export type DeclarationItemWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"DeclarationItem"> | Date | string
   declarationBatch?: Prisma.XOR<Prisma.DeclarationBatchScalarRelationFilter, Prisma.DeclarationBatchWhereInput>
   invoiceItem?: Prisma.XOR<Prisma.InvoiceItemScalarRelationFilter, Prisma.InvoiceItemWhereInput>
+  activeAssignment?: Prisma.XOR<Prisma.DeclarationActiveAssignmentNullableScalarRelationFilter, Prisma.DeclarationActiveAssignmentWhereInput> | null
 }, "id" | "declarationBatchId_invoiceItemId" | "declarationBatchId_sequenceNumber">
 
 export type DeclarationItemOrderByWithAggregationInput = {
@@ -556,6 +558,7 @@ export type DeclarationItemCreateInput = {
   updatedAt?: Date | string
   declarationBatch: Prisma.DeclarationBatchCreateNestedOneWithoutItemsInput
   invoiceItem: Prisma.InvoiceItemCreateNestedOneWithoutDeclarationItemsInput
+  activeAssignment?: Prisma.DeclarationActiveAssignmentCreateNestedOneWithoutDeclarationItemInput
 }
 
 export type DeclarationItemUncheckedCreateInput = {
@@ -584,6 +587,7 @@ export type DeclarationItemUncheckedCreateInput = {
   responseMessage?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  activeAssignment?: Prisma.DeclarationActiveAssignmentUncheckedCreateNestedOneWithoutDeclarationItemInput
 }
 
 export type DeclarationItemUpdateInput = {
@@ -612,6 +616,7 @@ export type DeclarationItemUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   declarationBatch?: Prisma.DeclarationBatchUpdateOneRequiredWithoutItemsNestedInput
   invoiceItem?: Prisma.InvoiceItemUpdateOneRequiredWithoutDeclarationItemsNestedInput
+  activeAssignment?: Prisma.DeclarationActiveAssignmentUpdateOneWithoutDeclarationItemNestedInput
 }
 
 export type DeclarationItemUncheckedUpdateInput = {
@@ -640,6 +645,7 @@ export type DeclarationItemUncheckedUpdateInput = {
   responseMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activeAssignment?: Prisma.DeclarationActiveAssignmentUncheckedUpdateOneWithoutDeclarationItemNestedInput
 }
 
 export type DeclarationItemCreateManyInput = {
@@ -732,12 +738,6 @@ export type DeclarationItemListRelationFilter = {
 
 export type DeclarationItemOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type DeclarationItemOrderByRelevanceInput = {
-  fields: Prisma.DeclarationItemOrderByRelevanceFieldEnum | Prisma.DeclarationItemOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type DeclarationItemDeclarationBatchIdInvoiceItemIdCompoundUniqueInput = {
@@ -852,6 +852,11 @@ export type DeclarationItemSumOrderByAggregateInput = {
   numberOfTreatmentsSnapshot?: Prisma.SortOrder
 }
 
+export type DeclarationItemScalarRelationFilter = {
+  is?: Prisma.DeclarationItemWhereInput
+  isNot?: Prisma.DeclarationItemWhereInput
+}
+
 export type DeclarationItemCreateNestedManyWithoutDeclarationBatchInput = {
   create?: Prisma.XOR<Prisma.DeclarationItemCreateWithoutDeclarationBatchInput, Prisma.DeclarationItemUncheckedCreateWithoutDeclarationBatchInput> | Prisma.DeclarationItemCreateWithoutDeclarationBatchInput[] | Prisma.DeclarationItemUncheckedCreateWithoutDeclarationBatchInput[]
   connectOrCreate?: Prisma.DeclarationItemCreateOrConnectWithoutDeclarationBatchInput | Prisma.DeclarationItemCreateOrConnectWithoutDeclarationBatchInput[]
@@ -912,6 +917,20 @@ export type NullableIntFieldUpdateOperationsInput = {
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type DeclarationItemCreateNestedOneWithoutActiveAssignmentInput = {
+  create?: Prisma.XOR<Prisma.DeclarationItemCreateWithoutActiveAssignmentInput, Prisma.DeclarationItemUncheckedCreateWithoutActiveAssignmentInput>
+  connectOrCreate?: Prisma.DeclarationItemCreateOrConnectWithoutActiveAssignmentInput
+  connect?: Prisma.DeclarationItemWhereUniqueInput
+}
+
+export type DeclarationItemUpdateOneRequiredWithoutActiveAssignmentNestedInput = {
+  create?: Prisma.XOR<Prisma.DeclarationItemCreateWithoutActiveAssignmentInput, Prisma.DeclarationItemUncheckedCreateWithoutActiveAssignmentInput>
+  connectOrCreate?: Prisma.DeclarationItemCreateOrConnectWithoutActiveAssignmentInput
+  upsert?: Prisma.DeclarationItemUpsertWithoutActiveAssignmentInput
+  connect?: Prisma.DeclarationItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DeclarationItemUpdateToOneWithWhereWithoutActiveAssignmentInput, Prisma.DeclarationItemUpdateWithoutActiveAssignmentInput>, Prisma.DeclarationItemUncheckedUpdateWithoutActiveAssignmentInput>
 }
 
 export type DeclarationItemCreateNestedManyWithoutInvoiceItemInput = {
@@ -981,6 +1000,7 @@ export type DeclarationItemCreateWithoutDeclarationBatchInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   invoiceItem: Prisma.InvoiceItemCreateNestedOneWithoutDeclarationItemsInput
+  activeAssignment?: Prisma.DeclarationActiveAssignmentCreateNestedOneWithoutDeclarationItemInput
 }
 
 export type DeclarationItemUncheckedCreateWithoutDeclarationBatchInput = {
@@ -1008,6 +1028,7 @@ export type DeclarationItemUncheckedCreateWithoutDeclarationBatchInput = {
   responseMessage?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  activeAssignment?: Prisma.DeclarationActiveAssignmentUncheckedCreateNestedOneWithoutDeclarationItemInput
 }
 
 export type DeclarationItemCreateOrConnectWithoutDeclarationBatchInput = {
@@ -1067,6 +1088,134 @@ export type DeclarationItemScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"DeclarationItem"> | Date | string
 }
 
+export type DeclarationItemCreateWithoutActiveAssignmentInput = {
+  id?: bigint | number
+  sequenceNumber: number
+  lineStatus?: $Enums.DeclarationItemLineStatus
+  declarantIdSnapshot: string
+  invoiceNumberSnapshot: string
+  detailInvoiceNumberSnapshot: string
+  providerIdSnapshot: string
+  serviceDateSnapshot: Date | string
+  insuredIdSnapshot: string
+  accidentFormNumberSnapshot?: string | null
+  treatmentIdSnapshot?: string | null
+  amountSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
+  authorizationIdSnapshot?: string | null
+  numberOfTreatmentsSnapshot?: number | null
+  assistanceSnapshot?: string | null
+  referrerIdSnapshot?: string | null
+  diagnosticCodeSnapshot?: string | null
+  policlinicSnapshot?: string | null
+  additionalNoteSnapshot?: string | null
+  responseCode?: string | null
+  responseMessage?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  declarationBatch: Prisma.DeclarationBatchCreateNestedOneWithoutItemsInput
+  invoiceItem: Prisma.InvoiceItemCreateNestedOneWithoutDeclarationItemsInput
+}
+
+export type DeclarationItemUncheckedCreateWithoutActiveAssignmentInput = {
+  id?: bigint | number
+  declarationBatchId: bigint | number
+  invoiceItemId: bigint | number
+  sequenceNumber: number
+  lineStatus?: $Enums.DeclarationItemLineStatus
+  declarantIdSnapshot: string
+  invoiceNumberSnapshot: string
+  detailInvoiceNumberSnapshot: string
+  providerIdSnapshot: string
+  serviceDateSnapshot: Date | string
+  insuredIdSnapshot: string
+  accidentFormNumberSnapshot?: string | null
+  treatmentIdSnapshot?: string | null
+  amountSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
+  authorizationIdSnapshot?: string | null
+  numberOfTreatmentsSnapshot?: number | null
+  assistanceSnapshot?: string | null
+  referrerIdSnapshot?: string | null
+  diagnosticCodeSnapshot?: string | null
+  policlinicSnapshot?: string | null
+  additionalNoteSnapshot?: string | null
+  responseCode?: string | null
+  responseMessage?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type DeclarationItemCreateOrConnectWithoutActiveAssignmentInput = {
+  where: Prisma.DeclarationItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.DeclarationItemCreateWithoutActiveAssignmentInput, Prisma.DeclarationItemUncheckedCreateWithoutActiveAssignmentInput>
+}
+
+export type DeclarationItemUpsertWithoutActiveAssignmentInput = {
+  update: Prisma.XOR<Prisma.DeclarationItemUpdateWithoutActiveAssignmentInput, Prisma.DeclarationItemUncheckedUpdateWithoutActiveAssignmentInput>
+  create: Prisma.XOR<Prisma.DeclarationItemCreateWithoutActiveAssignmentInput, Prisma.DeclarationItemUncheckedCreateWithoutActiveAssignmentInput>
+  where?: Prisma.DeclarationItemWhereInput
+}
+
+export type DeclarationItemUpdateToOneWithWhereWithoutActiveAssignmentInput = {
+  where?: Prisma.DeclarationItemWhereInput
+  data: Prisma.XOR<Prisma.DeclarationItemUpdateWithoutActiveAssignmentInput, Prisma.DeclarationItemUncheckedUpdateWithoutActiveAssignmentInput>
+}
+
+export type DeclarationItemUpdateWithoutActiveAssignmentInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  sequenceNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  lineStatus?: Prisma.EnumDeclarationItemLineStatusFieldUpdateOperationsInput | $Enums.DeclarationItemLineStatus
+  declarantIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceNumberSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  detailInvoiceNumberSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  providerIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceDateSnapshot?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  accidentFormNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amountSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  numberOfTreatmentsSnapshot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  assistanceSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  policlinicSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  additionalNoteSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responseCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responseMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  declarationBatch?: Prisma.DeclarationBatchUpdateOneRequiredWithoutItemsNestedInput
+  invoiceItem?: Prisma.InvoiceItemUpdateOneRequiredWithoutDeclarationItemsNestedInput
+}
+
+export type DeclarationItemUncheckedUpdateWithoutActiveAssignmentInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  declarationBatchId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  invoiceItemId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  sequenceNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  lineStatus?: Prisma.EnumDeclarationItemLineStatusFieldUpdateOperationsInput | $Enums.DeclarationItemLineStatus
+  declarantIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceNumberSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  detailInvoiceNumberSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  providerIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceDateSnapshot?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  accidentFormNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amountSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  numberOfTreatmentsSnapshot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  assistanceSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  policlinicSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  additionalNoteSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responseCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responseMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type DeclarationItemCreateWithoutInvoiceItemInput = {
   id?: bigint | number
   sequenceNumber: number
@@ -1092,6 +1241,7 @@ export type DeclarationItemCreateWithoutInvoiceItemInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   declarationBatch: Prisma.DeclarationBatchCreateNestedOneWithoutItemsInput
+  activeAssignment?: Prisma.DeclarationActiveAssignmentCreateNestedOneWithoutDeclarationItemInput
 }
 
 export type DeclarationItemUncheckedCreateWithoutInvoiceItemInput = {
@@ -1119,6 +1269,7 @@ export type DeclarationItemUncheckedCreateWithoutInvoiceItemInput = {
   responseMessage?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  activeAssignment?: Prisma.DeclarationActiveAssignmentUncheckedCreateNestedOneWithoutDeclarationItemInput
 }
 
 export type DeclarationItemCreateOrConnectWithoutInvoiceItemInput = {
@@ -1199,6 +1350,7 @@ export type DeclarationItemUpdateWithoutDeclarationBatchInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   invoiceItem?: Prisma.InvoiceItemUpdateOneRequiredWithoutDeclarationItemsNestedInput
+  activeAssignment?: Prisma.DeclarationActiveAssignmentUpdateOneWithoutDeclarationItemNestedInput
 }
 
 export type DeclarationItemUncheckedUpdateWithoutDeclarationBatchInput = {
@@ -1226,6 +1378,7 @@ export type DeclarationItemUncheckedUpdateWithoutDeclarationBatchInput = {
   responseMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activeAssignment?: Prisma.DeclarationActiveAssignmentUncheckedUpdateOneWithoutDeclarationItemNestedInput
 }
 
 export type DeclarationItemUncheckedUpdateManyWithoutDeclarationBatchInput = {
@@ -1307,6 +1460,7 @@ export type DeclarationItemUpdateWithoutInvoiceItemInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   declarationBatch?: Prisma.DeclarationBatchUpdateOneRequiredWithoutItemsNestedInput
+  activeAssignment?: Prisma.DeclarationActiveAssignmentUpdateOneWithoutDeclarationItemNestedInput
 }
 
 export type DeclarationItemUncheckedUpdateWithoutInvoiceItemInput = {
@@ -1334,6 +1488,7 @@ export type DeclarationItemUncheckedUpdateWithoutInvoiceItemInput = {
   responseMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activeAssignment?: Prisma.DeclarationActiveAssignmentUncheckedUpdateOneWithoutDeclarationItemNestedInput
 }
 
 export type DeclarationItemUncheckedUpdateManyWithoutInvoiceItemInput = {
@@ -1393,9 +1548,68 @@ export type DeclarationItemSelect<ExtArgs extends runtime.Types.Extensions.Inter
   updatedAt?: boolean
   declarationBatch?: boolean | Prisma.DeclarationBatchDefaultArgs<ExtArgs>
   invoiceItem?: boolean | Prisma.InvoiceItemDefaultArgs<ExtArgs>
+  activeAssignment?: boolean | Prisma.DeclarationItem$activeAssignmentArgs<ExtArgs>
 }, ExtArgs["result"]["declarationItem"]>
 
+export type DeclarationItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  declarationBatchId?: boolean
+  invoiceItemId?: boolean
+  sequenceNumber?: boolean
+  lineStatus?: boolean
+  declarantIdSnapshot?: boolean
+  invoiceNumberSnapshot?: boolean
+  detailInvoiceNumberSnapshot?: boolean
+  providerIdSnapshot?: boolean
+  serviceDateSnapshot?: boolean
+  insuredIdSnapshot?: boolean
+  accidentFormNumberSnapshot?: boolean
+  treatmentIdSnapshot?: boolean
+  amountSnapshot?: boolean
+  authorizationIdSnapshot?: boolean
+  numberOfTreatmentsSnapshot?: boolean
+  assistanceSnapshot?: boolean
+  referrerIdSnapshot?: boolean
+  diagnosticCodeSnapshot?: boolean
+  policlinicSnapshot?: boolean
+  additionalNoteSnapshot?: boolean
+  responseCode?: boolean
+  responseMessage?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  declarationBatch?: boolean | Prisma.DeclarationBatchDefaultArgs<ExtArgs>
+  invoiceItem?: boolean | Prisma.InvoiceItemDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["declarationItem"]>
 
+export type DeclarationItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  declarationBatchId?: boolean
+  invoiceItemId?: boolean
+  sequenceNumber?: boolean
+  lineStatus?: boolean
+  declarantIdSnapshot?: boolean
+  invoiceNumberSnapshot?: boolean
+  detailInvoiceNumberSnapshot?: boolean
+  providerIdSnapshot?: boolean
+  serviceDateSnapshot?: boolean
+  insuredIdSnapshot?: boolean
+  accidentFormNumberSnapshot?: boolean
+  treatmentIdSnapshot?: boolean
+  amountSnapshot?: boolean
+  authorizationIdSnapshot?: boolean
+  numberOfTreatmentsSnapshot?: boolean
+  assistanceSnapshot?: boolean
+  referrerIdSnapshot?: boolean
+  diagnosticCodeSnapshot?: boolean
+  policlinicSnapshot?: boolean
+  additionalNoteSnapshot?: boolean
+  responseCode?: boolean
+  responseMessage?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  declarationBatch?: boolean | Prisma.DeclarationBatchDefaultArgs<ExtArgs>
+  invoiceItem?: boolean | Prisma.InvoiceItemDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["declarationItem"]>
 
 export type DeclarationItemSelectScalar = {
   id?: boolean
@@ -1429,6 +1643,15 @@ export type DeclarationItemOmit<ExtArgs extends runtime.Types.Extensions.Interna
 export type DeclarationItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   declarationBatch?: boolean | Prisma.DeclarationBatchDefaultArgs<ExtArgs>
   invoiceItem?: boolean | Prisma.InvoiceItemDefaultArgs<ExtArgs>
+  activeAssignment?: boolean | Prisma.DeclarationItem$activeAssignmentArgs<ExtArgs>
+}
+export type DeclarationItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  declarationBatch?: boolean | Prisma.DeclarationBatchDefaultArgs<ExtArgs>
+  invoiceItem?: boolean | Prisma.InvoiceItemDefaultArgs<ExtArgs>
+}
+export type DeclarationItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  declarationBatch?: boolean | Prisma.DeclarationBatchDefaultArgs<ExtArgs>
+  invoiceItem?: boolean | Prisma.InvoiceItemDefaultArgs<ExtArgs>
 }
 
 export type $DeclarationItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1436,6 +1659,7 @@ export type $DeclarationItemPayload<ExtArgs extends runtime.Types.Extensions.Int
   objects: {
     declarationBatch: Prisma.$DeclarationBatchPayload<ExtArgs>
     invoiceItem: Prisma.$InvoiceItemPayload<ExtArgs>
+    activeAssignment: Prisma.$DeclarationActiveAssignmentPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: bigint
@@ -1581,6 +1805,30 @@ export interface DeclarationItemDelegate<ExtArgs extends runtime.Types.Extension
   createMany<T extends DeclarationItemCreateManyArgs>(args?: Prisma.SelectSubset<T, DeclarationItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many DeclarationItems and returns the data saved in the database.
+   * @param {DeclarationItemCreateManyAndReturnArgs} args - Arguments to create many DeclarationItems.
+   * @example
+   * // Create many DeclarationItems
+   * const declarationItem = await prisma.declarationItem.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many DeclarationItems and only return the `id`
+   * const declarationItemWithIdOnly = await prisma.declarationItem.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends DeclarationItemCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, DeclarationItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeclarationItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a DeclarationItem.
    * @param {DeclarationItemDeleteArgs} args - Arguments to delete one DeclarationItem.
    * @example
@@ -1643,6 +1891,36 @@ export interface DeclarationItemDelegate<ExtArgs extends runtime.Types.Extension
    * 
    */
   updateMany<T extends DeclarationItemUpdateManyArgs>(args: Prisma.SelectSubset<T, DeclarationItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more DeclarationItems and returns the data updated in the database.
+   * @param {DeclarationItemUpdateManyAndReturnArgs} args - Arguments to update many DeclarationItems.
+   * @example
+   * // Update many DeclarationItems
+   * const declarationItem = await prisma.declarationItem.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more DeclarationItems and only return the `id`
+   * const declarationItemWithIdOnly = await prisma.declarationItem.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends DeclarationItemUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, DeclarationItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeclarationItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one DeclarationItem.
@@ -1805,6 +2083,7 @@ export interface Prisma__DeclarationItemClient<T, Null = never, ExtArgs extends 
   readonly [Symbol.toStringTag]: "PrismaPromise"
   declarationBatch<T extends Prisma.DeclarationBatchDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DeclarationBatchDefaultArgs<ExtArgs>>): Prisma.Prisma__DeclarationBatchClient<runtime.Types.Result.GetResult<Prisma.$DeclarationBatchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   invoiceItem<T extends Prisma.InvoiceItemDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InvoiceItemDefaultArgs<ExtArgs>>): Prisma.Prisma__InvoiceItemClient<runtime.Types.Result.GetResult<Prisma.$InvoiceItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  activeAssignment<T extends Prisma.DeclarationItem$activeAssignmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DeclarationItem$activeAssignmentArgs<ExtArgs>>): Prisma.Prisma__DeclarationActiveAssignmentClient<runtime.Types.Result.GetResult<Prisma.$DeclarationActiveAssignmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2097,6 +2376,29 @@ export type DeclarationItemCreateManyArgs<ExtArgs extends runtime.Types.Extensio
 }
 
 /**
+ * DeclarationItem createManyAndReturn
+ */
+export type DeclarationItemCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeclarationItem
+   */
+  select?: Prisma.DeclarationItemSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeclarationItem
+   */
+  omit?: Prisma.DeclarationItemOmit<ExtArgs> | null
+  /**
+   * The data used to create many DeclarationItems.
+   */
+  data: Prisma.DeclarationItemCreateManyInput | Prisma.DeclarationItemCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeclarationItemIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * DeclarationItem update
  */
 export type DeclarationItemUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2138,6 +2440,36 @@ export type DeclarationItemUpdateManyArgs<ExtArgs extends runtime.Types.Extensio
    * Limit how many DeclarationItems to update.
    */
   limit?: number
+}
+
+/**
+ * DeclarationItem updateManyAndReturn
+ */
+export type DeclarationItemUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeclarationItem
+   */
+  select?: Prisma.DeclarationItemSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeclarationItem
+   */
+  omit?: Prisma.DeclarationItemOmit<ExtArgs> | null
+  /**
+   * The data used to update DeclarationItems.
+   */
+  data: Prisma.XOR<Prisma.DeclarationItemUpdateManyMutationInput, Prisma.DeclarationItemUncheckedUpdateManyInput>
+  /**
+   * Filter which DeclarationItems to update
+   */
+  where?: Prisma.DeclarationItemWhereInput
+  /**
+   * Limit how many DeclarationItems to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeclarationItemIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -2204,6 +2536,25 @@ export type DeclarationItemDeleteManyArgs<ExtArgs extends runtime.Types.Extensio
    * Limit how many DeclarationItems to delete.
    */
   limit?: number
+}
+
+/**
+ * DeclarationItem.activeAssignment
+ */
+export type DeclarationItem$activeAssignmentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeclarationActiveAssignment
+   */
+  select?: Prisma.DeclarationActiveAssignmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeclarationActiveAssignment
+   */
+  omit?: Prisma.DeclarationActiveAssignmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeclarationActiveAssignmentInclude<ExtArgs> | null
+  where?: Prisma.DeclarationActiveAssignmentWhereInput
 }
 
 /**

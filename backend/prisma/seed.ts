@@ -25,6 +25,8 @@ const permissions = [
   ["patient.create", "Crear pacientes", "Registrar pacientes."],
   ["patient.update", "Actualizar pacientes", "Actualizar información de pacientes."],
   ["patient.archive", "Archivar pacientes", "Archivar pacientes sin eliminar historia."],
+  ["treatment_case.read", "Ver casos de tratamiento", "Consultar casos del paciente."],
+  ["treatment_case.manage", "Gestionar casos de tratamiento", "Registrar y editar casos no utilizados."],
 
   ["insurance.read", "Ver coberturas", "Consultar cobertura/Insured ID."],
   ["insurance.create", "Crear coberturas", "Registrar cobertura de un paciente."],
@@ -90,6 +92,7 @@ const permissions = [
 ] as const;
 
 const receptionPermissions = [
+  "treatment_case.read",
   "dashboard.read",
   "organization.read",
   "clinic_location.read",
@@ -128,6 +131,8 @@ const receptionPermissions = [
 ] as const;
 
 const providerPermissions = [
+  "treatment_case.read",
+  "treatment_case.manage",
   "dashboard.read",
   "organization.read",
   "clinic_location.read",

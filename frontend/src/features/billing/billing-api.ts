@@ -65,6 +65,9 @@ export function createInvoice(appointmentId: EntityId) {
     method: 'POST',
   })
 }
+export function returnInvoiceToCare(id: EntityId, body: { reason: string; expectedVersionId: EntityId }) {
+  return apiFetch<Invoice>(`/invoices/${id}/reopen-encounter`, { method: 'POST', body })
+}
 function versionPath(id: EntityId, versionId: EntityId) {
   return `/invoices/${id}/versions/${versionId}`
 }

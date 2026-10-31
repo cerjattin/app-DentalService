@@ -60,13 +60,13 @@ async function cleanupDeclarationFixture() {
     where: {
       OR: [
         {
-          declarationNumber: {
-            startsWith: "TEST-DECL",
+          declarationNumberSearch: {
+            startsWith: ("TEST-DECL").toLowerCase(),
           },
         },
         {
-          notes: {
-            contains: "TEST-DECL",
+          notesSearch: {
+            contains: ("TEST-DECL").toLowerCase(),
           },
         },
       ],
@@ -89,7 +89,7 @@ async function cleanupDeclarationFixture() {
     where: {
       OR: [
         { actorUserId: { in: userIds } },
-        { entityType: { startsWith: "DECLARATION" } },
+        { entityTypeSearch: { startsWith: ("DECLARATION").toLowerCase() } },
       ],
     },
   });
@@ -111,7 +111,7 @@ async function cleanupDeclarationFixture() {
     where: {
       OR: [
         { id: { in: documentIds } },
-        { originalFilename: { startsWith: "TEST-DECL" } },
+        { originalFilenameSearch: { startsWith: ("TEST-DECL").toLowerCase() } },
       ],
     },
   });
@@ -140,7 +140,7 @@ async function cleanupDeclarationFixture() {
   const invoices = await prisma.invoice.findMany({
     where: {
       OR: [
-        { invoiceNumber: { startsWith: "TEST-DECL-INV" } },
+        { invoiceNumberSearch: { startsWith: ("TEST-DECL-INV").toLowerCase() } },
         { organization: { legalName: OTHER_ORG_LEGAL_NAME } },
       ],
     },
@@ -193,7 +193,7 @@ async function cleanupDeclarationFixture() {
   const appointments = await prisma.appointment.findMany({
     where: {
       OR: [
-        { appointmentNumber: { startsWith: "TEST-DECL-APT" } },
+        { appointmentNumberSearch: { startsWith: ("TEST-DECL-APT").toLowerCase() } },
         { organization: { legalName: OTHER_ORG_LEGAL_NAME } },
       ],
     },
@@ -235,52 +235,52 @@ async function cleanupDeclarationFixture() {
   });
   await prisma.patientInsurance.deleteMany({
     where: {
-      insuredId: {
-        startsWith: "00000",
+      insuredIdSearch: {
+        startsWith: ("00000").toLowerCase(),
       },
     },
   });
   await prisma.svbTariff.deleteMany({
     where: {
       svbProcedure: {
-        code: {
-          startsWith: "TEST-DECL-PROC",
+        codeSearch: {
+          startsWith: ("TEST-DECL-PROC").toLowerCase(),
         },
       },
     },
   });
   await prisma.svbProcedure.deleteMany({
     where: {
-      code: {
-        startsWith: "TEST-DECL-PROC",
+      codeSearch: {
+        startsWith: ("TEST-DECL-PROC").toLowerCase(),
       },
     },
   });
   await prisma.provider.deleteMany({
     where: {
-      lastName: {
-        startsWith: "Provider ",
+      lastNameSearch: {
+        startsWith: ("Provider ").toLowerCase(),
       },
     },
   });
   await prisma.clinicLocation.deleteMany({
     where: {
-      code: {
-        startsWith: "TEST-DECL-LOC",
+      codeSearch: {
+        startsWith: ("TEST-DECL-LOC").toLowerCase(),
       },
     },
   });
   await prisma.patient.deleteMany({
     where: {
-      patientNumber: {
-        startsWith: "TEST-DECL-PAT",
+      patientNumberSearch: {
+        startsWith: ("TEST-DECL-PAT").toLowerCase(),
       },
     },
   });
   await prisma.payer.deleteMany({
     where: {
-      code: {
-        startsWith: "TEST-DECL-PAYER",
+      codeSearch: {
+        startsWith: ("TEST-DECL-PAYER").toLowerCase(),
       },
     },
   });
@@ -577,7 +577,7 @@ async function createInvoiceFixture(input: {
   return item.id;
 }
 
-async function createDeclaration(declarantIdSnapshot: string | null = "12345") {
+async function createDeclaration(declarantIdSnapshot: string | null = null) {
   const response = await request(app)
     .post("/api/v1/declarations")
     .set("Authorization", `Bearer ${adminToken}`)
@@ -594,7 +594,7 @@ async function createDeclaration(declarantIdSnapshot: string | null = "12345") {
 }
 
 async function createExportedDeclaration(suffix: string) {
-  const targetDeclarationId = await createDeclaration("12345");
+  const targetDeclarationId = await createDeclaration(null);
   const targetInvoiceItemId = await createInvoiceFixture({
     orgId: organizationId,
     payer: payerId,
@@ -758,7 +758,6 @@ describe("Declaration API", () => {
         payerId: payerId.toString(),
         periodStart: "2026-08-01",
         periodEnd: "2026-08-31",
-        declarantIdSnapshot: "12345",
         notes: "TEST-DECL primary",
       })
       .expect(201);
@@ -890,7 +889,7 @@ describe("Declaration API", () => {
   });
 
   it("exports TXT, JSON, and XML adapters", async () => {
-    const targetDeclarationId = await createDeclaration("12345");
+    const targetDeclarationId = await createDeclaration(null);
     await request(app)
       .post(`/api/v1/declarations/${targetDeclarationId}/items`)
       .set("Authorization", `Bearer ${adminToken}`)
@@ -946,7 +945,7 @@ describe("Declaration API", () => {
   });
 
   it("rejects empty and incomplete declarations at READY", async () => {
-    const emptyDeclarationId = await createDeclaration("12345");
+    const emptyDeclarationId = await createDeclaration(null);
     await request(app)
       .post(`/api/v1/declarations/${emptyDeclarationId}/ready`)
       .set("Authorization", `Bearer ${adminToken}`)
@@ -969,15 +968,14 @@ describe("Declaration API", () => {
       .send({
         invoiceItemId: incompleteItemId.toString(),
       })
-      .expect(201);
+      .expect(409)
+      .expect((response) => { expect(response.body.error.code).toBe("DECLARATION_SVB_DATA_INCOMPLETE"); });
     await request(app)
       .post(`/api/v1/declarations/${incompleteDeclarationId}/ready`)
       .set("Authorization", `Bearer ${adminToken}`)
       .expect(409)
       .expect((response) => {
-        expect(response.body.error.code).toBe(
-          "DECLARATION_SVB_DATA_INCOMPLETE",
-        );
+        expect(response.body.error.code).toBe("DECLARATION_EMPTY");
       });
   });
 
@@ -1241,7 +1239,7 @@ describe("Declaration API", () => {
       useSuccessfulSubmissionAdapter("TEST-SUBMISSION-PRECHECK"),
     );
 
-    const draftDeclarationId = await createDeclaration("12345");
+    const draftDeclarationId = await createDeclaration(null);
     await request(app)
       .post(`/api/v1/declarations/${draftDeclarationId}/submit`)
       .set("Authorization", `Bearer ${adminToken}`)
@@ -1250,7 +1248,7 @@ describe("Declaration API", () => {
         expect(response.body.error.code).toBe("DECLARATION_NOT_SUBMITTABLE");
       });
 
-    const missingExportDeclarationId = await createDeclaration("12345");
+    const missingExportDeclarationId = await createDeclaration(null);
     const itemId = await createInvoiceFixture({
       orgId: organizationId,
       payer: payerId,

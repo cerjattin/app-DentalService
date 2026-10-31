@@ -1,4 +1,4 @@
-name: MASTER-02R MySQL compliance
+name: MASTER-02R PostgreSQL compliance
 
 on:
   pull_request:
@@ -12,19 +12,19 @@ permissions:
   contents: read
 
 jobs:
-  mysql-compliance:
+  postgresql-compliance:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     services:
-      mysql:
-        image: mysql:8.0
+      postgres:
+        image: postgres:17
         env:
-          MYSQL_ROOT_PASSWORD: isolated-master02r-only
-          MYSQL_DATABASE: odontho_master02r_test
+          POSTGRES_PASSWORD: isolated-master02r-only
+          POSTGRES_DB: odontho_master02r_test
         ports:
-          - 3306:3306
+          - 5432:5432
         options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1 -pisolated-master02r-only"
+          --health-cmd="pg_isready -U postgres"
           --health-interval=5s
           --health-timeout=5s
           --health-retries=30
@@ -32,7 +32,8 @@ jobs:
       run:
         working-directory: backend
     env:
-      DATABASE_URL: mysql://root:isolated-master02r-only@127.0.0.1:3306/odontho_master02r_test
+      DATABASE_URL: postgresql://postgres:isolated-master02r-only@127.0.0.1:5432/odontho_master02r_test
+      TEST_DATABASE_URL: postgresql://postgres:isolated-master02r-only@127.0.0.1:5432/odontho_master02r_test
       ACCESS_TOKEN_SECRET: isolated-master02r-ci-secret-at-least-32-characters
       NODE_ENV: test
       LOG_LEVEL: silent
@@ -56,7 +57,7 @@ jobs:
         run: npm run typecheck
       - name: Build
         run: npm run build
-      - name: Full suite with real MySQL
+      - name: Full suite with real PostgreSQL
         run: npm test -- --reporter=default --reporter=json --outputFile=test-results-master02r.json
       - name: Live HTTP QA with normal login
         if: ${{ !cancelled() && steps.prepare.outcome == 'success' }}

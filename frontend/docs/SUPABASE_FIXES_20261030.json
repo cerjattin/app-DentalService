@@ -1,0 +1,41 @@
+{
+  "runAt": "2026-10-30T23:18:47.683Z",
+  "checks": [
+    "FEV-01 PASS: date filter includes both 20:00 and 21:00 Curaçao appointments",
+    "SVB form PASS: new layout is idempotent; original PDF, closed snapshots and signed content hash are unchanged"
+  ],
+  "requests": [
+    {
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "path": "/api/v1/appointments?date=2026-10-30&page=1&pageSize=100",
+      "status": 200
+    },
+    {
+      "path": "/api/v1/invoices/2",
+      "status": 200
+    },
+    {
+      "path": "/api/v1/invoices/2/versions/2/pdf",
+      "status": 201
+    },
+    {
+      "path": "/api/v1/invoices/2/versions/2/pdf",
+      "status": 201
+    },
+    {
+      "path": "/api/v1/invoices/2",
+      "status": 200
+    }
+  ],
+  "pdf": {
+    "documentId": "5",
+    "originalFilename": "QAI-000002-v1-svb.pdf",
+    "bytes": 287278,
+    "sha256": "ac56c65b590a3196e5bc76b1529463ca5b8f9db44b3733e9903dc044f0015aee",
+    "output": "output/pdf/QAI-000002-v1-svb.pdf"
+  },
+  "status": "PASS"
+}

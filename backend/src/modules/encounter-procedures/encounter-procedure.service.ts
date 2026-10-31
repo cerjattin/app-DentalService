@@ -1,3 +1,4 @@
+import { isTransactionConflict } from "../../infrastructure/database/transaction-conflict.js";
 import { Prisma } from "../../generated/prisma/client.js";
 
 import { prisma } from "../../infrastructure/database/prisma.js";
@@ -12,6 +13,7 @@ import type {
 import { authorizationService } from "../authorizations/authorization.service.js";
 import { clinicalEncounterRepository } from "../clinical-encounters/clinical-encounter.repository.js";
 import { svbCatalogService } from "../svb-catalog/svb-catalog.service.js";
+import { assertProcedureBillingEditable } from "../invoices/invoice-clinical-reopen.service.js";
 
 import {
   encounterProcedureRepository,
@@ -118,8 +120,7 @@ function toAuditValues(procedure: EncounterProcedureRecord) {
 
 function isSerializableConflict(error: unknown) {
   return (
-    error instanceof Prisma.PrismaClientKnownRequestError &&
-    error.code === "P2034"
+    isTransactionConflict(error)
   );
 }
 
@@ -567,6 +568,8 @@ export class EncounterProcedureService {
         );
       }
 
+      await tx.$queryRaw`SELECT id FROM appointments WHERE id = ${currentEncounter.appointment.id}
+        AND organization_id = ${actor.organizationId} FOR UPDATE`;
       const appointmentSvbContext = await tx.appointment.findFirst({
         where: {
           id: currentEncounter.appointment.id,
@@ -575,6 +578,8 @@ export class EncounterProcedureService {
         select: {
           treatmentCase: {
             select: {
+              organizationId: true,
+              patientId: true,
               treatmentId: true,
             },
           },
@@ -600,6 +605,11 @@ export class EncounterProcedureService {
       }
 
       let authorizationExternalId: string | null = null;
+      if (appointmentSvbContext.treatmentCase &&
+          (appointmentSvbContext.treatmentCase.organizationId !== actor.organizationId ||
+           appointmentSvbContext.treatmentCase.patientId !== currentEncounter.appointment.patient.id)) {
+        throw new AppError(409, "APPOINTMENT_CLINICAL_CONTEXT_LOCKED", "Treatment context requires explicit reconciliation");
+      }
 
       if (authorizationItemId !== null) {
         const consumed = await validateAndConsumeAuthorizationItem({
@@ -718,6 +728,10 @@ export class EncounterProcedureService {
         );
       }
 
+      if (current.invoiceItems.length > 0) {
+        await assertProcedureBillingEditable(tx, current.id, actor.organizationId);
+      }
+
       let diagnosisId: bigint | null | undefined;
       let diagnosticCodeSnapshot: string | null | undefined;
 
@@ -828,13 +842,15 @@ export class EncounterProcedureService {
         );
       }
 
-      if (current.invoiceItems.length > 0) {
+      if (!["PERFORMED", "BILLED"].includes(current.status)) {
         throw new AppError(
           409,
-          "ENCOUNTER_PROCEDURE_ALREADY_BILLED",
-          "Encounter procedure is already linked to billing",
+          "ENCOUNTER_PROCEDURE_NOT_EDITABLE",
+          "Encounter procedure is not editable",
         );
       }
+      const historical = current.invoiceItems.length > 0;
+      if (historical) await assertProcedureBillingEditable(tx, current.id, actor.organizationId);
 
       if (current.authorizationItemId !== null) {
         await releaseAuthorizationQuantity({
@@ -844,11 +860,11 @@ export class EncounterProcedureService {
         });
       }
 
-      await tx.encounterProcedure.delete({
-        where: {
-          id: encounterProcedureId,
-        },
-      });
+      if (historical) {
+        await tx.encounterProcedure.update({ where: { id: encounterProcedureId }, data: { status: "VOID" } });
+      } else {
+        await tx.encounterProcedure.delete({ where: { id: encounterProcedureId } });
+      }
 
       await auditService.writeWithinTransaction(tx, {
         organizationId: actor.organizationId,
@@ -858,10 +874,11 @@ export class EncounterProcedureService {
         entityId: current.id,
         entityKey: `${encounter.appointment.appointmentNumber}:${current.procedureCodeSnapshot}`,
         oldValues: toAuditValues(current),
+        ...(historical ? { newValues: { status: "VOID", reason: "clinical_rebilling" } } : {}),
         ...auditTechnicalFields(metadata),
       });
 
-      return current;
+      return historical ? { ...current, status: "VOID" as const } : current;
     });
 
     return toEncounterProcedureResponse(removed);

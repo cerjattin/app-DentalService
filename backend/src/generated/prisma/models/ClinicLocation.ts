@@ -51,6 +51,7 @@ export type ClinicLocationMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   archivedAt: Date | null
+  codeSearch: string | null
 }
 
 export type ClinicLocationMaxAggregateOutputType = {
@@ -68,6 +69,7 @@ export type ClinicLocationMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   archivedAt: Date | null
+  codeSearch: string | null
 }
 
 export type ClinicLocationCountAggregateOutputType = {
@@ -85,6 +87,7 @@ export type ClinicLocationCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   archivedAt: number
+  codeSearch: number
   _all: number
 }
 
@@ -114,6 +117,7 @@ export type ClinicLocationMinAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   archivedAt?: true
+  codeSearch?: true
 }
 
 export type ClinicLocationMaxAggregateInputType = {
@@ -131,6 +135,7 @@ export type ClinicLocationMaxAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   archivedAt?: true
+  codeSearch?: true
 }
 
 export type ClinicLocationCountAggregateInputType = {
@@ -148,6 +153,7 @@ export type ClinicLocationCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   archivedAt?: true
+  codeSearch?: true
   _all?: true
 }
 
@@ -252,6 +258,7 @@ export type ClinicLocationGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   archivedAt: Date | null
+  codeSearch: string
   _count: ClinicLocationCountAggregateOutputType | null
   _avg: ClinicLocationAvgAggregateOutputType | null
   _sum: ClinicLocationSumAggregateOutputType | null
@@ -292,6 +299,7 @@ export type ClinicLocationWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"ClinicLocation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ClinicLocation"> | Date | string
   archivedAt?: Prisma.DateTimeNullableFilter<"ClinicLocation"> | Date | string | null
+  codeSearch?: Prisma.StringFilter<"ClinicLocation"> | string
   appointments?: Prisma.AppointmentListRelationFilter
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
 }
@@ -311,9 +319,9 @@ export type ClinicLocationOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  codeSearch?: Prisma.SortOrder
   appointments?: Prisma.AppointmentOrderByRelationAggregateInput
   organization?: Prisma.OrganizationOrderByWithRelationInput
-  _relevance?: Prisma.ClinicLocationOrderByRelevanceInput
 }
 
 export type ClinicLocationWhereUniqueInput = Prisma.AtLeast<{
@@ -336,6 +344,7 @@ export type ClinicLocationWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"ClinicLocation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ClinicLocation"> | Date | string
   archivedAt?: Prisma.DateTimeNullableFilter<"ClinicLocation"> | Date | string | null
+  codeSearch?: Prisma.StringFilter<"ClinicLocation"> | string
   appointments?: Prisma.AppointmentListRelationFilter
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
 }, "id" | "organizationId_code" | "organizationId_policlinicCode">
@@ -355,6 +364,7 @@ export type ClinicLocationOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  codeSearch?: Prisma.SortOrder
   _count?: Prisma.ClinicLocationCountOrderByAggregateInput
   _avg?: Prisma.ClinicLocationAvgOrderByAggregateInput
   _max?: Prisma.ClinicLocationMaxOrderByAggregateInput
@@ -380,6 +390,7 @@ export type ClinicLocationScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ClinicLocation"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ClinicLocation"> | Date | string
   archivedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ClinicLocation"> | Date | string | null
+  codeSearch?: Prisma.StringWithAggregatesFilter<"ClinicLocation"> | string
 }
 
 export type ClinicLocationCreateInput = {
@@ -396,6 +407,7 @@ export type ClinicLocationCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  codeSearch?: string
   appointments?: Prisma.AppointmentCreateNestedManyWithoutClinicLocationInput
   organization: Prisma.OrganizationCreateNestedOneWithoutClinicLocationsInput
 }
@@ -415,6 +427,7 @@ export type ClinicLocationUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  codeSearch?: string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClinicLocationInput
 }
 
@@ -432,6 +445,7 @@ export type ClinicLocationUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
   appointments?: Prisma.AppointmentUpdateManyWithoutClinicLocationNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutClinicLocationsNestedInput
 }
@@ -451,6 +465,7 @@ export type ClinicLocationUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClinicLocationNestedInput
 }
 
@@ -469,6 +484,7 @@ export type ClinicLocationCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  codeSearch?: string
 }
 
 export type ClinicLocationUpdateManyMutationInput = {
@@ -485,6 +501,7 @@ export type ClinicLocationUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ClinicLocationUncheckedUpdateManyInput = {
@@ -502,17 +519,12 @@ export type ClinicLocationUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ClinicLocationScalarRelationFilter = {
   is?: Prisma.ClinicLocationWhereInput
   isNot?: Prisma.ClinicLocationWhereInput
-}
-
-export type ClinicLocationOrderByRelevanceInput = {
-  fields: Prisma.ClinicLocationOrderByRelevanceFieldEnum | Prisma.ClinicLocationOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type ClinicLocationOrganizationIdCodeCompoundUniqueInput = {
@@ -540,6 +552,7 @@ export type ClinicLocationCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
+  codeSearch?: Prisma.SortOrder
 }
 
 export type ClinicLocationAvgOrderByAggregateInput = {
@@ -562,6 +575,7 @@ export type ClinicLocationMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
+  codeSearch?: Prisma.SortOrder
 }
 
 export type ClinicLocationMinOrderByAggregateInput = {
@@ -579,6 +593,7 @@ export type ClinicLocationMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
+  codeSearch?: Prisma.SortOrder
 }
 
 export type ClinicLocationSumOrderByAggregateInput = {
@@ -670,6 +685,7 @@ export type ClinicLocationCreateWithoutAppointmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  codeSearch?: string
   organization: Prisma.OrganizationCreateNestedOneWithoutClinicLocationsInput
 }
 
@@ -688,6 +704,7 @@ export type ClinicLocationUncheckedCreateWithoutAppointmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  codeSearch?: string
 }
 
 export type ClinicLocationCreateOrConnectWithoutAppointmentsInput = {
@@ -720,6 +737,7 @@ export type ClinicLocationUpdateWithoutAppointmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutClinicLocationsNestedInput
 }
 
@@ -738,6 +756,7 @@ export type ClinicLocationUncheckedUpdateWithoutAppointmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ClinicLocationCreateWithoutOrganizationInput = {
@@ -754,6 +773,7 @@ export type ClinicLocationCreateWithoutOrganizationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  codeSearch?: string
   appointments?: Prisma.AppointmentCreateNestedManyWithoutClinicLocationInput
 }
 
@@ -771,6 +791,7 @@ export type ClinicLocationUncheckedCreateWithoutOrganizationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  codeSearch?: string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClinicLocationInput
 }
 
@@ -818,6 +839,7 @@ export type ClinicLocationScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"ClinicLocation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ClinicLocation"> | Date | string
   archivedAt?: Prisma.DateTimeNullableFilter<"ClinicLocation"> | Date | string | null
+  codeSearch?: Prisma.StringFilter<"ClinicLocation"> | string
 }
 
 export type ClinicLocationCreateManyOrganizationInput = {
@@ -834,6 +856,7 @@ export type ClinicLocationCreateManyOrganizationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  codeSearch?: string
 }
 
 export type ClinicLocationUpdateWithoutOrganizationInput = {
@@ -850,6 +873,7 @@ export type ClinicLocationUpdateWithoutOrganizationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
   appointments?: Prisma.AppointmentUpdateManyWithoutClinicLocationNestedInput
 }
 
@@ -867,6 +891,7 @@ export type ClinicLocationUncheckedUpdateWithoutOrganizationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClinicLocationNestedInput
 }
 
@@ -884,6 +909,7 @@ export type ClinicLocationUncheckedUpdateManyWithoutOrganizationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -932,12 +958,49 @@ export type ClinicLocationSelect<ExtArgs extends runtime.Types.Extensions.Intern
   createdAt?: boolean
   updatedAt?: boolean
   archivedAt?: boolean
+  codeSearch?: boolean
   appointments?: boolean | Prisma.ClinicLocation$appointmentsArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.ClinicLocationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["clinicLocation"]>
 
+export type ClinicLocationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  organizationId?: boolean
+  code?: boolean
+  name?: boolean
+  policlinicCode?: boolean
+  addressLine1?: boolean
+  addressLine2?: boolean
+  city?: boolean
+  countryCode?: boolean
+  phone?: boolean
+  isActive?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  archivedAt?: boolean
+  codeSearch?: boolean
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["clinicLocation"]>
 
+export type ClinicLocationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  organizationId?: boolean
+  code?: boolean
+  name?: boolean
+  policlinicCode?: boolean
+  addressLine1?: boolean
+  addressLine2?: boolean
+  city?: boolean
+  countryCode?: boolean
+  phone?: boolean
+  isActive?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  archivedAt?: boolean
+  codeSearch?: boolean
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["clinicLocation"]>
 
 export type ClinicLocationSelectScalar = {
   id?: boolean
@@ -954,13 +1017,20 @@ export type ClinicLocationSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   archivedAt?: boolean
+  codeSearch?: boolean
 }
 
-export type ClinicLocationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "code" | "name" | "policlinicCode" | "addressLine1" | "addressLine2" | "city" | "countryCode" | "phone" | "isActive" | "createdAt" | "updatedAt" | "archivedAt", ExtArgs["result"]["clinicLocation"]>
+export type ClinicLocationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "code" | "name" | "policlinicCode" | "addressLine1" | "addressLine2" | "city" | "countryCode" | "phone" | "isActive" | "createdAt" | "updatedAt" | "archivedAt" | "codeSearch", ExtArgs["result"]["clinicLocation"]>
 export type ClinicLocationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   appointments?: boolean | Prisma.ClinicLocation$appointmentsArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.ClinicLocationCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type ClinicLocationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+}
+export type ClinicLocationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }
 
 export type $ClinicLocationPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -984,6 +1054,7 @@ export type $ClinicLocationPayload<ExtArgs extends runtime.Types.Extensions.Inte
     createdAt: Date
     updatedAt: Date
     archivedAt: Date | null
+    codeSearch: string
   }, ExtArgs["result"]["clinicLocation"]>
   composites: {}
 }
@@ -1102,6 +1173,30 @@ export interface ClinicLocationDelegate<ExtArgs extends runtime.Types.Extensions
   createMany<T extends ClinicLocationCreateManyArgs>(args?: Prisma.SelectSubset<T, ClinicLocationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many ClinicLocations and returns the data saved in the database.
+   * @param {ClinicLocationCreateManyAndReturnArgs} args - Arguments to create many ClinicLocations.
+   * @example
+   * // Create many ClinicLocations
+   * const clinicLocation = await prisma.clinicLocation.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many ClinicLocations and only return the `id`
+   * const clinicLocationWithIdOnly = await prisma.clinicLocation.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends ClinicLocationCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, ClinicLocationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ClinicLocationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a ClinicLocation.
    * @param {ClinicLocationDeleteArgs} args - Arguments to delete one ClinicLocation.
    * @example
@@ -1164,6 +1259,36 @@ export interface ClinicLocationDelegate<ExtArgs extends runtime.Types.Extensions
    * 
    */
   updateMany<T extends ClinicLocationUpdateManyArgs>(args: Prisma.SelectSubset<T, ClinicLocationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more ClinicLocations and returns the data updated in the database.
+   * @param {ClinicLocationUpdateManyAndReturnArgs} args - Arguments to update many ClinicLocations.
+   * @example
+   * // Update many ClinicLocations
+   * const clinicLocation = await prisma.clinicLocation.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more ClinicLocations and only return the `id`
+   * const clinicLocationWithIdOnly = await prisma.clinicLocation.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends ClinicLocationUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, ClinicLocationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ClinicLocationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one ClinicLocation.
@@ -1369,6 +1494,7 @@ export interface ClinicLocationFieldRefs {
   readonly createdAt: Prisma.FieldRef<"ClinicLocation", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"ClinicLocation", 'DateTime'>
   readonly archivedAt: Prisma.FieldRef<"ClinicLocation", 'DateTime'>
+  readonly codeSearch: Prisma.FieldRef<"ClinicLocation", 'String'>
 }
     
 
@@ -1607,6 +1733,29 @@ export type ClinicLocationCreateManyArgs<ExtArgs extends runtime.Types.Extension
 }
 
 /**
+ * ClinicLocation createManyAndReturn
+ */
+export type ClinicLocationCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ClinicLocation
+   */
+  select?: Prisma.ClinicLocationSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the ClinicLocation
+   */
+  omit?: Prisma.ClinicLocationOmit<ExtArgs> | null
+  /**
+   * The data used to create many ClinicLocations.
+   */
+  data: Prisma.ClinicLocationCreateManyInput | Prisma.ClinicLocationCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ClinicLocationIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * ClinicLocation update
  */
 export type ClinicLocationUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1648,6 +1797,36 @@ export type ClinicLocationUpdateManyArgs<ExtArgs extends runtime.Types.Extension
    * Limit how many ClinicLocations to update.
    */
   limit?: number
+}
+
+/**
+ * ClinicLocation updateManyAndReturn
+ */
+export type ClinicLocationUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ClinicLocation
+   */
+  select?: Prisma.ClinicLocationSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the ClinicLocation
+   */
+  omit?: Prisma.ClinicLocationOmit<ExtArgs> | null
+  /**
+   * The data used to update ClinicLocations.
+   */
+  data: Prisma.XOR<Prisma.ClinicLocationUpdateManyMutationInput, Prisma.ClinicLocationUncheckedUpdateManyInput>
+  /**
+   * Filter which ClinicLocations to update
+   */
+  where?: Prisma.ClinicLocationWhereInput
+  /**
+   * Limit how many ClinicLocations to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ClinicLocationIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

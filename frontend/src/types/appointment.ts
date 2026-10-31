@@ -116,6 +116,7 @@ export type AppointmentListResult = {
 }
 
 export interface AppointmentCreateDto {
+  treatmentCaseId?: EntityId | null
   patientId: EntityId
   providerId: EntityId
   clinicLocationId: EntityId

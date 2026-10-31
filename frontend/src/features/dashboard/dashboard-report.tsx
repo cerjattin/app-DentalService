@@ -1,18 +1,23 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { getApiErrorMessage } from '../../api'
 import { useAuth } from '../../auth/use-auth'
 import { hasPermission } from '../../auth/permissions'
 import { ErrorState } from '../../components/feedback/error-state'
 import { LoadingState } from '../../components/feedback/loading-state'
+import { FormField } from '../../components/forms/form-field'
 import { Card } from '../../components/ui/card'
 import { Button } from '../../components/ui/button'
 import { Input } from '../../components/ui/input'
 import { Select } from '../../components/ui/select'
 import { formatBusinessDate } from '../../lib/timezone'
+import type { Provider } from '../../types/appointment'
 import type { DashboardFilters, ReportMoney } from '../../types/reporting'
 import { dashboardKeys, getDashboardReport, listReportProviders } from './dashboard-api'
+import { dashboardFilterSchema } from './dashboard-model'
 
 function Money({ rows }: { rows: ReportMoney[] }) {
   return rows.length ? <>{rows.map((r) => <p key={r.currencyCode} className="font-mono tabular-nums">{r.currencyCode} {r.amount}</p>)}</> : <span>No amounts recorded</span>
@@ -23,23 +28,44 @@ function Kpi({ label, children }: { label: string; children: ReactNode }) {
 export function DashboardReport() {
   const { permissions } = useAuth()
   const [filters, setFilters] = useState<DashboardFilters>(() => { const today = formatBusinessDate(new Date()); return { from: today, to: today } })
+  const { register, control, handleSubmit, formState: { errors } } = useForm<DashboardFilters>({
+    resolver: zodResolver(dashboardFilterSchema), defaultValues: { ...filters, providerId: '' },
+  })
+  const [selectedProvider, setSelectedProvider] = useState<Provider | null>(null)
   const [search, setSearch] = useState('')
   const [q, setQ] = useState('')
   useEffect(() => { const t = window.setTimeout(() => setQ(search.trim()), 300); return () => window.clearTimeout(t) }, [search])
   const canReadProviders = hasPermission(permissions, 'provider.read')
   const providers = useQuery({ queryKey: dashboardKeys.providers(q), queryFn: ({ signal }) => listReportProviders(q, signal), enabled: canReadProviders })
+  const providerChoices = providers.data?.data ?? []
+  const providerOptions = selectedProvider && !providerChoices.some((provider) => provider.id === selectedProvider.id)
+    ? [selectedProvider, ...providerChoices]
+    : providerChoices
   const report = useQuery({ queryKey: dashboardKeys.report(filters), queryFn: ({ signal }) => getDashboardReport(filters, signal) })
   return <section aria-label="Dashboard reporting" className="mb-6 space-y-4">
-    <form className="grid gap-3 rounded-lg border border-clinic-border bg-white p-4 sm:grid-cols-2 xl:grid-cols-5" onSubmit={(event) => {
-      event.preventDefault(); const data = new FormData(event.currentTarget)
-      const providerId = String(data.get('providerId') ?? '')
-      setFilters({ from: String(data.get('from')), to: String(data.get('to')), ...(providerId ? { providerId } : {}) })
-    }}>
-      <label className="text-sm">From<Input className="mt-1" type="date" name="from" required defaultValue={filters.from} /></label>
-      <label className="text-sm">To<Input className="mt-1" type="date" name="to" required defaultValue={filters.to} /></label>
-      {canReadProviders ? <><label className="text-sm">Find provider<Input className="mt-1" maxLength={120} value={search} onChange={(event) => setSearch(event.target.value)} /></label><div className="text-sm"><label htmlFor="dashboard-provider">Provider</label><Select id="dashboard-provider" className="mt-1" name="providerId" disabled={providers.isFetching}><option value="">All providers</option>{providers.data?.data.map((p) => <option key={p.id} value={p.id}>{p.firstName} {p.lastName}{p.isActive ? '' : ' (Inactive)'}</option>)}</Select></div></> : null}
+    <form noValidate className="grid gap-3 rounded-lg border border-clinic-border bg-white p-4 sm:grid-cols-2 xl:grid-cols-5" onSubmit={handleSubmit(({ from, to, providerId }) => {
+      setFilters({ from, to, ...(canReadProviders && providerId ? { providerId } : {}) })
+    })}>
+      <FormField label="From" htmlFor="dashboard-from" error={errors.from?.message}><Input id="dashboard-from" type="date" {...register('from')} /></FormField>
+      <FormField label="To" htmlFor="dashboard-to" error={errors.to?.message}><Input id="dashboard-to" type="date" {...register('to')} /></FormField>
+      {canReadProviders ? <>
+        <label className="text-sm">Find provider<Input className="mt-1" maxLength={120} value={search} onChange={(event) => setSearch(event.target.value)} /></label>
+        <Controller name="providerId" control={control} render={({ field }) => (
+          <FormField label="Provider" htmlFor="dashboard-provider" error={errors.providerId?.message}>
+            <Select {...field} id="dashboard-provider" value={field.value ?? ''} disabled={providers.isFetching || search.trim() !== q} onChange={(event) => {
+              field.onChange(event)
+              setSelectedProvider(providerOptions.find((provider) => provider.id === event.target.value) ?? null)
+            }}>
+              <option value="">All providers</option>
+              {providerOptions.map((provider) => <option key={provider.id} value={provider.id}>{provider.firstName} {provider.lastName}{provider.isActive ? '' : ' (Inactive)'}</option>)}
+            </Select>
+          </FormField>
+        )} />
+      </> : null}
       <div className="flex items-end"><Button type="submit">Apply filters</Button></div>
     </form>
+    {canReadProviders && providers.isFetching ? <p role="status" className="text-sm text-slate-500">Loading providers...</p> : null}
+    {canReadProviders && providers.isSuccess && !providerChoices.length ? <p role="status" className="text-sm text-slate-500">No providers match this search.</p> : null}
     {canReadProviders && providers.isError ? <ErrorState title="Unable to load provider filter" description={getApiErrorMessage(providers.error)} onRetry={() => void providers.refetch()} /> : null}
     {(providers.data?.meta?.total ?? 0) > 100 ? <p className="text-xs text-slate-500">Showing up to 100 providers. Refine the provider search.</p> : null}
     {report.isPending ? <LoadingState label="Loading dashboard report" /> : report.isError ? <ErrorState title="Unable to load dashboard report" description={getApiErrorMessage(report.error)} onRetry={() => void report.refetch()} /> : <div className="space-y-4">

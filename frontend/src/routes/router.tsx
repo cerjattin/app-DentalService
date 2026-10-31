@@ -93,9 +93,9 @@ export const routes: RouteObject[] = [
               { path: '/admin', element: load(AdminPage) },
               { path: '/admin/users', element: load(AdminUsersPage) },
               { path: '/admin/providers', element: load(AdminProvidersPage) },
-              { path: '/admin/settings', element: load(AdminSettingsPage) },
             ],
           },
+          { element: <PermissionRoute anyOf={routePermissions.settings} />, children: [{ path: '/admin/settings', element: load(AdminSettingsPage) }] },
           { element: <PermissionRoute anyOf={routePermissions.services} />, children: [
             { path: '/admin/services', element: load(ServicesPage) },
             { path: '/admin/services/:serviceId', element: load(ServiceDetailPage) },

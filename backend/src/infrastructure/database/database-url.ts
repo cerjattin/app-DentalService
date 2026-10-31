@@ -1,53 +1,25 @@
-export interface MySqlConnectionConfig {
-  host: string;
-  port: number;
-  user: string;
-  password: string;
-  database: string;
-}
+import { readFileSync } from "node:fs";
+import type { PoolConfig } from "pg";
 
-export function parseMySqlDatabaseUrl(
-  connectionString: string,
-): MySqlConnectionConfig {
+export function postgresConnectionConfig(connectionString: string, caPath?: string): PoolConfig {
   let url: URL;
-
-  try {
-    url = new URL(connectionString);
-  } catch {
-    throw new Error("DATABASE_URL is not a valid URL");
+  try { url = new URL(connectionString); }
+  catch { throw new Error("DATABASE_URL is not a valid PostgreSQL URL"); }
+  if (!["postgres:", "postgresql:"].includes(url.protocol)) {
+    throw new Error("DATABASE_URL must use PostgreSQL. Select the Supabase environment file.");
   }
-
-  if (url.protocol !== "mysql:") {
-    throw new Error(
-      `Unsupported database protocol: ${url.protocol}. Expected mysql:`,
-    );
+  if (!url.hostname || !url.username || url.pathname.length <= 1) {
+    throw new Error("DATABASE_URL must contain host, user and database");
   }
-
-  const database = decodeURIComponent(url.pathname.replace(/^\/+/, ""));
-
-  if (!url.hostname) {
-    throw new Error("DATABASE_URL must contain a database host");
-  }
-
-  if (!url.username) {
-    throw new Error("DATABASE_URL must contain a database user");
-  }
-
-  if (!database) {
-    throw new Error("DATABASE_URL must contain a database name");
-  }
-
-  const port = url.port ? Number.parseInt(url.port, 10) : 3306;
-
-  if (!Number.isInteger(port) || port <= 0 || port > 65535) {
-    throw new Error("DATABASE_URL contains an invalid database port");
-  }
-
+  const schema = url.searchParams.get("schema");
+  if (schema && schema !== "public") throw new Error("This backend uses the public PostgreSQL schema");
+  const local = ["localhost", "127.0.0.1", "::1", "[::1]"].includes(url.hostname);
+  if (!local && url.searchParams.get("sslmode") === "disable") throw new Error("Remote PostgreSQL connections require TLS");
+  for (const key of ["sslmode", "sslrootcert", "sslcert", "sslkey", "sslaccept"]) url.searchParams.delete(key);
+  url.searchParams.delete("schema");
   return {
-    host: url.hostname,
-    port,
-    user: decodeURIComponent(url.username),
-    password: decodeURIComponent(url.password),
-    database,
+    connectionString: url.toString(), connectionTimeoutMillis: 15_000, idleTimeoutMillis: 10_000,
+    options: "-c timezone=UTC",
+    ssl: local ? false : { rejectUnauthorized: true, ...(caPath ? { ca: readFileSync(caPath, "utf8") } : {}) },
   };
 }

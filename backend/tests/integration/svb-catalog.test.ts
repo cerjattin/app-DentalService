@@ -29,8 +29,8 @@ let ambiguousProcedureId: bigint;
 async function cleanupSvbCatalogFixture() {
   const procedures = await prisma.svbProcedure.findMany({
     where: {
-      code: {
-        startsWith: "TEST-SVB-PROC",
+      codeSearch: {
+        startsWith: ("TEST-SVB-PROC").toLowerCase(),
       },
     },
     select: {

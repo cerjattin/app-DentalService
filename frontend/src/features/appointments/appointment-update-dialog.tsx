@@ -1,8 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { useEffect, useRef, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { getApiErrorMessage } from '../../api'
+import { ApiError, getApiErrorMessage } from '../../api'
+import { useAuth } from '../../auth/use-auth'
+import { hasPermission } from '../../auth/permissions'
+import { TreatmentCaseSelector } from '../treatment-cases/treatment-case-selector'
+import { UnsavedChanges } from '../../components/forms/unsaved-changes'
+import { ConfirmDialog } from '../../components/ui/confirm-dialog'
 import { FormField } from '../../components/forms/form-field'
 import { Button } from '../../components/ui/button'
 import { Dialog } from '../../components/ui/dialog'
@@ -22,6 +27,7 @@ import type {
 const schema = z
   .object({
     providerId: z.string().regex(/^[1-9]\d*$/),
+    treatmentCaseId: z.string().regex(/^$|^[1-9]\d*$/),
     scheduledStart: z.string().min(1, 'Start date and time are required.'),
     scheduledEnd: z.string().min(1, 'End date and time are required.'),
     reason: z.string().trim().max(255),
@@ -37,6 +43,7 @@ type Values = z.infer<typeof schema>
 function defaults(appointment: Appointment): Values {
   return {
     providerId: appointment.providerId,
+    treatmentCaseId: appointment.treatmentCaseId ?? '',
     scheduledStart: formatBusinessDateTimeInput(appointment.scheduledStart),
     scheduledEnd: formatBusinessDateTimeInput(appointment.scheduledEnd),
     reason: appointment.reason ?? '',
@@ -63,18 +70,29 @@ export function AppointmentUpdateDialog({
   isPending: boolean
   error?: unknown
 }) {
+  const { permissions } = useAuth()
+  const [discard, setDiscard] = useState(false)
+  const initialized = useRef('')
+  const contextLocked = error instanceof ApiError && error.code === 'APPOINTMENT_CLINICAL_CONTEXT_LOCKED'
+  const close = () => { if (!isPending) { if (isDirty) setDiscard(true); else onOpenChange(false) } }
   const {
     register,
+    control,
+    setValue,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<Values>({
     resolver: zodResolver(schema),
     defaultValues: defaults(appointment),
   })
 
   useEffect(() => {
-    if (open) reset(defaults(appointment))
+    if (open && initialized.current !== appointment.id) {
+      initialized.current = appointment.id
+      reset(defaults(appointment))
+    }
+    if (!open) initialized.current = ''
   }, [appointment, open, reset])
 
   const providerOptions = providers.some((provider) => provider.id === appointment.providerId)
@@ -100,9 +118,9 @@ export function AppointmentUpdateDialog({
       ]
 
   return (
-    <Dialog
+    <><UnsavedChanges active={open && isDirty && !isPending} /><Dialog
       open={open}
-      onOpenChange={onOpenChange}
+      onOpenChange={(next) => { if (!next) close() }}
       title="Edit appointment"
       description="Update the schedule and appointment notes."
       size="wide"
@@ -112,6 +130,7 @@ export function AppointmentUpdateDialog({
         onSubmit={handleSubmit((values) =>
           onSubmit({
             providerId: values.providerId,
+            ...(hasPermission(permissions, 'treatment_case.read') && values.treatmentCaseId !== (appointment.treatmentCaseId ?? '') ? { treatmentCaseId: values.treatmentCaseId || null } : {}),
             scheduledStart: businessDateTimeInputToIso(values.scheduledStart),
             scheduledEnd: businessDateTimeInputToIso(values.scheduledEnd),
             reason: values.reason || null,
@@ -144,6 +163,8 @@ export function AppointmentUpdateDialog({
             <Input id="scheduledEnd" type="datetime-local" {...register('scheduledEnd')} />
           </FormField>
         </div>
+        <Controller control={control} name="treatmentCaseId" render={({ field }) => <TreatmentCaseSelector patientId={appointment.patientId} value={field.value} onChange={field.onChange} disabled={isPending || contextLocked} error={errors.treatmentCaseId?.message} />} />
+        {contextLocked ? <Button variant="secondary" onClick={() => setValue('treatmentCaseId', appointment.treatmentCaseId ?? '', { shouldDirty: true })}>Keep recorded treatment case</Button> : null}
         <FormField label="Reason" htmlFor="appointmentReason" error={errors.reason?.message}>
           <Input id="appointmentReason" {...register('reason')} />
         </FormField>
@@ -156,10 +177,10 @@ export function AppointmentUpdateDialog({
           </p>
         ) : null}
         <div className="flex justify-end gap-2 border-t border-clinic-border pt-4">
-          <Button variant="secondary" onClick={() => onOpenChange(false)} disabled={isPending}>Cancel</Button>
+          <Button variant="secondary" onClick={close} disabled={isPending}>Cancel</Button>
           <Button type="submit" disabled={isPending}>{isPending ? 'Saving...' : 'Save changes'}</Button>
         </div>
       </form>
-    </Dialog>
+    </Dialog><ConfirmDialog open={discard} title="Discard appointment changes?" description="Your changes have not been saved." confirmLabel="Discard changes" cancelLabel="Keep editing" onCancel={() => setDiscard(false)} onConfirm={() => { setDiscard(false); onOpenChange(false) }} /></>
   )
 }

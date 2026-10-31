@@ -191,6 +191,7 @@ function boundary(
     documents?: boolean
     historical?: boolean
     correction?: boolean
+    unbuilt?: boolean
     fail?: string
     code?: string
     http?: number
@@ -202,6 +203,7 @@ function boundary(
     ...version,
     status: options.status ?? 'DRAFT',
     versionType: options.correction ? 'CORRECTION' : 'ORIGINAL',
+    ...(options.unbuilt ? { items: [], totalAmount: '0.00' } : {}),
     ...(options.status && options.status !== 'DRAFT'
       ? { contentHash: hash, lockedAt: item.createdAt }
       : {}),
@@ -263,6 +265,7 @@ function boundary(
       return ok(snapshot())
     }
     if (path === `/invoices/${iid}`) return ok(snapshot())
+    if (path === `/invoices/${iid}/reopen-encounter`) return ok(snapshot())
     if (path === `/invoices/${iid}/corrections`) return ok([])
     if (path === `/invoices/${iid}/status-history`) return ok([])
     if (path.endsWith('/versions/7777'))
@@ -359,6 +362,7 @@ function renderBilling(list = false, perms = permissions) {
       <Routes>
         <Route path="/invoices" element={<InvoicesPage />} />
         <Route path="/invoices/:invoiceId" element={<InvoiceDetailPage />} />
+        <Route path="/clinical/:appointmentId" element={<div>Correct clinical services</div>} />
       </Routes>
     </MemoryRouter>,
   )
@@ -436,6 +440,46 @@ afterEach(() => {
 })
 
 describe('F06 invoice list and contract', () => {
+  it('returns an invoice to clinical care with a reason and the expected string version ID', async () => {
+    const api = boundary({ status: 'CLOSED' })
+    renderBilling(false, [...permissions, 'invoice.apply_correction', 'encounter.update', 'procedure.update', 'encounter.read'])
+    await userEvent.click(await screen.findByRole('button', { name: 'Return to clinical care' }))
+    const dialog = screen.getByRole('dialog')
+    expect(within(dialog).getByRole('button', { name: 'Return to care' })).toBeDisabled()
+    await userEvent.type(within(dialog).getByLabelText('Reason for returning to care'), 'Wrong service selected')
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Return to care' }))
+    await screen.findByText('Correct clinical services')
+    expect(api.calls.find((call) => call.path.endsWith('/reopen-encounter'))?.body).toEqual({ reason: 'Wrong service selected', expectedVersionId: vid })
+  })
+  it('does not offer a clinical return without correction permission', async () => {
+    boundary({ status: 'CLOSED' })
+    renderBilling()
+    await screen.findByText('QA Patient')
+    expect(screen.queryByRole('button', { name: 'Return to clinical care' })).not.toBeInTheDocument()
+  })
+  it('keeps a declaration conflict visible inside the return dialog', async () => {
+    boundary({ status: 'CLOSED', fail: `POST /invoices/${iid}/reopen-encounter`, code: 'INVOICE_DECLARATION_ASSIGNED' })
+    renderBilling(false, [...permissions, 'invoice.apply_correction', 'encounter.update', 'procedure.update', 'encounter.read'])
+    await userEvent.click(await screen.findByRole('button', { name: 'Return to clinical care' }))
+    const dialog = screen.getByRole('dialog')
+    await userEvent.type(within(dialog).getByLabelText('Reason for returning to care'), 'Wrong service')
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Return to care' }))
+    expect(await within(dialog).findByRole('alert')).toHaveTextContent('active declaration')
+  })
+  it('does not offer signature preparation before clinical refactoring is rebuilt', async () => {
+    boundary({ correction: true, unbuilt: true })
+    renderBilling()
+    await screen.findByText(/Complete the corrected clinical encounter/)
+    expect(screen.queryByRole('button', { name: 'Prepare for signature' })).not.toBeInTheDocument()
+  })
+  it('rebuilds the existing invoice from corrected care rather than creating another invoice', async () => {
+    const api = boundary({ correction: true, unbuilt: true })
+    session()
+    renderWithProviders(<MemoryRouter><AppointmentBilling appointment={{ id: aid, appointmentNumber: 'APT-40', status: 'COMPLETED' } as Appointment} /></MemoryRouter>)
+    await userEvent.click(await screen.findByRole('button', { name: 'Rebuild invoice from corrected services' }))
+    await userEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Confirm rebuild' }))
+    await waitFor(() => expect(api.calls.some((call) => call.method === 'POST' && call.path === `/appointments/${aid}/invoice`)).toBe(true))
+  })
   it('shows list loading', () => {
     boundary({ pending: 'GET /invoices' })
     renderBilling(true)

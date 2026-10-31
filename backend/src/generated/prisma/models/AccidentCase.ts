@@ -289,7 +289,6 @@ export type AccidentCaseOrderByWithRelationInput = {
   patientInsurance?: Prisma.PatientInsuranceOrderByWithRelationInput
   patient?: Prisma.PatientOrderByWithRelationInput
   appointments?: Prisma.AppointmentOrderByRelationAggregateInput
-  _relevance?: Prisma.AccidentCaseOrderByRelevanceInput
 }
 
 export type AccidentCaseWhereUniqueInput = Prisma.AtLeast<{
@@ -437,12 +436,6 @@ export type AccidentCaseUncheckedUpdateManyInput = {
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type AccidentCaseOrderByRelevanceInput = {
-  fields: Prisma.AccidentCaseOrderByRelevanceFieldEnum | Prisma.AccidentCaseOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type AccidentCasePatientIdAccidentFormNumberCompoundUniqueInput = {
@@ -1135,7 +1128,37 @@ export type AccidentCaseSelect<ExtArgs extends runtime.Types.Extensions.Internal
   _count?: boolean | Prisma.AccidentCaseCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["accidentCase"]>
 
+export type AccidentCaseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  patientId?: boolean
+  patientInsuranceId?: boolean
+  accidentFormNumber?: boolean
+  accidentDate?: boolean
+  description?: boolean
+  status?: boolean
+  createdByUserId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  patientInsurance?: boolean | Prisma.AccidentCase$patientInsuranceArgs<ExtArgs>
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["accidentCase"]>
 
+export type AccidentCaseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  patientId?: boolean
+  patientInsuranceId?: boolean
+  accidentFormNumber?: boolean
+  accidentDate?: boolean
+  description?: boolean
+  status?: boolean
+  createdByUserId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  patientInsurance?: boolean | Prisma.AccidentCase$patientInsuranceArgs<ExtArgs>
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["accidentCase"]>
 
 export type AccidentCaseSelectScalar = {
   id?: boolean
@@ -1157,6 +1180,16 @@ export type AccidentCaseInclude<ExtArgs extends runtime.Types.Extensions.Interna
   patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
   appointments?: boolean | Prisma.AccidentCase$appointmentsArgs<ExtArgs>
   _count?: boolean | Prisma.AccidentCaseCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type AccidentCaseIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  patientInsurance?: boolean | Prisma.AccidentCase$patientInsuranceArgs<ExtArgs>
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+}
+export type AccidentCaseIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  patientInsurance?: boolean | Prisma.AccidentCase$patientInsuranceArgs<ExtArgs>
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
 }
 
 export type $AccidentCasePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1296,6 +1329,30 @@ export interface AccidentCaseDelegate<ExtArgs extends runtime.Types.Extensions.I
   createMany<T extends AccidentCaseCreateManyArgs>(args?: Prisma.SelectSubset<T, AccidentCaseCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many AccidentCases and returns the data saved in the database.
+   * @param {AccidentCaseCreateManyAndReturnArgs} args - Arguments to create many AccidentCases.
+   * @example
+   * // Create many AccidentCases
+   * const accidentCase = await prisma.accidentCase.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many AccidentCases and only return the `id`
+   * const accidentCaseWithIdOnly = await prisma.accidentCase.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends AccidentCaseCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, AccidentCaseCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccidentCasePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a AccidentCase.
    * @param {AccidentCaseDeleteArgs} args - Arguments to delete one AccidentCase.
    * @example
@@ -1358,6 +1415,36 @@ export interface AccidentCaseDelegate<ExtArgs extends runtime.Types.Extensions.I
    * 
    */
   updateMany<T extends AccidentCaseUpdateManyArgs>(args: Prisma.SelectSubset<T, AccidentCaseUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more AccidentCases and returns the data updated in the database.
+   * @param {AccidentCaseUpdateManyAndReturnArgs} args - Arguments to update many AccidentCases.
+   * @example
+   * // Update many AccidentCases
+   * const accidentCase = await prisma.accidentCase.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more AccidentCases and only return the `id`
+   * const accidentCaseWithIdOnly = await prisma.accidentCase.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends AccidentCaseUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, AccidentCaseUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccidentCasePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one AccidentCase.
@@ -1799,6 +1886,29 @@ export type AccidentCaseCreateManyArgs<ExtArgs extends runtime.Types.Extensions.
 }
 
 /**
+ * AccidentCase createManyAndReturn
+ */
+export type AccidentCaseCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AccidentCase
+   */
+  select?: Prisma.AccidentCaseSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the AccidentCase
+   */
+  omit?: Prisma.AccidentCaseOmit<ExtArgs> | null
+  /**
+   * The data used to create many AccidentCases.
+   */
+  data: Prisma.AccidentCaseCreateManyInput | Prisma.AccidentCaseCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AccidentCaseIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * AccidentCase update
  */
 export type AccidentCaseUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1840,6 +1950,36 @@ export type AccidentCaseUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Limit how many AccidentCases to update.
    */
   limit?: number
+}
+
+/**
+ * AccidentCase updateManyAndReturn
+ */
+export type AccidentCaseUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AccidentCase
+   */
+  select?: Prisma.AccidentCaseSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the AccidentCase
+   */
+  omit?: Prisma.AccidentCaseOmit<ExtArgs> | null
+  /**
+   * The data used to update AccidentCases.
+   */
+  data: Prisma.XOR<Prisma.AccidentCaseUpdateManyMutationInput, Prisma.AccidentCaseUncheckedUpdateManyInput>
+  /**
+   * Filter which AccidentCases to update
+   */
+  where?: Prisma.AccidentCaseWhereInput
+  /**
+   * Limit how many AccidentCases to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AccidentCaseIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

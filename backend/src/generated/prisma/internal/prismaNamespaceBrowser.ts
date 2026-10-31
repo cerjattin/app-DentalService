@@ -61,6 +61,7 @@ export const ModelName = {
   DeclarationBatch: 'DeclarationBatch',
   DeclarationExport: 'DeclarationExport',
   DeclarationItem: 'DeclarationItem',
+  DeclarationActiveAssignment: 'DeclarationActiveAssignment',
   DeclarationSubmission: 'DeclarationSubmission',
   DiagnosisCode: 'DiagnosisCode',
   Document: 'Document',
@@ -160,7 +161,9 @@ export const AppointmentScalarFieldEnum = {
   cancelledAt: 'cancelledAt',
   cancellationReason: 'cancellationReason',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  appointmentNumberSearch: 'appointmentNumberSearch',
+  reasonSearch: 'reasonSearch'
 } as const
 
 export type AppointmentScalarFieldEnum = (typeof AppointmentScalarFieldEnum)[keyof typeof AppointmentScalarFieldEnum]
@@ -181,7 +184,9 @@ export const AuditLogScalarFieldEnum = {
   correlationId: 'correlationId',
   ipAddress: 'ipAddress',
   userAgent: 'userAgent',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  entityKeySearch: 'entityKeySearch',
+  entityTypeSearch: 'entityTypeSearch'
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
@@ -201,7 +206,8 @@ export const ClinicLocationScalarFieldEnum = {
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  archivedAt: 'archivedAt'
+  archivedAt: 'archivedAt',
+  codeSearch: 'codeSearch'
 } as const
 
 export type ClinicLocationScalarFieldEnum = (typeof ClinicLocationScalarFieldEnum)[keyof typeof ClinicLocationScalarFieldEnum]
@@ -244,6 +250,7 @@ export const DeclarationBatchScalarFieldEnum = {
   payerId: 'payerId',
   declarationNumber: 'declarationNumber',
   status: 'status',
+  lastItemSequence: 'lastItemSequence',
   periodStart: 'periodStart',
   periodEnd: 'periodEnd',
   declarantIdSnapshot: 'declarantIdSnapshot',
@@ -256,7 +263,9 @@ export const DeclarationBatchScalarFieldEnum = {
   acceptedAt: 'acceptedAt',
   rejectedAt: 'rejectedAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  declarationNumberSearch: 'declarationNumberSearch',
+  notesSearch: 'notesSearch'
 } as const
 
 export type DeclarationBatchScalarFieldEnum = (typeof DeclarationBatchScalarFieldEnum)[keyof typeof DeclarationBatchScalarFieldEnum]
@@ -309,6 +318,15 @@ export const DeclarationItemScalarFieldEnum = {
 export type DeclarationItemScalarFieldEnum = (typeof DeclarationItemScalarFieldEnum)[keyof typeof DeclarationItemScalarFieldEnum]
 
 
+export const DeclarationActiveAssignmentScalarFieldEnum = {
+  invoiceItemId: 'invoiceItemId',
+  declarationItemId: 'declarationItemId',
+  declarationBatchId: 'declarationBatchId'
+} as const
+
+export type DeclarationActiveAssignmentScalarFieldEnum = (typeof DeclarationActiveAssignmentScalarFieldEnum)[keyof typeof DeclarationActiveAssignmentScalarFieldEnum]
+
+
 export const DeclarationSubmissionScalarFieldEnum = {
   id: 'id',
   declarationBatchId: 'declarationBatchId',
@@ -336,7 +354,9 @@ export const DiagnosisCodeScalarFieldEnum = {
   validFrom: 'validFrom',
   validTo: 'validTo',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  codeSearch: 'codeSearch',
+  descriptionSearch: 'descriptionSearch'
 } as const
 
 export type DiagnosisCodeScalarFieldEnum = (typeof DiagnosisCodeScalarFieldEnum)[keyof typeof DiagnosisCodeScalarFieldEnum]
@@ -354,7 +374,9 @@ export const DocumentScalarFieldEnum = {
   sha256: 'sha256',
   metadata: 'metadata',
   createdByUserId: 'createdByUserId',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  originalFilenameSearch: 'originalFilenameSearch',
+  storageUriSearch: 'storageUriSearch'
 } as const
 
 export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
@@ -369,7 +391,8 @@ export const EncounterDiagnosisScalarFieldEnum = {
   descriptionSnapshot: 'descriptionSnapshot',
   notes: 'notes',
   createdByUserId: 'createdByUserId',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  codeSnapshotSearch: 'codeSnapshotSearch'
 } as const
 
 export type EncounterDiagnosisScalarFieldEnum = (typeof EncounterDiagnosisScalarFieldEnum)[keyof typeof EncounterDiagnosisScalarFieldEnum]
@@ -406,7 +429,8 @@ export const EncounterProcedureScalarFieldEnum = {
   status: 'status',
   createdByUserId: 'createdByUserId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  procedureCodeSnapshotSearch: 'procedureCodeSnapshotSearch'
 } as const
 
 export type EncounterProcedureScalarFieldEnum = (typeof EncounterProcedureScalarFieldEnum)[keyof typeof EncounterProcedureScalarFieldEnum]
@@ -536,7 +560,8 @@ export const InvoiceScalarFieldEnum = {
   cancelledAt: 'cancelledAt',
   cancellationReason: 'cancellationReason',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  invoiceNumberSearch: 'invoiceNumberSearch'
 } as const
 
 export type InvoiceScalarFieldEnum = (typeof InvoiceScalarFieldEnum)[keyof typeof InvoiceScalarFieldEnum]
@@ -572,7 +597,9 @@ export const OrganizationScalarFieldEnum = {
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  archivedAt: 'archivedAt'
+  archivedAt: 'archivedAt',
+  legalNameSearch: 'legalNameSearch',
+  declarantIdSearch: 'declarantIdSearch'
 } as const
 
 export type OrganizationScalarFieldEnum = (typeof OrganizationScalarFieldEnum)[keyof typeof OrganizationScalarFieldEnum]
@@ -592,7 +619,8 @@ export const PatientInsuranceScalarFieldEnum = {
   verificationSource: 'verificationSource',
   metadata: 'metadata',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  insuredIdSearch: 'insuredIdSearch'
 } as const
 
 export type PatientInsuranceScalarFieldEnum = (typeof PatientInsuranceScalarFieldEnum)[keyof typeof PatientInsuranceScalarFieldEnum]
@@ -620,7 +648,15 @@ export const PatientScalarFieldEnum = {
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  archivedAt: 'archivedAt'
+  archivedAt: 'archivedAt',
+  patientNumberSearch: 'patientNumberSearch',
+  firstNameSearch: 'firstNameSearch',
+  middleNameSearch: 'middleNameSearch',
+  lastNameSearch: 'lastNameSearch',
+  secondLastNameSearch: 'secondLastNameSearch',
+  documentNumberSearch: 'documentNumberSearch',
+  phoneSearch: 'phoneSearch',
+  mobilePhoneSearch: 'mobilePhoneSearch'
 } as const
 
 export type PatientScalarFieldEnum = (typeof PatientScalarFieldEnum)[keyof typeof PatientScalarFieldEnum]
@@ -633,7 +669,9 @@ export const PayerScalarFieldEnum = {
   payerType: 'payerType',
   isActive: 'isActive',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  codeSearch: 'codeSearch',
+  nameSearch: 'nameSearch'
 } as const
 
 export type PayerScalarFieldEnum = (typeof PayerScalarFieldEnum)[keyof typeof PayerScalarFieldEnum]
@@ -665,7 +703,14 @@ export const ProviderScalarFieldEnum = {
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  archivedAt: 'archivedAt'
+  archivedAt: 'archivedAt',
+  firstNameSearch: 'firstNameSearch',
+  lastNameSearch: 'lastNameSearch',
+  svbProviderIdSearch: 'svbProviderIdSearch',
+  licenseNumberSearch: 'licenseNumberSearch',
+  emailSearch: 'emailSearch',
+  phoneSearch: 'phoneSearch',
+  specialtySearch: 'specialtySearch'
 } as const
 
 export type ProviderScalarFieldEnum = (typeof ProviderScalarFieldEnum)[keyof typeof ProviderScalarFieldEnum]
@@ -769,7 +814,8 @@ export const SvbAuthorizationScalarFieldEnum = {
   metadata: 'metadata',
   createdByUserId: 'createdByUserId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  authorizationIdSearch: 'authorizationIdSearch'
 } as const
 
 export type SvbAuthorizationScalarFieldEnum = (typeof SvbAuthorizationScalarFieldEnum)[keyof typeof SvbAuthorizationScalarFieldEnum]
@@ -787,7 +833,9 @@ export const SvbProcedureScalarFieldEnum = {
   validFrom: 'validFrom',
   validTo: 'validTo',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  codeSearch: 'codeSearch',
+  descriptionSearch: 'descriptionSearch'
 } as const
 
 export type SvbProcedureScalarFieldEnum = (typeof SvbProcedureScalarFieldEnum)[keyof typeof SvbProcedureScalarFieldEnum]
@@ -831,6 +879,7 @@ export const TreatmentCaseScalarFieldEnum = {
   treatmentType: 'treatmentType',
   description: 'description',
   status: 'status',
+  firstAssignedAt: 'firstAssignedAt',
   startedAt: 'startedAt',
   completedAt: 'completedAt',
   createdByUserId: 'createdByUserId',
@@ -865,7 +914,10 @@ export const UserScalarFieldEnum = {
   lockedUntil: 'lockedUntil',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  archivedAt: 'archivedAt'
+  archivedAt: 'archivedAt',
+  emailSearch: 'emailSearch',
+  firstNameSearch: 'firstNameSearch',
+  lastNameSearch: 'lastNameSearch'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -894,20 +946,20 @@ export const JsonNullValueInput = {
 export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
 export const NullsOrder = {
   first: 'first',
   last: 'last'
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
-
-
-export const AccidentCaseOrderByRelevanceFieldEnum = {
-  accidentFormNumber: 'accidentFormNumber',
-  description: 'description'
-} as const
-
-export type AccidentCaseOrderByRelevanceFieldEnum = (typeof AccidentCaseOrderByRelevanceFieldEnum)[keyof typeof AccidentCaseOrderByRelevanceFieldEnum]
 
 
 export const JsonNullValueFilter = {
@@ -917,398 +969,4 @@ export const JsonNullValueFilter = {
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-
-
-export const QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
-} as const
-
-export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
-
-
-export const AppointmentStatusHistoryOrderByRelevanceFieldEnum = {
-  reason: 'reason'
-} as const
-
-export type AppointmentStatusHistoryOrderByRelevanceFieldEnum = (typeof AppointmentStatusHistoryOrderByRelevanceFieldEnum)[keyof typeof AppointmentStatusHistoryOrderByRelevanceFieldEnum]
-
-
-export const AppointmentOrderByRelevanceFieldEnum = {
-  appointmentNumber: 'appointmentNumber',
-  reason: 'reason',
-  notes: 'notes',
-  cancellationReason: 'cancellationReason'
-} as const
-
-export type AppointmentOrderByRelevanceFieldEnum = (typeof AppointmentOrderByRelevanceFieldEnum)[keyof typeof AppointmentOrderByRelevanceFieldEnum]
-
-
-export const AuditLogOrderByRelevanceFieldEnum = {
-  action: 'action',
-  entityType: 'entityType',
-  entityKey: 'entityKey',
-  reason: 'reason',
-  correlationId: 'correlationId',
-  ipAddress: 'ipAddress',
-  userAgent: 'userAgent'
-} as const
-
-export type AuditLogOrderByRelevanceFieldEnum = (typeof AuditLogOrderByRelevanceFieldEnum)[keyof typeof AuditLogOrderByRelevanceFieldEnum]
-
-
-export const ClinicLocationOrderByRelevanceFieldEnum = {
-  code: 'code',
-  name: 'name',
-  policlinicCode: 'policlinicCode',
-  addressLine1: 'addressLine1',
-  addressLine2: 'addressLine2',
-  city: 'city',
-  countryCode: 'countryCode',
-  phone: 'phone'
-} as const
-
-export type ClinicLocationOrderByRelevanceFieldEnum = (typeof ClinicLocationOrderByRelevanceFieldEnum)[keyof typeof ClinicLocationOrderByRelevanceFieldEnum]
-
-
-export const ClinicalEncounterOrderByRelevanceFieldEnum = {
-  chiefComplaint: 'chiefComplaint',
-  clinicalNotes: 'clinicalNotes'
-} as const
-
-export type ClinicalEncounterOrderByRelevanceFieldEnum = (typeof ClinicalEncounterOrderByRelevanceFieldEnum)[keyof typeof ClinicalEncounterOrderByRelevanceFieldEnum]
-
-
-export const DeclarationBatchStatusHistoryOrderByRelevanceFieldEnum = {
-  reason: 'reason'
-} as const
-
-export type DeclarationBatchStatusHistoryOrderByRelevanceFieldEnum = (typeof DeclarationBatchStatusHistoryOrderByRelevanceFieldEnum)[keyof typeof DeclarationBatchStatusHistoryOrderByRelevanceFieldEnum]
-
-
-export const DeclarationBatchOrderByRelevanceFieldEnum = {
-  declarationNumber: 'declarationNumber',
-  declarantIdSnapshot: 'declarantIdSnapshot',
-  submissionReference: 'submissionReference',
-  notes: 'notes'
-} as const
-
-export type DeclarationBatchOrderByRelevanceFieldEnum = (typeof DeclarationBatchOrderByRelevanceFieldEnum)[keyof typeof DeclarationBatchOrderByRelevanceFieldEnum]
-
-
-export const DeclarationExportOrderByRelevanceFieldEnum = {
-  schemaVersion: 'schemaVersion',
-  adapterVersion: 'adapterVersion'
-} as const
-
-export type DeclarationExportOrderByRelevanceFieldEnum = (typeof DeclarationExportOrderByRelevanceFieldEnum)[keyof typeof DeclarationExportOrderByRelevanceFieldEnum]
-
-
-export const DeclarationItemOrderByRelevanceFieldEnum = {
-  declarantIdSnapshot: 'declarantIdSnapshot',
-  invoiceNumberSnapshot: 'invoiceNumberSnapshot',
-  detailInvoiceNumberSnapshot: 'detailInvoiceNumberSnapshot',
-  providerIdSnapshot: 'providerIdSnapshot',
-  insuredIdSnapshot: 'insuredIdSnapshot',
-  accidentFormNumberSnapshot: 'accidentFormNumberSnapshot',
-  treatmentIdSnapshot: 'treatmentIdSnapshot',
-  authorizationIdSnapshot: 'authorizationIdSnapshot',
-  assistanceSnapshot: 'assistanceSnapshot',
-  referrerIdSnapshot: 'referrerIdSnapshot',
-  diagnosticCodeSnapshot: 'diagnosticCodeSnapshot',
-  policlinicSnapshot: 'policlinicSnapshot',
-  additionalNoteSnapshot: 'additionalNoteSnapshot',
-  responseCode: 'responseCode',
-  responseMessage: 'responseMessage'
-} as const
-
-export type DeclarationItemOrderByRelevanceFieldEnum = (typeof DeclarationItemOrderByRelevanceFieldEnum)[keyof typeof DeclarationItemOrderByRelevanceFieldEnum]
-
-
-export const DeclarationSubmissionOrderByRelevanceFieldEnum = {
-  externalReference: 'externalReference'
-} as const
-
-export type DeclarationSubmissionOrderByRelevanceFieldEnum = (typeof DeclarationSubmissionOrderByRelevanceFieldEnum)[keyof typeof DeclarationSubmissionOrderByRelevanceFieldEnum]
-
-
-export const DiagnosisCodeOrderByRelevanceFieldEnum = {
-  codeSystem: 'codeSystem',
-  code: 'code',
-  description: 'description'
-} as const
-
-export type DiagnosisCodeOrderByRelevanceFieldEnum = (typeof DiagnosisCodeOrderByRelevanceFieldEnum)[keyof typeof DiagnosisCodeOrderByRelevanceFieldEnum]
-
-
-export const DocumentOrderByRelevanceFieldEnum = {
-  storageUri: 'storageUri',
-  originalFilename: 'originalFilename',
-  mimeType: 'mimeType',
-  sha256: 'sha256'
-} as const
-
-export type DocumentOrderByRelevanceFieldEnum = (typeof DocumentOrderByRelevanceFieldEnum)[keyof typeof DocumentOrderByRelevanceFieldEnum]
-
-
-export const EncounterDiagnosisOrderByRelevanceFieldEnum = {
-  codeSnapshot: 'codeSnapshot',
-  descriptionSnapshot: 'descriptionSnapshot',
-  notes: 'notes'
-} as const
-
-export type EncounterDiagnosisOrderByRelevanceFieldEnum = (typeof EncounterDiagnosisOrderByRelevanceFieldEnum)[keyof typeof EncounterDiagnosisOrderByRelevanceFieldEnum]
-
-
-export const EncounterProcedureOrderByRelevanceFieldEnum = {
-  procedureCodeSnapshot: 'procedureCodeSnapshot',
-  procedureDescriptionSnapshot: 'procedureDescriptionSnapshot',
-  providerIdSnapshot: 'providerIdSnapshot',
-  insuredIdSnapshot: 'insuredIdSnapshot',
-  currencyCodeSnapshot: 'currencyCodeSnapshot',
-  authorizationIdSnapshot: 'authorizationIdSnapshot',
-  diagnosticCodeSnapshot: 'diagnosticCodeSnapshot',
-  treatmentIdSnapshot: 'treatmentIdSnapshot',
-  accidentFormNumberSnapshot: 'accidentFormNumberSnapshot',
-  assistanceSnapshot: 'assistanceSnapshot',
-  referrerIdSnapshot: 'referrerIdSnapshot',
-  policlinicSnapshot: 'policlinicSnapshot',
-  additionalNote: 'additionalNote'
-} as const
-
-export type EncounterProcedureOrderByRelevanceFieldEnum = (typeof EncounterProcedureOrderByRelevanceFieldEnum)[keyof typeof EncounterProcedureOrderByRelevanceFieldEnum]
-
-
-export const InvoiceCorrectionOrderByRelevanceFieldEnum = {
-  reasonCode: 'reasonCode',
-  reasonText: 'reasonText'
-} as const
-
-export type InvoiceCorrectionOrderByRelevanceFieldEnum = (typeof InvoiceCorrectionOrderByRelevanceFieldEnum)[keyof typeof InvoiceCorrectionOrderByRelevanceFieldEnum]
-
-
-export const InvoiceItemOrderByRelevanceFieldEnum = {
-  detailInvoiceNumber: 'detailInvoiceNumber',
-  procedureCodeSnapshot: 'procedureCodeSnapshot',
-  procedureDescriptionSnapshot: 'procedureDescriptionSnapshot',
-  providerIdSnapshot: 'providerIdSnapshot',
-  insuredIdSnapshot: 'insuredIdSnapshot',
-  currencyCodeSnapshot: 'currencyCodeSnapshot',
-  authorizationIdSnapshot: 'authorizationIdSnapshot',
-  diagnosticCodeSnapshot: 'diagnosticCodeSnapshot',
-  treatmentIdSnapshot: 'treatmentIdSnapshot',
-  accidentFormNumberSnapshot: 'accidentFormNumberSnapshot',
-  assistanceSnapshot: 'assistanceSnapshot',
-  referrerIdSnapshot: 'referrerIdSnapshot',
-  policlinicSnapshot: 'policlinicSnapshot',
-  additionalNote: 'additionalNote'
-} as const
-
-export type InvoiceItemOrderByRelevanceFieldEnum = (typeof InvoiceItemOrderByRelevanceFieldEnum)[keyof typeof InvoiceItemOrderByRelevanceFieldEnum]
-
-
-export const InvoiceStatusHistoryOrderByRelevanceFieldEnum = {
-  reason: 'reason'
-} as const
-
-export type InvoiceStatusHistoryOrderByRelevanceFieldEnum = (typeof InvoiceStatusHistoryOrderByRelevanceFieldEnum)[keyof typeof InvoiceStatusHistoryOrderByRelevanceFieldEnum]
-
-
-export const InvoiceVersionOrderByRelevanceFieldEnum = {
-  currencyCode: 'currencyCode',
-  declarantIdSnapshot: 'declarantIdSnapshot',
-  patientNameSnapshot: 'patientNameSnapshot',
-  patientDocumentTypeSnapshot: 'patientDocumentTypeSnapshot',
-  patientDocumentNumberSnapshot: 'patientDocumentNumberSnapshot',
-  insuredIdSnapshot: 'insuredIdSnapshot',
-  contentHash: 'contentHash'
-} as const
-
-export type InvoiceVersionOrderByRelevanceFieldEnum = (typeof InvoiceVersionOrderByRelevanceFieldEnum)[keyof typeof InvoiceVersionOrderByRelevanceFieldEnum]
-
-
-export const InvoiceOrderByRelevanceFieldEnum = {
-  invoiceNumber: 'invoiceNumber',
-  cancellationReason: 'cancellationReason'
-} as const
-
-export type InvoiceOrderByRelevanceFieldEnum = (typeof InvoiceOrderByRelevanceFieldEnum)[keyof typeof InvoiceOrderByRelevanceFieldEnum]
-
-
-export const NumberSequenceOrderByRelevanceFieldEnum = {
-  prefix: 'prefix'
-} as const
-
-export type NumberSequenceOrderByRelevanceFieldEnum = (typeof NumberSequenceOrderByRelevanceFieldEnum)[keyof typeof NumberSequenceOrderByRelevanceFieldEnum]
-
-
-export const OrganizationOrderByRelevanceFieldEnum = {
-  legalName: 'legalName',
-  tradeName: 'tradeName',
-  declarantId: 'declarantId',
-  registrationNumber: 'registrationNumber',
-  email: 'email',
-  phone: 'phone',
-  addressLine1: 'addressLine1',
-  addressLine2: 'addressLine2',
-  city: 'city',
-  countryCode: 'countryCode',
-  timezone: 'timezone'
-} as const
-
-export type OrganizationOrderByRelevanceFieldEnum = (typeof OrganizationOrderByRelevanceFieldEnum)[keyof typeof OrganizationOrderByRelevanceFieldEnum]
-
-
-export const PatientInsuranceOrderByRelevanceFieldEnum = {
-  insuredId: 'insuredId',
-  verificationSource: 'verificationSource'
-} as const
-
-export type PatientInsuranceOrderByRelevanceFieldEnum = (typeof PatientInsuranceOrderByRelevanceFieldEnum)[keyof typeof PatientInsuranceOrderByRelevanceFieldEnum]
-
-
-export const PatientOrderByRelevanceFieldEnum = {
-  patientNumber: 'patientNumber',
-  firstName: 'firstName',
-  middleName: 'middleName',
-  lastName: 'lastName',
-  secondLastName: 'secondLastName',
-  documentType: 'documentType',
-  documentNumber: 'documentNumber',
-  email: 'email',
-  phone: 'phone',
-  mobilePhone: 'mobilePhone',
-  addressLine1: 'addressLine1',
-  addressLine2: 'addressLine2',
-  city: 'city',
-  countryCode: 'countryCode'
-} as const
-
-export type PatientOrderByRelevanceFieldEnum = (typeof PatientOrderByRelevanceFieldEnum)[keyof typeof PatientOrderByRelevanceFieldEnum]
-
-
-export const PayerOrderByRelevanceFieldEnum = {
-  code: 'code',
-  name: 'name'
-} as const
-
-export type PayerOrderByRelevanceFieldEnum = (typeof PayerOrderByRelevanceFieldEnum)[keyof typeof PayerOrderByRelevanceFieldEnum]
-
-
-export const PermissionOrderByRelevanceFieldEnum = {
-  code: 'code',
-  name: 'name',
-  description: 'description'
-} as const
-
-export type PermissionOrderByRelevanceFieldEnum = (typeof PermissionOrderByRelevanceFieldEnum)[keyof typeof PermissionOrderByRelevanceFieldEnum]
-
-
-export const ProviderOrderByRelevanceFieldEnum = {
-  svbProviderId: 'svbProviderId',
-  firstName: 'firstName',
-  lastName: 'lastName',
-  licenseNumber: 'licenseNumber',
-  specialty: 'specialty',
-  email: 'email',
-  phone: 'phone'
-} as const
-
-export type ProviderOrderByRelevanceFieldEnum = (typeof ProviderOrderByRelevanceFieldEnum)[keyof typeof ProviderOrderByRelevanceFieldEnum]
-
-
-export const ReferrerOrderByRelevanceFieldEnum = {
-  referrerIdentifier: 'referrerIdentifier',
-  firstName: 'firstName',
-  lastName: 'lastName',
-  organizationName: 'organizationName',
-  providerType: 'providerType',
-  phone: 'phone',
-  email: 'email'
-} as const
-
-export type ReferrerOrderByRelevanceFieldEnum = (typeof ReferrerOrderByRelevanceFieldEnum)[keyof typeof ReferrerOrderByRelevanceFieldEnum]
-
-
-export const RoleOrderByRelevanceFieldEnum = {
-  code: 'code',
-  name: 'name',
-  description: 'description'
-} as const
-
-export type RoleOrderByRelevanceFieldEnum = (typeof RoleOrderByRelevanceFieldEnum)[keyof typeof RoleOrderByRelevanceFieldEnum]
-
-
-export const SignatureOrderByRelevanceFieldEnum = {
-  signerName: 'signerName',
-  signerRelationship: 'signerRelationship',
-  signedContentHash: 'signedContentHash',
-  signatureHash: 'signatureHash',
-  deviceIdentifier: 'deviceIdentifier',
-  ipAddress: 'ipAddress',
-  userAgent: 'userAgent',
-  voidReason: 'voidReason'
-} as const
-
-export type SignatureOrderByRelevanceFieldEnum = (typeof SignatureOrderByRelevanceFieldEnum)[keyof typeof SignatureOrderByRelevanceFieldEnum]
-
-
-export const SvbAuthorizationItemOrderByRelevanceFieldEnum = {
-  procedureCodeSnapshot: 'procedureCodeSnapshot',
-  notes: 'notes'
-} as const
-
-export type SvbAuthorizationItemOrderByRelevanceFieldEnum = (typeof SvbAuthorizationItemOrderByRelevanceFieldEnum)[keyof typeof SvbAuthorizationItemOrderByRelevanceFieldEnum]
-
-
-export const SvbAuthorizationOrderByRelevanceFieldEnum = {
-  authorizationId: 'authorizationId',
-  notes: 'notes'
-} as const
-
-export type SvbAuthorizationOrderByRelevanceFieldEnum = (typeof SvbAuthorizationOrderByRelevanceFieldEnum)[keyof typeof SvbAuthorizationOrderByRelevanceFieldEnum]
-
-
-export const SvbProcedureOrderByRelevanceFieldEnum = {
-  code: 'code',
-  description: 'description',
-  category: 'category',
-  unit: 'unit'
-} as const
-
-export type SvbProcedureOrderByRelevanceFieldEnum = (typeof SvbProcedureOrderByRelevanceFieldEnum)[keyof typeof SvbProcedureOrderByRelevanceFieldEnum]
-
-
-export const SvbTariffOrderByRelevanceFieldEnum = {
-  currencyCode: 'currencyCode'
-} as const
-
-export type SvbTariffOrderByRelevanceFieldEnum = (typeof SvbTariffOrderByRelevanceFieldEnum)[keyof typeof SvbTariffOrderByRelevanceFieldEnum]
-
-
-export const SystemSettingOrderByRelevanceFieldEnum = {
-  settingKey: 'settingKey',
-  description: 'description'
-} as const
-
-export type SystemSettingOrderByRelevanceFieldEnum = (typeof SystemSettingOrderByRelevanceFieldEnum)[keyof typeof SystemSettingOrderByRelevanceFieldEnum]
-
-
-export const TreatmentCaseOrderByRelevanceFieldEnum = {
-  treatmentId: 'treatmentId',
-  treatmentType: 'treatmentType',
-  description: 'description'
-} as const
-
-export type TreatmentCaseOrderByRelevanceFieldEnum = (typeof TreatmentCaseOrderByRelevanceFieldEnum)[keyof typeof TreatmentCaseOrderByRelevanceFieldEnum]
-
-
-export const UserOrderByRelevanceFieldEnum = {
-  email: 'email',
-  passwordHash: 'passwordHash',
-  firstName: 'firstName',
-  lastName: 'lastName'
-} as const
-
-export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
 

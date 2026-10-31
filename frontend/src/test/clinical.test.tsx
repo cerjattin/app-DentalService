@@ -649,10 +649,23 @@ describe('performed procedures, tariffs and authorizations', () => {
     await userEvent.click(
       await screen.findByRole('button', { name: 'Remove procedure QA-PROC' }),
     )
-    expect(screen.getByText(/permanently removes/)).toBeInTheDocument()
+    expect(screen.getByText(/unbilled record is permanently removed/)).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: 'Confirm' }))
     await screen.findByText('No performed procedures recorded.')
     expect(api.calls.filter((call) => call.method === 'DELETE')).toHaveLength(1)
+  })
+  it('lets a professional remove a mistaken service and add it again before completing care', async () => {
+    const api = boundary({ withProcedure: true })
+    renderClinical()
+    await userEvent.click(await screen.findByRole('button', { name: 'Remove procedure QA-PROC' }))
+    await userEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Confirm' }))
+    await screen.findByText('No performed procedures recorded.')
+    await addProcedureForm()
+    await userEvent.click(screen.getByRole('button', { name: 'Save procedure' }))
+    await screen.findByText('Procedure saved.')
+    expect(api.calls.filter((call) => call.method === 'DELETE')).toHaveLength(1)
+    expect(api.calls.filter((call) => call.method === 'POST' && call.url.pathname.endsWith('/procedures'))).toHaveLength(1)
+    expect(screen.getByRole('button', { name: 'Remove procedure QA-PROC' })).toBeInTheDocument()
   })
   it('displays authorization usage from the backend', async () => {
     boundary()

@@ -8,12 +8,22 @@ import type { RequestSecurityMetadata } from "../auth/auth.types.js";
 
 import {
   cancelInvoiceSchema,
+  reopenInvoiceEncounterSchema,
   listInvoicesQuerySchema,
   requestInvoiceCorrectionSchema,
   resolveInvoiceCorrectionSchema,
   updateCorrectionInvoiceItemSchema,
 } from "./invoice.schemas.js";
 import { invoiceService } from "./invoice.service.js";
+import { reopenInvoiceEncounter } from "./invoice-clinical-reopen.service.js";
+
+export const returnInvoiceToEncounter: RequestHandler = async (req, res) => {
+  const actor = requireAuth(req);
+  const id = parseBigIntId(req.params.id, "invoiceId");
+  const input = reopenInvoiceEncounterSchema.parse(req.body);
+  const result = await reopenInvoiceEncounter(id, input, actor, securityMetadata(req, res));
+  res.status(200).json(successResponse(result));
+};
 
 function securityMetadata(
   req: Parameters<RequestHandler>[0],

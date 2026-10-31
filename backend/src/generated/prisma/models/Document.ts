@@ -52,6 +52,8 @@ export type DocumentMinAggregateOutputType = {
   sha256: string | null
   createdByUserId: bigint | null
   createdAt: Date | null
+  originalFilenameSearch: string | null
+  storageUriSearch: string | null
 }
 
 export type DocumentMaxAggregateOutputType = {
@@ -66,6 +68,8 @@ export type DocumentMaxAggregateOutputType = {
   sha256: string | null
   createdByUserId: bigint | null
   createdAt: Date | null
+  originalFilenameSearch: string | null
+  storageUriSearch: string | null
 }
 
 export type DocumentCountAggregateOutputType = {
@@ -81,6 +85,8 @@ export type DocumentCountAggregateOutputType = {
   metadata: number
   createdByUserId: number
   createdAt: number
+  originalFilenameSearch: number
+  storageUriSearch: number
   _all: number
 }
 
@@ -111,6 +117,8 @@ export type DocumentMinAggregateInputType = {
   sha256?: true
   createdByUserId?: true
   createdAt?: true
+  originalFilenameSearch?: true
+  storageUriSearch?: true
 }
 
 export type DocumentMaxAggregateInputType = {
@@ -125,6 +133,8 @@ export type DocumentMaxAggregateInputType = {
   sha256?: true
   createdByUserId?: true
   createdAt?: true
+  originalFilenameSearch?: true
+  storageUriSearch?: true
 }
 
 export type DocumentCountAggregateInputType = {
@@ -140,6 +150,8 @@ export type DocumentCountAggregateInputType = {
   metadata?: true
   createdByUserId?: true
   createdAt?: true
+  originalFilenameSearch?: true
+  storageUriSearch?: true
   _all?: true
 }
 
@@ -242,6 +254,8 @@ export type DocumentGroupByOutputType = {
   metadata: runtime.JsonValue | null
   createdByUserId: bigint | null
   createdAt: Date
+  originalFilenameSearch: string
+  storageUriSearch: string
   _count: DocumentCountAggregateOutputType | null
   _avg: DocumentAvgAggregateOutputType | null
   _sum: DocumentSumAggregateOutputType | null
@@ -280,6 +294,8 @@ export type DocumentWhereInput = {
   metadata?: Prisma.JsonNullableFilter<"Document">
   createdByUserId?: Prisma.BigIntNullableFilter<"Document"> | bigint | number | null
   createdAt?: Prisma.DateTimeFilter<"Document"> | Date | string
+  originalFilenameSearch?: Prisma.StringFilter<"Document"> | string
+  storageUriSearch?: Prisma.StringFilter<"Document"> | string
   declarationExport?: Prisma.XOR<Prisma.DeclarationExportNullableScalarRelationFilter, Prisma.DeclarationExportWhereInput> | null
   createdByUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
@@ -300,12 +316,13 @@ export type DocumentOrderByWithRelationInput = {
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   createdByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  originalFilenameSearch?: Prisma.SortOrder
+  storageUriSearch?: Prisma.SortOrder
   declarationExport?: Prisma.DeclarationExportOrderByWithRelationInput
   createdByUser?: Prisma.UserOrderByWithRelationInput
   organization?: Prisma.OrganizationOrderByWithRelationInput
   invoiceDocuments?: Prisma.InvoiceDocumentOrderByRelationAggregateInput
   signature?: Prisma.SignatureOrderByWithRelationInput
-  _relevance?: Prisma.DocumentOrderByRelevanceInput
 }
 
 export type DocumentWhereUniqueInput = Prisma.AtLeast<{
@@ -324,6 +341,8 @@ export type DocumentWhereUniqueInput = Prisma.AtLeast<{
   metadata?: Prisma.JsonNullableFilter<"Document">
   createdByUserId?: Prisma.BigIntNullableFilter<"Document"> | bigint | number | null
   createdAt?: Prisma.DateTimeFilter<"Document"> | Date | string
+  originalFilenameSearch?: Prisma.StringFilter<"Document"> | string
+  storageUriSearch?: Prisma.StringFilter<"Document"> | string
   declarationExport?: Prisma.XOR<Prisma.DeclarationExportNullableScalarRelationFilter, Prisma.DeclarationExportWhereInput> | null
   createdByUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
@@ -344,6 +363,8 @@ export type DocumentOrderByWithAggregationInput = {
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   createdByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  originalFilenameSearch?: Prisma.SortOrder
+  storageUriSearch?: Prisma.SortOrder
   _count?: Prisma.DocumentCountOrderByAggregateInput
   _avg?: Prisma.DocumentAvgOrderByAggregateInput
   _max?: Prisma.DocumentMaxOrderByAggregateInput
@@ -367,6 +388,8 @@ export type DocumentScalarWhereWithAggregatesInput = {
   metadata?: Prisma.JsonNullableWithAggregatesFilter<"Document">
   createdByUserId?: Prisma.BigIntNullableWithAggregatesFilter<"Document"> | bigint | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Document"> | Date | string
+  originalFilenameSearch?: Prisma.StringWithAggregatesFilter<"Document"> | string
+  storageUriSearch?: Prisma.StringWithAggregatesFilter<"Document"> | string
 }
 
 export type DocumentCreateInput = {
@@ -380,6 +403,8 @@ export type DocumentCreateInput = {
   sha256: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
+  originalFilenameSearch?: string
+  storageUriSearch?: string
   declarationExport?: Prisma.DeclarationExportCreateNestedOneWithoutDocumentInput
   createdByUser?: Prisma.UserCreateNestedOneWithoutCreatedDocumentsInput
   organization: Prisma.OrganizationCreateNestedOneWithoutDocumentsInput
@@ -400,6 +425,8 @@ export type DocumentUncheckedCreateInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdByUserId?: bigint | number | null
   createdAt?: Date | string
+  originalFilenameSearch?: string
+  storageUriSearch?: string
   declarationExport?: Prisma.DeclarationExportUncheckedCreateNestedOneWithoutDocumentInput
   invoiceDocuments?: Prisma.InvoiceDocumentUncheckedCreateNestedManyWithoutDocumentInput
   signature?: Prisma.SignatureUncheckedCreateNestedOneWithoutSignatureDocumentInput
@@ -416,6 +443,8 @@ export type DocumentUpdateInput = {
   sha256?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
   declarationExport?: Prisma.DeclarationExportUpdateOneWithoutDocumentNestedInput
   createdByUser?: Prisma.UserUpdateOneWithoutCreatedDocumentsNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutDocumentsNestedInput
@@ -436,6 +465,8 @@ export type DocumentUncheckedUpdateInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdByUserId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
   declarationExport?: Prisma.DeclarationExportUncheckedUpdateOneWithoutDocumentNestedInput
   invoiceDocuments?: Prisma.InvoiceDocumentUncheckedUpdateManyWithoutDocumentNestedInput
   signature?: Prisma.SignatureUncheckedUpdateOneWithoutSignatureDocumentNestedInput
@@ -454,6 +485,8 @@ export type DocumentCreateManyInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdByUserId?: bigint | number | null
   createdAt?: Date | string
+  originalFilenameSearch?: string
+  storageUriSearch?: string
 }
 
 export type DocumentUpdateManyMutationInput = {
@@ -467,6 +500,8 @@ export type DocumentUpdateManyMutationInput = {
   sha256?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type DocumentUncheckedUpdateManyInput = {
@@ -482,17 +517,13 @@ export type DocumentUncheckedUpdateManyInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdByUserId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type DocumentScalarRelationFilter = {
   is?: Prisma.DocumentWhereInput
   isNot?: Prisma.DocumentWhereInput
-}
-
-export type DocumentOrderByRelevanceInput = {
-  fields: Prisma.DocumentOrderByRelevanceFieldEnum | Prisma.DocumentOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type DocumentCountOrderByAggregateInput = {
@@ -508,6 +539,8 @@ export type DocumentCountOrderByAggregateInput = {
   metadata?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  originalFilenameSearch?: Prisma.SortOrder
+  storageUriSearch?: Prisma.SortOrder
 }
 
 export type DocumentAvgOrderByAggregateInput = {
@@ -529,6 +562,8 @@ export type DocumentMaxOrderByAggregateInput = {
   sha256?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  originalFilenameSearch?: Prisma.SortOrder
+  storageUriSearch?: Prisma.SortOrder
 }
 
 export type DocumentMinOrderByAggregateInput = {
@@ -543,6 +578,8 @@ export type DocumentMinOrderByAggregateInput = {
   sha256?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  originalFilenameSearch?: Prisma.SortOrder
+  storageUriSearch?: Prisma.SortOrder
 }
 
 export type DocumentSumOrderByAggregateInput = {
@@ -707,6 +744,8 @@ export type DocumentCreateWithoutDeclarationExportInput = {
   sha256: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
+  originalFilenameSearch?: string
+  storageUriSearch?: string
   createdByUser?: Prisma.UserCreateNestedOneWithoutCreatedDocumentsInput
   organization: Prisma.OrganizationCreateNestedOneWithoutDocumentsInput
   invoiceDocuments?: Prisma.InvoiceDocumentCreateNestedManyWithoutDocumentInput
@@ -726,6 +765,8 @@ export type DocumentUncheckedCreateWithoutDeclarationExportInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdByUserId?: bigint | number | null
   createdAt?: Date | string
+  originalFilenameSearch?: string
+  storageUriSearch?: string
   invoiceDocuments?: Prisma.InvoiceDocumentUncheckedCreateNestedManyWithoutDocumentInput
   signature?: Prisma.SignatureUncheckedCreateNestedOneWithoutSignatureDocumentInput
 }
@@ -757,6 +798,8 @@ export type DocumentUpdateWithoutDeclarationExportInput = {
   sha256?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdByUser?: Prisma.UserUpdateOneWithoutCreatedDocumentsNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutDocumentsNestedInput
   invoiceDocuments?: Prisma.InvoiceDocumentUpdateManyWithoutDocumentNestedInput
@@ -776,6 +819,8 @@ export type DocumentUncheckedUpdateWithoutDeclarationExportInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdByUserId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
   invoiceDocuments?: Prisma.InvoiceDocumentUncheckedUpdateManyWithoutDocumentNestedInput
   signature?: Prisma.SignatureUncheckedUpdateOneWithoutSignatureDocumentNestedInput
 }
@@ -791,6 +836,8 @@ export type DocumentCreateWithoutInvoiceDocumentsInput = {
   sha256: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
+  originalFilenameSearch?: string
+  storageUriSearch?: string
   declarationExport?: Prisma.DeclarationExportCreateNestedOneWithoutDocumentInput
   createdByUser?: Prisma.UserCreateNestedOneWithoutCreatedDocumentsInput
   organization: Prisma.OrganizationCreateNestedOneWithoutDocumentsInput
@@ -810,6 +857,8 @@ export type DocumentUncheckedCreateWithoutInvoiceDocumentsInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdByUserId?: bigint | number | null
   createdAt?: Date | string
+  originalFilenameSearch?: string
+  storageUriSearch?: string
   declarationExport?: Prisma.DeclarationExportUncheckedCreateNestedOneWithoutDocumentInput
   signature?: Prisma.SignatureUncheckedCreateNestedOneWithoutSignatureDocumentInput
 }
@@ -841,6 +890,8 @@ export type DocumentUpdateWithoutInvoiceDocumentsInput = {
   sha256?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
   declarationExport?: Prisma.DeclarationExportUpdateOneWithoutDocumentNestedInput
   createdByUser?: Prisma.UserUpdateOneWithoutCreatedDocumentsNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutDocumentsNestedInput
@@ -860,6 +911,8 @@ export type DocumentUncheckedUpdateWithoutInvoiceDocumentsInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdByUserId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
   declarationExport?: Prisma.DeclarationExportUncheckedUpdateOneWithoutDocumentNestedInput
   signature?: Prisma.SignatureUncheckedUpdateOneWithoutSignatureDocumentNestedInput
 }
@@ -875,6 +928,8 @@ export type DocumentCreateWithoutOrganizationInput = {
   sha256: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
+  originalFilenameSearch?: string
+  storageUriSearch?: string
   declarationExport?: Prisma.DeclarationExportCreateNestedOneWithoutDocumentInput
   createdByUser?: Prisma.UserCreateNestedOneWithoutCreatedDocumentsInput
   invoiceDocuments?: Prisma.InvoiceDocumentCreateNestedManyWithoutDocumentInput
@@ -893,6 +948,8 @@ export type DocumentUncheckedCreateWithoutOrganizationInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdByUserId?: bigint | number | null
   createdAt?: Date | string
+  originalFilenameSearch?: string
+  storageUriSearch?: string
   declarationExport?: Prisma.DeclarationExportUncheckedCreateNestedOneWithoutDocumentInput
   invoiceDocuments?: Prisma.InvoiceDocumentUncheckedCreateNestedManyWithoutDocumentInput
   signature?: Prisma.SignatureUncheckedCreateNestedOneWithoutSignatureDocumentInput
@@ -940,6 +997,8 @@ export type DocumentScalarWhereInput = {
   metadata?: Prisma.JsonNullableFilter<"Document">
   createdByUserId?: Prisma.BigIntNullableFilter<"Document"> | bigint | number | null
   createdAt?: Prisma.DateTimeFilter<"Document"> | Date | string
+  originalFilenameSearch?: Prisma.StringFilter<"Document"> | string
+  storageUriSearch?: Prisma.StringFilter<"Document"> | string
 }
 
 export type DocumentCreateWithoutSignatureInput = {
@@ -953,6 +1012,8 @@ export type DocumentCreateWithoutSignatureInput = {
   sha256: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
+  originalFilenameSearch?: string
+  storageUriSearch?: string
   declarationExport?: Prisma.DeclarationExportCreateNestedOneWithoutDocumentInput
   createdByUser?: Prisma.UserCreateNestedOneWithoutCreatedDocumentsInput
   organization: Prisma.OrganizationCreateNestedOneWithoutDocumentsInput
@@ -972,6 +1033,8 @@ export type DocumentUncheckedCreateWithoutSignatureInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdByUserId?: bigint | number | null
   createdAt?: Date | string
+  originalFilenameSearch?: string
+  storageUriSearch?: string
   declarationExport?: Prisma.DeclarationExportUncheckedCreateNestedOneWithoutDocumentInput
   invoiceDocuments?: Prisma.InvoiceDocumentUncheckedCreateNestedManyWithoutDocumentInput
 }
@@ -1003,6 +1066,8 @@ export type DocumentUpdateWithoutSignatureInput = {
   sha256?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
   declarationExport?: Prisma.DeclarationExportUpdateOneWithoutDocumentNestedInput
   createdByUser?: Prisma.UserUpdateOneWithoutCreatedDocumentsNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutDocumentsNestedInput
@@ -1022,6 +1087,8 @@ export type DocumentUncheckedUpdateWithoutSignatureInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdByUserId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
   declarationExport?: Prisma.DeclarationExportUncheckedUpdateOneWithoutDocumentNestedInput
   invoiceDocuments?: Prisma.InvoiceDocumentUncheckedUpdateManyWithoutDocumentNestedInput
 }
@@ -1037,6 +1104,8 @@ export type DocumentCreateWithoutCreatedByUserInput = {
   sha256: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
+  originalFilenameSearch?: string
+  storageUriSearch?: string
   declarationExport?: Prisma.DeclarationExportCreateNestedOneWithoutDocumentInput
   organization: Prisma.OrganizationCreateNestedOneWithoutDocumentsInput
   invoiceDocuments?: Prisma.InvoiceDocumentCreateNestedManyWithoutDocumentInput
@@ -1055,6 +1124,8 @@ export type DocumentUncheckedCreateWithoutCreatedByUserInput = {
   sha256: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
+  originalFilenameSearch?: string
+  storageUriSearch?: string
   declarationExport?: Prisma.DeclarationExportUncheckedCreateNestedOneWithoutDocumentInput
   invoiceDocuments?: Prisma.InvoiceDocumentUncheckedCreateNestedManyWithoutDocumentInput
   signature?: Prisma.SignatureUncheckedCreateNestedOneWithoutSignatureDocumentInput
@@ -1098,6 +1169,8 @@ export type DocumentCreateManyOrganizationInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdByUserId?: bigint | number | null
   createdAt?: Date | string
+  originalFilenameSearch?: string
+  storageUriSearch?: string
 }
 
 export type DocumentUpdateWithoutOrganizationInput = {
@@ -1111,6 +1184,8 @@ export type DocumentUpdateWithoutOrganizationInput = {
   sha256?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
   declarationExport?: Prisma.DeclarationExportUpdateOneWithoutDocumentNestedInput
   createdByUser?: Prisma.UserUpdateOneWithoutCreatedDocumentsNestedInput
   invoiceDocuments?: Prisma.InvoiceDocumentUpdateManyWithoutDocumentNestedInput
@@ -1129,6 +1204,8 @@ export type DocumentUncheckedUpdateWithoutOrganizationInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdByUserId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
   declarationExport?: Prisma.DeclarationExportUncheckedUpdateOneWithoutDocumentNestedInput
   invoiceDocuments?: Prisma.InvoiceDocumentUncheckedUpdateManyWithoutDocumentNestedInput
   signature?: Prisma.SignatureUncheckedUpdateOneWithoutSignatureDocumentNestedInput
@@ -1146,6 +1223,8 @@ export type DocumentUncheckedUpdateManyWithoutOrganizationInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdByUserId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type DocumentCreateManyCreatedByUserInput = {
@@ -1160,6 +1239,8 @@ export type DocumentCreateManyCreatedByUserInput = {
   sha256: string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
+  originalFilenameSearch?: string
+  storageUriSearch?: string
 }
 
 export type DocumentUpdateWithoutCreatedByUserInput = {
@@ -1173,6 +1254,8 @@ export type DocumentUpdateWithoutCreatedByUserInput = {
   sha256?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
   declarationExport?: Prisma.DeclarationExportUpdateOneWithoutDocumentNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutDocumentsNestedInput
   invoiceDocuments?: Prisma.InvoiceDocumentUpdateManyWithoutDocumentNestedInput
@@ -1191,6 +1274,8 @@ export type DocumentUncheckedUpdateWithoutCreatedByUserInput = {
   sha256?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
   declarationExport?: Prisma.DeclarationExportUncheckedUpdateOneWithoutDocumentNestedInput
   invoiceDocuments?: Prisma.InvoiceDocumentUncheckedUpdateManyWithoutDocumentNestedInput
   signature?: Prisma.SignatureUncheckedUpdateOneWithoutSignatureDocumentNestedInput
@@ -1208,6 +1293,8 @@ export type DocumentUncheckedUpdateManyWithoutCreatedByUserInput = {
   sha256?: Prisma.StringFieldUpdateOperationsInput | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -1254,6 +1341,8 @@ export type DocumentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   metadata?: boolean
   createdByUserId?: boolean
   createdAt?: boolean
+  originalFilenameSearch?: boolean
+  storageUriSearch?: boolean
   declarationExport?: boolean | Prisma.Document$declarationExportArgs<ExtArgs>
   createdByUser?: boolean | Prisma.Document$createdByUserArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
@@ -1262,7 +1351,43 @@ export type DocumentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   _count?: boolean | Prisma.DocumentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["document"]>
 
+export type DocumentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  organizationId?: boolean
+  documentType?: boolean
+  storageProvider?: boolean
+  storageUri?: boolean
+  originalFilename?: boolean
+  mimeType?: boolean
+  sizeBytes?: boolean
+  sha256?: boolean
+  metadata?: boolean
+  createdByUserId?: boolean
+  createdAt?: boolean
+  originalFilenameSearch?: boolean
+  storageUriSearch?: boolean
+  createdByUser?: boolean | Prisma.Document$createdByUserArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["document"]>
 
+export type DocumentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  organizationId?: boolean
+  documentType?: boolean
+  storageProvider?: boolean
+  storageUri?: boolean
+  originalFilename?: boolean
+  mimeType?: boolean
+  sizeBytes?: boolean
+  sha256?: boolean
+  metadata?: boolean
+  createdByUserId?: boolean
+  createdAt?: boolean
+  originalFilenameSearch?: boolean
+  storageUriSearch?: boolean
+  createdByUser?: boolean | Prisma.Document$createdByUserArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["document"]>
 
 export type DocumentSelectScalar = {
   id?: boolean
@@ -1277,9 +1402,11 @@ export type DocumentSelectScalar = {
   metadata?: boolean
   createdByUserId?: boolean
   createdAt?: boolean
+  originalFilenameSearch?: boolean
+  storageUriSearch?: boolean
 }
 
-export type DocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "documentType" | "storageProvider" | "storageUri" | "originalFilename" | "mimeType" | "sizeBytes" | "sha256" | "metadata" | "createdByUserId" | "createdAt", ExtArgs["result"]["document"]>
+export type DocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "documentType" | "storageProvider" | "storageUri" | "originalFilename" | "mimeType" | "sizeBytes" | "sha256" | "metadata" | "createdByUserId" | "createdAt" | "originalFilenameSearch" | "storageUriSearch", ExtArgs["result"]["document"]>
 export type DocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   declarationExport?: boolean | Prisma.Document$declarationExportArgs<ExtArgs>
   createdByUser?: boolean | Prisma.Document$createdByUserArgs<ExtArgs>
@@ -1287,6 +1414,14 @@ export type DocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   invoiceDocuments?: boolean | Prisma.Document$invoiceDocumentsArgs<ExtArgs>
   signature?: boolean | Prisma.Document$signatureArgs<ExtArgs>
   _count?: boolean | Prisma.DocumentCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type DocumentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  createdByUser?: boolean | Prisma.Document$createdByUserArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+}
+export type DocumentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  createdByUser?: boolean | Prisma.Document$createdByUserArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }
 
 export type $DocumentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1311,6 +1446,8 @@ export type $DocumentPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     metadata: runtime.JsonValue | null
     createdByUserId: bigint | null
     createdAt: Date
+    originalFilenameSearch: string
+    storageUriSearch: string
   }, ExtArgs["result"]["document"]>
   composites: {}
 }
@@ -1429,6 +1566,30 @@ export interface DocumentDelegate<ExtArgs extends runtime.Types.Extensions.Inter
   createMany<T extends DocumentCreateManyArgs>(args?: Prisma.SelectSubset<T, DocumentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many Documents and returns the data saved in the database.
+   * @param {DocumentCreateManyAndReturnArgs} args - Arguments to create many Documents.
+   * @example
+   * // Create many Documents
+   * const document = await prisma.document.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many Documents and only return the `id`
+   * const documentWithIdOnly = await prisma.document.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends DocumentCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, DocumentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a Document.
    * @param {DocumentDeleteArgs} args - Arguments to delete one Document.
    * @example
@@ -1491,6 +1652,36 @@ export interface DocumentDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * 
    */
   updateMany<T extends DocumentUpdateManyArgs>(args: Prisma.SelectSubset<T, DocumentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more Documents and returns the data updated in the database.
+   * @param {DocumentUpdateManyAndReturnArgs} args - Arguments to update many Documents.
+   * @example
+   * // Update many Documents
+   * const document = await prisma.document.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more Documents and only return the `id`
+   * const documentWithIdOnly = await prisma.document.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends DocumentUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, DocumentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Document.
@@ -1697,6 +1888,8 @@ export interface DocumentFieldRefs {
   readonly metadata: Prisma.FieldRef<"Document", 'Json'>
   readonly createdByUserId: Prisma.FieldRef<"Document", 'BigInt'>
   readonly createdAt: Prisma.FieldRef<"Document", 'DateTime'>
+  readonly originalFilenameSearch: Prisma.FieldRef<"Document", 'String'>
+  readonly storageUriSearch: Prisma.FieldRef<"Document", 'String'>
 }
     
 
@@ -1935,6 +2128,29 @@ export type DocumentCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
+ * Document createManyAndReturn
+ */
+export type DocumentCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Document
+   */
+  select?: Prisma.DocumentSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Document
+   */
+  omit?: Prisma.DocumentOmit<ExtArgs> | null
+  /**
+   * The data used to create many Documents.
+   */
+  data: Prisma.DocumentCreateManyInput | Prisma.DocumentCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocumentIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * Document update
  */
 export type DocumentUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1976,6 +2192,36 @@ export type DocumentUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Limit how many Documents to update.
    */
   limit?: number
+}
+
+/**
+ * Document updateManyAndReturn
+ */
+export type DocumentUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Document
+   */
+  select?: Prisma.DocumentSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Document
+   */
+  omit?: Prisma.DocumentOmit<ExtArgs> | null
+  /**
+   * The data used to update Documents.
+   */
+  data: Prisma.XOR<Prisma.DocumentUpdateManyMutationInput, Prisma.DocumentUncheckedUpdateManyInput>
+  /**
+   * Filter which Documents to update
+   */
+  where?: Prisma.DocumentWhereInput
+  /**
+   * Limit how many Documents to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocumentIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

@@ -1,0 +1,10 @@
+import { Router } from "express";
+import { authenticate } from "../../shared/middleware/auth.middleware.js";
+import { requirePermission } from "../../shared/middleware/permission.middleware.js";
+import { listTreatmentCases, getTreatmentCase, createTreatmentCase, updateTreatmentCase } from "./treatment-case.controller.js";
+export const treatmentCaseRouter = Router({ mergeParams: true });
+treatmentCaseRouter.use(authenticate);
+treatmentCaseRouter.get("/", requirePermission("treatment_case.read"), listTreatmentCases);
+treatmentCaseRouter.get("/:caseId", requirePermission("treatment_case.read"), getTreatmentCase);
+treatmentCaseRouter.post("/", requirePermission("treatment_case.manage"), createTreatmentCase);
+treatmentCaseRouter.patch("/:caseId", requirePermission("treatment_case.manage"), updateTreatmentCase);

@@ -274,7 +274,6 @@ export type SvbTariffOrderByWithRelationInput = {
   encounterProcedures?: Prisma.EncounterProcedureOrderByRelationAggregateInput
   invoiceItems?: Prisma.InvoiceItemOrderByRelationAggregateInput
   svbProcedure?: Prisma.SvbProcedureOrderByWithRelationInput
-  _relevance?: Prisma.SvbTariffOrderByRelevanceInput
 }
 
 export type SvbTariffWhereUniqueInput = Prisma.AtLeast<{
@@ -432,12 +431,6 @@ export type SvbTariffListRelationFilter = {
 
 export type SvbTariffOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type SvbTariffOrderByRelevanceInput = {
-  fields: Prisma.SvbTariffOrderByRelevanceFieldEnum | Prisma.SvbTariffOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type SvbTariffSvbProcedureIdCurrencyCodeValidFromCompoundUniqueInput = {
@@ -871,7 +864,31 @@ export type SvbTariffSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   _count?: boolean | Prisma.SvbTariffCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["svbTariff"]>
 
+export type SvbTariffSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  svbProcedureId?: boolean
+  amount?: boolean
+  currencyCode?: boolean
+  validFrom?: boolean
+  validTo?: boolean
+  isActive?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  svbProcedure?: boolean | Prisma.SvbProcedureDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["svbTariff"]>
 
+export type SvbTariffSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  svbProcedureId?: boolean
+  amount?: boolean
+  currencyCode?: boolean
+  validFrom?: boolean
+  validTo?: boolean
+  isActive?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  svbProcedure?: boolean | Prisma.SvbProcedureDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["svbTariff"]>
 
 export type SvbTariffSelectScalar = {
   id?: boolean
@@ -891,6 +908,12 @@ export type SvbTariffInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   invoiceItems?: boolean | Prisma.SvbTariff$invoiceItemsArgs<ExtArgs>
   svbProcedure?: boolean | Prisma.SvbProcedureDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.SvbTariffCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type SvbTariffIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  svbProcedure?: boolean | Prisma.SvbProcedureDefaultArgs<ExtArgs>
+}
+export type SvbTariffIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  svbProcedure?: boolean | Prisma.SvbProcedureDefaultArgs<ExtArgs>
 }
 
 export type $SvbTariffPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1028,6 +1051,30 @@ export interface SvbTariffDelegate<ExtArgs extends runtime.Types.Extensions.Inte
   createMany<T extends SvbTariffCreateManyArgs>(args?: Prisma.SelectSubset<T, SvbTariffCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many SvbTariffs and returns the data saved in the database.
+   * @param {SvbTariffCreateManyAndReturnArgs} args - Arguments to create many SvbTariffs.
+   * @example
+   * // Create many SvbTariffs
+   * const svbTariff = await prisma.svbTariff.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many SvbTariffs and only return the `id`
+   * const svbTariffWithIdOnly = await prisma.svbTariff.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends SvbTariffCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, SvbTariffCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SvbTariffPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a SvbTariff.
    * @param {SvbTariffDeleteArgs} args - Arguments to delete one SvbTariff.
    * @example
@@ -1090,6 +1137,36 @@ export interface SvbTariffDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * 
    */
   updateMany<T extends SvbTariffUpdateManyArgs>(args: Prisma.SelectSubset<T, SvbTariffUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more SvbTariffs and returns the data updated in the database.
+   * @param {SvbTariffUpdateManyAndReturnArgs} args - Arguments to update many SvbTariffs.
+   * @example
+   * // Update many SvbTariffs
+   * const svbTariff = await prisma.svbTariff.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more SvbTariffs and only return the `id`
+   * const svbTariffWithIdOnly = await prisma.svbTariff.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends SvbTariffUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, SvbTariffUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SvbTariffPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one SvbTariff.
@@ -1529,6 +1606,29 @@ export type SvbTariffCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
+ * SvbTariff createManyAndReturn
+ */
+export type SvbTariffCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SvbTariff
+   */
+  select?: Prisma.SvbTariffSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the SvbTariff
+   */
+  omit?: Prisma.SvbTariffOmit<ExtArgs> | null
+  /**
+   * The data used to create many SvbTariffs.
+   */
+  data: Prisma.SvbTariffCreateManyInput | Prisma.SvbTariffCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SvbTariffIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * SvbTariff update
  */
 export type SvbTariffUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1570,6 +1670,36 @@ export type SvbTariffUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Limit how many SvbTariffs to update.
    */
   limit?: number
+}
+
+/**
+ * SvbTariff updateManyAndReturn
+ */
+export type SvbTariffUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SvbTariff
+   */
+  select?: Prisma.SvbTariffSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the SvbTariff
+   */
+  omit?: Prisma.SvbTariffOmit<ExtArgs> | null
+  /**
+   * The data used to update SvbTariffs.
+   */
+  data: Prisma.XOR<Prisma.SvbTariffUpdateManyMutationInput, Prisma.SvbTariffUncheckedUpdateManyInput>
+  /**
+   * Filter which SvbTariffs to update
+   */
+  where?: Prisma.SvbTariffWhereInput
+  /**
+   * Limit how many SvbTariffs to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SvbTariffIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

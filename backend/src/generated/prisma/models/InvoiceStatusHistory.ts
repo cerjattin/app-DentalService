@@ -274,7 +274,6 @@ export type InvoiceStatusHistoryOrderByWithRelationInput = {
   invoice?: Prisma.InvoiceOrderByWithRelationInput
   changedByUser?: Prisma.UserOrderByWithRelationInput
   invoiceVersion?: Prisma.InvoiceVersionOrderByWithRelationInput
-  _relevance?: Prisma.InvoiceStatusHistoryOrderByRelevanceInput
 }
 
 export type InvoiceStatusHistoryWhereUniqueInput = Prisma.AtLeast<{
@@ -406,12 +405,6 @@ export type InvoiceStatusHistoryUncheckedUpdateManyInput = {
   changedByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-}
-
-export type InvoiceStatusHistoryOrderByRelevanceInput = {
-  fields: Prisma.InvoiceStatusHistoryOrderByRelevanceFieldEnum | Prisma.InvoiceStatusHistoryOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type InvoiceStatusHistoryCountOrderByAggregateInput = {
@@ -914,7 +907,35 @@ export type InvoiceStatusHistorySelect<ExtArgs extends runtime.Types.Extensions.
   invoiceVersion?: boolean | Prisma.InvoiceStatusHistory$invoiceVersionArgs<ExtArgs>
 }, ExtArgs["result"]["invoiceStatusHistory"]>
 
+export type InvoiceStatusHistorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  invoiceId?: boolean
+  invoiceVersionId?: boolean
+  oldStatus?: boolean
+  newStatus?: boolean
+  reason?: boolean
+  changedByUserId?: boolean
+  changedAt?: boolean
+  metadata?: boolean
+  invoice?: boolean | Prisma.InvoiceDefaultArgs<ExtArgs>
+  changedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  invoiceVersion?: boolean | Prisma.InvoiceStatusHistory$invoiceVersionArgs<ExtArgs>
+}, ExtArgs["result"]["invoiceStatusHistory"]>
 
+export type InvoiceStatusHistorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  invoiceId?: boolean
+  invoiceVersionId?: boolean
+  oldStatus?: boolean
+  newStatus?: boolean
+  reason?: boolean
+  changedByUserId?: boolean
+  changedAt?: boolean
+  metadata?: boolean
+  invoice?: boolean | Prisma.InvoiceDefaultArgs<ExtArgs>
+  changedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  invoiceVersion?: boolean | Prisma.InvoiceStatusHistory$invoiceVersionArgs<ExtArgs>
+}, ExtArgs["result"]["invoiceStatusHistory"]>
 
 export type InvoiceStatusHistorySelectScalar = {
   id?: boolean
@@ -930,6 +951,16 @@ export type InvoiceStatusHistorySelectScalar = {
 
 export type InvoiceStatusHistoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "invoiceId" | "invoiceVersionId" | "oldStatus" | "newStatus" | "reason" | "changedByUserId" | "changedAt" | "metadata", ExtArgs["result"]["invoiceStatusHistory"]>
 export type InvoiceStatusHistoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  invoice?: boolean | Prisma.InvoiceDefaultArgs<ExtArgs>
+  changedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  invoiceVersion?: boolean | Prisma.InvoiceStatusHistory$invoiceVersionArgs<ExtArgs>
+}
+export type InvoiceStatusHistoryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  invoice?: boolean | Prisma.InvoiceDefaultArgs<ExtArgs>
+  changedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  invoiceVersion?: boolean | Prisma.InvoiceStatusHistory$invoiceVersionArgs<ExtArgs>
+}
+export type InvoiceStatusHistoryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   invoice?: boolean | Prisma.InvoiceDefaultArgs<ExtArgs>
   changedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   invoiceVersion?: boolean | Prisma.InvoiceStatusHistory$invoiceVersionArgs<ExtArgs>
@@ -1070,6 +1101,30 @@ export interface InvoiceStatusHistoryDelegate<ExtArgs extends runtime.Types.Exte
   createMany<T extends InvoiceStatusHistoryCreateManyArgs>(args?: Prisma.SelectSubset<T, InvoiceStatusHistoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many InvoiceStatusHistories and returns the data saved in the database.
+   * @param {InvoiceStatusHistoryCreateManyAndReturnArgs} args - Arguments to create many InvoiceStatusHistories.
+   * @example
+   * // Create many InvoiceStatusHistories
+   * const invoiceStatusHistory = await prisma.invoiceStatusHistory.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many InvoiceStatusHistories and only return the `id`
+   * const invoiceStatusHistoryWithIdOnly = await prisma.invoiceStatusHistory.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends InvoiceStatusHistoryCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, InvoiceStatusHistoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoiceStatusHistoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a InvoiceStatusHistory.
    * @param {InvoiceStatusHistoryDeleteArgs} args - Arguments to delete one InvoiceStatusHistory.
    * @example
@@ -1132,6 +1187,36 @@ export interface InvoiceStatusHistoryDelegate<ExtArgs extends runtime.Types.Exte
    * 
    */
   updateMany<T extends InvoiceStatusHistoryUpdateManyArgs>(args: Prisma.SelectSubset<T, InvoiceStatusHistoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more InvoiceStatusHistories and returns the data updated in the database.
+   * @param {InvoiceStatusHistoryUpdateManyAndReturnArgs} args - Arguments to update many InvoiceStatusHistories.
+   * @example
+   * // Update many InvoiceStatusHistories
+   * const invoiceStatusHistory = await prisma.invoiceStatusHistory.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more InvoiceStatusHistories and only return the `id`
+   * const invoiceStatusHistoryWithIdOnly = await prisma.invoiceStatusHistory.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends InvoiceStatusHistoryUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, InvoiceStatusHistoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoiceStatusHistoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one InvoiceStatusHistory.
@@ -1571,6 +1656,29 @@ export type InvoiceStatusHistoryCreateManyArgs<ExtArgs extends runtime.Types.Ext
 }
 
 /**
+ * InvoiceStatusHistory createManyAndReturn
+ */
+export type InvoiceStatusHistoryCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InvoiceStatusHistory
+   */
+  select?: Prisma.InvoiceStatusHistorySelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the InvoiceStatusHistory
+   */
+  omit?: Prisma.InvoiceStatusHistoryOmit<ExtArgs> | null
+  /**
+   * The data used to create many InvoiceStatusHistories.
+   */
+  data: Prisma.InvoiceStatusHistoryCreateManyInput | Prisma.InvoiceStatusHistoryCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InvoiceStatusHistoryIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * InvoiceStatusHistory update
  */
 export type InvoiceStatusHistoryUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1612,6 +1720,36 @@ export type InvoiceStatusHistoryUpdateManyArgs<ExtArgs extends runtime.Types.Ext
    * Limit how many InvoiceStatusHistories to update.
    */
   limit?: number
+}
+
+/**
+ * InvoiceStatusHistory updateManyAndReturn
+ */
+export type InvoiceStatusHistoryUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InvoiceStatusHistory
+   */
+  select?: Prisma.InvoiceStatusHistorySelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the InvoiceStatusHistory
+   */
+  omit?: Prisma.InvoiceStatusHistoryOmit<ExtArgs> | null
+  /**
+   * The data used to update InvoiceStatusHistories.
+   */
+  data: Prisma.XOR<Prisma.InvoiceStatusHistoryUpdateManyMutationInput, Prisma.InvoiceStatusHistoryUncheckedUpdateManyInput>
+  /**
+   * Filter which InvoiceStatusHistories to update
+   */
+  where?: Prisma.InvoiceStatusHistoryWhereInput
+  /**
+   * Limit how many InvoiceStatusHistories to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InvoiceStatusHistoryIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

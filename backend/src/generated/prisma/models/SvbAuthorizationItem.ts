@@ -300,7 +300,6 @@ export type SvbAuthorizationItemOrderByWithRelationInput = {
   encounterProcedures?: Prisma.EncounterProcedureOrderByRelationAggregateInput
   authorization?: Prisma.SvbAuthorizationOrderByWithRelationInput
   svbProcedure?: Prisma.SvbProcedureOrderByWithRelationInput
-  _relevance?: Prisma.SvbAuthorizationItemOrderByRelevanceInput
 }
 
 export type SvbAuthorizationItemWhereUniqueInput = Prisma.AtLeast<{
@@ -462,12 +461,6 @@ export type SvbAuthorizationItemUncheckedUpdateManyInput = {
 export type SvbAuthorizationItemNullableScalarRelationFilter = {
   is?: Prisma.SvbAuthorizationItemWhereInput | null
   isNot?: Prisma.SvbAuthorizationItemWhereInput | null
-}
-
-export type SvbAuthorizationItemOrderByRelevanceInput = {
-  fields: Prisma.SvbAuthorizationItemOrderByRelevanceFieldEnum | Prisma.SvbAuthorizationItemOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type SvbAuthorizationItemCountOrderByAggregateInput = {
@@ -1000,7 +993,37 @@ export type SvbAuthorizationItemSelect<ExtArgs extends runtime.Types.Extensions.
   _count?: boolean | Prisma.SvbAuthorizationItemCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["svbAuthorizationItem"]>
 
+export type SvbAuthorizationItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  authorizationId?: boolean
+  svbProcedureId?: boolean
+  procedureCodeSnapshot?: boolean
+  authorizedQuantity?: boolean
+  usedQuantity?: boolean
+  validFrom?: boolean
+  validTo?: boolean
+  notes?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  authorization?: boolean | Prisma.SvbAuthorizationDefaultArgs<ExtArgs>
+  svbProcedure?: boolean | Prisma.SvbAuthorizationItem$svbProcedureArgs<ExtArgs>
+}, ExtArgs["result"]["svbAuthorizationItem"]>
 
+export type SvbAuthorizationItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  authorizationId?: boolean
+  svbProcedureId?: boolean
+  procedureCodeSnapshot?: boolean
+  authorizedQuantity?: boolean
+  usedQuantity?: boolean
+  validFrom?: boolean
+  validTo?: boolean
+  notes?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  authorization?: boolean | Prisma.SvbAuthorizationDefaultArgs<ExtArgs>
+  svbProcedure?: boolean | Prisma.SvbAuthorizationItem$svbProcedureArgs<ExtArgs>
+}, ExtArgs["result"]["svbAuthorizationItem"]>
 
 export type SvbAuthorizationItemSelectScalar = {
   id?: boolean
@@ -1022,6 +1045,14 @@ export type SvbAuthorizationItemInclude<ExtArgs extends runtime.Types.Extensions
   authorization?: boolean | Prisma.SvbAuthorizationDefaultArgs<ExtArgs>
   svbProcedure?: boolean | Prisma.SvbAuthorizationItem$svbProcedureArgs<ExtArgs>
   _count?: boolean | Prisma.SvbAuthorizationItemCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type SvbAuthorizationItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  authorization?: boolean | Prisma.SvbAuthorizationDefaultArgs<ExtArgs>
+  svbProcedure?: boolean | Prisma.SvbAuthorizationItem$svbProcedureArgs<ExtArgs>
+}
+export type SvbAuthorizationItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  authorization?: boolean | Prisma.SvbAuthorizationDefaultArgs<ExtArgs>
+  svbProcedure?: boolean | Prisma.SvbAuthorizationItem$svbProcedureArgs<ExtArgs>
 }
 
 export type $SvbAuthorizationItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1161,6 +1192,30 @@ export interface SvbAuthorizationItemDelegate<ExtArgs extends runtime.Types.Exte
   createMany<T extends SvbAuthorizationItemCreateManyArgs>(args?: Prisma.SelectSubset<T, SvbAuthorizationItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many SvbAuthorizationItems and returns the data saved in the database.
+   * @param {SvbAuthorizationItemCreateManyAndReturnArgs} args - Arguments to create many SvbAuthorizationItems.
+   * @example
+   * // Create many SvbAuthorizationItems
+   * const svbAuthorizationItem = await prisma.svbAuthorizationItem.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many SvbAuthorizationItems and only return the `id`
+   * const svbAuthorizationItemWithIdOnly = await prisma.svbAuthorizationItem.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends SvbAuthorizationItemCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, SvbAuthorizationItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SvbAuthorizationItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a SvbAuthorizationItem.
    * @param {SvbAuthorizationItemDeleteArgs} args - Arguments to delete one SvbAuthorizationItem.
    * @example
@@ -1223,6 +1278,36 @@ export interface SvbAuthorizationItemDelegate<ExtArgs extends runtime.Types.Exte
    * 
    */
   updateMany<T extends SvbAuthorizationItemUpdateManyArgs>(args: Prisma.SelectSubset<T, SvbAuthorizationItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more SvbAuthorizationItems and returns the data updated in the database.
+   * @param {SvbAuthorizationItemUpdateManyAndReturnArgs} args - Arguments to update many SvbAuthorizationItems.
+   * @example
+   * // Update many SvbAuthorizationItems
+   * const svbAuthorizationItem = await prisma.svbAuthorizationItem.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more SvbAuthorizationItems and only return the `id`
+   * const svbAuthorizationItemWithIdOnly = await prisma.svbAuthorizationItem.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends SvbAuthorizationItemUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, SvbAuthorizationItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SvbAuthorizationItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one SvbAuthorizationItem.
@@ -1664,6 +1749,29 @@ export type SvbAuthorizationItemCreateManyArgs<ExtArgs extends runtime.Types.Ext
 }
 
 /**
+ * SvbAuthorizationItem createManyAndReturn
+ */
+export type SvbAuthorizationItemCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SvbAuthorizationItem
+   */
+  select?: Prisma.SvbAuthorizationItemSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the SvbAuthorizationItem
+   */
+  omit?: Prisma.SvbAuthorizationItemOmit<ExtArgs> | null
+  /**
+   * The data used to create many SvbAuthorizationItems.
+   */
+  data: Prisma.SvbAuthorizationItemCreateManyInput | Prisma.SvbAuthorizationItemCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SvbAuthorizationItemIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * SvbAuthorizationItem update
  */
 export type SvbAuthorizationItemUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1705,6 +1813,36 @@ export type SvbAuthorizationItemUpdateManyArgs<ExtArgs extends runtime.Types.Ext
    * Limit how many SvbAuthorizationItems to update.
    */
   limit?: number
+}
+
+/**
+ * SvbAuthorizationItem updateManyAndReturn
+ */
+export type SvbAuthorizationItemUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SvbAuthorizationItem
+   */
+  select?: Prisma.SvbAuthorizationItemSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the SvbAuthorizationItem
+   */
+  omit?: Prisma.SvbAuthorizationItemOmit<ExtArgs> | null
+  /**
+   * The data used to update SvbAuthorizationItems.
+   */
+  data: Prisma.XOR<Prisma.SvbAuthorizationItemUpdateManyMutationInput, Prisma.SvbAuthorizationItemUncheckedUpdateManyInput>
+  /**
+   * Filter which SvbAuthorizationItems to update
+   */
+  where?: Prisma.SvbAuthorizationItemWhereInput
+  /**
+   * Limit how many SvbAuthorizationItems to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SvbAuthorizationItemIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

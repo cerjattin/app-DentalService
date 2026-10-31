@@ -114,9 +114,27 @@ export interface CreateDeclarationDto {
   payerId: EntityId
   periodStart?: string | null
   periodEnd?: string | null
-  declarantIdSnapshot?: string | null
   notes?: string | null
 }
+
+export interface DeclarationCandidate {
+  invoiceId: EntityId
+  invoiceVersionId: EntityId
+  invoiceItemId: EntityId
+  invoiceNumber: string | null
+  versionNumber: number
+  detailInvoiceNumber: string | null
+  serviceDate: string
+  procedureCode: string
+  procedureDescription: string
+  providerIdSnapshot: string
+  insuredIdSnapshot: string
+  amount: DecimalString
+  currencyCode: string
+  svbReadiness: 'COMPLETE' | 'INCOMPLETE'
+  issues: Array<{ field: string; code: 'DECLARATION_SVB_DATA_INCOMPLETE' | 'DECLARATION_SVB_DATA_INVALID' }>
+}
+export interface CandidateFilters { q?: string; from?: string; to?: string; page: number; pageSize: number }
 
 export interface SubmissionResultDto {
   status: Exclude<DeclarationSubmissionStatus, 'SUBMITTED'>

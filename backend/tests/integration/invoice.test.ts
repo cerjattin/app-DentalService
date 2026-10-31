@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { rm } from "node:fs/promises";
 import path from "node:path";
+import sharp from "sharp";
 
 import request from "supertest";
 
@@ -78,7 +79,7 @@ async function cleanupInvoiceFixture() {
   const invoices = await prisma.invoice.findMany({
     where: {
       OR: [
-        { appointment: { appointmentNumber: { startsWith: "TEST-INV-APT" } } },
+        { appointment: { appointmentNumberSearch: { startsWith: ("TEST-INV-APT").toLowerCase() } } },
         { organization: { legalName: OTHER_ORG_LEGAL_NAME } },
       ],
     },
@@ -99,7 +100,7 @@ async function cleanupInvoiceFixture() {
     where: {
       OR: [
         { invoiceVersionId: { in: versionIds } },
-        { signatureDocument: { storageUri: { startsWith: "test://invoice-signature/" } } },
+        { signatureDocument: { storageUriSearch: { startsWith: ("test://invoice-signature/").toLowerCase() } } },
       ],
     },
     select: { signatureDocumentId: true },
@@ -136,7 +137,7 @@ async function cleanupInvoiceFixture() {
     where: {
       OR: [
         { invoiceVersionId: { in: versionIds } },
-        { signatureDocument: { storageUri: { startsWith: "test://invoice-signature/" } } },
+        { signatureDocument: { storageUriSearch: { startsWith: ("test://invoice-signature/").toLowerCase() } } },
       ],
     },
   });
@@ -152,8 +153,8 @@ async function cleanupInvoiceFixture() {
     where: {
       OR: [
         { id: { in: documentIds } },
-        { storageUri: { startsWith: "test://invoice-signature/" } },
-        { originalFilename: { startsWith: "TEST-SIGN-" } },
+        { storageUriSearch: { startsWith: ("test://invoice-signature/").toLowerCase() } },
+        { originalFilenameSearch: { startsWith: ("TEST-SIGN-").toLowerCase() } },
       ],
     },
   });
@@ -193,7 +194,7 @@ async function cleanupInvoiceFixture() {
   const appointments = await prisma.appointment.findMany({
     where: {
       OR: [
-        { appointmentNumber: { startsWith: "TEST-INV-APT" } },
+        { appointmentNumberSearch: { startsWith: ("TEST-INV-APT").toLowerCase() } },
         { organization: { legalName: OTHER_ORG_LEGAL_NAME } },
       ],
     },
@@ -204,7 +205,7 @@ async function cleanupInvoiceFixture() {
   const encounterProcedures = await prisma.encounterProcedure.findMany({
     where: {
       OR: [
-        { procedureCodeSnapshot: { startsWith: "TEST-INV-PROC" } },
+        { procedureCodeSnapshotSearch: { startsWith: ("TEST-INV-PROC").toLowerCase() } },
         { encounter: { appointmentId: { in: appointmentIds } } },
       ],
     },
@@ -225,7 +226,7 @@ async function cleanupInvoiceFixture() {
   await prisma.encounterProcedure.deleteMany({
     where: {
       OR: [
-        { procedureCodeSnapshot: { startsWith: "TEST-INV-PROC" } },
+        { procedureCodeSnapshotSearch: { startsWith: ("TEST-INV-PROC").toLowerCase() } },
         { encounter: { appointmentId: { in: appointmentIds } } },
       ],
     },
@@ -243,22 +244,22 @@ async function cleanupInvoiceFixture() {
     where: { id: { in: appointmentIds } },
   });
   await prisma.patientInsurance.deleteMany({
-    where: { insuredId: { startsWith: "TEST-INV-INS" } },
+    where: { insuredIdSearch: { startsWith: ("TEST-INV-INS").toLowerCase() } },
   });
   await prisma.svbTariff.deleteMany({
-    where: { svbProcedure: { code: { startsWith: "TEST-INV-PROC" } } },
+    where: { svbProcedure: { codeSearch: { startsWith: ("TEST-INV-PROC").toLowerCase() } } },
   });
   await prisma.svbProcedure.deleteMany({
-    where: { code: { startsWith: "TEST-INV-PROC" } },
+    where: { codeSearch: { startsWith: ("TEST-INV-PROC").toLowerCase() } },
   });
   await prisma.provider.deleteMany({
-    where: { svbProviderId: { startsWith: "TEST-INV-PROV" } },
+    where: { svbProviderIdSearch: { startsWith: ("TEST-INV-PROV").toLowerCase() } },
   });
   await prisma.patient.deleteMany({
-    where: { patientNumber: { startsWith: "TEST-INV-PAT" } },
+    where: { patientNumberSearch: { startsWith: ("TEST-INV-PAT").toLowerCase() } },
   });
   await prisma.clinicLocation.deleteMany({
-    where: { code: { startsWith: "TEST-INV-LOC" } },
+    where: { codeSearch: { startsWith: ("TEST-INV-LOC").toLowerCase() } },
   });
   await prisma.userRole.deleteMany({
     where: { userId: { in: userIds } },
@@ -544,7 +545,7 @@ async function createSignatureDocument(input: {
 }
 
 async function uploadSignatureDocument(suffix: string, token = receptionToken) {
-  const bytes = Buffer.from(`TEST-SIGNATURE-${suffix}`);
+  const bytes = await sharp(Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="320" height="80"><rect width="320" height="80" fill="white"/><path d="M10 55 L70 15 L100 60 L210 25" fill="none" stroke="black" stroke-width="3"/><text x="220" y="50" font-size="10">${suffix.replace(/[^a-zA-Z0-9-]/g, "")}</text></svg>`)).png().toBuffer();
   const response = await request(app)
     .post(
       `/api/v1/documents?documentType=SIGNATURE&originalFilename=TEST-SIGN-${suffix}.png`,
@@ -2729,7 +2730,9 @@ describe("Invoice API", () => {
     const pdfText = extractPdfSearchText(pdfBytes);
     expect(pdfText).toContain(closed.invoiceNumber);
     expect(pdfText).toContain("Maria Elena Martina Lopez");
-    expect(pdfText).toContain("TEST Invoice procedure TEST-INV-PROC-A");
+    expect(pdfText).toContain("TEST Invoice procedure");
+    expect(pdfText).toContain("TEST-INV-PROC-A");
+    expect(pdfText.match(/\/Subtype \/Image/g)?.length).toBeGreaterThanOrEqual(2);
     expect(pdfText).not.toContain("Changed master description");
     expect(createHash("sha256").update(pdfBytes).digest("hex")).toBe(
       persisted.document.sha256,
@@ -2863,6 +2866,56 @@ describe("Invoice API", () => {
       .expect((response) => {
         expect(response.body.error.code).toBe("PERMISSION_DENIED");
       });
+  });
+
+  it("returns closed billing to clinical care, replaces a service, and closes a newly signed version", async () => {
+    const closed = await createClosedInvoiceFixture("CLINICAL-RETURN");
+    const original = await prisma.invoiceVersion.findUniqueOrThrow({
+      where: { id: BigInt(closed.versionId) }, include: { items: true, signatures: true },
+    });
+    const oldItem = original.items[0]!;
+    const oldProcedure = await prisma.encounterProcedure.findUniqueOrThrow({ where: { id: oldItem.encounterProcedureId } });
+    const path = `/api/v1/invoices/${closed.invoiceId}/reopen-encounter`;
+    await request(app).post(path).set("Authorization", `Bearer ${providerToken}`)
+      .send({ reason: "Mistaken service", expectedVersionId: closed.versionId }).expect(403);
+    const returned = await request(app).post(path).set("Authorization", `Bearer ${adminToken}`)
+      .send({ reason: "Mistaken service", expectedVersionId: closed.versionId }).expect(200);
+    const replacementId = returned.body.data.currentVersionId as string;
+    expect(returned.body.data.currentVersion.items).toHaveLength(0);
+    await prepareInvoice(closed.invoiceId, replacementId).expect(409);
+    const servicesPath = `/api/v1/clinical-encounters/${oldProcedure.encounterId}/procedures`;
+    const removed = await request(app).delete(`${servicesPath}/${oldProcedure.id}`).set("Authorization", `Bearer ${providerToken}`).expect(200);
+    expect(removed.body.data.status).toBe("VOID");
+    await request(app).delete(`${servicesPath}/${oldProcedure.id}`).set("Authorization", `Bearer ${providerToken}`).expect(409);
+    await request(app).post(servicesPath).set("Authorization", `Bearer ${providerToken}`)
+      .send({ patientInsuranceId: oldProcedure.patientInsuranceId.toString(), svbProcedureId: procedureBId.toString(), quantity: "3.00" }).expect(201);
+    await request(app).post(`/api/v1/clinical-encounters/${oldProcedure.encounterId}/complete`).set("Authorization", `Bearer ${providerToken}`).send({}).expect(200);
+    const rebuilt = await createInvoice(BigInt(returned.body.data.appointmentId as string)).expect(201);
+    expect(rebuilt.body.data.id).toBe(closed.invoiceId);
+    expect(rebuilt.body.data.invoiceNumber).toBe(closed.invoiceNumber);
+    expect(rebuilt.body.data.currentVersion.totalAmount).toBe("76.50");
+    expect(rebuilt.body.data.currentVersion.items).toHaveLength(1);
+    expect(rebuilt.body.data.currentVersion.items[0].svbProcedureId).toBe(procedureBId.toString());
+    const prepared = await prepareInvoice(closed.invoiceId, replacementId).expect(200);
+    await signInvoiceVersion({ invoiceId: closed.invoiceId, versionId: replacementId,
+      suffix: "CLINICAL-RETURN-NEW", contentHash: prepared.body.data.currentVersion.contentHash as string });
+    await closeInvoice(closed.invoiceId, replacementId, adminToken).expect(200);
+    const historical = await prisma.invoiceVersion.findUniqueOrThrow({
+      where: { id: original.id }, include: { items: true, signatures: true },
+    });
+    expect(historical.status).toBe("SUPERSEDED");
+    expect(historical.contentHash).toBe(original.contentHash);
+    expect(historical.items).toEqual(original.items);
+    expect(historical.signatures).toEqual(original.signatures);
+  });
+
+  it("allows only one concurrent return of the same invoice version", async () => {
+    const draft = await createInvoiceFixture("RETURN-CONCURRENCY");
+    const results = await Promise.all([1, 2].map(() => request(app)
+      .post(`/api/v1/invoices/${draft.invoiceId}/reopen-encounter`).set("Authorization", `Bearer ${adminToken}`)
+      .send({ reason: "Fix services", expectedVersionId: draft.versionId })));
+    expect(results.map((result) => result.status).sort()).toEqual([200, 409]);
+    expect(await prisma.invoiceVersion.count({ where: { invoiceId: BigInt(draft.invoiceId) } })).toBe(2);
   });
 
   it("writes invoice audit logs", async () => {

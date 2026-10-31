@@ -92,6 +92,7 @@ export type EncounterProcedureMinAggregateOutputType = {
   createdByUserId: bigint | null
   createdAt: Date | null
   updatedAt: Date | null
+  procedureCodeSnapshotSearch: string | null
 }
 
 export type EncounterProcedureMaxAggregateOutputType = {
@@ -126,6 +127,7 @@ export type EncounterProcedureMaxAggregateOutputType = {
   createdByUserId: bigint | null
   createdAt: Date | null
   updatedAt: Date | null
+  procedureCodeSnapshotSearch: string | null
 }
 
 export type EncounterProcedureCountAggregateOutputType = {
@@ -160,6 +162,7 @@ export type EncounterProcedureCountAggregateOutputType = {
   createdByUserId: number
   createdAt: number
   updatedAt: number
+  procedureCodeSnapshotSearch: number
   _all: number
 }
 
@@ -230,6 +233,7 @@ export type EncounterProcedureMinAggregateInputType = {
   createdByUserId?: true
   createdAt?: true
   updatedAt?: true
+  procedureCodeSnapshotSearch?: true
 }
 
 export type EncounterProcedureMaxAggregateInputType = {
@@ -264,6 +268,7 @@ export type EncounterProcedureMaxAggregateInputType = {
   createdByUserId?: true
   createdAt?: true
   updatedAt?: true
+  procedureCodeSnapshotSearch?: true
 }
 
 export type EncounterProcedureCountAggregateInputType = {
@@ -298,6 +303,7 @@ export type EncounterProcedureCountAggregateInputType = {
   createdByUserId?: true
   createdAt?: true
   updatedAt?: true
+  procedureCodeSnapshotSearch?: true
   _all?: true
 }
 
@@ -419,6 +425,7 @@ export type EncounterProcedureGroupByOutputType = {
   createdByUserId: bigint
   createdAt: Date
   updatedAt: Date
+  procedureCodeSnapshotSearch: string
   _count: EncounterProcedureCountAggregateOutputType | null
   _avg: EncounterProcedureAvgAggregateOutputType | null
   _sum: EncounterProcedureSumAggregateOutputType | null
@@ -476,6 +483,7 @@ export type EncounterProcedureWhereInput = {
   createdByUserId?: Prisma.BigIntFilter<"EncounterProcedure"> | bigint | number
   createdAt?: Prisma.DateTimeFilter<"EncounterProcedure"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"EncounterProcedure"> | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFilter<"EncounterProcedure"> | string
   authorizationItem?: Prisma.XOR<Prisma.SvbAuthorizationItemNullableScalarRelationFilter, Prisma.SvbAuthorizationItemWhereInput> | null
   createdByUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   diagnosis?: Prisma.XOR<Prisma.EncounterDiagnosisNullableScalarRelationFilter, Prisma.EncounterDiagnosisWhereInput> | null
@@ -520,6 +528,7 @@ export type EncounterProcedureOrderByWithRelationInput = {
   createdByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  procedureCodeSnapshotSearch?: Prisma.SortOrder
   authorizationItem?: Prisma.SvbAuthorizationItemOrderByWithRelationInput
   createdByUser?: Prisma.UserOrderByWithRelationInput
   diagnosis?: Prisma.EncounterDiagnosisOrderByWithRelationInput
@@ -530,7 +539,6 @@ export type EncounterProcedureOrderByWithRelationInput = {
   svbProcedure?: Prisma.SvbProcedureOrderByWithRelationInput
   svbTariff?: Prisma.SvbTariffOrderByWithRelationInput
   invoiceItems?: Prisma.InvoiceItemOrderByRelationAggregateInput
-  _relevance?: Prisma.EncounterProcedureOrderByRelevanceInput
 }
 
 export type EncounterProcedureWhereUniqueInput = Prisma.AtLeast<{
@@ -568,6 +576,7 @@ export type EncounterProcedureWhereUniqueInput = Prisma.AtLeast<{
   createdByUserId?: Prisma.BigIntFilter<"EncounterProcedure"> | bigint | number
   createdAt?: Prisma.DateTimeFilter<"EncounterProcedure"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"EncounterProcedure"> | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFilter<"EncounterProcedure"> | string
   authorizationItem?: Prisma.XOR<Prisma.SvbAuthorizationItemNullableScalarRelationFilter, Prisma.SvbAuthorizationItemWhereInput> | null
   createdByUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   diagnosis?: Prisma.XOR<Prisma.EncounterDiagnosisNullableScalarRelationFilter, Prisma.EncounterDiagnosisWhereInput> | null
@@ -612,6 +621,7 @@ export type EncounterProcedureOrderByWithAggregationInput = {
   createdByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  procedureCodeSnapshotSearch?: Prisma.SortOrder
   _count?: Prisma.EncounterProcedureCountOrderByAggregateInput
   _avg?: Prisma.EncounterProcedureAvgOrderByAggregateInput
   _max?: Prisma.EncounterProcedureMaxOrderByAggregateInput
@@ -654,6 +664,7 @@ export type EncounterProcedureScalarWhereWithAggregatesInput = {
   createdByUserId?: Prisma.BigIntWithAggregatesFilter<"EncounterProcedure"> | bigint | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"EncounterProcedure"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"EncounterProcedure"> | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringWithAggregatesFilter<"EncounterProcedure"> | string
 }
 
 export type EncounterProcedureCreateInput = {
@@ -679,6 +690,7 @@ export type EncounterProcedureCreateInput = {
   status?: $Enums.EncounterProcedureStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
   authorizationItem?: Prisma.SvbAuthorizationItemCreateNestedOneWithoutEncounterProceduresInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedEncounterProceduresInput
   diagnosis?: Prisma.EncounterDiagnosisCreateNestedOneWithoutProceduresInput
@@ -723,6 +735,7 @@ export type EncounterProcedureUncheckedCreateInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
   invoiceItems?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutEncounterProcedureInput
 }
 
@@ -749,6 +762,7 @@ export type EncounterProcedureUpdateInput = {
   status?: Prisma.EnumEncounterProcedureStatusFieldUpdateOperationsInput | $Enums.EncounterProcedureStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   authorizationItem?: Prisma.SvbAuthorizationItemUpdateOneWithoutEncounterProceduresNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedEncounterProceduresNestedInput
   diagnosis?: Prisma.EncounterDiagnosisUpdateOneWithoutProceduresNestedInput
@@ -793,6 +807,7 @@ export type EncounterProcedureUncheckedUpdateInput = {
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   invoiceItems?: Prisma.InvoiceItemUncheckedUpdateManyWithoutEncounterProcedureNestedInput
 }
 
@@ -828,6 +843,7 @@ export type EncounterProcedureCreateManyInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
 }
 
 export type EncounterProcedureUpdateManyMutationInput = {
@@ -853,6 +869,7 @@ export type EncounterProcedureUpdateManyMutationInput = {
   status?: Prisma.EnumEncounterProcedureStatusFieldUpdateOperationsInput | $Enums.EncounterProcedureStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type EncounterProcedureUncheckedUpdateManyInput = {
@@ -887,6 +904,7 @@ export type EncounterProcedureUncheckedUpdateManyInput = {
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type EncounterProcedureListRelationFilter = {
@@ -897,12 +915,6 @@ export type EncounterProcedureListRelationFilter = {
 
 export type EncounterProcedureOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type EncounterProcedureOrderByRelevanceInput = {
-  fields: Prisma.EncounterProcedureOrderByRelevanceFieldEnum | Prisma.EncounterProcedureOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type EncounterProcedureCountOrderByAggregateInput = {
@@ -937,6 +949,7 @@ export type EncounterProcedureCountOrderByAggregateInput = {
   createdByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  procedureCodeSnapshotSearch?: Prisma.SortOrder
 }
 
 export type EncounterProcedureAvgOrderByAggregateInput = {
@@ -988,6 +1001,7 @@ export type EncounterProcedureMaxOrderByAggregateInput = {
   createdByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  procedureCodeSnapshotSearch?: Prisma.SortOrder
 }
 
 export type EncounterProcedureMinOrderByAggregateInput = {
@@ -1022,6 +1036,7 @@ export type EncounterProcedureMinOrderByAggregateInput = {
   createdByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  procedureCodeSnapshotSearch?: Prisma.SortOrder
 }
 
 export type EncounterProcedureSumOrderByAggregateInput = {
@@ -1465,6 +1480,7 @@ export type EncounterProcedureCreateWithoutEncounterInput = {
   status?: $Enums.EncounterProcedureStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
   authorizationItem?: Prisma.SvbAuthorizationItemCreateNestedOneWithoutEncounterProceduresInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedEncounterProceduresInput
   diagnosis?: Prisma.EncounterDiagnosisCreateNestedOneWithoutProceduresInput
@@ -1507,6 +1523,7 @@ export type EncounterProcedureUncheckedCreateWithoutEncounterInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
   invoiceItems?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutEncounterProcedureInput
 }
 
@@ -1571,6 +1588,7 @@ export type EncounterProcedureScalarWhereInput = {
   createdByUserId?: Prisma.BigIntFilter<"EncounterProcedure"> | bigint | number
   createdAt?: Prisma.DateTimeFilter<"EncounterProcedure"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"EncounterProcedure"> | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFilter<"EncounterProcedure"> | string
 }
 
 export type EncounterProcedureCreateWithoutDiagnosisInput = {
@@ -1596,6 +1614,7 @@ export type EncounterProcedureCreateWithoutDiagnosisInput = {
   status?: $Enums.EncounterProcedureStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
   authorizationItem?: Prisma.SvbAuthorizationItemCreateNestedOneWithoutEncounterProceduresInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedEncounterProceduresInput
   encounter: Prisma.ClinicalEncounterCreateNestedOneWithoutProceduresInput
@@ -1638,6 +1657,7 @@ export type EncounterProcedureUncheckedCreateWithoutDiagnosisInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
   invoiceItems?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutEncounterProcedureInput
 }
 
@@ -1690,6 +1710,7 @@ export type EncounterProcedureCreateWithoutInvoiceItemsInput = {
   status?: $Enums.EncounterProcedureStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
   authorizationItem?: Prisma.SvbAuthorizationItemCreateNestedOneWithoutEncounterProceduresInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedEncounterProceduresInput
   diagnosis?: Prisma.EncounterDiagnosisCreateNestedOneWithoutProceduresInput
@@ -1733,6 +1754,7 @@ export type EncounterProcedureUncheckedCreateWithoutInvoiceItemsInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
 }
 
 export type EncounterProcedureCreateOrConnectWithoutInvoiceItemsInput = {
@@ -1774,6 +1796,7 @@ export type EncounterProcedureUpdateWithoutInvoiceItemsInput = {
   status?: Prisma.EnumEncounterProcedureStatusFieldUpdateOperationsInput | $Enums.EncounterProcedureStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   authorizationItem?: Prisma.SvbAuthorizationItemUpdateOneWithoutEncounterProceduresNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedEncounterProceduresNestedInput
   diagnosis?: Prisma.EncounterDiagnosisUpdateOneWithoutProceduresNestedInput
@@ -1817,6 +1840,7 @@ export type EncounterProcedureUncheckedUpdateWithoutInvoiceItemsInput = {
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type EncounterProcedureCreateWithoutPatientInsuranceInput = {
@@ -1842,6 +1866,7 @@ export type EncounterProcedureCreateWithoutPatientInsuranceInput = {
   status?: $Enums.EncounterProcedureStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
   authorizationItem?: Prisma.SvbAuthorizationItemCreateNestedOneWithoutEncounterProceduresInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedEncounterProceduresInput
   diagnosis?: Prisma.EncounterDiagnosisCreateNestedOneWithoutProceduresInput
@@ -1884,6 +1909,7 @@ export type EncounterProcedureUncheckedCreateWithoutPatientInsuranceInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
   invoiceItems?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutEncounterProcedureInput
 }
 
@@ -1936,6 +1962,7 @@ export type EncounterProcedureCreateWithoutPerformedByProviderInput = {
   status?: $Enums.EncounterProcedureStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
   authorizationItem?: Prisma.SvbAuthorizationItemCreateNestedOneWithoutEncounterProceduresInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedEncounterProceduresInput
   diagnosis?: Prisma.EncounterDiagnosisCreateNestedOneWithoutProceduresInput
@@ -1978,6 +2005,7 @@ export type EncounterProcedureUncheckedCreateWithoutPerformedByProviderInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
   invoiceItems?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutEncounterProcedureInput
 }
 
@@ -2030,6 +2058,7 @@ export type EncounterProcedureCreateWithoutReferrerInput = {
   status?: $Enums.EncounterProcedureStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
   authorizationItem?: Prisma.SvbAuthorizationItemCreateNestedOneWithoutEncounterProceduresInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedEncounterProceduresInput
   diagnosis?: Prisma.EncounterDiagnosisCreateNestedOneWithoutProceduresInput
@@ -2072,6 +2101,7 @@ export type EncounterProcedureUncheckedCreateWithoutReferrerInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
   invoiceItems?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutEncounterProcedureInput
 }
 
@@ -2124,6 +2154,7 @@ export type EncounterProcedureCreateWithoutAuthorizationItemInput = {
   status?: $Enums.EncounterProcedureStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedEncounterProceduresInput
   diagnosis?: Prisma.EncounterDiagnosisCreateNestedOneWithoutProceduresInput
   encounter: Prisma.ClinicalEncounterCreateNestedOneWithoutProceduresInput
@@ -2166,6 +2197,7 @@ export type EncounterProcedureUncheckedCreateWithoutAuthorizationItemInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
   invoiceItems?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutEncounterProcedureInput
 }
 
@@ -2218,6 +2250,7 @@ export type EncounterProcedureCreateWithoutSvbProcedureInput = {
   status?: $Enums.EncounterProcedureStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
   authorizationItem?: Prisma.SvbAuthorizationItemCreateNestedOneWithoutEncounterProceduresInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedEncounterProceduresInput
   diagnosis?: Prisma.EncounterDiagnosisCreateNestedOneWithoutProceduresInput
@@ -2260,6 +2293,7 @@ export type EncounterProcedureUncheckedCreateWithoutSvbProcedureInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
   invoiceItems?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutEncounterProcedureInput
 }
 
@@ -2312,6 +2346,7 @@ export type EncounterProcedureCreateWithoutSvbTariffInput = {
   status?: $Enums.EncounterProcedureStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
   authorizationItem?: Prisma.SvbAuthorizationItemCreateNestedOneWithoutEncounterProceduresInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedEncounterProceduresInput
   diagnosis?: Prisma.EncounterDiagnosisCreateNestedOneWithoutProceduresInput
@@ -2354,6 +2389,7 @@ export type EncounterProcedureUncheckedCreateWithoutSvbTariffInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
   invoiceItems?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutEncounterProcedureInput
 }
 
@@ -2406,6 +2442,7 @@ export type EncounterProcedureCreateWithoutCreatedByUserInput = {
   status?: $Enums.EncounterProcedureStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
   authorizationItem?: Prisma.SvbAuthorizationItemCreateNestedOneWithoutEncounterProceduresInput
   diagnosis?: Prisma.EncounterDiagnosisCreateNestedOneWithoutProceduresInput
   encounter: Prisma.ClinicalEncounterCreateNestedOneWithoutProceduresInput
@@ -2448,6 +2485,7 @@ export type EncounterProcedureUncheckedCreateWithoutCreatedByUserInput = {
   status?: $Enums.EncounterProcedureStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
   invoiceItems?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutEncounterProcedureInput
 }
 
@@ -2508,6 +2546,7 @@ export type EncounterProcedureCreateManyEncounterInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
 }
 
 export type EncounterProcedureUpdateWithoutEncounterInput = {
@@ -2533,6 +2572,7 @@ export type EncounterProcedureUpdateWithoutEncounterInput = {
   status?: Prisma.EnumEncounterProcedureStatusFieldUpdateOperationsInput | $Enums.EncounterProcedureStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   authorizationItem?: Prisma.SvbAuthorizationItemUpdateOneWithoutEncounterProceduresNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedEncounterProceduresNestedInput
   diagnosis?: Prisma.EncounterDiagnosisUpdateOneWithoutProceduresNestedInput
@@ -2575,6 +2615,7 @@ export type EncounterProcedureUncheckedUpdateWithoutEncounterInput = {
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   invoiceItems?: Prisma.InvoiceItemUncheckedUpdateManyWithoutEncounterProcedureNestedInput
 }
 
@@ -2609,6 +2650,7 @@ export type EncounterProcedureUncheckedUpdateManyWithoutEncounterInput = {
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type EncounterProcedureCreateManyDiagnosisInput = {
@@ -2642,6 +2684,7 @@ export type EncounterProcedureCreateManyDiagnosisInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
 }
 
 export type EncounterProcedureUpdateWithoutDiagnosisInput = {
@@ -2667,6 +2710,7 @@ export type EncounterProcedureUpdateWithoutDiagnosisInput = {
   status?: Prisma.EnumEncounterProcedureStatusFieldUpdateOperationsInput | $Enums.EncounterProcedureStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   authorizationItem?: Prisma.SvbAuthorizationItemUpdateOneWithoutEncounterProceduresNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedEncounterProceduresNestedInput
   encounter?: Prisma.ClinicalEncounterUpdateOneRequiredWithoutProceduresNestedInput
@@ -2709,6 +2753,7 @@ export type EncounterProcedureUncheckedUpdateWithoutDiagnosisInput = {
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   invoiceItems?: Prisma.InvoiceItemUncheckedUpdateManyWithoutEncounterProcedureNestedInput
 }
 
@@ -2743,6 +2788,7 @@ export type EncounterProcedureUncheckedUpdateManyWithoutDiagnosisInput = {
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type EncounterProcedureCreateManyPatientInsuranceInput = {
@@ -2776,6 +2822,7 @@ export type EncounterProcedureCreateManyPatientInsuranceInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
 }
 
 export type EncounterProcedureUpdateWithoutPatientInsuranceInput = {
@@ -2801,6 +2848,7 @@ export type EncounterProcedureUpdateWithoutPatientInsuranceInput = {
   status?: Prisma.EnumEncounterProcedureStatusFieldUpdateOperationsInput | $Enums.EncounterProcedureStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   authorizationItem?: Prisma.SvbAuthorizationItemUpdateOneWithoutEncounterProceduresNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedEncounterProceduresNestedInput
   diagnosis?: Prisma.EncounterDiagnosisUpdateOneWithoutProceduresNestedInput
@@ -2843,6 +2891,7 @@ export type EncounterProcedureUncheckedUpdateWithoutPatientInsuranceInput = {
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   invoiceItems?: Prisma.InvoiceItemUncheckedUpdateManyWithoutEncounterProcedureNestedInput
 }
 
@@ -2877,6 +2926,7 @@ export type EncounterProcedureUncheckedUpdateManyWithoutPatientInsuranceInput = 
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type EncounterProcedureCreateManyPerformedByProviderInput = {
@@ -2910,6 +2960,7 @@ export type EncounterProcedureCreateManyPerformedByProviderInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
 }
 
 export type EncounterProcedureUpdateWithoutPerformedByProviderInput = {
@@ -2935,6 +2986,7 @@ export type EncounterProcedureUpdateWithoutPerformedByProviderInput = {
   status?: Prisma.EnumEncounterProcedureStatusFieldUpdateOperationsInput | $Enums.EncounterProcedureStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   authorizationItem?: Prisma.SvbAuthorizationItemUpdateOneWithoutEncounterProceduresNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedEncounterProceduresNestedInput
   diagnosis?: Prisma.EncounterDiagnosisUpdateOneWithoutProceduresNestedInput
@@ -2977,6 +3029,7 @@ export type EncounterProcedureUncheckedUpdateWithoutPerformedByProviderInput = {
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   invoiceItems?: Prisma.InvoiceItemUncheckedUpdateManyWithoutEncounterProcedureNestedInput
 }
 
@@ -3011,6 +3064,7 @@ export type EncounterProcedureUncheckedUpdateManyWithoutPerformedByProviderInput
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type EncounterProcedureCreateManyReferrerInput = {
@@ -3044,6 +3098,7 @@ export type EncounterProcedureCreateManyReferrerInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
 }
 
 export type EncounterProcedureUpdateWithoutReferrerInput = {
@@ -3069,6 +3124,7 @@ export type EncounterProcedureUpdateWithoutReferrerInput = {
   status?: Prisma.EnumEncounterProcedureStatusFieldUpdateOperationsInput | $Enums.EncounterProcedureStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   authorizationItem?: Prisma.SvbAuthorizationItemUpdateOneWithoutEncounterProceduresNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedEncounterProceduresNestedInput
   diagnosis?: Prisma.EncounterDiagnosisUpdateOneWithoutProceduresNestedInput
@@ -3111,6 +3167,7 @@ export type EncounterProcedureUncheckedUpdateWithoutReferrerInput = {
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   invoiceItems?: Prisma.InvoiceItemUncheckedUpdateManyWithoutEncounterProcedureNestedInput
 }
 
@@ -3145,6 +3202,7 @@ export type EncounterProcedureUncheckedUpdateManyWithoutReferrerInput = {
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type EncounterProcedureCreateManyAuthorizationItemInput = {
@@ -3178,6 +3236,7 @@ export type EncounterProcedureCreateManyAuthorizationItemInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
 }
 
 export type EncounterProcedureUpdateWithoutAuthorizationItemInput = {
@@ -3203,6 +3262,7 @@ export type EncounterProcedureUpdateWithoutAuthorizationItemInput = {
   status?: Prisma.EnumEncounterProcedureStatusFieldUpdateOperationsInput | $Enums.EncounterProcedureStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedEncounterProceduresNestedInput
   diagnosis?: Prisma.EncounterDiagnosisUpdateOneWithoutProceduresNestedInput
   encounter?: Prisma.ClinicalEncounterUpdateOneRequiredWithoutProceduresNestedInput
@@ -3245,6 +3305,7 @@ export type EncounterProcedureUncheckedUpdateWithoutAuthorizationItemInput = {
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   invoiceItems?: Prisma.InvoiceItemUncheckedUpdateManyWithoutEncounterProcedureNestedInput
 }
 
@@ -3279,6 +3340,7 @@ export type EncounterProcedureUncheckedUpdateManyWithoutAuthorizationItemInput =
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type EncounterProcedureCreateManySvbProcedureInput = {
@@ -3312,6 +3374,7 @@ export type EncounterProcedureCreateManySvbProcedureInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
 }
 
 export type EncounterProcedureUpdateWithoutSvbProcedureInput = {
@@ -3337,6 +3400,7 @@ export type EncounterProcedureUpdateWithoutSvbProcedureInput = {
   status?: Prisma.EnumEncounterProcedureStatusFieldUpdateOperationsInput | $Enums.EncounterProcedureStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   authorizationItem?: Prisma.SvbAuthorizationItemUpdateOneWithoutEncounterProceduresNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedEncounterProceduresNestedInput
   diagnosis?: Prisma.EncounterDiagnosisUpdateOneWithoutProceduresNestedInput
@@ -3379,6 +3443,7 @@ export type EncounterProcedureUncheckedUpdateWithoutSvbProcedureInput = {
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   invoiceItems?: Prisma.InvoiceItemUncheckedUpdateManyWithoutEncounterProcedureNestedInput
 }
 
@@ -3413,6 +3478,7 @@ export type EncounterProcedureUncheckedUpdateManyWithoutSvbProcedureInput = {
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type EncounterProcedureCreateManySvbTariffInput = {
@@ -3446,6 +3512,7 @@ export type EncounterProcedureCreateManySvbTariffInput = {
   createdByUserId: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
 }
 
 export type EncounterProcedureUpdateWithoutSvbTariffInput = {
@@ -3471,6 +3538,7 @@ export type EncounterProcedureUpdateWithoutSvbTariffInput = {
   status?: Prisma.EnumEncounterProcedureStatusFieldUpdateOperationsInput | $Enums.EncounterProcedureStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   authorizationItem?: Prisma.SvbAuthorizationItemUpdateOneWithoutEncounterProceduresNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedEncounterProceduresNestedInput
   diagnosis?: Prisma.EncounterDiagnosisUpdateOneWithoutProceduresNestedInput
@@ -3513,6 +3581,7 @@ export type EncounterProcedureUncheckedUpdateWithoutSvbTariffInput = {
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   invoiceItems?: Prisma.InvoiceItemUncheckedUpdateManyWithoutEncounterProcedureNestedInput
 }
 
@@ -3547,6 +3616,7 @@ export type EncounterProcedureUncheckedUpdateManyWithoutSvbTariffInput = {
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type EncounterProcedureCreateManyCreatedByUserInput = {
@@ -3580,6 +3650,7 @@ export type EncounterProcedureCreateManyCreatedByUserInput = {
   status?: $Enums.EncounterProcedureStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  procedureCodeSnapshotSearch?: string
 }
 
 export type EncounterProcedureUpdateWithoutCreatedByUserInput = {
@@ -3605,6 +3676,7 @@ export type EncounterProcedureUpdateWithoutCreatedByUserInput = {
   status?: Prisma.EnumEncounterProcedureStatusFieldUpdateOperationsInput | $Enums.EncounterProcedureStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   authorizationItem?: Prisma.SvbAuthorizationItemUpdateOneWithoutEncounterProceduresNestedInput
   diagnosis?: Prisma.EncounterDiagnosisUpdateOneWithoutProceduresNestedInput
   encounter?: Prisma.ClinicalEncounterUpdateOneRequiredWithoutProceduresNestedInput
@@ -3647,6 +3719,7 @@ export type EncounterProcedureUncheckedUpdateWithoutCreatedByUserInput = {
   status?: Prisma.EnumEncounterProcedureStatusFieldUpdateOperationsInput | $Enums.EncounterProcedureStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
   invoiceItems?: Prisma.InvoiceItemUncheckedUpdateManyWithoutEncounterProcedureNestedInput
 }
 
@@ -3681,6 +3754,7 @@ export type EncounterProcedureUncheckedUpdateManyWithoutCreatedByUserInput = {
   status?: Prisma.EnumEncounterProcedureStatusFieldUpdateOperationsInput | $Enums.EncounterProcedureStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  procedureCodeSnapshotSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -3746,6 +3820,7 @@ export type EncounterProcedureSelect<ExtArgs extends runtime.Types.Extensions.In
   createdByUserId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  procedureCodeSnapshotSearch?: boolean
   authorizationItem?: boolean | Prisma.EncounterProcedure$authorizationItemArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   diagnosis?: boolean | Prisma.EncounterProcedure$diagnosisArgs<ExtArgs>
@@ -3759,7 +3834,93 @@ export type EncounterProcedureSelect<ExtArgs extends runtime.Types.Extensions.In
   _count?: boolean | Prisma.EncounterProcedureCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["encounterProcedure"]>
 
+export type EncounterProcedureSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  encounterId?: boolean
+  patientInsuranceId?: boolean
+  svbProcedureId?: boolean
+  svbTariffId?: boolean
+  authorizationItemId?: boolean
+  diagnosisId?: boolean
+  referrerId?: boolean
+  performedByProviderId?: boolean
+  procedureCodeSnapshot?: boolean
+  procedureDescriptionSnapshot?: boolean
+  providerIdSnapshot?: boolean
+  insuredIdSnapshot?: boolean
+  unitTariffSnapshot?: boolean
+  currencyCodeSnapshot?: boolean
+  quantity?: boolean
+  amount?: boolean
+  authorizationIdSnapshot?: boolean
+  diagnosticCodeSnapshot?: boolean
+  treatmentIdSnapshot?: boolean
+  accidentFormNumberSnapshot?: boolean
+  numberOfTreatmentsSnapshot?: boolean
+  assistanceSnapshot?: boolean
+  referrerIdSnapshot?: boolean
+  policlinicSnapshot?: boolean
+  performedAt?: boolean
+  additionalNote?: boolean
+  status?: boolean
+  createdByUserId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  procedureCodeSnapshotSearch?: boolean
+  authorizationItem?: boolean | Prisma.EncounterProcedure$authorizationItemArgs<ExtArgs>
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  diagnosis?: boolean | Prisma.EncounterProcedure$diagnosisArgs<ExtArgs>
+  encounter?: boolean | Prisma.ClinicalEncounterDefaultArgs<ExtArgs>
+  patientInsurance?: boolean | Prisma.PatientInsuranceDefaultArgs<ExtArgs>
+  performedByProvider?: boolean | Prisma.ProviderDefaultArgs<ExtArgs>
+  referrer?: boolean | Prisma.EncounterProcedure$referrerArgs<ExtArgs>
+  svbProcedure?: boolean | Prisma.SvbProcedureDefaultArgs<ExtArgs>
+  svbTariff?: boolean | Prisma.SvbTariffDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["encounterProcedure"]>
 
+export type EncounterProcedureSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  encounterId?: boolean
+  patientInsuranceId?: boolean
+  svbProcedureId?: boolean
+  svbTariffId?: boolean
+  authorizationItemId?: boolean
+  diagnosisId?: boolean
+  referrerId?: boolean
+  performedByProviderId?: boolean
+  procedureCodeSnapshot?: boolean
+  procedureDescriptionSnapshot?: boolean
+  providerIdSnapshot?: boolean
+  insuredIdSnapshot?: boolean
+  unitTariffSnapshot?: boolean
+  currencyCodeSnapshot?: boolean
+  quantity?: boolean
+  amount?: boolean
+  authorizationIdSnapshot?: boolean
+  diagnosticCodeSnapshot?: boolean
+  treatmentIdSnapshot?: boolean
+  accidentFormNumberSnapshot?: boolean
+  numberOfTreatmentsSnapshot?: boolean
+  assistanceSnapshot?: boolean
+  referrerIdSnapshot?: boolean
+  policlinicSnapshot?: boolean
+  performedAt?: boolean
+  additionalNote?: boolean
+  status?: boolean
+  createdByUserId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  procedureCodeSnapshotSearch?: boolean
+  authorizationItem?: boolean | Prisma.EncounterProcedure$authorizationItemArgs<ExtArgs>
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  diagnosis?: boolean | Prisma.EncounterProcedure$diagnosisArgs<ExtArgs>
+  encounter?: boolean | Prisma.ClinicalEncounterDefaultArgs<ExtArgs>
+  patientInsurance?: boolean | Prisma.PatientInsuranceDefaultArgs<ExtArgs>
+  performedByProvider?: boolean | Prisma.ProviderDefaultArgs<ExtArgs>
+  referrer?: boolean | Prisma.EncounterProcedure$referrerArgs<ExtArgs>
+  svbProcedure?: boolean | Prisma.SvbProcedureDefaultArgs<ExtArgs>
+  svbTariff?: boolean | Prisma.SvbTariffDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["encounterProcedure"]>
 
 export type EncounterProcedureSelectScalar = {
   id?: boolean
@@ -3793,9 +3954,10 @@ export type EncounterProcedureSelectScalar = {
   createdByUserId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  procedureCodeSnapshotSearch?: boolean
 }
 
-export type EncounterProcedureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "encounterId" | "patientInsuranceId" | "svbProcedureId" | "svbTariffId" | "authorizationItemId" | "diagnosisId" | "referrerId" | "performedByProviderId" | "procedureCodeSnapshot" | "procedureDescriptionSnapshot" | "providerIdSnapshot" | "insuredIdSnapshot" | "unitTariffSnapshot" | "currencyCodeSnapshot" | "quantity" | "amount" | "authorizationIdSnapshot" | "diagnosticCodeSnapshot" | "treatmentIdSnapshot" | "accidentFormNumberSnapshot" | "numberOfTreatmentsSnapshot" | "assistanceSnapshot" | "referrerIdSnapshot" | "policlinicSnapshot" | "performedAt" | "additionalNote" | "status" | "createdByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["encounterProcedure"]>
+export type EncounterProcedureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "encounterId" | "patientInsuranceId" | "svbProcedureId" | "svbTariffId" | "authorizationItemId" | "diagnosisId" | "referrerId" | "performedByProviderId" | "procedureCodeSnapshot" | "procedureDescriptionSnapshot" | "providerIdSnapshot" | "insuredIdSnapshot" | "unitTariffSnapshot" | "currencyCodeSnapshot" | "quantity" | "amount" | "authorizationIdSnapshot" | "diagnosticCodeSnapshot" | "treatmentIdSnapshot" | "accidentFormNumberSnapshot" | "numberOfTreatmentsSnapshot" | "assistanceSnapshot" | "referrerIdSnapshot" | "policlinicSnapshot" | "performedAt" | "additionalNote" | "status" | "createdByUserId" | "createdAt" | "updatedAt" | "procedureCodeSnapshotSearch", ExtArgs["result"]["encounterProcedure"]>
 export type EncounterProcedureInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   authorizationItem?: boolean | Prisma.EncounterProcedure$authorizationItemArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -3808,6 +3970,28 @@ export type EncounterProcedureInclude<ExtArgs extends runtime.Types.Extensions.I
   svbTariff?: boolean | Prisma.SvbTariffDefaultArgs<ExtArgs>
   invoiceItems?: boolean | Prisma.EncounterProcedure$invoiceItemsArgs<ExtArgs>
   _count?: boolean | Prisma.EncounterProcedureCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type EncounterProcedureIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  authorizationItem?: boolean | Prisma.EncounterProcedure$authorizationItemArgs<ExtArgs>
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  diagnosis?: boolean | Prisma.EncounterProcedure$diagnosisArgs<ExtArgs>
+  encounter?: boolean | Prisma.ClinicalEncounterDefaultArgs<ExtArgs>
+  patientInsurance?: boolean | Prisma.PatientInsuranceDefaultArgs<ExtArgs>
+  performedByProvider?: boolean | Prisma.ProviderDefaultArgs<ExtArgs>
+  referrer?: boolean | Prisma.EncounterProcedure$referrerArgs<ExtArgs>
+  svbProcedure?: boolean | Prisma.SvbProcedureDefaultArgs<ExtArgs>
+  svbTariff?: boolean | Prisma.SvbTariffDefaultArgs<ExtArgs>
+}
+export type EncounterProcedureIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  authorizationItem?: boolean | Prisma.EncounterProcedure$authorizationItemArgs<ExtArgs>
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  diagnosis?: boolean | Prisma.EncounterProcedure$diagnosisArgs<ExtArgs>
+  encounter?: boolean | Prisma.ClinicalEncounterDefaultArgs<ExtArgs>
+  patientInsurance?: boolean | Prisma.PatientInsuranceDefaultArgs<ExtArgs>
+  performedByProvider?: boolean | Prisma.ProviderDefaultArgs<ExtArgs>
+  referrer?: boolean | Prisma.EncounterProcedure$referrerArgs<ExtArgs>
+  svbProcedure?: boolean | Prisma.SvbProcedureDefaultArgs<ExtArgs>
+  svbTariff?: boolean | Prisma.SvbTariffDefaultArgs<ExtArgs>
 }
 
 export type $EncounterProcedurePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3856,6 +4040,7 @@ export type $EncounterProcedurePayload<ExtArgs extends runtime.Types.Extensions.
     createdByUserId: bigint
     createdAt: Date
     updatedAt: Date
+    procedureCodeSnapshotSearch: string
   }, ExtArgs["result"]["encounterProcedure"]>
   composites: {}
 }
@@ -3974,6 +4159,30 @@ export interface EncounterProcedureDelegate<ExtArgs extends runtime.Types.Extens
   createMany<T extends EncounterProcedureCreateManyArgs>(args?: Prisma.SelectSubset<T, EncounterProcedureCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many EncounterProcedures and returns the data saved in the database.
+   * @param {EncounterProcedureCreateManyAndReturnArgs} args - Arguments to create many EncounterProcedures.
+   * @example
+   * // Create many EncounterProcedures
+   * const encounterProcedure = await prisma.encounterProcedure.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many EncounterProcedures and only return the `id`
+   * const encounterProcedureWithIdOnly = await prisma.encounterProcedure.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends EncounterProcedureCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, EncounterProcedureCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EncounterProcedurePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a EncounterProcedure.
    * @param {EncounterProcedureDeleteArgs} args - Arguments to delete one EncounterProcedure.
    * @example
@@ -4036,6 +4245,36 @@ export interface EncounterProcedureDelegate<ExtArgs extends runtime.Types.Extens
    * 
    */
   updateMany<T extends EncounterProcedureUpdateManyArgs>(args: Prisma.SelectSubset<T, EncounterProcedureUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more EncounterProcedures and returns the data updated in the database.
+   * @param {EncounterProcedureUpdateManyAndReturnArgs} args - Arguments to update many EncounterProcedures.
+   * @example
+   * // Update many EncounterProcedures
+   * const encounterProcedure = await prisma.encounterProcedure.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more EncounterProcedures and only return the `id`
+   * const encounterProcedureWithIdOnly = await prisma.encounterProcedure.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends EncounterProcedureUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, EncounterProcedureUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EncounterProcedurePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one EncounterProcedure.
@@ -4266,6 +4505,7 @@ export interface EncounterProcedureFieldRefs {
   readonly createdByUserId: Prisma.FieldRef<"EncounterProcedure", 'BigInt'>
   readonly createdAt: Prisma.FieldRef<"EncounterProcedure", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"EncounterProcedure", 'DateTime'>
+  readonly procedureCodeSnapshotSearch: Prisma.FieldRef<"EncounterProcedure", 'String'>
 }
     
 
@@ -4504,6 +4744,29 @@ export type EncounterProcedureCreateManyArgs<ExtArgs extends runtime.Types.Exten
 }
 
 /**
+ * EncounterProcedure createManyAndReturn
+ */
+export type EncounterProcedureCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EncounterProcedure
+   */
+  select?: Prisma.EncounterProcedureSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the EncounterProcedure
+   */
+  omit?: Prisma.EncounterProcedureOmit<ExtArgs> | null
+  /**
+   * The data used to create many EncounterProcedures.
+   */
+  data: Prisma.EncounterProcedureCreateManyInput | Prisma.EncounterProcedureCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EncounterProcedureIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * EncounterProcedure update
  */
 export type EncounterProcedureUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4545,6 +4808,36 @@ export type EncounterProcedureUpdateManyArgs<ExtArgs extends runtime.Types.Exten
    * Limit how many EncounterProcedures to update.
    */
   limit?: number
+}
+
+/**
+ * EncounterProcedure updateManyAndReturn
+ */
+export type EncounterProcedureUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EncounterProcedure
+   */
+  select?: Prisma.EncounterProcedureSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the EncounterProcedure
+   */
+  omit?: Prisma.EncounterProcedureOmit<ExtArgs> | null
+  /**
+   * The data used to update EncounterProcedures.
+   */
+  data: Prisma.XOR<Prisma.EncounterProcedureUpdateManyMutationInput, Prisma.EncounterProcedureUncheckedUpdateManyInput>
+  /**
+   * Filter which EncounterProcedures to update
+   */
+  where?: Prisma.EncounterProcedureWhereInput
+  /**
+   * Limit how many EncounterProcedures to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EncounterProcedureIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

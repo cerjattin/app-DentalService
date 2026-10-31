@@ -419,7 +419,6 @@ export type InvoiceVersionOrderByWithRelationInput = {
   supersededByVersions?: Prisma.InvoiceVersionOrderByRelationAggregateInput
   currentForInvoices?: Prisma.InvoiceOrderByRelationAggregateInput
   signatures?: Prisma.SignatureOrderByRelationAggregateInput
-  _relevance?: Prisma.InvoiceVersionOrderByRelevanceInput
 }
 
 export type InvoiceVersionWhereUniqueInput = Prisma.AtLeast<{
@@ -742,12 +741,6 @@ export type InvoiceVersionListRelationFilter = {
 
 export type InvoiceVersionOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type InvoiceVersionOrderByRelevanceInput = {
-  fields: Prisma.InvoiceVersionOrderByRelevanceFieldEnum | Prisma.InvoiceVersionOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type InvoiceVersionInvoiceIdVersionNumberCompoundUniqueInput = {
@@ -3010,7 +3003,61 @@ export type InvoiceVersionSelect<ExtArgs extends runtime.Types.Extensions.Intern
   _count?: boolean | Prisma.InvoiceVersionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["invoiceVersion"]>
 
+export type InvoiceVersionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  invoiceId?: boolean
+  versionNumber?: boolean
+  versionType?: boolean
+  supersedesVersionId?: boolean
+  status?: boolean
+  invoiceDate?: boolean
+  currencyCode?: boolean
+  totalAmount?: boolean
+  declarantIdSnapshot?: boolean
+  patientNameSnapshot?: boolean
+  patientDocumentTypeSnapshot?: boolean
+  patientDocumentNumberSnapshot?: boolean
+  insuredIdSnapshot?: boolean
+  contentHash?: boolean
+  preparedByUserId?: boolean
+  lockedAt?: boolean
+  signedAt?: boolean
+  closedAt?: boolean
+  supersededAt?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  invoice?: boolean | Prisma.InvoiceDefaultArgs<ExtArgs>
+  preparedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  supersedesVersion?: boolean | Prisma.InvoiceVersion$supersedesVersionArgs<ExtArgs>
+}, ExtArgs["result"]["invoiceVersion"]>
 
+export type InvoiceVersionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  invoiceId?: boolean
+  versionNumber?: boolean
+  versionType?: boolean
+  supersedesVersionId?: boolean
+  status?: boolean
+  invoiceDate?: boolean
+  currencyCode?: boolean
+  totalAmount?: boolean
+  declarantIdSnapshot?: boolean
+  patientNameSnapshot?: boolean
+  patientDocumentTypeSnapshot?: boolean
+  patientDocumentNumberSnapshot?: boolean
+  insuredIdSnapshot?: boolean
+  contentHash?: boolean
+  preparedByUserId?: boolean
+  lockedAt?: boolean
+  signedAt?: boolean
+  closedAt?: boolean
+  supersededAt?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  invoice?: boolean | Prisma.InvoiceDefaultArgs<ExtArgs>
+  preparedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  supersedesVersion?: boolean | Prisma.InvoiceVersion$supersedesVersionArgs<ExtArgs>
+}, ExtArgs["result"]["invoiceVersion"]>
 
 export type InvoiceVersionSelectScalar = {
   id?: boolean
@@ -3051,6 +3098,16 @@ export type InvoiceVersionInclude<ExtArgs extends runtime.Types.Extensions.Inter
   currentForInvoices?: boolean | Prisma.InvoiceVersion$currentForInvoicesArgs<ExtArgs>
   signatures?: boolean | Prisma.InvoiceVersion$signaturesArgs<ExtArgs>
   _count?: boolean | Prisma.InvoiceVersionCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type InvoiceVersionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  invoice?: boolean | Prisma.InvoiceDefaultArgs<ExtArgs>
+  preparedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  supersedesVersion?: boolean | Prisma.InvoiceVersion$supersedesVersionArgs<ExtArgs>
+}
+export type InvoiceVersionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  invoice?: boolean | Prisma.InvoiceDefaultArgs<ExtArgs>
+  preparedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  supersedesVersion?: boolean | Prisma.InvoiceVersion$supersedesVersionArgs<ExtArgs>
 }
 
 export type $InvoiceVersionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3209,6 +3266,30 @@ export interface InvoiceVersionDelegate<ExtArgs extends runtime.Types.Extensions
   createMany<T extends InvoiceVersionCreateManyArgs>(args?: Prisma.SelectSubset<T, InvoiceVersionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many InvoiceVersions and returns the data saved in the database.
+   * @param {InvoiceVersionCreateManyAndReturnArgs} args - Arguments to create many InvoiceVersions.
+   * @example
+   * // Create many InvoiceVersions
+   * const invoiceVersion = await prisma.invoiceVersion.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many InvoiceVersions and only return the `id`
+   * const invoiceVersionWithIdOnly = await prisma.invoiceVersion.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends InvoiceVersionCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, InvoiceVersionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoiceVersionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a InvoiceVersion.
    * @param {InvoiceVersionDeleteArgs} args - Arguments to delete one InvoiceVersion.
    * @example
@@ -3271,6 +3352,36 @@ export interface InvoiceVersionDelegate<ExtArgs extends runtime.Types.Extensions
    * 
    */
   updateMany<T extends InvoiceVersionUpdateManyArgs>(args: Prisma.SelectSubset<T, InvoiceVersionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more InvoiceVersions and returns the data updated in the database.
+   * @param {InvoiceVersionUpdateManyAndReturnArgs} args - Arguments to update many InvoiceVersions.
+   * @example
+   * // Update many InvoiceVersions
+   * const invoiceVersion = await prisma.invoiceVersion.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more InvoiceVersions and only return the `id`
+   * const invoiceVersionWithIdOnly = await prisma.invoiceVersion.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends InvoiceVersionUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, InvoiceVersionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoiceVersionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one InvoiceVersion.
@@ -3731,6 +3842,29 @@ export type InvoiceVersionCreateManyArgs<ExtArgs extends runtime.Types.Extension
 }
 
 /**
+ * InvoiceVersion createManyAndReturn
+ */
+export type InvoiceVersionCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InvoiceVersion
+   */
+  select?: Prisma.InvoiceVersionSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the InvoiceVersion
+   */
+  omit?: Prisma.InvoiceVersionOmit<ExtArgs> | null
+  /**
+   * The data used to create many InvoiceVersions.
+   */
+  data: Prisma.InvoiceVersionCreateManyInput | Prisma.InvoiceVersionCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InvoiceVersionIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * InvoiceVersion update
  */
 export type InvoiceVersionUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3772,6 +3906,36 @@ export type InvoiceVersionUpdateManyArgs<ExtArgs extends runtime.Types.Extension
    * Limit how many InvoiceVersions to update.
    */
   limit?: number
+}
+
+/**
+ * InvoiceVersion updateManyAndReturn
+ */
+export type InvoiceVersionUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InvoiceVersion
+   */
+  select?: Prisma.InvoiceVersionSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the InvoiceVersion
+   */
+  omit?: Prisma.InvoiceVersionOmit<ExtArgs> | null
+  /**
+   * The data used to update InvoiceVersions.
+   */
+  data: Prisma.XOR<Prisma.InvoiceVersionUpdateManyMutationInput, Prisma.InvoiceVersionUncheckedUpdateManyInput>
+  /**
+   * Filter which InvoiceVersions to update
+   */
+  where?: Prisma.InvoiceVersionWhereInput
+  /**
+   * Limit how many InvoiceVersions to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InvoiceVersionIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

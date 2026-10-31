@@ -89,7 +89,7 @@ describe("NumberSequenceService rollback", () => {
 
     /*
      * El incremento debe haber sido
-     * revertido por MySQL.
+     * revertido por PostgreSQL.
      */
     const sequence = await prisma.numberSequence.findUniqueOrThrow({
       where: {

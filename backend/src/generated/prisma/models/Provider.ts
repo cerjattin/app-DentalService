@@ -53,6 +53,13 @@ export type ProviderMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   archivedAt: Date | null
+  firstNameSearch: string | null
+  lastNameSearch: string | null
+  svbProviderIdSearch: string | null
+  licenseNumberSearch: string | null
+  emailSearch: string | null
+  phoneSearch: string | null
+  specialtySearch: string | null
 }
 
 export type ProviderMaxAggregateOutputType = {
@@ -70,6 +77,13 @@ export type ProviderMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   archivedAt: Date | null
+  firstNameSearch: string | null
+  lastNameSearch: string | null
+  svbProviderIdSearch: string | null
+  licenseNumberSearch: string | null
+  emailSearch: string | null
+  phoneSearch: string | null
+  specialtySearch: string | null
 }
 
 export type ProviderCountAggregateOutputType = {
@@ -87,6 +101,13 @@ export type ProviderCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   archivedAt: number
+  firstNameSearch: number
+  lastNameSearch: number
+  svbProviderIdSearch: number
+  licenseNumberSearch: number
+  emailSearch: number
+  phoneSearch: number
+  specialtySearch: number
   _all: number
 }
 
@@ -118,6 +139,13 @@ export type ProviderMinAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   archivedAt?: true
+  firstNameSearch?: true
+  lastNameSearch?: true
+  svbProviderIdSearch?: true
+  licenseNumberSearch?: true
+  emailSearch?: true
+  phoneSearch?: true
+  specialtySearch?: true
 }
 
 export type ProviderMaxAggregateInputType = {
@@ -135,6 +163,13 @@ export type ProviderMaxAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   archivedAt?: true
+  firstNameSearch?: true
+  lastNameSearch?: true
+  svbProviderIdSearch?: true
+  licenseNumberSearch?: true
+  emailSearch?: true
+  phoneSearch?: true
+  specialtySearch?: true
 }
 
 export type ProviderCountAggregateInputType = {
@@ -152,6 +187,13 @@ export type ProviderCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   archivedAt?: true
+  firstNameSearch?: true
+  lastNameSearch?: true
+  svbProviderIdSearch?: true
+  licenseNumberSearch?: true
+  emailSearch?: true
+  phoneSearch?: true
+  specialtySearch?: true
   _all?: true
 }
 
@@ -256,6 +298,13 @@ export type ProviderGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   archivedAt: Date | null
+  firstNameSearch: string
+  lastNameSearch: string
+  svbProviderIdSearch: string | null
+  licenseNumberSearch: string | null
+  emailSearch: string | null
+  phoneSearch: string | null
+  specialtySearch: string | null
   _count: ProviderCountAggregateOutputType | null
   _avg: ProviderAvgAggregateOutputType | null
   _sum: ProviderSumAggregateOutputType | null
@@ -296,6 +345,13 @@ export type ProviderWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Provider"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Provider"> | Date | string
   archivedAt?: Prisma.DateTimeNullableFilter<"Provider"> | Date | string | null
+  firstNameSearch?: Prisma.StringFilter<"Provider"> | string
+  lastNameSearch?: Prisma.StringFilter<"Provider"> | string
+  svbProviderIdSearch?: Prisma.StringNullableFilter<"Provider"> | string | null
+  licenseNumberSearch?: Prisma.StringNullableFilter<"Provider"> | string | null
+  emailSearch?: Prisma.StringNullableFilter<"Provider"> | string | null
+  phoneSearch?: Prisma.StringNullableFilter<"Provider"> | string | null
+  specialtySearch?: Prisma.StringNullableFilter<"Provider"> | string | null
   appointments?: Prisma.AppointmentListRelationFilter
   clinicalEncounters?: Prisma.ClinicalEncounterListRelationFilter
   performedProcedures?: Prisma.EncounterProcedureListRelationFilter
@@ -318,12 +374,18 @@ export type ProviderOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  firstNameSearch?: Prisma.SortOrder
+  lastNameSearch?: Prisma.SortOrder
+  svbProviderIdSearch?: Prisma.SortOrderInput | Prisma.SortOrder
+  licenseNumberSearch?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailSearch?: Prisma.SortOrderInput | Prisma.SortOrder
+  phoneSearch?: Prisma.SortOrderInput | Prisma.SortOrder
+  specialtySearch?: Prisma.SortOrderInput | Prisma.SortOrder
   appointments?: Prisma.AppointmentOrderByRelationAggregateInput
   clinicalEncounters?: Prisma.ClinicalEncounterOrderByRelationAggregateInput
   performedProcedures?: Prisma.EncounterProcedureOrderByRelationAggregateInput
   organization?: Prisma.OrganizationOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
-  _relevance?: Prisma.ProviderOrderByRelevanceInput
 }
 
 export type ProviderWhereUniqueInput = Prisma.AtLeast<{
@@ -345,6 +407,13 @@ export type ProviderWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Provider"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Provider"> | Date | string
   archivedAt?: Prisma.DateTimeNullableFilter<"Provider"> | Date | string | null
+  firstNameSearch?: Prisma.StringFilter<"Provider"> | string
+  lastNameSearch?: Prisma.StringFilter<"Provider"> | string
+  svbProviderIdSearch?: Prisma.StringNullableFilter<"Provider"> | string | null
+  licenseNumberSearch?: Prisma.StringNullableFilter<"Provider"> | string | null
+  emailSearch?: Prisma.StringNullableFilter<"Provider"> | string | null
+  phoneSearch?: Prisma.StringNullableFilter<"Provider"> | string | null
+  specialtySearch?: Prisma.StringNullableFilter<"Provider"> | string | null
   appointments?: Prisma.AppointmentListRelationFilter
   clinicalEncounters?: Prisma.ClinicalEncounterListRelationFilter
   performedProcedures?: Prisma.EncounterProcedureListRelationFilter
@@ -367,6 +436,13 @@ export type ProviderOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  firstNameSearch?: Prisma.SortOrder
+  lastNameSearch?: Prisma.SortOrder
+  svbProviderIdSearch?: Prisma.SortOrderInput | Prisma.SortOrder
+  licenseNumberSearch?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailSearch?: Prisma.SortOrderInput | Prisma.SortOrder
+  phoneSearch?: Prisma.SortOrderInput | Prisma.SortOrder
+  specialtySearch?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ProviderCountOrderByAggregateInput
   _avg?: Prisma.ProviderAvgOrderByAggregateInput
   _max?: Prisma.ProviderMaxOrderByAggregateInput
@@ -392,6 +468,13 @@ export type ProviderScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Provider"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Provider"> | Date | string
   archivedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Provider"> | Date | string | null
+  firstNameSearch?: Prisma.StringWithAggregatesFilter<"Provider"> | string
+  lastNameSearch?: Prisma.StringWithAggregatesFilter<"Provider"> | string
+  svbProviderIdSearch?: Prisma.StringNullableWithAggregatesFilter<"Provider"> | string | null
+  licenseNumberSearch?: Prisma.StringNullableWithAggregatesFilter<"Provider"> | string | null
+  emailSearch?: Prisma.StringNullableWithAggregatesFilter<"Provider"> | string | null
+  phoneSearch?: Prisma.StringNullableWithAggregatesFilter<"Provider"> | string | null
+  specialtySearch?: Prisma.StringNullableWithAggregatesFilter<"Provider"> | string | null
 }
 
 export type ProviderCreateInput = {
@@ -407,6 +490,13 @@ export type ProviderCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  firstNameSearch?: string
+  lastNameSearch?: string
+  svbProviderIdSearch?: string | null
+  licenseNumberSearch?: string | null
+  emailSearch?: string | null
+  phoneSearch?: string | null
+  specialtySearch?: string | null
   appointments?: Prisma.AppointmentCreateNestedManyWithoutProviderInput
   clinicalEncounters?: Prisma.ClinicalEncounterCreateNestedManyWithoutProviderInput
   performedProcedures?: Prisma.EncounterProcedureCreateNestedManyWithoutPerformedByProviderInput
@@ -429,6 +519,13 @@ export type ProviderUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  firstNameSearch?: string
+  lastNameSearch?: string
+  svbProviderIdSearch?: string | null
+  licenseNumberSearch?: string | null
+  emailSearch?: string | null
+  phoneSearch?: string | null
+  specialtySearch?: string | null
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutProviderInput
   clinicalEncounters?: Prisma.ClinicalEncounterUncheckedCreateNestedManyWithoutProviderInput
   performedProcedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutPerformedByProviderInput
@@ -447,6 +544,13 @@ export type ProviderUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  svbProviderIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  licenseNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUpdateManyWithoutProviderNestedInput
   clinicalEncounters?: Prisma.ClinicalEncounterUpdateManyWithoutProviderNestedInput
   performedProcedures?: Prisma.EncounterProcedureUpdateManyWithoutPerformedByProviderNestedInput
@@ -469,6 +573,13 @@ export type ProviderUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  svbProviderIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  licenseNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutProviderNestedInput
   clinicalEncounters?: Prisma.ClinicalEncounterUncheckedUpdateManyWithoutProviderNestedInput
   performedProcedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutPerformedByProviderNestedInput
@@ -489,6 +600,13 @@ export type ProviderCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  firstNameSearch?: string
+  lastNameSearch?: string
+  svbProviderIdSearch?: string | null
+  licenseNumberSearch?: string | null
+  emailSearch?: string | null
+  phoneSearch?: string | null
+  specialtySearch?: string | null
 }
 
 export type ProviderUpdateManyMutationInput = {
@@ -504,6 +622,13 @@ export type ProviderUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  svbProviderIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  licenseNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ProviderUncheckedUpdateManyInput = {
@@ -521,6 +646,13 @@ export type ProviderUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  svbProviderIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  licenseNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ProviderScalarRelationFilter = {
@@ -536,12 +668,6 @@ export type ProviderListRelationFilter = {
 
 export type ProviderOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type ProviderOrderByRelevanceInput = {
-  fields: Prisma.ProviderOrderByRelevanceFieldEnum | Prisma.ProviderOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type ProviderOrganizationIdSvbProviderIdCompoundUniqueInput = {
@@ -564,6 +690,13 @@ export type ProviderCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
+  firstNameSearch?: Prisma.SortOrder
+  lastNameSearch?: Prisma.SortOrder
+  svbProviderIdSearch?: Prisma.SortOrder
+  licenseNumberSearch?: Prisma.SortOrder
+  emailSearch?: Prisma.SortOrder
+  phoneSearch?: Prisma.SortOrder
+  specialtySearch?: Prisma.SortOrder
 }
 
 export type ProviderAvgOrderByAggregateInput = {
@@ -587,6 +720,13 @@ export type ProviderMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
+  firstNameSearch?: Prisma.SortOrder
+  lastNameSearch?: Prisma.SortOrder
+  svbProviderIdSearch?: Prisma.SortOrder
+  licenseNumberSearch?: Prisma.SortOrder
+  emailSearch?: Prisma.SortOrder
+  phoneSearch?: Prisma.SortOrder
+  specialtySearch?: Prisma.SortOrder
 }
 
 export type ProviderMinOrderByAggregateInput = {
@@ -604,6 +744,13 @@ export type ProviderMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
+  firstNameSearch?: Prisma.SortOrder
+  lastNameSearch?: Prisma.SortOrder
+  svbProviderIdSearch?: Prisma.SortOrder
+  licenseNumberSearch?: Prisma.SortOrder
+  emailSearch?: Prisma.SortOrder
+  phoneSearch?: Prisma.SortOrder
+  specialtySearch?: Prisma.SortOrder
 }
 
 export type ProviderSumOrderByAggregateInput = {
@@ -746,6 +893,13 @@ export type ProviderCreateWithoutAppointmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  firstNameSearch?: string
+  lastNameSearch?: string
+  svbProviderIdSearch?: string | null
+  licenseNumberSearch?: string | null
+  emailSearch?: string | null
+  phoneSearch?: string | null
+  specialtySearch?: string | null
   clinicalEncounters?: Prisma.ClinicalEncounterCreateNestedManyWithoutProviderInput
   performedProcedures?: Prisma.EncounterProcedureCreateNestedManyWithoutPerformedByProviderInput
   organization: Prisma.OrganizationCreateNestedOneWithoutProvidersInput
@@ -767,6 +921,13 @@ export type ProviderUncheckedCreateWithoutAppointmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  firstNameSearch?: string
+  lastNameSearch?: string
+  svbProviderIdSearch?: string | null
+  licenseNumberSearch?: string | null
+  emailSearch?: string | null
+  phoneSearch?: string | null
+  specialtySearch?: string | null
   clinicalEncounters?: Prisma.ClinicalEncounterUncheckedCreateNestedManyWithoutProviderInput
   performedProcedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutPerformedByProviderInput
 }
@@ -800,6 +961,13 @@ export type ProviderUpdateWithoutAppointmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  svbProviderIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  licenseNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clinicalEncounters?: Prisma.ClinicalEncounterUpdateManyWithoutProviderNestedInput
   performedProcedures?: Prisma.EncounterProcedureUpdateManyWithoutPerformedByProviderNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutProvidersNestedInput
@@ -821,6 +989,13 @@ export type ProviderUncheckedUpdateWithoutAppointmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  svbProviderIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  licenseNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clinicalEncounters?: Prisma.ClinicalEncounterUncheckedUpdateManyWithoutProviderNestedInput
   performedProcedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutPerformedByProviderNestedInput
 }
@@ -838,6 +1013,13 @@ export type ProviderCreateWithoutClinicalEncountersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  firstNameSearch?: string
+  lastNameSearch?: string
+  svbProviderIdSearch?: string | null
+  licenseNumberSearch?: string | null
+  emailSearch?: string | null
+  phoneSearch?: string | null
+  specialtySearch?: string | null
   appointments?: Prisma.AppointmentCreateNestedManyWithoutProviderInput
   performedProcedures?: Prisma.EncounterProcedureCreateNestedManyWithoutPerformedByProviderInput
   organization: Prisma.OrganizationCreateNestedOneWithoutProvidersInput
@@ -859,6 +1041,13 @@ export type ProviderUncheckedCreateWithoutClinicalEncountersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  firstNameSearch?: string
+  lastNameSearch?: string
+  svbProviderIdSearch?: string | null
+  licenseNumberSearch?: string | null
+  emailSearch?: string | null
+  phoneSearch?: string | null
+  specialtySearch?: string | null
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutProviderInput
   performedProcedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutPerformedByProviderInput
 }
@@ -892,6 +1081,13 @@ export type ProviderUpdateWithoutClinicalEncountersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  svbProviderIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  licenseNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUpdateManyWithoutProviderNestedInput
   performedProcedures?: Prisma.EncounterProcedureUpdateManyWithoutPerformedByProviderNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutProvidersNestedInput
@@ -913,6 +1109,13 @@ export type ProviderUncheckedUpdateWithoutClinicalEncountersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  svbProviderIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  licenseNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutProviderNestedInput
   performedProcedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutPerformedByProviderNestedInput
 }
@@ -930,6 +1133,13 @@ export type ProviderCreateWithoutPerformedProceduresInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  firstNameSearch?: string
+  lastNameSearch?: string
+  svbProviderIdSearch?: string | null
+  licenseNumberSearch?: string | null
+  emailSearch?: string | null
+  phoneSearch?: string | null
+  specialtySearch?: string | null
   appointments?: Prisma.AppointmentCreateNestedManyWithoutProviderInput
   clinicalEncounters?: Prisma.ClinicalEncounterCreateNestedManyWithoutProviderInput
   organization: Prisma.OrganizationCreateNestedOneWithoutProvidersInput
@@ -951,6 +1161,13 @@ export type ProviderUncheckedCreateWithoutPerformedProceduresInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  firstNameSearch?: string
+  lastNameSearch?: string
+  svbProviderIdSearch?: string | null
+  licenseNumberSearch?: string | null
+  emailSearch?: string | null
+  phoneSearch?: string | null
+  specialtySearch?: string | null
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutProviderInput
   clinicalEncounters?: Prisma.ClinicalEncounterUncheckedCreateNestedManyWithoutProviderInput
 }
@@ -984,6 +1201,13 @@ export type ProviderUpdateWithoutPerformedProceduresInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  svbProviderIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  licenseNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUpdateManyWithoutProviderNestedInput
   clinicalEncounters?: Prisma.ClinicalEncounterUpdateManyWithoutProviderNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutProvidersNestedInput
@@ -1005,6 +1229,13 @@ export type ProviderUncheckedUpdateWithoutPerformedProceduresInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  svbProviderIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  licenseNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutProviderNestedInput
   clinicalEncounters?: Prisma.ClinicalEncounterUncheckedUpdateManyWithoutProviderNestedInput
 }
@@ -1022,6 +1253,13 @@ export type ProviderCreateWithoutOrganizationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  firstNameSearch?: string
+  lastNameSearch?: string
+  svbProviderIdSearch?: string | null
+  licenseNumberSearch?: string | null
+  emailSearch?: string | null
+  phoneSearch?: string | null
+  specialtySearch?: string | null
   appointments?: Prisma.AppointmentCreateNestedManyWithoutProviderInput
   clinicalEncounters?: Prisma.ClinicalEncounterCreateNestedManyWithoutProviderInput
   performedProcedures?: Prisma.EncounterProcedureCreateNestedManyWithoutPerformedByProviderInput
@@ -1042,6 +1280,13 @@ export type ProviderUncheckedCreateWithoutOrganizationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  firstNameSearch?: string
+  lastNameSearch?: string
+  svbProviderIdSearch?: string | null
+  licenseNumberSearch?: string | null
+  emailSearch?: string | null
+  phoneSearch?: string | null
+  specialtySearch?: string | null
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutProviderInput
   clinicalEncounters?: Prisma.ClinicalEncounterUncheckedCreateNestedManyWithoutProviderInput
   performedProcedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutPerformedByProviderInput
@@ -1091,6 +1336,13 @@ export type ProviderScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Provider"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Provider"> | Date | string
   archivedAt?: Prisma.DateTimeNullableFilter<"Provider"> | Date | string | null
+  firstNameSearch?: Prisma.StringFilter<"Provider"> | string
+  lastNameSearch?: Prisma.StringFilter<"Provider"> | string
+  svbProviderIdSearch?: Prisma.StringNullableFilter<"Provider"> | string | null
+  licenseNumberSearch?: Prisma.StringNullableFilter<"Provider"> | string | null
+  emailSearch?: Prisma.StringNullableFilter<"Provider"> | string | null
+  phoneSearch?: Prisma.StringNullableFilter<"Provider"> | string | null
+  specialtySearch?: Prisma.StringNullableFilter<"Provider"> | string | null
 }
 
 export type ProviderCreateWithoutUserInput = {
@@ -1106,6 +1358,13 @@ export type ProviderCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  firstNameSearch?: string
+  lastNameSearch?: string
+  svbProviderIdSearch?: string | null
+  licenseNumberSearch?: string | null
+  emailSearch?: string | null
+  phoneSearch?: string | null
+  specialtySearch?: string | null
   appointments?: Prisma.AppointmentCreateNestedManyWithoutProviderInput
   clinicalEncounters?: Prisma.ClinicalEncounterCreateNestedManyWithoutProviderInput
   performedProcedures?: Prisma.EncounterProcedureCreateNestedManyWithoutPerformedByProviderInput
@@ -1126,6 +1385,13 @@ export type ProviderUncheckedCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  firstNameSearch?: string
+  lastNameSearch?: string
+  svbProviderIdSearch?: string | null
+  licenseNumberSearch?: string | null
+  emailSearch?: string | null
+  phoneSearch?: string | null
+  specialtySearch?: string | null
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutProviderInput
   clinicalEncounters?: Prisma.ClinicalEncounterUncheckedCreateNestedManyWithoutProviderInput
   performedProcedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutPerformedByProviderInput
@@ -1160,6 +1426,13 @@ export type ProviderUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  svbProviderIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  licenseNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUpdateManyWithoutProviderNestedInput
   clinicalEncounters?: Prisma.ClinicalEncounterUpdateManyWithoutProviderNestedInput
   performedProcedures?: Prisma.EncounterProcedureUpdateManyWithoutPerformedByProviderNestedInput
@@ -1180,6 +1453,13 @@ export type ProviderUncheckedUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  svbProviderIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  licenseNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutProviderNestedInput
   clinicalEncounters?: Prisma.ClinicalEncounterUncheckedUpdateManyWithoutProviderNestedInput
   performedProcedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutPerformedByProviderNestedInput
@@ -1199,6 +1479,13 @@ export type ProviderCreateManyOrganizationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   archivedAt?: Date | string | null
+  firstNameSearch?: string
+  lastNameSearch?: string
+  svbProviderIdSearch?: string | null
+  licenseNumberSearch?: string | null
+  emailSearch?: string | null
+  phoneSearch?: string | null
+  specialtySearch?: string | null
 }
 
 export type ProviderUpdateWithoutOrganizationInput = {
@@ -1214,6 +1501,13 @@ export type ProviderUpdateWithoutOrganizationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  svbProviderIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  licenseNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUpdateManyWithoutProviderNestedInput
   clinicalEncounters?: Prisma.ClinicalEncounterUpdateManyWithoutProviderNestedInput
   performedProcedures?: Prisma.EncounterProcedureUpdateManyWithoutPerformedByProviderNestedInput
@@ -1234,6 +1528,13 @@ export type ProviderUncheckedUpdateWithoutOrganizationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  svbProviderIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  licenseNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutProviderNestedInput
   clinicalEncounters?: Prisma.ClinicalEncounterUncheckedUpdateManyWithoutProviderNestedInput
   performedProcedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutPerformedByProviderNestedInput
@@ -1253,6 +1554,13 @@ export type ProviderUncheckedUpdateManyWithoutOrganizationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  svbProviderIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  licenseNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -1319,6 +1627,13 @@ export type ProviderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   createdAt?: boolean
   updatedAt?: boolean
   archivedAt?: boolean
+  firstNameSearch?: boolean
+  lastNameSearch?: boolean
+  svbProviderIdSearch?: boolean
+  licenseNumberSearch?: boolean
+  emailSearch?: boolean
+  phoneSearch?: boolean
+  specialtySearch?: boolean
   appointments?: boolean | Prisma.Provider$appointmentsArgs<ExtArgs>
   clinicalEncounters?: boolean | Prisma.Provider$clinicalEncountersArgs<ExtArgs>
   performedProcedures?: boolean | Prisma.Provider$performedProceduresArgs<ExtArgs>
@@ -1327,7 +1642,57 @@ export type ProviderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   _count?: boolean | Prisma.ProviderCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["provider"]>
 
+export type ProviderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  organizationId?: boolean
+  userId?: boolean
+  svbProviderId?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  licenseNumber?: boolean
+  specialty?: boolean
+  email?: boolean
+  phone?: boolean
+  isActive?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  archivedAt?: boolean
+  firstNameSearch?: boolean
+  lastNameSearch?: boolean
+  svbProviderIdSearch?: boolean
+  licenseNumberSearch?: boolean
+  emailSearch?: boolean
+  phoneSearch?: boolean
+  specialtySearch?: boolean
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.Provider$userArgs<ExtArgs>
+}, ExtArgs["result"]["provider"]>
 
+export type ProviderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  organizationId?: boolean
+  userId?: boolean
+  svbProviderId?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  licenseNumber?: boolean
+  specialty?: boolean
+  email?: boolean
+  phone?: boolean
+  isActive?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  archivedAt?: boolean
+  firstNameSearch?: boolean
+  lastNameSearch?: boolean
+  svbProviderIdSearch?: boolean
+  licenseNumberSearch?: boolean
+  emailSearch?: boolean
+  phoneSearch?: boolean
+  specialtySearch?: boolean
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.Provider$userArgs<ExtArgs>
+}, ExtArgs["result"]["provider"]>
 
 export type ProviderSelectScalar = {
   id?: boolean
@@ -1344,9 +1709,16 @@ export type ProviderSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   archivedAt?: boolean
+  firstNameSearch?: boolean
+  lastNameSearch?: boolean
+  svbProviderIdSearch?: boolean
+  licenseNumberSearch?: boolean
+  emailSearch?: boolean
+  phoneSearch?: boolean
+  specialtySearch?: boolean
 }
 
-export type ProviderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "userId" | "svbProviderId" | "firstName" | "lastName" | "licenseNumber" | "specialty" | "email" | "phone" | "isActive" | "createdAt" | "updatedAt" | "archivedAt", ExtArgs["result"]["provider"]>
+export type ProviderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "userId" | "svbProviderId" | "firstName" | "lastName" | "licenseNumber" | "specialty" | "email" | "phone" | "isActive" | "createdAt" | "updatedAt" | "archivedAt" | "firstNameSearch" | "lastNameSearch" | "svbProviderIdSearch" | "licenseNumberSearch" | "emailSearch" | "phoneSearch" | "specialtySearch", ExtArgs["result"]["provider"]>
 export type ProviderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   appointments?: boolean | Prisma.Provider$appointmentsArgs<ExtArgs>
   clinicalEncounters?: boolean | Prisma.Provider$clinicalEncountersArgs<ExtArgs>
@@ -1354,6 +1726,14 @@ export type ProviderInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   user?: boolean | Prisma.Provider$userArgs<ExtArgs>
   _count?: boolean | Prisma.ProviderCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type ProviderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.Provider$userArgs<ExtArgs>
+}
+export type ProviderIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.Provider$userArgs<ExtArgs>
 }
 
 export type $ProviderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1380,6 +1760,13 @@ export type $ProviderPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     createdAt: Date
     updatedAt: Date
     archivedAt: Date | null
+    firstNameSearch: string
+    lastNameSearch: string
+    svbProviderIdSearch: string | null
+    licenseNumberSearch: string | null
+    emailSearch: string | null
+    phoneSearch: string | null
+    specialtySearch: string | null
   }, ExtArgs["result"]["provider"]>
   composites: {}
 }
@@ -1498,6 +1885,30 @@ export interface ProviderDelegate<ExtArgs extends runtime.Types.Extensions.Inter
   createMany<T extends ProviderCreateManyArgs>(args?: Prisma.SelectSubset<T, ProviderCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many Providers and returns the data saved in the database.
+   * @param {ProviderCreateManyAndReturnArgs} args - Arguments to create many Providers.
+   * @example
+   * // Create many Providers
+   * const provider = await prisma.provider.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many Providers and only return the `id`
+   * const providerWithIdOnly = await prisma.provider.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends ProviderCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, ProviderCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a Provider.
    * @param {ProviderDeleteArgs} args - Arguments to delete one Provider.
    * @example
@@ -1560,6 +1971,36 @@ export interface ProviderDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * 
    */
   updateMany<T extends ProviderUpdateManyArgs>(args: Prisma.SelectSubset<T, ProviderUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more Providers and returns the data updated in the database.
+   * @param {ProviderUpdateManyAndReturnArgs} args - Arguments to update many Providers.
+   * @example
+   * // Update many Providers
+   * const provider = await prisma.provider.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more Providers and only return the `id`
+   * const providerWithIdOnly = await prisma.provider.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends ProviderUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, ProviderUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Provider.
@@ -1768,6 +2209,13 @@ export interface ProviderFieldRefs {
   readonly createdAt: Prisma.FieldRef<"Provider", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Provider", 'DateTime'>
   readonly archivedAt: Prisma.FieldRef<"Provider", 'DateTime'>
+  readonly firstNameSearch: Prisma.FieldRef<"Provider", 'String'>
+  readonly lastNameSearch: Prisma.FieldRef<"Provider", 'String'>
+  readonly svbProviderIdSearch: Prisma.FieldRef<"Provider", 'String'>
+  readonly licenseNumberSearch: Prisma.FieldRef<"Provider", 'String'>
+  readonly emailSearch: Prisma.FieldRef<"Provider", 'String'>
+  readonly phoneSearch: Prisma.FieldRef<"Provider", 'String'>
+  readonly specialtySearch: Prisma.FieldRef<"Provider", 'String'>
 }
     
 
@@ -2006,6 +2454,29 @@ export type ProviderCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
+ * Provider createManyAndReturn
+ */
+export type ProviderCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Provider
+   */
+  select?: Prisma.ProviderSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Provider
+   */
+  omit?: Prisma.ProviderOmit<ExtArgs> | null
+  /**
+   * The data used to create many Providers.
+   */
+  data: Prisma.ProviderCreateManyInput | Prisma.ProviderCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProviderIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * Provider update
  */
 export type ProviderUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2047,6 +2518,36 @@ export type ProviderUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Limit how many Providers to update.
    */
   limit?: number
+}
+
+/**
+ * Provider updateManyAndReturn
+ */
+export type ProviderUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Provider
+   */
+  select?: Prisma.ProviderSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Provider
+   */
+  omit?: Prisma.ProviderOmit<ExtArgs> | null
+  /**
+   * The data used to update Providers.
+   */
+  data: Prisma.XOR<Prisma.ProviderUpdateManyMutationInput, Prisma.ProviderUncheckedUpdateManyInput>
+  /**
+   * Filter which Providers to update
+   */
+  where?: Prisma.ProviderWhereInput
+  /**
+   * Limit how many Providers to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProviderIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

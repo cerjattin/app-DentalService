@@ -80,6 +80,7 @@ export function ProcedureSection({
     await client.invalidateQueries({
       queryKey: authorizationKeys.patient(encounter.patient.id),
     })
+    await client.invalidateQueries({ queryKey: ['dashboard-report'] })
   }
   const remove = useMutation({
     mutationFn: () => removeProcedure(encounter.id, removing!.id),
@@ -108,6 +109,9 @@ export function ProcedureSection({
         ) : null
       }
     >
+      {encounter.status === 'OPEN' ? (
+        <p className="mb-3 text-sm text-slate-500">Added the wrong service? Remove it and add the correct procedure before completing the encounter. Previously invoiced services remain in invoice history.</p>
+      ) : null}
       {notice ? (
         <p role="status" className="mb-3 text-sm text-green-700">
           {notice}
@@ -186,17 +190,17 @@ export function ProcedureSection({
               key: 'actions',
               header: 'Actions',
               render: (row) =>
-                encounter.status === 'OPEN' && row.status === 'PERFORMED' ? (
+                encounter.status === 'OPEN' && ['PERFORMED', 'BILLED'].includes(row.status) ? (
                   <PermissionGuard allOf={['procedure.update']}>
                     <div className="flex">
-                      <Button
+                      {row.status === 'PERFORMED' ? <Button
                         title="Edit procedure"
                         aria-label={`Edit procedure ${row.procedureCodeSnapshot}`}
                         variant="ghost"
                         onClick={() => setEditing(row)}
                       >
                         <Pencil size={16} />
-                      </Button>
+                      </Button> : null}
                       <Button
                         title="Remove procedure"
                         aria-label={`Remove procedure ${row.procedureCodeSnapshot}`}
@@ -234,7 +238,7 @@ export function ProcedureSection({
       {removing && encounter.status === 'OPEN' ? (
         <ClinicalConfirm
           title="Remove performed procedure?"
-          description="This permanently removes the procedure record and releases its authorization usage. It cannot be restored here. Billed records cannot be removed."
+          description="This removes the service from active care and releases its authorization usage. An unbilled record is permanently removed. If this encounter was returned for correction, previous invoice history is preserved. You can add the correct procedure before completing care."
           onClose={() => setRemoving(null)}
           onConfirm={() => remove.mutate()}
           pending={remove.isPending}

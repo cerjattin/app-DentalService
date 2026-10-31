@@ -47,18 +47,18 @@ async function cleanupAppointmentFixture() {
     where: {
       OR: [
         {
-          appointmentNumber: {
-            startsWith: "APT-",
+          appointmentNumberSearch: {
+            startsWith: ("APT-").toLowerCase(),
           },
           patient: {
-            patientNumber: {
-              startsWith: "TEST-APT",
+            patientNumberSearch: {
+              startsWith: ("TEST-APT").toLowerCase(),
             },
           },
         },
         {
-          reason: {
-            startsWith: "TEST-APT",
+          reasonSearch: {
+            startsWith: ("TEST-APT").toLowerCase(),
           },
         },
         {
@@ -118,8 +118,8 @@ async function cleanupAppointmentFixture() {
     where: {
       OR: [
         {
-          svbProviderId: {
-            startsWith: "TEST-APT-PROV",
+          svbProviderIdSearch: {
+            startsWith: ("TEST-APT-PROV").toLowerCase(),
           },
         },
         {
@@ -135,8 +135,8 @@ async function cleanupAppointmentFixture() {
     where: {
       OR: [
         {
-          patientNumber: {
-            startsWith: "TEST-APT",
+          patientNumberSearch: {
+            startsWith: ("TEST-APT").toLowerCase(),
           },
         },
         {
@@ -152,8 +152,8 @@ async function cleanupAppointmentFixture() {
     where: {
       OR: [
         {
-          code: {
-            startsWith: "TEST-APT",
+          codeSearch: {
+            startsWith: ("TEST-APT").toLowerCase(),
           },
         },
         {

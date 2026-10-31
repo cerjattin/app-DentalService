@@ -44,6 +44,8 @@ export type DiagnosisCodeMinAggregateOutputType = {
   validTo: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  codeSearch: string | null
+  descriptionSearch: string | null
 }
 
 export type DiagnosisCodeMaxAggregateOutputType = {
@@ -56,6 +58,8 @@ export type DiagnosisCodeMaxAggregateOutputType = {
   validTo: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  codeSearch: string | null
+  descriptionSearch: string | null
 }
 
 export type DiagnosisCodeCountAggregateOutputType = {
@@ -68,6 +72,8 @@ export type DiagnosisCodeCountAggregateOutputType = {
   validTo: number
   createdAt: number
   updatedAt: number
+  codeSearch: number
+  descriptionSearch: number
   _all: number
 }
 
@@ -90,6 +96,8 @@ export type DiagnosisCodeMinAggregateInputType = {
   validTo?: true
   createdAt?: true
   updatedAt?: true
+  codeSearch?: true
+  descriptionSearch?: true
 }
 
 export type DiagnosisCodeMaxAggregateInputType = {
@@ -102,6 +110,8 @@ export type DiagnosisCodeMaxAggregateInputType = {
   validTo?: true
   createdAt?: true
   updatedAt?: true
+  codeSearch?: true
+  descriptionSearch?: true
 }
 
 export type DiagnosisCodeCountAggregateInputType = {
@@ -114,6 +124,8 @@ export type DiagnosisCodeCountAggregateInputType = {
   validTo?: true
   createdAt?: true
   updatedAt?: true
+  codeSearch?: true
+  descriptionSearch?: true
   _all?: true
 }
 
@@ -213,6 +225,8 @@ export type DiagnosisCodeGroupByOutputType = {
   validTo: Date | null
   createdAt: Date
   updatedAt: Date
+  codeSearch: string
+  descriptionSearch: string
   _count: DiagnosisCodeCountAggregateOutputType | null
   _avg: DiagnosisCodeAvgAggregateOutputType | null
   _sum: DiagnosisCodeSumAggregateOutputType | null
@@ -248,6 +262,8 @@ export type DiagnosisCodeWhereInput = {
   validTo?: Prisma.DateTimeNullableFilter<"DiagnosisCode"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"DiagnosisCode"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DiagnosisCode"> | Date | string
+  codeSearch?: Prisma.StringFilter<"DiagnosisCode"> | string
+  descriptionSearch?: Prisma.StringFilter<"DiagnosisCode"> | string
   encounterDiagnoses?: Prisma.EncounterDiagnosisListRelationFilter
 }
 
@@ -261,8 +277,9 @@ export type DiagnosisCodeOrderByWithRelationInput = {
   validTo?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  codeSearch?: Prisma.SortOrder
+  descriptionSearch?: Prisma.SortOrder
   encounterDiagnoses?: Prisma.EncounterDiagnosisOrderByRelationAggregateInput
-  _relevance?: Prisma.DiagnosisCodeOrderByRelevanceInput
 }
 
 export type DiagnosisCodeWhereUniqueInput = Prisma.AtLeast<{
@@ -279,6 +296,8 @@ export type DiagnosisCodeWhereUniqueInput = Prisma.AtLeast<{
   validTo?: Prisma.DateTimeNullableFilter<"DiagnosisCode"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"DiagnosisCode"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DiagnosisCode"> | Date | string
+  codeSearch?: Prisma.StringFilter<"DiagnosisCode"> | string
+  descriptionSearch?: Prisma.StringFilter<"DiagnosisCode"> | string
   encounterDiagnoses?: Prisma.EncounterDiagnosisListRelationFilter
 }, "id" | "codeSystem_code">
 
@@ -292,6 +311,8 @@ export type DiagnosisCodeOrderByWithAggregationInput = {
   validTo?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  codeSearch?: Prisma.SortOrder
+  descriptionSearch?: Prisma.SortOrder
   _count?: Prisma.DiagnosisCodeCountOrderByAggregateInput
   _avg?: Prisma.DiagnosisCodeAvgOrderByAggregateInput
   _max?: Prisma.DiagnosisCodeMaxOrderByAggregateInput
@@ -312,6 +333,8 @@ export type DiagnosisCodeScalarWhereWithAggregatesInput = {
   validTo?: Prisma.DateTimeNullableWithAggregatesFilter<"DiagnosisCode"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"DiagnosisCode"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"DiagnosisCode"> | Date | string
+  codeSearch?: Prisma.StringWithAggregatesFilter<"DiagnosisCode"> | string
+  descriptionSearch?: Prisma.StringWithAggregatesFilter<"DiagnosisCode"> | string
 }
 
 export type DiagnosisCodeCreateInput = {
@@ -324,6 +347,8 @@ export type DiagnosisCodeCreateInput = {
   validTo?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  codeSearch?: string
+  descriptionSearch?: string
   encounterDiagnoses?: Prisma.EncounterDiagnosisCreateNestedManyWithoutDiagnosisCodeInput
 }
 
@@ -337,6 +362,8 @@ export type DiagnosisCodeUncheckedCreateInput = {
   validTo?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  codeSearch?: string
+  descriptionSearch?: string
   encounterDiagnoses?: Prisma.EncounterDiagnosisUncheckedCreateNestedManyWithoutDiagnosisCodeInput
 }
 
@@ -350,6 +377,8 @@ export type DiagnosisCodeUpdateInput = {
   validTo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionSearch?: Prisma.StringFieldUpdateOperationsInput | string
   encounterDiagnoses?: Prisma.EncounterDiagnosisUpdateManyWithoutDiagnosisCodeNestedInput
 }
 
@@ -363,6 +392,8 @@ export type DiagnosisCodeUncheckedUpdateInput = {
   validTo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionSearch?: Prisma.StringFieldUpdateOperationsInput | string
   encounterDiagnoses?: Prisma.EncounterDiagnosisUncheckedUpdateManyWithoutDiagnosisCodeNestedInput
 }
 
@@ -376,6 +407,8 @@ export type DiagnosisCodeCreateManyInput = {
   validTo?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  codeSearch?: string
+  descriptionSearch?: string
 }
 
 export type DiagnosisCodeUpdateManyMutationInput = {
@@ -388,6 +421,8 @@ export type DiagnosisCodeUpdateManyMutationInput = {
   validTo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type DiagnosisCodeUncheckedUpdateManyInput = {
@@ -400,12 +435,8 @@ export type DiagnosisCodeUncheckedUpdateManyInput = {
   validTo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type DiagnosisCodeOrderByRelevanceInput = {
-  fields: Prisma.DiagnosisCodeOrderByRelevanceFieldEnum | Prisma.DiagnosisCodeOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type DiagnosisCodeCodeSystemCodeCompoundUniqueInput = {
@@ -423,6 +454,8 @@ export type DiagnosisCodeCountOrderByAggregateInput = {
   validTo?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  codeSearch?: Prisma.SortOrder
+  descriptionSearch?: Prisma.SortOrder
 }
 
 export type DiagnosisCodeAvgOrderByAggregateInput = {
@@ -439,6 +472,8 @@ export type DiagnosisCodeMaxOrderByAggregateInput = {
   validTo?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  codeSearch?: Prisma.SortOrder
+  descriptionSearch?: Prisma.SortOrder
 }
 
 export type DiagnosisCodeMinOrderByAggregateInput = {
@@ -451,6 +486,8 @@ export type DiagnosisCodeMinOrderByAggregateInput = {
   validTo?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  codeSearch?: Prisma.SortOrder
+  descriptionSearch?: Prisma.SortOrder
 }
 
 export type DiagnosisCodeSumOrderByAggregateInput = {
@@ -486,6 +523,8 @@ export type DiagnosisCodeCreateWithoutEncounterDiagnosesInput = {
   validTo?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  codeSearch?: string
+  descriptionSearch?: string
 }
 
 export type DiagnosisCodeUncheckedCreateWithoutEncounterDiagnosesInput = {
@@ -498,6 +537,8 @@ export type DiagnosisCodeUncheckedCreateWithoutEncounterDiagnosesInput = {
   validTo?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  codeSearch?: string
+  descriptionSearch?: string
 }
 
 export type DiagnosisCodeCreateOrConnectWithoutEncounterDiagnosesInput = {
@@ -526,6 +567,8 @@ export type DiagnosisCodeUpdateWithoutEncounterDiagnosesInput = {
   validTo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type DiagnosisCodeUncheckedUpdateWithoutEncounterDiagnosesInput = {
@@ -538,6 +581,8 @@ export type DiagnosisCodeUncheckedUpdateWithoutEncounterDiagnosesInput = {
   validTo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -581,11 +626,39 @@ export type DiagnosisCodeSelect<ExtArgs extends runtime.Types.Extensions.Interna
   validTo?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  codeSearch?: boolean
+  descriptionSearch?: boolean
   encounterDiagnoses?: boolean | Prisma.DiagnosisCode$encounterDiagnosesArgs<ExtArgs>
   _count?: boolean | Prisma.DiagnosisCodeCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["diagnosisCode"]>
 
+export type DiagnosisCodeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  codeSystem?: boolean
+  code?: boolean
+  description?: boolean
+  isActive?: boolean
+  validFrom?: boolean
+  validTo?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  codeSearch?: boolean
+  descriptionSearch?: boolean
+}, ExtArgs["result"]["diagnosisCode"]>
 
+export type DiagnosisCodeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  codeSystem?: boolean
+  code?: boolean
+  description?: boolean
+  isActive?: boolean
+  validFrom?: boolean
+  validTo?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  codeSearch?: boolean
+  descriptionSearch?: boolean
+}, ExtArgs["result"]["diagnosisCode"]>
 
 export type DiagnosisCodeSelectScalar = {
   id?: boolean
@@ -597,13 +670,17 @@ export type DiagnosisCodeSelectScalar = {
   validTo?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  codeSearch?: boolean
+  descriptionSearch?: boolean
 }
 
-export type DiagnosisCodeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "codeSystem" | "code" | "description" | "isActive" | "validFrom" | "validTo" | "createdAt" | "updatedAt", ExtArgs["result"]["diagnosisCode"]>
+export type DiagnosisCodeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "codeSystem" | "code" | "description" | "isActive" | "validFrom" | "validTo" | "createdAt" | "updatedAt" | "codeSearch" | "descriptionSearch", ExtArgs["result"]["diagnosisCode"]>
 export type DiagnosisCodeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   encounterDiagnoses?: boolean | Prisma.DiagnosisCode$encounterDiagnosesArgs<ExtArgs>
   _count?: boolean | Prisma.DiagnosisCodeCountOutputTypeDefaultArgs<ExtArgs>
 }
+export type DiagnosisCodeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type DiagnosisCodeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $DiagnosisCodePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "DiagnosisCode"
@@ -620,6 +697,8 @@ export type $DiagnosisCodePayload<ExtArgs extends runtime.Types.Extensions.Inter
     validTo: Date | null
     createdAt: Date
     updatedAt: Date
+    codeSearch: string
+    descriptionSearch: string
   }, ExtArgs["result"]["diagnosisCode"]>
   composites: {}
 }
@@ -738,6 +817,30 @@ export interface DiagnosisCodeDelegate<ExtArgs extends runtime.Types.Extensions.
   createMany<T extends DiagnosisCodeCreateManyArgs>(args?: Prisma.SelectSubset<T, DiagnosisCodeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many DiagnosisCodes and returns the data saved in the database.
+   * @param {DiagnosisCodeCreateManyAndReturnArgs} args - Arguments to create many DiagnosisCodes.
+   * @example
+   * // Create many DiagnosisCodes
+   * const diagnosisCode = await prisma.diagnosisCode.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many DiagnosisCodes and only return the `id`
+   * const diagnosisCodeWithIdOnly = await prisma.diagnosisCode.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends DiagnosisCodeCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, DiagnosisCodeCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DiagnosisCodePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a DiagnosisCode.
    * @param {DiagnosisCodeDeleteArgs} args - Arguments to delete one DiagnosisCode.
    * @example
@@ -800,6 +903,36 @@ export interface DiagnosisCodeDelegate<ExtArgs extends runtime.Types.Extensions.
    * 
    */
   updateMany<T extends DiagnosisCodeUpdateManyArgs>(args: Prisma.SelectSubset<T, DiagnosisCodeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more DiagnosisCodes and returns the data updated in the database.
+   * @param {DiagnosisCodeUpdateManyAndReturnArgs} args - Arguments to update many DiagnosisCodes.
+   * @example
+   * // Update many DiagnosisCodes
+   * const diagnosisCode = await prisma.diagnosisCode.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more DiagnosisCodes and only return the `id`
+   * const diagnosisCodeWithIdOnly = await prisma.diagnosisCode.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends DiagnosisCodeUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, DiagnosisCodeUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DiagnosisCodePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one DiagnosisCode.
@@ -999,6 +1132,8 @@ export interface DiagnosisCodeFieldRefs {
   readonly validTo: Prisma.FieldRef<"DiagnosisCode", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"DiagnosisCode", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"DiagnosisCode", 'DateTime'>
+  readonly codeSearch: Prisma.FieldRef<"DiagnosisCode", 'String'>
+  readonly descriptionSearch: Prisma.FieldRef<"DiagnosisCode", 'String'>
 }
     
 
@@ -1237,6 +1372,25 @@ export type DiagnosisCodeCreateManyArgs<ExtArgs extends runtime.Types.Extensions
 }
 
 /**
+ * DiagnosisCode createManyAndReturn
+ */
+export type DiagnosisCodeCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DiagnosisCode
+   */
+  select?: Prisma.DiagnosisCodeSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the DiagnosisCode
+   */
+  omit?: Prisma.DiagnosisCodeOmit<ExtArgs> | null
+  /**
+   * The data used to create many DiagnosisCodes.
+   */
+  data: Prisma.DiagnosisCodeCreateManyInput | Prisma.DiagnosisCodeCreateManyInput[]
+  skipDuplicates?: boolean
+}
+
+/**
  * DiagnosisCode update
  */
 export type DiagnosisCodeUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1266,6 +1420,32 @@ export type DiagnosisCodeUpdateArgs<ExtArgs extends runtime.Types.Extensions.Int
  * DiagnosisCode updateMany
  */
 export type DiagnosisCodeUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * The data used to update DiagnosisCodes.
+   */
+  data: Prisma.XOR<Prisma.DiagnosisCodeUpdateManyMutationInput, Prisma.DiagnosisCodeUncheckedUpdateManyInput>
+  /**
+   * Filter which DiagnosisCodes to update
+   */
+  where?: Prisma.DiagnosisCodeWhereInput
+  /**
+   * Limit how many DiagnosisCodes to update.
+   */
+  limit?: number
+}
+
+/**
+ * DiagnosisCode updateManyAndReturn
+ */
+export type DiagnosisCodeUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DiagnosisCode
+   */
+  select?: Prisma.DiagnosisCodeSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the DiagnosisCode
+   */
+  omit?: Prisma.DiagnosisCodeOmit<ExtArgs> | null
   /**
    * The data used to update DiagnosisCodes.
    */

@@ -48,6 +48,7 @@ export type TreatmentCaseMinAggregateOutputType = {
   treatmentType: string | null
   description: string | null
   status: $Enums.TreatmentCaseStatus | null
+  firstAssignedAt: Date | null
   startedAt: Date | null
   completedAt: Date | null
   createdByUserId: bigint | null
@@ -63,6 +64,7 @@ export type TreatmentCaseMaxAggregateOutputType = {
   treatmentType: string | null
   description: string | null
   status: $Enums.TreatmentCaseStatus | null
+  firstAssignedAt: Date | null
   startedAt: Date | null
   completedAt: Date | null
   createdByUserId: bigint | null
@@ -78,6 +80,7 @@ export type TreatmentCaseCountAggregateOutputType = {
   treatmentType: number
   description: number
   status: number
+  firstAssignedAt: number
   startedAt: number
   completedAt: number
   createdByUserId: number
@@ -109,6 +112,7 @@ export type TreatmentCaseMinAggregateInputType = {
   treatmentType?: true
   description?: true
   status?: true
+  firstAssignedAt?: true
   startedAt?: true
   completedAt?: true
   createdByUserId?: true
@@ -124,6 +128,7 @@ export type TreatmentCaseMaxAggregateInputType = {
   treatmentType?: true
   description?: true
   status?: true
+  firstAssignedAt?: true
   startedAt?: true
   completedAt?: true
   createdByUserId?: true
@@ -139,6 +144,7 @@ export type TreatmentCaseCountAggregateInputType = {
   treatmentType?: true
   description?: true
   status?: true
+  firstAssignedAt?: true
   startedAt?: true
   completedAt?: true
   createdByUserId?: true
@@ -241,6 +247,7 @@ export type TreatmentCaseGroupByOutputType = {
   treatmentType: string | null
   description: string | null
   status: $Enums.TreatmentCaseStatus
+  firstAssignedAt: Date | null
   startedAt: Date | null
   completedAt: Date | null
   createdByUserId: bigint
@@ -279,6 +286,7 @@ export type TreatmentCaseWhereInput = {
   treatmentType?: Prisma.StringNullableFilter<"TreatmentCase"> | string | null
   description?: Prisma.StringNullableFilter<"TreatmentCase"> | string | null
   status?: Prisma.EnumTreatmentCaseStatusFilter<"TreatmentCase"> | $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Prisma.DateTimeNullableFilter<"TreatmentCase"> | Date | string | null
   startedAt?: Prisma.DateTimeNullableFilter<"TreatmentCase"> | Date | string | null
   completedAt?: Prisma.DateTimeNullableFilter<"TreatmentCase"> | Date | string | null
   createdByUserId?: Prisma.BigIntFilter<"TreatmentCase"> | bigint | number
@@ -298,6 +306,7 @@ export type TreatmentCaseOrderByWithRelationInput = {
   treatmentType?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  firstAssignedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   startedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
@@ -307,7 +316,6 @@ export type TreatmentCaseOrderByWithRelationInput = {
   createdByUser?: Prisma.UserOrderByWithRelationInput
   organization?: Prisma.OrganizationOrderByWithRelationInput
   patient?: Prisma.PatientOrderByWithRelationInput
-  _relevance?: Prisma.TreatmentCaseOrderByRelevanceInput
 }
 
 export type TreatmentCaseWhereUniqueInput = Prisma.AtLeast<{
@@ -322,6 +330,7 @@ export type TreatmentCaseWhereUniqueInput = Prisma.AtLeast<{
   treatmentType?: Prisma.StringNullableFilter<"TreatmentCase"> | string | null
   description?: Prisma.StringNullableFilter<"TreatmentCase"> | string | null
   status?: Prisma.EnumTreatmentCaseStatusFilter<"TreatmentCase"> | $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Prisma.DateTimeNullableFilter<"TreatmentCase"> | Date | string | null
   startedAt?: Prisma.DateTimeNullableFilter<"TreatmentCase"> | Date | string | null
   completedAt?: Prisma.DateTimeNullableFilter<"TreatmentCase"> | Date | string | null
   createdByUserId?: Prisma.BigIntFilter<"TreatmentCase"> | bigint | number
@@ -341,6 +350,7 @@ export type TreatmentCaseOrderByWithAggregationInput = {
   treatmentType?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  firstAssignedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   startedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
@@ -364,6 +374,7 @@ export type TreatmentCaseScalarWhereWithAggregatesInput = {
   treatmentType?: Prisma.StringNullableWithAggregatesFilter<"TreatmentCase"> | string | null
   description?: Prisma.StringNullableWithAggregatesFilter<"TreatmentCase"> | string | null
   status?: Prisma.EnumTreatmentCaseStatusWithAggregatesFilter<"TreatmentCase"> | $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"TreatmentCase"> | Date | string | null
   startedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"TreatmentCase"> | Date | string | null
   completedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"TreatmentCase"> | Date | string | null
   createdByUserId?: Prisma.BigIntWithAggregatesFilter<"TreatmentCase"> | bigint | number
@@ -377,6 +388,7 @@ export type TreatmentCaseCreateInput = {
   treatmentType?: string | null
   description?: string | null
   status?: $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Date | string | null
   startedAt?: Date | string | null
   completedAt?: Date | string | null
   createdAt?: Date | string
@@ -395,6 +407,7 @@ export type TreatmentCaseUncheckedCreateInput = {
   treatmentType?: string | null
   description?: string | null
   status?: $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Date | string | null
   startedAt?: Date | string | null
   completedAt?: Date | string | null
   createdByUserId: bigint | number
@@ -409,6 +422,7 @@ export type TreatmentCaseUpdateInput = {
   treatmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTreatmentCaseStatusFieldUpdateOperationsInput | $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -427,6 +441,7 @@ export type TreatmentCaseUncheckedUpdateInput = {
   treatmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTreatmentCaseStatusFieldUpdateOperationsInput | $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -443,6 +458,7 @@ export type TreatmentCaseCreateManyInput = {
   treatmentType?: string | null
   description?: string | null
   status?: $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Date | string | null
   startedAt?: Date | string | null
   completedAt?: Date | string | null
   createdByUserId: bigint | number
@@ -456,6 +472,7 @@ export type TreatmentCaseUpdateManyMutationInput = {
   treatmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTreatmentCaseStatusFieldUpdateOperationsInput | $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -470,6 +487,7 @@ export type TreatmentCaseUncheckedUpdateManyInput = {
   treatmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTreatmentCaseStatusFieldUpdateOperationsInput | $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -492,12 +510,6 @@ export type TreatmentCaseOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type TreatmentCaseOrderByRelevanceInput = {
-  fields: Prisma.TreatmentCaseOrderByRelevanceFieldEnum | Prisma.TreatmentCaseOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
-}
-
 export type TreatmentCasePatientIdTreatmentIdCompoundUniqueInput = {
   patientId: bigint | number
   treatmentId: string
@@ -511,6 +523,7 @@ export type TreatmentCaseCountOrderByAggregateInput = {
   treatmentType?: Prisma.SortOrder
   description?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  firstAssignedAt?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
@@ -533,6 +546,7 @@ export type TreatmentCaseMaxOrderByAggregateInput = {
   treatmentType?: Prisma.SortOrder
   description?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  firstAssignedAt?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
@@ -548,6 +562,7 @@ export type TreatmentCaseMinOrderByAggregateInput = {
   treatmentType?: Prisma.SortOrder
   description?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  firstAssignedAt?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
@@ -714,6 +729,7 @@ export type TreatmentCaseCreateWithoutAppointmentsInput = {
   treatmentType?: string | null
   description?: string | null
   status?: $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Date | string | null
   startedAt?: Date | string | null
   completedAt?: Date | string | null
   createdAt?: Date | string
@@ -731,6 +747,7 @@ export type TreatmentCaseUncheckedCreateWithoutAppointmentsInput = {
   treatmentType?: string | null
   description?: string | null
   status?: $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Date | string | null
   startedAt?: Date | string | null
   completedAt?: Date | string | null
   createdByUserId: bigint | number
@@ -760,6 +777,7 @@ export type TreatmentCaseUpdateWithoutAppointmentsInput = {
   treatmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTreatmentCaseStatusFieldUpdateOperationsInput | $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -777,6 +795,7 @@ export type TreatmentCaseUncheckedUpdateWithoutAppointmentsInput = {
   treatmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTreatmentCaseStatusFieldUpdateOperationsInput | $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -790,6 +809,7 @@ export type TreatmentCaseCreateWithoutOrganizationInput = {
   treatmentType?: string | null
   description?: string | null
   status?: $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Date | string | null
   startedAt?: Date | string | null
   completedAt?: Date | string | null
   createdAt?: Date | string
@@ -806,6 +826,7 @@ export type TreatmentCaseUncheckedCreateWithoutOrganizationInput = {
   treatmentType?: string | null
   description?: string | null
   status?: $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Date | string | null
   startedAt?: Date | string | null
   completedAt?: Date | string | null
   createdByUserId: bigint | number
@@ -851,6 +872,7 @@ export type TreatmentCaseScalarWhereInput = {
   treatmentType?: Prisma.StringNullableFilter<"TreatmentCase"> | string | null
   description?: Prisma.StringNullableFilter<"TreatmentCase"> | string | null
   status?: Prisma.EnumTreatmentCaseStatusFilter<"TreatmentCase"> | $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Prisma.DateTimeNullableFilter<"TreatmentCase"> | Date | string | null
   startedAt?: Prisma.DateTimeNullableFilter<"TreatmentCase"> | Date | string | null
   completedAt?: Prisma.DateTimeNullableFilter<"TreatmentCase"> | Date | string | null
   createdByUserId?: Prisma.BigIntFilter<"TreatmentCase"> | bigint | number
@@ -864,6 +886,7 @@ export type TreatmentCaseCreateWithoutPatientInput = {
   treatmentType?: string | null
   description?: string | null
   status?: $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Date | string | null
   startedAt?: Date | string | null
   completedAt?: Date | string | null
   createdAt?: Date | string
@@ -880,6 +903,7 @@ export type TreatmentCaseUncheckedCreateWithoutPatientInput = {
   treatmentType?: string | null
   description?: string | null
   status?: $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Date | string | null
   startedAt?: Date | string | null
   completedAt?: Date | string | null
   createdByUserId: bigint | number
@@ -920,6 +944,7 @@ export type TreatmentCaseCreateWithoutCreatedByUserInput = {
   treatmentType?: string | null
   description?: string | null
   status?: $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Date | string | null
   startedAt?: Date | string | null
   completedAt?: Date | string | null
   createdAt?: Date | string
@@ -937,6 +962,7 @@ export type TreatmentCaseUncheckedCreateWithoutCreatedByUserInput = {
   treatmentType?: string | null
   description?: string | null
   status?: $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Date | string | null
   startedAt?: Date | string | null
   completedAt?: Date | string | null
   createdAt?: Date | string
@@ -977,6 +1003,7 @@ export type TreatmentCaseCreateManyOrganizationInput = {
   treatmentType?: string | null
   description?: string | null
   status?: $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Date | string | null
   startedAt?: Date | string | null
   completedAt?: Date | string | null
   createdByUserId: bigint | number
@@ -990,6 +1017,7 @@ export type TreatmentCaseUpdateWithoutOrganizationInput = {
   treatmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTreatmentCaseStatusFieldUpdateOperationsInput | $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1006,6 +1034,7 @@ export type TreatmentCaseUncheckedUpdateWithoutOrganizationInput = {
   treatmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTreatmentCaseStatusFieldUpdateOperationsInput | $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -1021,6 +1050,7 @@ export type TreatmentCaseUncheckedUpdateManyWithoutOrganizationInput = {
   treatmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTreatmentCaseStatusFieldUpdateOperationsInput | $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -1035,6 +1065,7 @@ export type TreatmentCaseCreateManyPatientInput = {
   treatmentType?: string | null
   description?: string | null
   status?: $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Date | string | null
   startedAt?: Date | string | null
   completedAt?: Date | string | null
   createdByUserId: bigint | number
@@ -1048,6 +1079,7 @@ export type TreatmentCaseUpdateWithoutPatientInput = {
   treatmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTreatmentCaseStatusFieldUpdateOperationsInput | $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1064,6 +1096,7 @@ export type TreatmentCaseUncheckedUpdateWithoutPatientInput = {
   treatmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTreatmentCaseStatusFieldUpdateOperationsInput | $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -1079,6 +1112,7 @@ export type TreatmentCaseUncheckedUpdateManyWithoutPatientInput = {
   treatmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTreatmentCaseStatusFieldUpdateOperationsInput | $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -1094,6 +1128,7 @@ export type TreatmentCaseCreateManyCreatedByUserInput = {
   treatmentType?: string | null
   description?: string | null
   status?: $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Date | string | null
   startedAt?: Date | string | null
   completedAt?: Date | string | null
   createdAt?: Date | string
@@ -1106,6 +1141,7 @@ export type TreatmentCaseUpdateWithoutCreatedByUserInput = {
   treatmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTreatmentCaseStatusFieldUpdateOperationsInput | $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1123,6 +1159,7 @@ export type TreatmentCaseUncheckedUpdateWithoutCreatedByUserInput = {
   treatmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTreatmentCaseStatusFieldUpdateOperationsInput | $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1138,6 +1175,7 @@ export type TreatmentCaseUncheckedUpdateManyWithoutCreatedByUserInput = {
   treatmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTreatmentCaseStatusFieldUpdateOperationsInput | $Enums.TreatmentCaseStatus
+  firstAssignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1183,6 +1221,7 @@ export type TreatmentCaseSelect<ExtArgs extends runtime.Types.Extensions.Interna
   treatmentType?: boolean
   description?: boolean
   status?: boolean
+  firstAssignedAt?: boolean
   startedAt?: boolean
   completedAt?: boolean
   createdByUserId?: boolean
@@ -1195,7 +1234,43 @@ export type TreatmentCaseSelect<ExtArgs extends runtime.Types.Extensions.Interna
   _count?: boolean | Prisma.TreatmentCaseCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["treatmentCase"]>
 
+export type TreatmentCaseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  organizationId?: boolean
+  patientId?: boolean
+  treatmentId?: boolean
+  treatmentType?: boolean
+  description?: boolean
+  status?: boolean
+  firstAssignedAt?: boolean
+  startedAt?: boolean
+  completedAt?: boolean
+  createdByUserId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["treatmentCase"]>
 
+export type TreatmentCaseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  organizationId?: boolean
+  patientId?: boolean
+  treatmentId?: boolean
+  treatmentType?: boolean
+  description?: boolean
+  status?: boolean
+  firstAssignedAt?: boolean
+  startedAt?: boolean
+  completedAt?: boolean
+  createdByUserId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["treatmentCase"]>
 
 export type TreatmentCaseSelectScalar = {
   id?: boolean
@@ -1205,6 +1280,7 @@ export type TreatmentCaseSelectScalar = {
   treatmentType?: boolean
   description?: boolean
   status?: boolean
+  firstAssignedAt?: boolean
   startedAt?: boolean
   completedAt?: boolean
   createdByUserId?: boolean
@@ -1212,13 +1288,23 @@ export type TreatmentCaseSelectScalar = {
   updatedAt?: boolean
 }
 
-export type TreatmentCaseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "patientId" | "treatmentId" | "treatmentType" | "description" | "status" | "startedAt" | "completedAt" | "createdByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["treatmentCase"]>
+export type TreatmentCaseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "patientId" | "treatmentId" | "treatmentType" | "description" | "status" | "firstAssignedAt" | "startedAt" | "completedAt" | "createdByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["treatmentCase"]>
 export type TreatmentCaseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   appointments?: boolean | Prisma.TreatmentCase$appointmentsArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.TreatmentCaseCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type TreatmentCaseIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+}
+export type TreatmentCaseIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
 }
 
 export type $TreatmentCasePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1237,6 +1323,7 @@ export type $TreatmentCasePayload<ExtArgs extends runtime.Types.Extensions.Inter
     treatmentType: string | null
     description: string | null
     status: $Enums.TreatmentCaseStatus
+    firstAssignedAt: Date | null
     startedAt: Date | null
     completedAt: Date | null
     createdByUserId: bigint
@@ -1360,6 +1447,30 @@ export interface TreatmentCaseDelegate<ExtArgs extends runtime.Types.Extensions.
   createMany<T extends TreatmentCaseCreateManyArgs>(args?: Prisma.SelectSubset<T, TreatmentCaseCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many TreatmentCases and returns the data saved in the database.
+   * @param {TreatmentCaseCreateManyAndReturnArgs} args - Arguments to create many TreatmentCases.
+   * @example
+   * // Create many TreatmentCases
+   * const treatmentCase = await prisma.treatmentCase.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many TreatmentCases and only return the `id`
+   * const treatmentCaseWithIdOnly = await prisma.treatmentCase.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends TreatmentCaseCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, TreatmentCaseCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TreatmentCasePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a TreatmentCase.
    * @param {TreatmentCaseDeleteArgs} args - Arguments to delete one TreatmentCase.
    * @example
@@ -1422,6 +1533,36 @@ export interface TreatmentCaseDelegate<ExtArgs extends runtime.Types.Extensions.
    * 
    */
   updateMany<T extends TreatmentCaseUpdateManyArgs>(args: Prisma.SelectSubset<T, TreatmentCaseUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more TreatmentCases and returns the data updated in the database.
+   * @param {TreatmentCaseUpdateManyAndReturnArgs} args - Arguments to update many TreatmentCases.
+   * @example
+   * // Update many TreatmentCases
+   * const treatmentCase = await prisma.treatmentCase.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more TreatmentCases and only return the `id`
+   * const treatmentCaseWithIdOnly = await prisma.treatmentCase.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends TreatmentCaseUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, TreatmentCaseUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TreatmentCasePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one TreatmentCase.
@@ -1622,6 +1763,7 @@ export interface TreatmentCaseFieldRefs {
   readonly treatmentType: Prisma.FieldRef<"TreatmentCase", 'String'>
   readonly description: Prisma.FieldRef<"TreatmentCase", 'String'>
   readonly status: Prisma.FieldRef<"TreatmentCase", 'TreatmentCaseStatus'>
+  readonly firstAssignedAt: Prisma.FieldRef<"TreatmentCase", 'DateTime'>
   readonly startedAt: Prisma.FieldRef<"TreatmentCase", 'DateTime'>
   readonly completedAt: Prisma.FieldRef<"TreatmentCase", 'DateTime'>
   readonly createdByUserId: Prisma.FieldRef<"TreatmentCase", 'BigInt'>
@@ -1865,6 +2007,29 @@ export type TreatmentCaseCreateManyArgs<ExtArgs extends runtime.Types.Extensions
 }
 
 /**
+ * TreatmentCase createManyAndReturn
+ */
+export type TreatmentCaseCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TreatmentCase
+   */
+  select?: Prisma.TreatmentCaseSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the TreatmentCase
+   */
+  omit?: Prisma.TreatmentCaseOmit<ExtArgs> | null
+  /**
+   * The data used to create many TreatmentCases.
+   */
+  data: Prisma.TreatmentCaseCreateManyInput | Prisma.TreatmentCaseCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TreatmentCaseIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * TreatmentCase update
  */
 export type TreatmentCaseUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1906,6 +2071,36 @@ export type TreatmentCaseUpdateManyArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many TreatmentCases to update.
    */
   limit?: number
+}
+
+/**
+ * TreatmentCase updateManyAndReturn
+ */
+export type TreatmentCaseUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TreatmentCase
+   */
+  select?: Prisma.TreatmentCaseSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the TreatmentCase
+   */
+  omit?: Prisma.TreatmentCaseOmit<ExtArgs> | null
+  /**
+   * The data used to update TreatmentCases.
+   */
+  data: Prisma.XOR<Prisma.TreatmentCaseUpdateManyMutationInput, Prisma.TreatmentCaseUncheckedUpdateManyInput>
+  /**
+   * Filter which TreatmentCases to update
+   */
+  where?: Prisma.TreatmentCaseWhereInput
+  /**
+   * Limit how many TreatmentCases to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TreatmentCaseIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

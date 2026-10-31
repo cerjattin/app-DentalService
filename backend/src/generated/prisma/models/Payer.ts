@@ -42,6 +42,8 @@ export type PayerMinAggregateOutputType = {
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  codeSearch: string | null
+  nameSearch: string | null
 }
 
 export type PayerMaxAggregateOutputType = {
@@ -52,6 +54,8 @@ export type PayerMaxAggregateOutputType = {
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  codeSearch: string | null
+  nameSearch: string | null
 }
 
 export type PayerCountAggregateOutputType = {
@@ -62,6 +66,8 @@ export type PayerCountAggregateOutputType = {
   isActive: number
   createdAt: number
   updatedAt: number
+  codeSearch: number
+  nameSearch: number
   _all: number
 }
 
@@ -82,6 +88,8 @@ export type PayerMinAggregateInputType = {
   isActive?: true
   createdAt?: true
   updatedAt?: true
+  codeSearch?: true
+  nameSearch?: true
 }
 
 export type PayerMaxAggregateInputType = {
@@ -92,6 +100,8 @@ export type PayerMaxAggregateInputType = {
   isActive?: true
   createdAt?: true
   updatedAt?: true
+  codeSearch?: true
+  nameSearch?: true
 }
 
 export type PayerCountAggregateInputType = {
@@ -102,6 +112,8 @@ export type PayerCountAggregateInputType = {
   isActive?: true
   createdAt?: true
   updatedAt?: true
+  codeSearch?: true
+  nameSearch?: true
   _all?: true
 }
 
@@ -199,6 +211,8 @@ export type PayerGroupByOutputType = {
   isActive: boolean
   createdAt: Date
   updatedAt: Date
+  codeSearch: string
+  nameSearch: string
   _count: PayerCountAggregateOutputType | null
   _avg: PayerAvgAggregateOutputType | null
   _sum: PayerSumAggregateOutputType | null
@@ -232,6 +246,8 @@ export type PayerWhereInput = {
   isActive?: Prisma.BoolFilter<"Payer"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Payer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Payer"> | Date | string
+  codeSearch?: Prisma.StringFilter<"Payer"> | string
+  nameSearch?: Prisma.StringFilter<"Payer"> | string
   declarationBatches?: Prisma.DeclarationBatchListRelationFilter
   patientInsurance?: Prisma.PatientInsuranceListRelationFilter
 }
@@ -244,9 +260,10 @@ export type PayerOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  codeSearch?: Prisma.SortOrder
+  nameSearch?: Prisma.SortOrder
   declarationBatches?: Prisma.DeclarationBatchOrderByRelationAggregateInput
   patientInsurance?: Prisma.PatientInsuranceOrderByRelationAggregateInput
-  _relevance?: Prisma.PayerOrderByRelevanceInput
 }
 
 export type PayerWhereUniqueInput = Prisma.AtLeast<{
@@ -260,6 +277,8 @@ export type PayerWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"Payer"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Payer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Payer"> | Date | string
+  codeSearch?: Prisma.StringFilter<"Payer"> | string
+  nameSearch?: Prisma.StringFilter<"Payer"> | string
   declarationBatches?: Prisma.DeclarationBatchListRelationFilter
   patientInsurance?: Prisma.PatientInsuranceListRelationFilter
 }, "id" | "code">
@@ -272,6 +291,8 @@ export type PayerOrderByWithAggregationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  codeSearch?: Prisma.SortOrder
+  nameSearch?: Prisma.SortOrder
   _count?: Prisma.PayerCountOrderByAggregateInput
   _avg?: Prisma.PayerAvgOrderByAggregateInput
   _max?: Prisma.PayerMaxOrderByAggregateInput
@@ -290,6 +311,8 @@ export type PayerScalarWhereWithAggregatesInput = {
   isActive?: Prisma.BoolWithAggregatesFilter<"Payer"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Payer"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Payer"> | Date | string
+  codeSearch?: Prisma.StringWithAggregatesFilter<"Payer"> | string
+  nameSearch?: Prisma.StringWithAggregatesFilter<"Payer"> | string
 }
 
 export type PayerCreateInput = {
@@ -300,6 +323,8 @@ export type PayerCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  codeSearch?: string
+  nameSearch?: string
   declarationBatches?: Prisma.DeclarationBatchCreateNestedManyWithoutPayerInput
   patientInsurance?: Prisma.PatientInsuranceCreateNestedManyWithoutPayerInput
 }
@@ -312,6 +337,8 @@ export type PayerUncheckedCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  codeSearch?: string
+  nameSearch?: string
   declarationBatches?: Prisma.DeclarationBatchUncheckedCreateNestedManyWithoutPayerInput
   patientInsurance?: Prisma.PatientInsuranceUncheckedCreateNestedManyWithoutPayerInput
 }
@@ -324,6 +351,8 @@ export type PayerUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  nameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   declarationBatches?: Prisma.DeclarationBatchUpdateManyWithoutPayerNestedInput
   patientInsurance?: Prisma.PatientInsuranceUpdateManyWithoutPayerNestedInput
 }
@@ -336,6 +365,8 @@ export type PayerUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  nameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   declarationBatches?: Prisma.DeclarationBatchUncheckedUpdateManyWithoutPayerNestedInput
   patientInsurance?: Prisma.PatientInsuranceUncheckedUpdateManyWithoutPayerNestedInput
 }
@@ -348,6 +379,8 @@ export type PayerCreateManyInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  codeSearch?: string
+  nameSearch?: string
 }
 
 export type PayerUpdateManyMutationInput = {
@@ -358,6 +391,8 @@ export type PayerUpdateManyMutationInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  nameSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type PayerUncheckedUpdateManyInput = {
@@ -368,17 +403,13 @@ export type PayerUncheckedUpdateManyInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  nameSearch?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type PayerScalarRelationFilter = {
   is?: Prisma.PayerWhereInput
   isNot?: Prisma.PayerWhereInput
-}
-
-export type PayerOrderByRelevanceInput = {
-  fields: Prisma.PayerOrderByRelevanceFieldEnum | Prisma.PayerOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type PayerCountOrderByAggregateInput = {
@@ -389,6 +420,8 @@ export type PayerCountOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  codeSearch?: Prisma.SortOrder
+  nameSearch?: Prisma.SortOrder
 }
 
 export type PayerAvgOrderByAggregateInput = {
@@ -403,6 +436,8 @@ export type PayerMaxOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  codeSearch?: Prisma.SortOrder
+  nameSearch?: Prisma.SortOrder
 }
 
 export type PayerMinOrderByAggregateInput = {
@@ -413,6 +448,8 @@ export type PayerMinOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  codeSearch?: Prisma.SortOrder
+  nameSearch?: Prisma.SortOrder
 }
 
 export type PayerSumOrderByAggregateInput = {
@@ -459,6 +496,8 @@ export type PayerCreateWithoutDeclarationBatchesInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  codeSearch?: string
+  nameSearch?: string
   patientInsurance?: Prisma.PatientInsuranceCreateNestedManyWithoutPayerInput
 }
 
@@ -470,6 +509,8 @@ export type PayerUncheckedCreateWithoutDeclarationBatchesInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  codeSearch?: string
+  nameSearch?: string
   patientInsurance?: Prisma.PatientInsuranceUncheckedCreateNestedManyWithoutPayerInput
 }
 
@@ -497,6 +538,8 @@ export type PayerUpdateWithoutDeclarationBatchesInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  nameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   patientInsurance?: Prisma.PatientInsuranceUpdateManyWithoutPayerNestedInput
 }
 
@@ -508,6 +551,8 @@ export type PayerUncheckedUpdateWithoutDeclarationBatchesInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  nameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   patientInsurance?: Prisma.PatientInsuranceUncheckedUpdateManyWithoutPayerNestedInput
 }
 
@@ -519,6 +564,8 @@ export type PayerCreateWithoutPatientInsuranceInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  codeSearch?: string
+  nameSearch?: string
   declarationBatches?: Prisma.DeclarationBatchCreateNestedManyWithoutPayerInput
 }
 
@@ -530,6 +577,8 @@ export type PayerUncheckedCreateWithoutPatientInsuranceInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  codeSearch?: string
+  nameSearch?: string
   declarationBatches?: Prisma.DeclarationBatchUncheckedCreateNestedManyWithoutPayerInput
 }
 
@@ -557,6 +606,8 @@ export type PayerUpdateWithoutPatientInsuranceInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  nameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   declarationBatches?: Prisma.DeclarationBatchUpdateManyWithoutPayerNestedInput
 }
 
@@ -568,6 +619,8 @@ export type PayerUncheckedUpdateWithoutPatientInsuranceInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  nameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   declarationBatches?: Prisma.DeclarationBatchUncheckedUpdateManyWithoutPayerNestedInput
 }
 
@@ -619,12 +672,36 @@ export type PayerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  codeSearch?: boolean
+  nameSearch?: boolean
   declarationBatches?: boolean | Prisma.Payer$declarationBatchesArgs<ExtArgs>
   patientInsurance?: boolean | Prisma.Payer$patientInsuranceArgs<ExtArgs>
   _count?: boolean | Prisma.PayerCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["payer"]>
 
+export type PayerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  code?: boolean
+  name?: boolean
+  payerType?: boolean
+  isActive?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  codeSearch?: boolean
+  nameSearch?: boolean
+}, ExtArgs["result"]["payer"]>
 
+export type PayerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  code?: boolean
+  name?: boolean
+  payerType?: boolean
+  isActive?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  codeSearch?: boolean
+  nameSearch?: boolean
+}, ExtArgs["result"]["payer"]>
 
 export type PayerSelectScalar = {
   id?: boolean
@@ -634,14 +711,18 @@ export type PayerSelectScalar = {
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  codeSearch?: boolean
+  nameSearch?: boolean
 }
 
-export type PayerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "name" | "payerType" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["payer"]>
+export type PayerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "name" | "payerType" | "isActive" | "createdAt" | "updatedAt" | "codeSearch" | "nameSearch", ExtArgs["result"]["payer"]>
 export type PayerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   declarationBatches?: boolean | Prisma.Payer$declarationBatchesArgs<ExtArgs>
   patientInsurance?: boolean | Prisma.Payer$patientInsuranceArgs<ExtArgs>
   _count?: boolean | Prisma.PayerCountOutputTypeDefaultArgs<ExtArgs>
 }
+export type PayerIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type PayerIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $PayerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Payer"
@@ -657,6 +738,8 @@ export type $PayerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     isActive: boolean
     createdAt: Date
     updatedAt: Date
+    codeSearch: string
+    nameSearch: string
   }, ExtArgs["result"]["payer"]>
   composites: {}
 }
@@ -775,6 +858,30 @@ export interface PayerDelegate<ExtArgs extends runtime.Types.Extensions.Internal
   createMany<T extends PayerCreateManyArgs>(args?: Prisma.SelectSubset<T, PayerCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many Payers and returns the data saved in the database.
+   * @param {PayerCreateManyAndReturnArgs} args - Arguments to create many Payers.
+   * @example
+   * // Create many Payers
+   * const payer = await prisma.payer.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many Payers and only return the `id`
+   * const payerWithIdOnly = await prisma.payer.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends PayerCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, PayerCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PayerPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a Payer.
    * @param {PayerDeleteArgs} args - Arguments to delete one Payer.
    * @example
@@ -837,6 +944,36 @@ export interface PayerDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * 
    */
   updateMany<T extends PayerUpdateManyArgs>(args: Prisma.SelectSubset<T, PayerUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more Payers and returns the data updated in the database.
+   * @param {PayerUpdateManyAndReturnArgs} args - Arguments to update many Payers.
+   * @example
+   * // Update many Payers
+   * const payer = await prisma.payer.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more Payers and only return the `id`
+   * const payerWithIdOnly = await prisma.payer.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends PayerUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, PayerUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PayerPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Payer.
@@ -1035,6 +1172,8 @@ export interface PayerFieldRefs {
   readonly isActive: Prisma.FieldRef<"Payer", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Payer", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Payer", 'DateTime'>
+  readonly codeSearch: Prisma.FieldRef<"Payer", 'String'>
+  readonly nameSearch: Prisma.FieldRef<"Payer", 'String'>
 }
     
 
@@ -1273,6 +1412,25 @@ export type PayerCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
+ * Payer createManyAndReturn
+ */
+export type PayerCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Payer
+   */
+  select?: Prisma.PayerSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Payer
+   */
+  omit?: Prisma.PayerOmit<ExtArgs> | null
+  /**
+   * The data used to create many Payers.
+   */
+  data: Prisma.PayerCreateManyInput | Prisma.PayerCreateManyInput[]
+  skipDuplicates?: boolean
+}
+
+/**
  * Payer update
  */
 export type PayerUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1302,6 +1460,32 @@ export type PayerUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
  * Payer updateMany
  */
 export type PayerUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * The data used to update Payers.
+   */
+  data: Prisma.XOR<Prisma.PayerUpdateManyMutationInput, Prisma.PayerUncheckedUpdateManyInput>
+  /**
+   * Filter which Payers to update
+   */
+  where?: Prisma.PayerWhereInput
+  /**
+   * Limit how many Payers to update.
+   */
+  limit?: number
+}
+
+/**
+ * Payer updateManyAndReturn
+ */
+export type PayerUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Payer
+   */
+  select?: Prisma.PayerSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Payer
+   */
+  omit?: Prisma.PayerOmit<ExtArgs> | null
   /**
    * The data used to update Payers.
    */
