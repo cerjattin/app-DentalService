@@ -50,10 +50,12 @@ export function AppointmentCreateDialog({ onClose, onCreated }: { onClose: () =>
     resolver: zodResolver(appointmentCreateSchema), defaultValues: { patientId: '', treatmentCaseId: '', providerId: '', clinicLocationId: '', scheduledStart: '', scheduledEnd: '', reason: '', notes: '' },
   })
   const patientId = useWatch({ control, name: 'patientId' })
+  const clinicLocationId = useWatch({ control, name: 'clinicLocationId' })
   const patientsFilter = { q: patientQ, status: 'ACTIVE' as const, page: 1, pageSize: 100 }
   const patients = useQuery({ queryKey: patientKeys.list(patientsFilter), queryFn: ({ signal }) => listPatients(patientsFilter, signal) })
   const providers = useQuery({ queryKey: appointmentKeys.providerChoices(providerQ), queryFn: ({ signal }) => searchAppointmentProviders(providerQ, signal) })
   const locations = useQuery({ queryKey: appointmentKeys.locations(), queryFn: ({ signal }) => listClinicLocations(signal) })
+  const selectedLocation = locations.data?.find((row) => row.id === clinicLocationId)
   const mutation = useMutation({ mutationFn: (v: Values) => createAppointment({
     patientId: v.patientId, providerId: v.providerId, clinicLocationId: v.clinicLocationId,
     ...(v.treatmentCaseId ? { treatmentCaseId: v.treatmentCaseId } : {}),
@@ -77,7 +79,7 @@ export function AppointmentCreateDialog({ onClose, onCreated }: { onClose: () =>
         <label className="text-sm">Search providers<Input className="mt-1" maxLength={120} value={providerSearch} onChange={(event) => { setProviderSearch(event.target.value); resetField('providerId') }} /></label>
         <FormField label="Patient" htmlFor="create-patient" error={errors.patientId?.message} hint={(patients.data?.meta?.total ?? 0) > 100 ? 'Showing 100 matches. Refine your search.' : undefined}><Select id="create-patient" disabled={patients.isFetching || patientSearch.trim() !== patientQ} {...register('patientId', { onChange: () => setValue('treatmentCaseId', '', { shouldDirty: true }) })}><option value="">Select patient</option>{patients.data?.data.map((p) => <option key={p.id} value={p.id}>{p.firstName} {p.lastName} — {p.patientNumber}</option>)}</Select></FormField>
         <FormField label="Provider" htmlFor="create-provider" error={errors.providerId?.message} hint={(providers.data?.meta?.total ?? 0) > 100 ? 'Showing 100 matches. Refine your search.' : undefined}><Select id="create-provider" disabled={providers.isFetching || providerSearch.trim() !== providerQ} {...register('providerId')}><option value="">Select provider</option>{providers.data?.data.map((p) => <option key={p.id} value={p.id}>{p.firstName} {p.lastName}</option>)}</Select></FormField>
-        <FormField label="Clinic location" htmlFor="create-location" error={errors.clinicLocationId?.message}><Select id="create-location" {...register('clinicLocationId')}><option value="">Select clinic location</option>{locations.data?.map((l) => <option key={l.id} value={l.id}>{l.name}</option>)}</Select></FormField>
+        <FormField label="Clinic location" htmlFor="create-location" error={errors.clinicLocationId?.message} hint={selectedLocation ? `SVB policlinic code: ${selectedLocation.policlinicCode ?? 'Not provided'}. New service snapshots use the recorded location configuration.` : undefined}><Select id="create-location" {...register('clinicLocationId')}><option value="">Select clinic location</option>{locations.data?.map((l) => <option key={l.id} value={l.id}>{l.name}</option>)}</Select></FormField>
         <Controller control={control} name="treatmentCaseId" render={({ field }) => <TreatmentCaseSelector patientId={patientId} value={field.value ?? ''} onChange={field.onChange} disabled={busy} error={errors.treatmentCaseId?.message} />} />
         <FormField label="Scheduled start" htmlFor="create-start" error={errors.scheduledStart?.message}><Input id="create-start" type="datetime-local" {...register('scheduledStart')} /></FormField>
         <FormField label="Scheduled end" htmlFor="create-end" error={errors.scheduledEnd?.message}><Input id="create-end" type="datetime-local" {...register('scheduledEnd')} /></FormField>

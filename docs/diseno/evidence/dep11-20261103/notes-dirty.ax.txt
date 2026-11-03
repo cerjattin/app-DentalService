@@ -1,0 +1,3 @@
+Browser tab: 1209239802, Title: "frontend", URL: "http://127.0.0.1:5179/clinical/343".
+There has been no change in the accessibility tree.
+The focused UI element is 44 text entry area (settable) Clinical notes, Value: SYNTHETIC UNSAVED DESIGN DEP11 — must survive navigation, ID: clinical-notes

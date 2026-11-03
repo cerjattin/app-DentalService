@@ -1,0 +1,7 @@
+{
+  "phase": "R2",
+  "route": "http://127.0.0.1:5179/clinical/343",
+  "controlId": "clinical-notes",
+  "value": "SYNTHETIC DESIGN DEP11 R2 UNSAVED NOTE",
+  "preserved": true
+}

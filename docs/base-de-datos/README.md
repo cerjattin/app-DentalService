@@ -8,6 +8,8 @@ Modelo, integridad, índices, migraciones, seeds, verificación y conexión con 
 
 ## Estado y destino
 
+**Alcance vigente del primer despliegue:** clínico, con SVB aplazado. Ver [entrega DEP10/12 de inventario, permisos y plan fiscal protegido](DEP12_PRIMER_DESPLIEGUE.md). El destino se volvió a inspeccionar solo en lectura; su aplicación/objetos reales siguen pendientes. Las entregas siguientes conservan su fecha y límites históricos.
+
 Código actual: PostgreSQL con Prisma 7 y `PrismaPg`, con un cliente compartido por runtime, scripts y seeds. El baseline fue comprobado como aplicado en Supabase durante el diagnóstico Postman del 30 de octubre; después el usuario confirmó que sus pruebas pasaron. No se reinspeccionó el destino operativo en el encargo del 31 de octubre. La base MySQL y su configuración no se eliminaron.
 
 El usuario confirmó que todos los datos MySQL son pruebas prescindibles: esta transición crea estructura nueva sin transferir registros. Solicitó conservar comparaciones/búsquedas sin distinguir mayúsculas ni acentos. Se mantienen IDs/Decimal string, autenticación/RBAC e integridad histórica.
@@ -19,6 +21,14 @@ Ver [entrega DB03/DB04/DB05, diagnóstico y aplicación](NEG_FUNC_03_04_05.md). 
 Continuar con el [paso a paso y contrato de conversión](MIGRACION_POSTGRESQL.md). Los nuevos scripts `*:supabase` seleccionan explícitamente el entorno y el certificado; no sobrescriben el `.env` MySQL.
 
 La elección de Supabase no migra automáticamente usuarios de aplicación a Supabase Auth. Auth, sesiones, Storage y Realtime tienen alcances separados.
+
+## Contrato final 06 — datos SVB
+
+La [entrega técnica de Base de datos del contrato 06](NEG_FINAL_06_DATOS_SVB.md) incorpora diagnóstico de integridad/snapshots y simulación de precarga de maestros con procedencia, sin escrituras. El usuario confirmó el 2 de noviembre que todavía no existe la ficha clínica autorizada: carga real y presentación siguen bloqueadas. Se conserva el modelo actual; la unicidad de PoliClinic por organización requiere contrastarse con la fuente antes de publicar su edición. Las pruebas de esta entrega utilizan otro PostgreSQL local dedicado, sin aplicar cambios a Supabase operativo.
+
+## Contratos finales 07/08/09 — preparación de piloto
+
+Ver [entrega de integridad, inventario y recuperación](NEG_FINAL_07_09_HANDOFF.md). El 3 de noviembre se verificó el Supabase configurado **solo en lectura**: baseline aplicado, migraciones posteriores/permisos nuevos pendientes y conflictos fiscales contados sin exponer datos. La migración 07 del registro manual se preparó con Backend y se valida en PostgreSQL local separado. La captura manual campo por campo conserva un expediente y comprobante; no requiere inventar un archivo oficial SVB ni configurar transporte automático. El entorno operativo permanece bloqueado hasta resolver su inventario y completar la aplicación controlada/aceptación. No se desplegó ni se ejecutaron semillas, migraciones o limpieza sobre clínica.
 
 ## Trabajo de transición
 

@@ -7,6 +7,7 @@ import { assertDeclarationIdentity, declarationSnapshot } from "./declaration-id
 import { declarationRepository } from "./declaration.repository.js";
 import type { DeclarationCandidatesQuery } from "./declaration.schemas.js";
 import { declarationItemToSvbRow, diagnoseSvbDeclarationRow } from "./export/declaration-row.mapper.js";
+import { realSvbPresentationReadiness } from "../svb-readiness/svb-readiness.service.js";
 
 export async function listDeclarationCandidates(id: bigint, query: DeclarationCandidatesQuery, actor: AuthenticatedRequestContext) {
   const from = query.from === undefined ? undefined : parseDateOnly(query.from, "from");
@@ -36,7 +37,8 @@ export async function listDeclarationCandidates(id: bigint, query: DeclarationCa
         serviceDate: item.serviceDateSnapshot.toISOString().slice(0, 10), procedureCode: item.procedureCodeSnapshot,
         procedureDescription: item.procedureDescriptionSnapshot, providerIdSnapshot: item.providerIdSnapshot,
         insuredIdSnapshot: item.insuredIdSnapshot, amount: item.amount.toFixed(2), currencyCode: item.currencyCodeSnapshot,
-        svbReadiness: issues.length ? "INCOMPLETE" as const : "COMPLETE" as const, issues };
+        svbReadiness: issues.length ? "INCOMPLETE" as const : "COMPLETE" as const, issues,
+        realPresentationReadiness: realSvbPresentationReadiness() };
     });
     return { candidates, pagination: { page: query.page, pageSize: query.pageSize, total, totalPages: Math.ceil(total / query.pageSize) } };
   }, { isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead });

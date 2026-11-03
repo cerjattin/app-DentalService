@@ -10,7 +10,7 @@ const decimalQuantity = z
 const optionalText = (max: number) =>
   z.string().trim().max(max).nullable().optional();
 
-export const createEncounterProcedureSchema = z.object({
+export const createEncounterProcedureSchema = z.strictObject({
   patientInsuranceId: bigintId,
 
   svbProcedureId: bigintId,
@@ -25,7 +25,7 @@ export const createEncounterProcedureSchema = z.object({
 });
 
 export const updateEncounterProcedureSchema = z
-  .object({
+  .strictObject({
     diagnosisId: bigintId.nullable().optional(),
 
     additionalNote: optionalText(65_535),

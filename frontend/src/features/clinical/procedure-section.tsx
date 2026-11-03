@@ -28,6 +28,7 @@ import type {
 } from '../../types/clinical'
 import type { PatientInsurance } from '../../types/patient'
 import { CatalogueSearch } from './catalogue-search'
+import { SvbPilotNotice } from '../svb-readiness/svb-pilot-notice'
 import {
   addProcedure,
   authorizationKeys,
@@ -296,6 +297,7 @@ function ProcedureForm({
         if (!open && !pending) onClose()
       }}
     >
+      {initial === 'new' ? <SvbPilotNotice /> : null}
       {initial === 'new' ? (
         selected ? (
           <CreateProcedureForm

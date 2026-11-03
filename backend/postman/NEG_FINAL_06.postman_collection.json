@@ -1,0 +1,144 @@
+{
+  "info": {
+    "name": "ODONTHO NEG-FINAL-06 \u2014 source-blocked Backend controls",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Dedicated synthetic QA only. Set baseUrl without /api/v1, adminToken, qaDraftDeclarationId for a session-owned DRAFT and qaReadyDeclarationId for a technical READY fixture. No source sheet or portal layout is approved. POST requests prove refusal; this collection does not authorize operational writes, portal upload or production values."
+  },
+  "variable": [
+    {
+      "key": "qaDraftDeclarationId",
+      "value": ""
+    },
+    {
+      "key": "qaReadyDeclarationId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Read actual pilot scope",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/v1/svb-pilot/readiness"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('No enabled real pilot', () => { const d=pm.response.json().data; pm.expect(d.realSubmissionEnabled).to.eql(false); pm.expect(d.enabledServiceCodes).to.eql([]); pm.expect(d.enabledCaseTypes).to.eql([]); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Read stored clinic policlinic codes",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/v1/clinic-locations?isActive=true"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Real READY is blocked without approved sources",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/v1/declarations/{{qaDraftDeclarationId}}/ready",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"presentationPurpose\": \"REAL_SVB\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 409', () => pm.response.to.have.status(409));",
+              "pm.test('No real eligibility approval', () => pm.expect(pm.response.json().error.code).to.eql('SVB_REAL_PRESENTATION_NOT_ENABLED'));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Real export is blocked before file creation",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/v1/declarations/{{qaReadyDeclarationId}}/exports",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"format\": \"CSV\",\n  \"presentationPurpose\": \"REAL_SVB\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 409', () => pm.response.to.have.status(409));",
+              "pm.test('No real eligibility approval', () => pm.expect(pm.response.json().error.code).to.eql('SVB_REAL_PRESENTATION_NOT_ENABLED'));"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

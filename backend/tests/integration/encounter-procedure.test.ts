@@ -895,6 +895,13 @@ describe("Encounter Procedure API", () => {
 
     expect(detail.body.data.patientInsurance.id).toBe(insuranceId.toString());
 
+    // Unsupported PATCH fields are rejected rather than silently discarded.
+    await request(app)
+      .patch(`/api/v1/clinical-encounters/${openEncounterId.toString()}/procedures/${createdProcedureId}`)
+      .set("Authorization", `Bearer ${providerToken}`)
+      .send({ diagnosisId: null, additionalNote: "TEST-EP rejected", quantity: "9.99" })
+      .expect(400);
+
     const updated = await request(app)
       .patch(
         `/api/v1/clinical-encounters/${openEncounterId.toString()}/procedures/${createdProcedureId}`,
@@ -903,7 +910,6 @@ describe("Encounter Procedure API", () => {
       .send({
         diagnosisId: null,
         additionalNote: "TEST-EP updated",
-        quantity: "9.99",
       })
       .expect(200);
 

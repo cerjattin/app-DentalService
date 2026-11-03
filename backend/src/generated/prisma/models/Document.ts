@@ -296,6 +296,9 @@ export type DocumentWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Document"> | Date | string
   originalFilenameSearch?: Prisma.StringFilter<"Document"> | string
   storageUriSearch?: Prisma.StringFilter<"Document"> | string
+  manualReceipts?: Prisma.DeclarationManualEntryListRelationFilter
+  manualResolutions?: Prisma.DeclarationManualEntryListRelationFilter
+  manualResults?: Prisma.DeclarationManualResultListRelationFilter
   declarationExport?: Prisma.XOR<Prisma.DeclarationExportNullableScalarRelationFilter, Prisma.DeclarationExportWhereInput> | null
   createdByUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
@@ -318,6 +321,9 @@ export type DocumentOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   originalFilenameSearch?: Prisma.SortOrder
   storageUriSearch?: Prisma.SortOrder
+  manualReceipts?: Prisma.DeclarationManualEntryOrderByRelationAggregateInput
+  manualResolutions?: Prisma.DeclarationManualEntryOrderByRelationAggregateInput
+  manualResults?: Prisma.DeclarationManualResultOrderByRelationAggregateInput
   declarationExport?: Prisma.DeclarationExportOrderByWithRelationInput
   createdByUser?: Prisma.UserOrderByWithRelationInput
   organization?: Prisma.OrganizationOrderByWithRelationInput
@@ -343,6 +349,9 @@ export type DocumentWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Document"> | Date | string
   originalFilenameSearch?: Prisma.StringFilter<"Document"> | string
   storageUriSearch?: Prisma.StringFilter<"Document"> | string
+  manualReceipts?: Prisma.DeclarationManualEntryListRelationFilter
+  manualResolutions?: Prisma.DeclarationManualEntryListRelationFilter
+  manualResults?: Prisma.DeclarationManualResultListRelationFilter
   declarationExport?: Prisma.XOR<Prisma.DeclarationExportNullableScalarRelationFilter, Prisma.DeclarationExportWhereInput> | null
   createdByUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
@@ -405,6 +414,9 @@ export type DocumentCreateInput = {
   createdAt?: Date | string
   originalFilenameSearch?: string
   storageUriSearch?: string
+  manualReceipts?: Prisma.DeclarationManualEntryCreateNestedManyWithoutReceiptDocumentInput
+  manualResolutions?: Prisma.DeclarationManualEntryCreateNestedManyWithoutResolutionDocumentInput
+  manualResults?: Prisma.DeclarationManualResultCreateNestedManyWithoutResultDocumentInput
   declarationExport?: Prisma.DeclarationExportCreateNestedOneWithoutDocumentInput
   createdByUser?: Prisma.UserCreateNestedOneWithoutCreatedDocumentsInput
   organization: Prisma.OrganizationCreateNestedOneWithoutDocumentsInput
@@ -427,6 +439,9 @@ export type DocumentUncheckedCreateInput = {
   createdAt?: Date | string
   originalFilenameSearch?: string
   storageUriSearch?: string
+  manualReceipts?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutReceiptDocumentInput
+  manualResolutions?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutResolutionDocumentInput
+  manualResults?: Prisma.DeclarationManualResultUncheckedCreateNestedManyWithoutResultDocumentInput
   declarationExport?: Prisma.DeclarationExportUncheckedCreateNestedOneWithoutDocumentInput
   invoiceDocuments?: Prisma.InvoiceDocumentUncheckedCreateNestedManyWithoutDocumentInput
   signature?: Prisma.SignatureUncheckedCreateNestedOneWithoutSignatureDocumentInput
@@ -445,6 +460,9 @@ export type DocumentUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  manualReceipts?: Prisma.DeclarationManualEntryUpdateManyWithoutReceiptDocumentNestedInput
+  manualResolutions?: Prisma.DeclarationManualEntryUpdateManyWithoutResolutionDocumentNestedInput
+  manualResults?: Prisma.DeclarationManualResultUpdateManyWithoutResultDocumentNestedInput
   declarationExport?: Prisma.DeclarationExportUpdateOneWithoutDocumentNestedInput
   createdByUser?: Prisma.UserUpdateOneWithoutCreatedDocumentsNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutDocumentsNestedInput
@@ -467,6 +485,9 @@ export type DocumentUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  manualReceipts?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutReceiptDocumentNestedInput
+  manualResolutions?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutResolutionDocumentNestedInput
+  manualResults?: Prisma.DeclarationManualResultUncheckedUpdateManyWithoutResultDocumentNestedInput
   declarationExport?: Prisma.DeclarationExportUncheckedUpdateOneWithoutDocumentNestedInput
   invoiceDocuments?: Prisma.InvoiceDocumentUncheckedUpdateManyWithoutDocumentNestedInput
   signature?: Prisma.SignatureUncheckedUpdateOneWithoutSignatureDocumentNestedInput
@@ -524,6 +545,11 @@ export type DocumentUncheckedUpdateManyInput = {
 export type DocumentScalarRelationFilter = {
   is?: Prisma.DocumentWhereInput
   isNot?: Prisma.DocumentWhereInput
+}
+
+export type DocumentNullableScalarRelationFilter = {
+  is?: Prisma.DocumentWhereInput | null
+  isNot?: Prisma.DocumentWhereInput | null
 }
 
 export type DocumentCountOrderByAggregateInput = {
@@ -611,6 +637,52 @@ export type DocumentUpdateOneRequiredWithoutDeclarationExportNestedInput = {
   upsert?: Prisma.DocumentUpsertWithoutDeclarationExportInput
   connect?: Prisma.DocumentWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.DocumentUpdateToOneWithWhereWithoutDeclarationExportInput, Prisma.DocumentUpdateWithoutDeclarationExportInput>, Prisma.DocumentUncheckedUpdateWithoutDeclarationExportInput>
+}
+
+export type DocumentCreateNestedOneWithoutManualReceiptsInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutManualReceiptsInput, Prisma.DocumentUncheckedCreateWithoutManualReceiptsInput>
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutManualReceiptsInput
+  connect?: Prisma.DocumentWhereUniqueInput
+}
+
+export type DocumentCreateNestedOneWithoutManualResolutionsInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutManualResolutionsInput, Prisma.DocumentUncheckedCreateWithoutManualResolutionsInput>
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutManualResolutionsInput
+  connect?: Prisma.DocumentWhereUniqueInput
+}
+
+export type DocumentUpdateOneWithoutManualReceiptsNestedInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutManualReceiptsInput, Prisma.DocumentUncheckedCreateWithoutManualReceiptsInput>
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutManualReceiptsInput
+  upsert?: Prisma.DocumentUpsertWithoutManualReceiptsInput
+  disconnect?: Prisma.DocumentWhereInput | boolean
+  delete?: Prisma.DocumentWhereInput | boolean
+  connect?: Prisma.DocumentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DocumentUpdateToOneWithWhereWithoutManualReceiptsInput, Prisma.DocumentUpdateWithoutManualReceiptsInput>, Prisma.DocumentUncheckedUpdateWithoutManualReceiptsInput>
+}
+
+export type DocumentUpdateOneWithoutManualResolutionsNestedInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutManualResolutionsInput, Prisma.DocumentUncheckedCreateWithoutManualResolutionsInput>
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutManualResolutionsInput
+  upsert?: Prisma.DocumentUpsertWithoutManualResolutionsInput
+  disconnect?: Prisma.DocumentWhereInput | boolean
+  delete?: Prisma.DocumentWhereInput | boolean
+  connect?: Prisma.DocumentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DocumentUpdateToOneWithWhereWithoutManualResolutionsInput, Prisma.DocumentUpdateWithoutManualResolutionsInput>, Prisma.DocumentUncheckedUpdateWithoutManualResolutionsInput>
+}
+
+export type DocumentCreateNestedOneWithoutManualResultsInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutManualResultsInput, Prisma.DocumentUncheckedCreateWithoutManualResultsInput>
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutManualResultsInput
+  connect?: Prisma.DocumentWhereUniqueInput
+}
+
+export type DocumentUpdateOneRequiredWithoutManualResultsNestedInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutManualResultsInput, Prisma.DocumentUncheckedCreateWithoutManualResultsInput>
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutManualResultsInput
+  upsert?: Prisma.DocumentUpsertWithoutManualResultsInput
+  connect?: Prisma.DocumentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DocumentUpdateToOneWithWhereWithoutManualResultsInput, Prisma.DocumentUpdateWithoutManualResultsInput>, Prisma.DocumentUncheckedUpdateWithoutManualResultsInput>
 }
 
 export type EnumDocumentTypeFieldUpdateOperationsInput = {
@@ -746,6 +818,9 @@ export type DocumentCreateWithoutDeclarationExportInput = {
   createdAt?: Date | string
   originalFilenameSearch?: string
   storageUriSearch?: string
+  manualReceipts?: Prisma.DeclarationManualEntryCreateNestedManyWithoutReceiptDocumentInput
+  manualResolutions?: Prisma.DeclarationManualEntryCreateNestedManyWithoutResolutionDocumentInput
+  manualResults?: Prisma.DeclarationManualResultCreateNestedManyWithoutResultDocumentInput
   createdByUser?: Prisma.UserCreateNestedOneWithoutCreatedDocumentsInput
   organization: Prisma.OrganizationCreateNestedOneWithoutDocumentsInput
   invoiceDocuments?: Prisma.InvoiceDocumentCreateNestedManyWithoutDocumentInput
@@ -767,6 +842,9 @@ export type DocumentUncheckedCreateWithoutDeclarationExportInput = {
   createdAt?: Date | string
   originalFilenameSearch?: string
   storageUriSearch?: string
+  manualReceipts?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutReceiptDocumentInput
+  manualResolutions?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutResolutionDocumentInput
+  manualResults?: Prisma.DeclarationManualResultUncheckedCreateNestedManyWithoutResultDocumentInput
   invoiceDocuments?: Prisma.InvoiceDocumentUncheckedCreateNestedManyWithoutDocumentInput
   signature?: Prisma.SignatureUncheckedCreateNestedOneWithoutSignatureDocumentInput
 }
@@ -800,6 +878,9 @@ export type DocumentUpdateWithoutDeclarationExportInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  manualReceipts?: Prisma.DeclarationManualEntryUpdateManyWithoutReceiptDocumentNestedInput
+  manualResolutions?: Prisma.DeclarationManualEntryUpdateManyWithoutResolutionDocumentNestedInput
+  manualResults?: Prisma.DeclarationManualResultUpdateManyWithoutResultDocumentNestedInput
   createdByUser?: Prisma.UserUpdateOneWithoutCreatedDocumentsNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutDocumentsNestedInput
   invoiceDocuments?: Prisma.InvoiceDocumentUpdateManyWithoutDocumentNestedInput
@@ -821,6 +902,321 @@ export type DocumentUncheckedUpdateWithoutDeclarationExportInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  manualReceipts?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutReceiptDocumentNestedInput
+  manualResolutions?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutResolutionDocumentNestedInput
+  manualResults?: Prisma.DeclarationManualResultUncheckedUpdateManyWithoutResultDocumentNestedInput
+  invoiceDocuments?: Prisma.InvoiceDocumentUncheckedUpdateManyWithoutDocumentNestedInput
+  signature?: Prisma.SignatureUncheckedUpdateOneWithoutSignatureDocumentNestedInput
+}
+
+export type DocumentCreateWithoutManualReceiptsInput = {
+  id?: bigint | number
+  documentType: $Enums.DocumentType
+  storageProvider?: $Enums.DocumentStorageProvider
+  storageUri: string
+  originalFilename: string
+  mimeType: string
+  sizeBytes: bigint | number
+  sha256: string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  originalFilenameSearch?: string
+  storageUriSearch?: string
+  manualResolutions?: Prisma.DeclarationManualEntryCreateNestedManyWithoutResolutionDocumentInput
+  manualResults?: Prisma.DeclarationManualResultCreateNestedManyWithoutResultDocumentInput
+  declarationExport?: Prisma.DeclarationExportCreateNestedOneWithoutDocumentInput
+  createdByUser?: Prisma.UserCreateNestedOneWithoutCreatedDocumentsInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutDocumentsInput
+  invoiceDocuments?: Prisma.InvoiceDocumentCreateNestedManyWithoutDocumentInput
+  signature?: Prisma.SignatureCreateNestedOneWithoutSignatureDocumentInput
+}
+
+export type DocumentUncheckedCreateWithoutManualReceiptsInput = {
+  id?: bigint | number
+  organizationId: bigint | number
+  documentType: $Enums.DocumentType
+  storageProvider?: $Enums.DocumentStorageProvider
+  storageUri: string
+  originalFilename: string
+  mimeType: string
+  sizeBytes: bigint | number
+  sha256: string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdByUserId?: bigint | number | null
+  createdAt?: Date | string
+  originalFilenameSearch?: string
+  storageUriSearch?: string
+  manualResolutions?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutResolutionDocumentInput
+  manualResults?: Prisma.DeclarationManualResultUncheckedCreateNestedManyWithoutResultDocumentInput
+  declarationExport?: Prisma.DeclarationExportUncheckedCreateNestedOneWithoutDocumentInput
+  invoiceDocuments?: Prisma.InvoiceDocumentUncheckedCreateNestedManyWithoutDocumentInput
+  signature?: Prisma.SignatureUncheckedCreateNestedOneWithoutSignatureDocumentInput
+}
+
+export type DocumentCreateOrConnectWithoutManualReceiptsInput = {
+  where: Prisma.DocumentWhereUniqueInput
+  create: Prisma.XOR<Prisma.DocumentCreateWithoutManualReceiptsInput, Prisma.DocumentUncheckedCreateWithoutManualReceiptsInput>
+}
+
+export type DocumentCreateWithoutManualResolutionsInput = {
+  id?: bigint | number
+  documentType: $Enums.DocumentType
+  storageProvider?: $Enums.DocumentStorageProvider
+  storageUri: string
+  originalFilename: string
+  mimeType: string
+  sizeBytes: bigint | number
+  sha256: string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  originalFilenameSearch?: string
+  storageUriSearch?: string
+  manualReceipts?: Prisma.DeclarationManualEntryCreateNestedManyWithoutReceiptDocumentInput
+  manualResults?: Prisma.DeclarationManualResultCreateNestedManyWithoutResultDocumentInput
+  declarationExport?: Prisma.DeclarationExportCreateNestedOneWithoutDocumentInput
+  createdByUser?: Prisma.UserCreateNestedOneWithoutCreatedDocumentsInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutDocumentsInput
+  invoiceDocuments?: Prisma.InvoiceDocumentCreateNestedManyWithoutDocumentInput
+  signature?: Prisma.SignatureCreateNestedOneWithoutSignatureDocumentInput
+}
+
+export type DocumentUncheckedCreateWithoutManualResolutionsInput = {
+  id?: bigint | number
+  organizationId: bigint | number
+  documentType: $Enums.DocumentType
+  storageProvider?: $Enums.DocumentStorageProvider
+  storageUri: string
+  originalFilename: string
+  mimeType: string
+  sizeBytes: bigint | number
+  sha256: string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdByUserId?: bigint | number | null
+  createdAt?: Date | string
+  originalFilenameSearch?: string
+  storageUriSearch?: string
+  manualReceipts?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutReceiptDocumentInput
+  manualResults?: Prisma.DeclarationManualResultUncheckedCreateNestedManyWithoutResultDocumentInput
+  declarationExport?: Prisma.DeclarationExportUncheckedCreateNestedOneWithoutDocumentInput
+  invoiceDocuments?: Prisma.InvoiceDocumentUncheckedCreateNestedManyWithoutDocumentInput
+  signature?: Prisma.SignatureUncheckedCreateNestedOneWithoutSignatureDocumentInput
+}
+
+export type DocumentCreateOrConnectWithoutManualResolutionsInput = {
+  where: Prisma.DocumentWhereUniqueInput
+  create: Prisma.XOR<Prisma.DocumentCreateWithoutManualResolutionsInput, Prisma.DocumentUncheckedCreateWithoutManualResolutionsInput>
+}
+
+export type DocumentUpsertWithoutManualReceiptsInput = {
+  update: Prisma.XOR<Prisma.DocumentUpdateWithoutManualReceiptsInput, Prisma.DocumentUncheckedUpdateWithoutManualReceiptsInput>
+  create: Prisma.XOR<Prisma.DocumentCreateWithoutManualReceiptsInput, Prisma.DocumentUncheckedCreateWithoutManualReceiptsInput>
+  where?: Prisma.DocumentWhereInput
+}
+
+export type DocumentUpdateToOneWithWhereWithoutManualReceiptsInput = {
+  where?: Prisma.DocumentWhereInput
+  data: Prisma.XOR<Prisma.DocumentUpdateWithoutManualReceiptsInput, Prisma.DocumentUncheckedUpdateWithoutManualReceiptsInput>
+}
+
+export type DocumentUpdateWithoutManualReceiptsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  documentType?: Prisma.EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+  storageProvider?: Prisma.EnumDocumentStorageProviderFieldUpdateOperationsInput | $Enums.DocumentStorageProvider
+  storageUri?: Prisma.StringFieldUpdateOperationsInput | string
+  originalFilename?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  sizeBytes?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  sha256?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  manualResolutions?: Prisma.DeclarationManualEntryUpdateManyWithoutResolutionDocumentNestedInput
+  manualResults?: Prisma.DeclarationManualResultUpdateManyWithoutResultDocumentNestedInput
+  declarationExport?: Prisma.DeclarationExportUpdateOneWithoutDocumentNestedInput
+  createdByUser?: Prisma.UserUpdateOneWithoutCreatedDocumentsNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutDocumentsNestedInput
+  invoiceDocuments?: Prisma.InvoiceDocumentUpdateManyWithoutDocumentNestedInput
+  signature?: Prisma.SignatureUpdateOneWithoutSignatureDocumentNestedInput
+}
+
+export type DocumentUncheckedUpdateWithoutManualReceiptsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  organizationId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  documentType?: Prisma.EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+  storageProvider?: Prisma.EnumDocumentStorageProviderFieldUpdateOperationsInput | $Enums.DocumentStorageProvider
+  storageUri?: Prisma.StringFieldUpdateOperationsInput | string
+  originalFilename?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  sizeBytes?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  sha256?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdByUserId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  manualResolutions?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutResolutionDocumentNestedInput
+  manualResults?: Prisma.DeclarationManualResultUncheckedUpdateManyWithoutResultDocumentNestedInput
+  declarationExport?: Prisma.DeclarationExportUncheckedUpdateOneWithoutDocumentNestedInput
+  invoiceDocuments?: Prisma.InvoiceDocumentUncheckedUpdateManyWithoutDocumentNestedInput
+  signature?: Prisma.SignatureUncheckedUpdateOneWithoutSignatureDocumentNestedInput
+}
+
+export type DocumentUpsertWithoutManualResolutionsInput = {
+  update: Prisma.XOR<Prisma.DocumentUpdateWithoutManualResolutionsInput, Prisma.DocumentUncheckedUpdateWithoutManualResolutionsInput>
+  create: Prisma.XOR<Prisma.DocumentCreateWithoutManualResolutionsInput, Prisma.DocumentUncheckedCreateWithoutManualResolutionsInput>
+  where?: Prisma.DocumentWhereInput
+}
+
+export type DocumentUpdateToOneWithWhereWithoutManualResolutionsInput = {
+  where?: Prisma.DocumentWhereInput
+  data: Prisma.XOR<Prisma.DocumentUpdateWithoutManualResolutionsInput, Prisma.DocumentUncheckedUpdateWithoutManualResolutionsInput>
+}
+
+export type DocumentUpdateWithoutManualResolutionsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  documentType?: Prisma.EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+  storageProvider?: Prisma.EnumDocumentStorageProviderFieldUpdateOperationsInput | $Enums.DocumentStorageProvider
+  storageUri?: Prisma.StringFieldUpdateOperationsInput | string
+  originalFilename?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  sizeBytes?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  sha256?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  manualReceipts?: Prisma.DeclarationManualEntryUpdateManyWithoutReceiptDocumentNestedInput
+  manualResults?: Prisma.DeclarationManualResultUpdateManyWithoutResultDocumentNestedInput
+  declarationExport?: Prisma.DeclarationExportUpdateOneWithoutDocumentNestedInput
+  createdByUser?: Prisma.UserUpdateOneWithoutCreatedDocumentsNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutDocumentsNestedInput
+  invoiceDocuments?: Prisma.InvoiceDocumentUpdateManyWithoutDocumentNestedInput
+  signature?: Prisma.SignatureUpdateOneWithoutSignatureDocumentNestedInput
+}
+
+export type DocumentUncheckedUpdateWithoutManualResolutionsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  organizationId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  documentType?: Prisma.EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+  storageProvider?: Prisma.EnumDocumentStorageProviderFieldUpdateOperationsInput | $Enums.DocumentStorageProvider
+  storageUri?: Prisma.StringFieldUpdateOperationsInput | string
+  originalFilename?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  sizeBytes?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  sha256?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdByUserId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  manualReceipts?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutReceiptDocumentNestedInput
+  manualResults?: Prisma.DeclarationManualResultUncheckedUpdateManyWithoutResultDocumentNestedInput
+  declarationExport?: Prisma.DeclarationExportUncheckedUpdateOneWithoutDocumentNestedInput
+  invoiceDocuments?: Prisma.InvoiceDocumentUncheckedUpdateManyWithoutDocumentNestedInput
+  signature?: Prisma.SignatureUncheckedUpdateOneWithoutSignatureDocumentNestedInput
+}
+
+export type DocumentCreateWithoutManualResultsInput = {
+  id?: bigint | number
+  documentType: $Enums.DocumentType
+  storageProvider?: $Enums.DocumentStorageProvider
+  storageUri: string
+  originalFilename: string
+  mimeType: string
+  sizeBytes: bigint | number
+  sha256: string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  originalFilenameSearch?: string
+  storageUriSearch?: string
+  manualReceipts?: Prisma.DeclarationManualEntryCreateNestedManyWithoutReceiptDocumentInput
+  manualResolutions?: Prisma.DeclarationManualEntryCreateNestedManyWithoutResolutionDocumentInput
+  declarationExport?: Prisma.DeclarationExportCreateNestedOneWithoutDocumentInput
+  createdByUser?: Prisma.UserCreateNestedOneWithoutCreatedDocumentsInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutDocumentsInput
+  invoiceDocuments?: Prisma.InvoiceDocumentCreateNestedManyWithoutDocumentInput
+  signature?: Prisma.SignatureCreateNestedOneWithoutSignatureDocumentInput
+}
+
+export type DocumentUncheckedCreateWithoutManualResultsInput = {
+  id?: bigint | number
+  organizationId: bigint | number
+  documentType: $Enums.DocumentType
+  storageProvider?: $Enums.DocumentStorageProvider
+  storageUri: string
+  originalFilename: string
+  mimeType: string
+  sizeBytes: bigint | number
+  sha256: string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdByUserId?: bigint | number | null
+  createdAt?: Date | string
+  originalFilenameSearch?: string
+  storageUriSearch?: string
+  manualReceipts?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutReceiptDocumentInput
+  manualResolutions?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutResolutionDocumentInput
+  declarationExport?: Prisma.DeclarationExportUncheckedCreateNestedOneWithoutDocumentInput
+  invoiceDocuments?: Prisma.InvoiceDocumentUncheckedCreateNestedManyWithoutDocumentInput
+  signature?: Prisma.SignatureUncheckedCreateNestedOneWithoutSignatureDocumentInput
+}
+
+export type DocumentCreateOrConnectWithoutManualResultsInput = {
+  where: Prisma.DocumentWhereUniqueInput
+  create: Prisma.XOR<Prisma.DocumentCreateWithoutManualResultsInput, Prisma.DocumentUncheckedCreateWithoutManualResultsInput>
+}
+
+export type DocumentUpsertWithoutManualResultsInput = {
+  update: Prisma.XOR<Prisma.DocumentUpdateWithoutManualResultsInput, Prisma.DocumentUncheckedUpdateWithoutManualResultsInput>
+  create: Prisma.XOR<Prisma.DocumentCreateWithoutManualResultsInput, Prisma.DocumentUncheckedCreateWithoutManualResultsInput>
+  where?: Prisma.DocumentWhereInput
+}
+
+export type DocumentUpdateToOneWithWhereWithoutManualResultsInput = {
+  where?: Prisma.DocumentWhereInput
+  data: Prisma.XOR<Prisma.DocumentUpdateWithoutManualResultsInput, Prisma.DocumentUncheckedUpdateWithoutManualResultsInput>
+}
+
+export type DocumentUpdateWithoutManualResultsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  documentType?: Prisma.EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+  storageProvider?: Prisma.EnumDocumentStorageProviderFieldUpdateOperationsInput | $Enums.DocumentStorageProvider
+  storageUri?: Prisma.StringFieldUpdateOperationsInput | string
+  originalFilename?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  sizeBytes?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  sha256?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  manualReceipts?: Prisma.DeclarationManualEntryUpdateManyWithoutReceiptDocumentNestedInput
+  manualResolutions?: Prisma.DeclarationManualEntryUpdateManyWithoutResolutionDocumentNestedInput
+  declarationExport?: Prisma.DeclarationExportUpdateOneWithoutDocumentNestedInput
+  createdByUser?: Prisma.UserUpdateOneWithoutCreatedDocumentsNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutDocumentsNestedInput
+  invoiceDocuments?: Prisma.InvoiceDocumentUpdateManyWithoutDocumentNestedInput
+  signature?: Prisma.SignatureUpdateOneWithoutSignatureDocumentNestedInput
+}
+
+export type DocumentUncheckedUpdateWithoutManualResultsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  organizationId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  documentType?: Prisma.EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+  storageProvider?: Prisma.EnumDocumentStorageProviderFieldUpdateOperationsInput | $Enums.DocumentStorageProvider
+  storageUri?: Prisma.StringFieldUpdateOperationsInput | string
+  originalFilename?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  sizeBytes?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  sha256?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdByUserId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  manualReceipts?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutReceiptDocumentNestedInput
+  manualResolutions?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutResolutionDocumentNestedInput
+  declarationExport?: Prisma.DeclarationExportUncheckedUpdateOneWithoutDocumentNestedInput
   invoiceDocuments?: Prisma.InvoiceDocumentUncheckedUpdateManyWithoutDocumentNestedInput
   signature?: Prisma.SignatureUncheckedUpdateOneWithoutSignatureDocumentNestedInput
 }
@@ -838,6 +1234,9 @@ export type DocumentCreateWithoutInvoiceDocumentsInput = {
   createdAt?: Date | string
   originalFilenameSearch?: string
   storageUriSearch?: string
+  manualReceipts?: Prisma.DeclarationManualEntryCreateNestedManyWithoutReceiptDocumentInput
+  manualResolutions?: Prisma.DeclarationManualEntryCreateNestedManyWithoutResolutionDocumentInput
+  manualResults?: Prisma.DeclarationManualResultCreateNestedManyWithoutResultDocumentInput
   declarationExport?: Prisma.DeclarationExportCreateNestedOneWithoutDocumentInput
   createdByUser?: Prisma.UserCreateNestedOneWithoutCreatedDocumentsInput
   organization: Prisma.OrganizationCreateNestedOneWithoutDocumentsInput
@@ -859,6 +1258,9 @@ export type DocumentUncheckedCreateWithoutInvoiceDocumentsInput = {
   createdAt?: Date | string
   originalFilenameSearch?: string
   storageUriSearch?: string
+  manualReceipts?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutReceiptDocumentInput
+  manualResolutions?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutResolutionDocumentInput
+  manualResults?: Prisma.DeclarationManualResultUncheckedCreateNestedManyWithoutResultDocumentInput
   declarationExport?: Prisma.DeclarationExportUncheckedCreateNestedOneWithoutDocumentInput
   signature?: Prisma.SignatureUncheckedCreateNestedOneWithoutSignatureDocumentInput
 }
@@ -892,6 +1294,9 @@ export type DocumentUpdateWithoutInvoiceDocumentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  manualReceipts?: Prisma.DeclarationManualEntryUpdateManyWithoutReceiptDocumentNestedInput
+  manualResolutions?: Prisma.DeclarationManualEntryUpdateManyWithoutResolutionDocumentNestedInput
+  manualResults?: Prisma.DeclarationManualResultUpdateManyWithoutResultDocumentNestedInput
   declarationExport?: Prisma.DeclarationExportUpdateOneWithoutDocumentNestedInput
   createdByUser?: Prisma.UserUpdateOneWithoutCreatedDocumentsNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutDocumentsNestedInput
@@ -913,6 +1318,9 @@ export type DocumentUncheckedUpdateWithoutInvoiceDocumentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  manualReceipts?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutReceiptDocumentNestedInput
+  manualResolutions?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutResolutionDocumentNestedInput
+  manualResults?: Prisma.DeclarationManualResultUncheckedUpdateManyWithoutResultDocumentNestedInput
   declarationExport?: Prisma.DeclarationExportUncheckedUpdateOneWithoutDocumentNestedInput
   signature?: Prisma.SignatureUncheckedUpdateOneWithoutSignatureDocumentNestedInput
 }
@@ -930,6 +1338,9 @@ export type DocumentCreateWithoutOrganizationInput = {
   createdAt?: Date | string
   originalFilenameSearch?: string
   storageUriSearch?: string
+  manualReceipts?: Prisma.DeclarationManualEntryCreateNestedManyWithoutReceiptDocumentInput
+  manualResolutions?: Prisma.DeclarationManualEntryCreateNestedManyWithoutResolutionDocumentInput
+  manualResults?: Prisma.DeclarationManualResultCreateNestedManyWithoutResultDocumentInput
   declarationExport?: Prisma.DeclarationExportCreateNestedOneWithoutDocumentInput
   createdByUser?: Prisma.UserCreateNestedOneWithoutCreatedDocumentsInput
   invoiceDocuments?: Prisma.InvoiceDocumentCreateNestedManyWithoutDocumentInput
@@ -950,6 +1361,9 @@ export type DocumentUncheckedCreateWithoutOrganizationInput = {
   createdAt?: Date | string
   originalFilenameSearch?: string
   storageUriSearch?: string
+  manualReceipts?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutReceiptDocumentInput
+  manualResolutions?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutResolutionDocumentInput
+  manualResults?: Prisma.DeclarationManualResultUncheckedCreateNestedManyWithoutResultDocumentInput
   declarationExport?: Prisma.DeclarationExportUncheckedCreateNestedOneWithoutDocumentInput
   invoiceDocuments?: Prisma.InvoiceDocumentUncheckedCreateNestedManyWithoutDocumentInput
   signature?: Prisma.SignatureUncheckedCreateNestedOneWithoutSignatureDocumentInput
@@ -1014,6 +1428,9 @@ export type DocumentCreateWithoutSignatureInput = {
   createdAt?: Date | string
   originalFilenameSearch?: string
   storageUriSearch?: string
+  manualReceipts?: Prisma.DeclarationManualEntryCreateNestedManyWithoutReceiptDocumentInput
+  manualResolutions?: Prisma.DeclarationManualEntryCreateNestedManyWithoutResolutionDocumentInput
+  manualResults?: Prisma.DeclarationManualResultCreateNestedManyWithoutResultDocumentInput
   declarationExport?: Prisma.DeclarationExportCreateNestedOneWithoutDocumentInput
   createdByUser?: Prisma.UserCreateNestedOneWithoutCreatedDocumentsInput
   organization: Prisma.OrganizationCreateNestedOneWithoutDocumentsInput
@@ -1035,6 +1452,9 @@ export type DocumentUncheckedCreateWithoutSignatureInput = {
   createdAt?: Date | string
   originalFilenameSearch?: string
   storageUriSearch?: string
+  manualReceipts?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutReceiptDocumentInput
+  manualResolutions?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutResolutionDocumentInput
+  manualResults?: Prisma.DeclarationManualResultUncheckedCreateNestedManyWithoutResultDocumentInput
   declarationExport?: Prisma.DeclarationExportUncheckedCreateNestedOneWithoutDocumentInput
   invoiceDocuments?: Prisma.InvoiceDocumentUncheckedCreateNestedManyWithoutDocumentInput
 }
@@ -1068,6 +1488,9 @@ export type DocumentUpdateWithoutSignatureInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  manualReceipts?: Prisma.DeclarationManualEntryUpdateManyWithoutReceiptDocumentNestedInput
+  manualResolutions?: Prisma.DeclarationManualEntryUpdateManyWithoutResolutionDocumentNestedInput
+  manualResults?: Prisma.DeclarationManualResultUpdateManyWithoutResultDocumentNestedInput
   declarationExport?: Prisma.DeclarationExportUpdateOneWithoutDocumentNestedInput
   createdByUser?: Prisma.UserUpdateOneWithoutCreatedDocumentsNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutDocumentsNestedInput
@@ -1089,6 +1512,9 @@ export type DocumentUncheckedUpdateWithoutSignatureInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  manualReceipts?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutReceiptDocumentNestedInput
+  manualResolutions?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutResolutionDocumentNestedInput
+  manualResults?: Prisma.DeclarationManualResultUncheckedUpdateManyWithoutResultDocumentNestedInput
   declarationExport?: Prisma.DeclarationExportUncheckedUpdateOneWithoutDocumentNestedInput
   invoiceDocuments?: Prisma.InvoiceDocumentUncheckedUpdateManyWithoutDocumentNestedInput
 }
@@ -1106,6 +1532,9 @@ export type DocumentCreateWithoutCreatedByUserInput = {
   createdAt?: Date | string
   originalFilenameSearch?: string
   storageUriSearch?: string
+  manualReceipts?: Prisma.DeclarationManualEntryCreateNestedManyWithoutReceiptDocumentInput
+  manualResolutions?: Prisma.DeclarationManualEntryCreateNestedManyWithoutResolutionDocumentInput
+  manualResults?: Prisma.DeclarationManualResultCreateNestedManyWithoutResultDocumentInput
   declarationExport?: Prisma.DeclarationExportCreateNestedOneWithoutDocumentInput
   organization: Prisma.OrganizationCreateNestedOneWithoutDocumentsInput
   invoiceDocuments?: Prisma.InvoiceDocumentCreateNestedManyWithoutDocumentInput
@@ -1126,6 +1555,9 @@ export type DocumentUncheckedCreateWithoutCreatedByUserInput = {
   createdAt?: Date | string
   originalFilenameSearch?: string
   storageUriSearch?: string
+  manualReceipts?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutReceiptDocumentInput
+  manualResolutions?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutResolutionDocumentInput
+  manualResults?: Prisma.DeclarationManualResultUncheckedCreateNestedManyWithoutResultDocumentInput
   declarationExport?: Prisma.DeclarationExportUncheckedCreateNestedOneWithoutDocumentInput
   invoiceDocuments?: Prisma.InvoiceDocumentUncheckedCreateNestedManyWithoutDocumentInput
   signature?: Prisma.SignatureUncheckedCreateNestedOneWithoutSignatureDocumentInput
@@ -1186,6 +1618,9 @@ export type DocumentUpdateWithoutOrganizationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  manualReceipts?: Prisma.DeclarationManualEntryUpdateManyWithoutReceiptDocumentNestedInput
+  manualResolutions?: Prisma.DeclarationManualEntryUpdateManyWithoutResolutionDocumentNestedInput
+  manualResults?: Prisma.DeclarationManualResultUpdateManyWithoutResultDocumentNestedInput
   declarationExport?: Prisma.DeclarationExportUpdateOneWithoutDocumentNestedInput
   createdByUser?: Prisma.UserUpdateOneWithoutCreatedDocumentsNestedInput
   invoiceDocuments?: Prisma.InvoiceDocumentUpdateManyWithoutDocumentNestedInput
@@ -1206,6 +1641,9 @@ export type DocumentUncheckedUpdateWithoutOrganizationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  manualReceipts?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutReceiptDocumentNestedInput
+  manualResolutions?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutResolutionDocumentNestedInput
+  manualResults?: Prisma.DeclarationManualResultUncheckedUpdateManyWithoutResultDocumentNestedInput
   declarationExport?: Prisma.DeclarationExportUncheckedUpdateOneWithoutDocumentNestedInput
   invoiceDocuments?: Prisma.InvoiceDocumentUncheckedUpdateManyWithoutDocumentNestedInput
   signature?: Prisma.SignatureUncheckedUpdateOneWithoutSignatureDocumentNestedInput
@@ -1256,6 +1694,9 @@ export type DocumentUpdateWithoutCreatedByUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  manualReceipts?: Prisma.DeclarationManualEntryUpdateManyWithoutReceiptDocumentNestedInput
+  manualResolutions?: Prisma.DeclarationManualEntryUpdateManyWithoutResolutionDocumentNestedInput
+  manualResults?: Prisma.DeclarationManualResultUpdateManyWithoutResultDocumentNestedInput
   declarationExport?: Prisma.DeclarationExportUpdateOneWithoutDocumentNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutDocumentsNestedInput
   invoiceDocuments?: Prisma.InvoiceDocumentUpdateManyWithoutDocumentNestedInput
@@ -1276,6 +1717,9 @@ export type DocumentUncheckedUpdateWithoutCreatedByUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   originalFilenameSearch?: Prisma.StringFieldUpdateOperationsInput | string
   storageUriSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  manualReceipts?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutReceiptDocumentNestedInput
+  manualResolutions?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutResolutionDocumentNestedInput
+  manualResults?: Prisma.DeclarationManualResultUncheckedUpdateManyWithoutResultDocumentNestedInput
   declarationExport?: Prisma.DeclarationExportUncheckedUpdateOneWithoutDocumentNestedInput
   invoiceDocuments?: Prisma.InvoiceDocumentUncheckedUpdateManyWithoutDocumentNestedInput
   signature?: Prisma.SignatureUncheckedUpdateOneWithoutSignatureDocumentNestedInput
@@ -1303,10 +1747,16 @@ export type DocumentUncheckedUpdateManyWithoutCreatedByUserInput = {
  */
 
 export type DocumentCountOutputType = {
+  manualReceipts: number
+  manualResolutions: number
+  manualResults: number
   invoiceDocuments: number
 }
 
 export type DocumentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  manualReceipts?: boolean | DocumentCountOutputTypeCountManualReceiptsArgs
+  manualResolutions?: boolean | DocumentCountOutputTypeCountManualResolutionsArgs
+  manualResults?: boolean | DocumentCountOutputTypeCountManualResultsArgs
   invoiceDocuments?: boolean | DocumentCountOutputTypeCountInvoiceDocumentsArgs
 }
 
@@ -1318,6 +1768,27 @@ export type DocumentCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ext
    * Select specific fields to fetch from the DocumentCountOutputType
    */
   select?: Prisma.DocumentCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * DocumentCountOutputType without action
+ */
+export type DocumentCountOutputTypeCountManualReceiptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DeclarationManualEntryWhereInput
+}
+
+/**
+ * DocumentCountOutputType without action
+ */
+export type DocumentCountOutputTypeCountManualResolutionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DeclarationManualEntryWhereInput
+}
+
+/**
+ * DocumentCountOutputType without action
+ */
+export type DocumentCountOutputTypeCountManualResultsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DeclarationManualResultWhereInput
 }
 
 /**
@@ -1343,6 +1814,9 @@ export type DocumentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   createdAt?: boolean
   originalFilenameSearch?: boolean
   storageUriSearch?: boolean
+  manualReceipts?: boolean | Prisma.Document$manualReceiptsArgs<ExtArgs>
+  manualResolutions?: boolean | Prisma.Document$manualResolutionsArgs<ExtArgs>
+  manualResults?: boolean | Prisma.Document$manualResultsArgs<ExtArgs>
   declarationExport?: boolean | Prisma.Document$declarationExportArgs<ExtArgs>
   createdByUser?: boolean | Prisma.Document$createdByUserArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
@@ -1408,6 +1882,9 @@ export type DocumentSelectScalar = {
 
 export type DocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "documentType" | "storageProvider" | "storageUri" | "originalFilename" | "mimeType" | "sizeBytes" | "sha256" | "metadata" | "createdByUserId" | "createdAt" | "originalFilenameSearch" | "storageUriSearch", ExtArgs["result"]["document"]>
 export type DocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  manualReceipts?: boolean | Prisma.Document$manualReceiptsArgs<ExtArgs>
+  manualResolutions?: boolean | Prisma.Document$manualResolutionsArgs<ExtArgs>
+  manualResults?: boolean | Prisma.Document$manualResultsArgs<ExtArgs>
   declarationExport?: boolean | Prisma.Document$declarationExportArgs<ExtArgs>
   createdByUser?: boolean | Prisma.Document$createdByUserArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
@@ -1427,6 +1904,9 @@ export type DocumentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type $DocumentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Document"
   objects: {
+    manualReceipts: Prisma.$DeclarationManualEntryPayload<ExtArgs>[]
+    manualResolutions: Prisma.$DeclarationManualEntryPayload<ExtArgs>[]
+    manualResults: Prisma.$DeclarationManualResultPayload<ExtArgs>[]
     declarationExport: Prisma.$DeclarationExportPayload<ExtArgs> | null
     createdByUser: Prisma.$UserPayload<ExtArgs> | null
     organization: Prisma.$OrganizationPayload<ExtArgs>
@@ -1842,6 +2322,9 @@ readonly fields: DocumentFieldRefs;
  */
 export interface Prisma__DocumentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  manualReceipts<T extends Prisma.Document$manualReceiptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$manualReceiptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeclarationManualEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  manualResolutions<T extends Prisma.Document$manualResolutionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$manualResolutionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeclarationManualEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  manualResults<T extends Prisma.Document$manualResultsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$manualResultsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeclarationManualResultPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   declarationExport<T extends Prisma.Document$declarationExportArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$declarationExportArgs<ExtArgs>>): Prisma.Prisma__DeclarationExportClient<runtime.Types.Result.GetResult<Prisma.$DeclarationExportPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   createdByUser<T extends Prisma.Document$createdByUserArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$createdByUserArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -2288,6 +2771,78 @@ export type DocumentDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Limit how many Documents to delete.
    */
   limit?: number
+}
+
+/**
+ * Document.manualReceipts
+ */
+export type Document$manualReceiptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeclarationManualEntry
+   */
+  select?: Prisma.DeclarationManualEntrySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeclarationManualEntry
+   */
+  omit?: Prisma.DeclarationManualEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeclarationManualEntryInclude<ExtArgs> | null
+  where?: Prisma.DeclarationManualEntryWhereInput
+  orderBy?: Prisma.DeclarationManualEntryOrderByWithRelationInput | Prisma.DeclarationManualEntryOrderByWithRelationInput[]
+  cursor?: Prisma.DeclarationManualEntryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DeclarationManualEntryScalarFieldEnum | Prisma.DeclarationManualEntryScalarFieldEnum[]
+}
+
+/**
+ * Document.manualResolutions
+ */
+export type Document$manualResolutionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeclarationManualEntry
+   */
+  select?: Prisma.DeclarationManualEntrySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeclarationManualEntry
+   */
+  omit?: Prisma.DeclarationManualEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeclarationManualEntryInclude<ExtArgs> | null
+  where?: Prisma.DeclarationManualEntryWhereInput
+  orderBy?: Prisma.DeclarationManualEntryOrderByWithRelationInput | Prisma.DeclarationManualEntryOrderByWithRelationInput[]
+  cursor?: Prisma.DeclarationManualEntryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DeclarationManualEntryScalarFieldEnum | Prisma.DeclarationManualEntryScalarFieldEnum[]
+}
+
+/**
+ * Document.manualResults
+ */
+export type Document$manualResultsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeclarationManualResult
+   */
+  select?: Prisma.DeclarationManualResultSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeclarationManualResult
+   */
+  omit?: Prisma.DeclarationManualResultOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeclarationManualResultInclude<ExtArgs> | null
+  where?: Prisma.DeclarationManualResultWhereInput
+  orderBy?: Prisma.DeclarationManualResultOrderByWithRelationInput | Prisma.DeclarationManualResultOrderByWithRelationInput[]
+  cursor?: Prisma.DeclarationManualResultWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DeclarationManualResultScalarFieldEnum | Prisma.DeclarationManualResultScalarFieldEnum[]
 }
 
 /**

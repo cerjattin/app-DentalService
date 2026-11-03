@@ -75,7 +75,7 @@ describe("Operational gap corrections", () => {
   });
   it("returns only active organization locations with string IDs", async () => {
     const r = await request(app).get("/api/v1/clinic-locations?isActive=true").set("Authorization", "Bearer " + token).expect(200);
-    expect(r.body.data).toEqual([{ id: location.toString(), code: "QA", name: "QA clinic", isActive: true }]);
+    expect(r.body.data).toEqual([{ id: location.toString(), code: "QA", name: "QA clinic", isActive: true, policlinicCode: null }]);
   });
   it("creates an appointment using the mounted lookup and existing POST contract", async () => {
     const r = await request(app).post("/api/v1/appointments").set("Authorization", "Bearer " + token).send({ patientId: patient.toString(), providerId: provider.toString(), clinicLocationId: location.toString(), scheduledStart: "2026-11-01T09:00:00-04:00", scheduledEnd: "2026-11-01T09:30:00-04:00", reason: "QA create", notes: "QA notes" }).expect(201);

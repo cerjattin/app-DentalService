@@ -47,6 +47,7 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc -p tsconfig.json",
+    "vercel-build": "prisma generate && npm run build",
     "start": "node dist/src/server.js",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
@@ -62,6 +63,7 @@
     "db:migrate:supabase": "node scripts/with-supabase.mjs node_modules/prisma/build/index.js migrate deploy",
     "db:seed:supabase": "node scripts/with-supabase.mjs node_modules/prisma/build/index.js db seed",
     "db:verify-seed:supabase": "node scripts/with-supabase.mjs node_modules/tsx/dist/cli.mjs prisma/seed-verify.ts",
+    "documents:audit": "tsx src/scripts/audit-document-storage.ts",
     "db:bootstrap:supabase": "node scripts/with-supabase.mjs node_modules/tsx/dist/cli.mjs src/scripts/bootstrap-admin.ts",
     "db:qa-seed:supabase": "node scripts/with-supabase.mjs node_modules/tsx/dist/cli.mjs src/scripts/qa-postman-seed.ts"
   },

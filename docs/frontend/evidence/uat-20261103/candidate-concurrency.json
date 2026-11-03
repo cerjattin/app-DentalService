@@ -1,0 +1,18 @@
+{
+  "date": "2026-11-03T13:49:34.436Z",
+  "environment": "isolated synthetic Frontend QA",
+  "invoiceItemId": "250",
+  "declarationIds": [
+    "136",
+    "137"
+  ],
+  "statuses": [
+    201,
+    409
+  ],
+  "errors": [
+    null,
+    "DECLARATION_ITEM_ASSIGNED"
+  ],
+  "singleWinner": true
+}

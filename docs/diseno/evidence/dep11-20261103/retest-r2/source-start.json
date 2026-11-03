@@ -1,0 +1,35 @@
+{
+  "date": "2026-11-03",
+  "phase": "Independent design retest R2",
+  "release": "design-dep11-r2",
+  "database": "odontho_design_dep11_20261103_test",
+  "backend": "http://127.0.0.1:3411",
+  "frontend": "http://127.0.0.1:5179",
+  "manualRecordingEnabled": false,
+  "files": [
+    {
+      "path": "frontend/src/features/clinical/clinical-appointment-page.tsx",
+      "sha256": "026ce0770b8bd836927939a4aeff5a0b89663ccf05e639b782c632922e31b281"
+    },
+    {
+      "path": "frontend/src/components/ui/dialog.tsx",
+      "sha256": "0facf1792dee42d968d3754332732c4e7789c19d2c79fcd7c91ed5985855273d"
+    },
+    {
+      "path": "frontend/src/features/reception/reception-page.tsx",
+      "sha256": "b6562c18c519a8e70142cc969c6b2e821b85a6724858b1aa47e520298eb8d819"
+    },
+    {
+      "path": "frontend/src/features/appointments/appointments-page.tsx",
+      "sha256": "6b912e8c0eb4d67fe016870a08d73f563a51542188815474cbbcd844d77544e5"
+    },
+    {
+      "path": "frontend/src/features/declarations/manual-entry-dialog.tsx",
+      "sha256": "3c1455a60906f0374e4d28d64567e8d9a6e954e45d5db570a1432142ffb6e4e0"
+    },
+    {
+      "path": "frontend/src/components/forms/unsaved-changes.tsx",
+      "sha256": "68a4395b9bd6c02b7956114db8798166b50b7cb2b83b782c3a7680d67f7f9870"
+    }
+  ]
+}

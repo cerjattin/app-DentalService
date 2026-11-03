@@ -1,0 +1,79 @@
+{
+  "date": "2026-11-03T13:09:54.938Z",
+  "environment": "odontho_frontend0709_20261103_test; loopback 55443/3408",
+  "organizationId": "84",
+  "checks": [
+    {
+      "name": "ADMIN login",
+      "actual": 200,
+      "expected": 200,
+      "pass": true
+    },
+    {
+      "name": "RECEPTION login",
+      "actual": 200,
+      "expected": 200,
+      "pass": true
+    },
+    {
+      "name": "Reception close follows effective invoice.close permission",
+      "actual": 409,
+      "expected": 409,
+      "pass": true
+    },
+    {
+      "name": "PROVIDER login",
+      "actual": 200,
+      "expected": 200,
+      "pass": true
+    },
+    {
+      "name": "Provider cannot update organization",
+      "actual": 403,
+      "expected": 403,
+      "pass": true
+    },
+    {
+      "name": "No session invoice",
+      "actual": 401,
+      "expected": 401,
+      "pass": true
+    },
+    {
+      "name": "Foreign or unavailable /patients/1",
+      "actual": 404,
+      "expected": "403/404",
+      "pass": true
+    },
+    {
+      "name": "Foreign or unavailable /invoices/1",
+      "actual": 404,
+      "expected": "403/404",
+      "pass": true
+    },
+    {
+      "name": "Foreign or unavailable /documents/1",
+      "actual": 404,
+      "expected": "403/404",
+      "pass": true
+    },
+    {
+      "name": "Foreign or unavailable /declarations/1",
+      "actual": 404,
+      "expected": "403/404",
+      "pass": true
+    },
+    {
+      "name": "Real SVB disabled",
+      "actual": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "Dashboard read",
+      "actual": 200,
+      "expected": 200,
+      "pass": true
+    }
+  ]
+}

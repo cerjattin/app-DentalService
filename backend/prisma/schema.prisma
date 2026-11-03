@@ -201,6 +201,8 @@ model DeclarationBatch {
   declarationNumber   String?                         @map("declaration_number") @db.VarChar(80)
   status              DeclarationBatchStatus          @default(DRAFT)
   lastItemSequence    Int                             @default(0) @map("last_item_sequence") @db.Integer
+  lastSubmissionAttempt Int                           @default(0) @map("last_submission_attempt") @db.Integer
+  manualEntries       DeclarationManualEntry[]
   periodStart         DateTime?                       @map("period_start") @db.Date
   periodEnd           DateTime?                       @map("period_end") @db.Date
   declarantIdSnapshot String?                         @map("declarant_id_snapshot") @db.VarChar(64)
@@ -311,6 +313,7 @@ model DeclarationActiveAssignment {
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model DeclarationSubmission {
   id                  BigInt                       @id @default(autoincrement()) @db.BigInt
+  manualEntry         DeclarationManualEntry?
   declarationBatchId  BigInt                       @map("declaration_batch_id") @db.BigInt
   declarationExportId BigInt?                      @map("declaration_export_id") @db.BigInt
   attemptNumber       Int                          @map("attempt_number") @db.Integer
@@ -331,6 +334,70 @@ model DeclarationSubmission {
   @@index([submittedByUserId], map: "ix_declaration_submissions_user")
   @@index([declarationBatchId, status, submittedAt], map: "idx_declaration_submissions_status")
   @@map("declaration_submissions")
+}
+
+model DeclarationManualEntry {
+  id                    BigInt @id @default(autoincrement()) @db.BigInt
+  organizationId        BigInt @map("organization_id") @db.BigInt
+  declarationBatchId    BigInt @map("declaration_batch_id") @db.BigInt
+  state                 String @default("PREPARED") @db.VarChar(20)
+  claimKey              String @map("claim_key") @db.VarChar(128)
+  contentHash           String @map("content_hash") @db.Char(64)
+  contentSnapshot       Json @map("content_snapshot")
+  preparedByUserId      BigInt @map("prepared_by_user_id") @db.BigInt
+  preparedAt            DateTime @default(now()) @map("prepared_at") @db.Timestamptz(3)
+  uncertaintyReason     String? @map("uncertainty_reason") @db.VarChar(500)
+  releaseReason         String? @map("release_reason") @db.VarChar(500)
+  releasedAt            DateTime? @map("released_at") @db.Timestamptz(3)
+  resolutionDocumentId  BigInt? @map("resolution_document_id") @db.BigInt
+  recordKey             String? @map("record_key") @db.VarChar(128)
+  recordHash            String? @map("record_hash") @db.Char(64)
+  submissionId          BigInt? @unique(map: "uq_manual_entry_submission") @map("submission_id") @db.BigInt
+  receiptDocumentId     BigInt? @map("receipt_document_id") @db.BigInt
+  receiptSha256         String? @map("receipt_sha256") @db.Char(64)
+  externalSubmittedAt   DateTime? @map("external_submitted_at") @db.Timestamptz(3)
+  confirmedAt           DateTime? @map("confirmed_at") @db.Timestamptz(3)
+  organization          Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  declarationBatch      DeclarationBatch @relation(fields: [declarationBatchId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  preparedByUser        User @relation(fields: [preparedByUserId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  submission            DeclarationSubmission? @relation(fields: [submissionId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  receiptDocument       Document? @relation("ManualReceipt", fields: [receiptDocumentId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  resolutionDocument    Document? @relation("ManualResolution", fields: [resolutionDocumentId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  result                DeclarationManualResult?
+
+  @@unique([organizationId, claimKey], map: "uq_manual_entry_claim_key")
+  @@unique([organizationId, recordKey], map: "uq_manual_entry_record_key")
+  @@index([declarationBatchId, state], map: "idx_manual_entry_batch_state")
+  @@index([preparedByUserId], map: "idx_manual_entry_user")
+  @@index([receiptDocumentId], map: "idx_manual_entry_receipt")
+  @@index([resolutionDocumentId], map: "idx_manual_entry_resolution")
+  @@map("declaration_manual_entries")
+}
+
+model DeclarationManualResult {
+  id                    BigInt @id @default(autoincrement()) @db.BigInt
+  manualEntryId         BigInt @unique(map: "uq_manual_result_entry") @map("manual_entry_id") @db.BigInt
+  organizationId        BigInt @map("organization_id") @db.BigInt
+  idempotencyKey        String @map("idempotency_key") @db.VarChar(128)
+  requestHash           String @map("request_hash") @db.Char(64)
+  status                DeclarationSubmissionStatus
+  resultDocumentId      BigInt @map("result_document_id") @db.BigInt
+  resultSha256          String @map("result_sha256") @db.Char(64)
+  externalReference     String? @map("external_reference") @db.VarChar(120)
+  reason                String? @db.VarChar(500)
+  externalRespondedAt   DateTime @map("external_responded_at") @db.Timestamptz(3)
+  recordedByUserId      BigInt @map("recorded_by_user_id") @db.BigInt
+  recordedAt            DateTime @default(now()) @map("recorded_at") @db.Timestamptz(3)
+  lineResults           Json @map("line_results")
+  manualEntry           DeclarationManualEntry @relation(fields: [manualEntryId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  organization          Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  recordedByUser        User @relation(fields: [recordedByUserId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  resultDocument        Document @relation(fields: [resultDocumentId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+
+  @@unique([organizationId, idempotencyKey], map: "uq_manual_result_key")
+  @@index([recordedByUserId], map: "idx_manual_result_user")
+  @@index([resultDocumentId], map: "idx_manual_result_document")
+  @@map("declaration_manual_results")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -356,6 +423,9 @@ model DiagnosisCode {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model Document {
+  manualReceipts DeclarationManualEntry[] @relation("ManualReceipt")
+  manualResolutions DeclarationManualEntry[] @relation("ManualResolution")
+  manualResults DeclarationManualResult[]
   id                BigInt                  @id @default(autoincrement()) @db.BigInt
   organizationId    BigInt                  @map("organization_id") @db.BigInt
   documentType      DocumentType            @map("document_type")
@@ -684,6 +754,8 @@ model NumberSequence {
 }
 
 model Organization {
+  manualEntries DeclarationManualEntry[]
+  manualResults DeclarationManualResult[]
   id                 BigInt             @id @default(autoincrement()) @db.BigInt
   legalName          String             @map("legal_name") @db.VarChar(200)
   tradeName          String?            @map("trade_name") @db.VarChar(200)
@@ -1112,6 +1184,8 @@ model UserRole {
 }
 
 model User {
+  manualEntries DeclarationManualEntry[]
+  manualResults DeclarationManualResult[]
   id                            BigInt                          @id @default(autoincrement()) @db.BigInt
   organizationId                BigInt                          @map("organization_id") @db.BigInt
   email                         String                          @unique(map: "uq_users_email") @db.VarChar(320)

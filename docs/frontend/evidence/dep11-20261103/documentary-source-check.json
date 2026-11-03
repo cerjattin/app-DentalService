@@ -1,0 +1,9 @@
+{
+  "date": "2026-11-03T21:10:31.003603+00:00",
+  "scope": "Read-only comparison; no build or test rerun; no deployment",
+  "frontendOwnBuildSourceChanges": [],
+  "architectureCandidate": "dep12-092a67db50d812ff",
+  "architectureManifest": "deployment/releases/dep12-092a67db50d812ff-1793739679732/manifest.json",
+  "frontendFilesInArchitectureCandidate": 173,
+  "frontendCandidateChanges": []
+}

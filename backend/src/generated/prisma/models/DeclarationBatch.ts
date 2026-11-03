@@ -31,6 +31,7 @@ export type DeclarationBatchAvgAggregateOutputType = {
   organizationId: number | null
   payerId: number | null
   lastItemSequence: number | null
+  lastSubmissionAttempt: number | null
   createdByUserId: number | null
 }
 
@@ -39,6 +40,7 @@ export type DeclarationBatchSumAggregateOutputType = {
   organizationId: bigint | null
   payerId: bigint | null
   lastItemSequence: number | null
+  lastSubmissionAttempt: number | null
   createdByUserId: bigint | null
 }
 
@@ -49,6 +51,7 @@ export type DeclarationBatchMinAggregateOutputType = {
   declarationNumber: string | null
   status: $Enums.DeclarationBatchStatus | null
   lastItemSequence: number | null
+  lastSubmissionAttempt: number | null
   periodStart: Date | null
   periodEnd: Date | null
   declarantIdSnapshot: string | null
@@ -73,6 +76,7 @@ export type DeclarationBatchMaxAggregateOutputType = {
   declarationNumber: string | null
   status: $Enums.DeclarationBatchStatus | null
   lastItemSequence: number | null
+  lastSubmissionAttempt: number | null
   periodStart: Date | null
   periodEnd: Date | null
   declarantIdSnapshot: string | null
@@ -97,6 +101,7 @@ export type DeclarationBatchCountAggregateOutputType = {
   declarationNumber: number
   status: number
   lastItemSequence: number
+  lastSubmissionAttempt: number
   periodStart: number
   periodEnd: number
   declarantIdSnapshot: number
@@ -121,6 +126,7 @@ export type DeclarationBatchAvgAggregateInputType = {
   organizationId?: true
   payerId?: true
   lastItemSequence?: true
+  lastSubmissionAttempt?: true
   createdByUserId?: true
 }
 
@@ -129,6 +135,7 @@ export type DeclarationBatchSumAggregateInputType = {
   organizationId?: true
   payerId?: true
   lastItemSequence?: true
+  lastSubmissionAttempt?: true
   createdByUserId?: true
 }
 
@@ -139,6 +146,7 @@ export type DeclarationBatchMinAggregateInputType = {
   declarationNumber?: true
   status?: true
   lastItemSequence?: true
+  lastSubmissionAttempt?: true
   periodStart?: true
   periodEnd?: true
   declarantIdSnapshot?: true
@@ -163,6 +171,7 @@ export type DeclarationBatchMaxAggregateInputType = {
   declarationNumber?: true
   status?: true
   lastItemSequence?: true
+  lastSubmissionAttempt?: true
   periodStart?: true
   periodEnd?: true
   declarantIdSnapshot?: true
@@ -187,6 +196,7 @@ export type DeclarationBatchCountAggregateInputType = {
   declarationNumber?: true
   status?: true
   lastItemSequence?: true
+  lastSubmissionAttempt?: true
   periodStart?: true
   periodEnd?: true
   declarantIdSnapshot?: true
@@ -298,6 +308,7 @@ export type DeclarationBatchGroupByOutputType = {
   declarationNumber: string | null
   status: $Enums.DeclarationBatchStatus
   lastItemSequence: number
+  lastSubmissionAttempt: number
   periodStart: Date | null
   periodEnd: Date | null
   declarantIdSnapshot: string | null
@@ -345,6 +356,7 @@ export type DeclarationBatchWhereInput = {
   declarationNumber?: Prisma.StringNullableFilter<"DeclarationBatch"> | string | null
   status?: Prisma.EnumDeclarationBatchStatusFilter<"DeclarationBatch"> | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFilter<"DeclarationBatch"> | number
+  lastSubmissionAttempt?: Prisma.IntFilter<"DeclarationBatch"> | number
   periodStart?: Prisma.DateTimeNullableFilter<"DeclarationBatch"> | Date | string | null
   periodEnd?: Prisma.DateTimeNullableFilter<"DeclarationBatch"> | Date | string | null
   declarantIdSnapshot?: Prisma.StringNullableFilter<"DeclarationBatch"> | string | null
@@ -360,6 +372,7 @@ export type DeclarationBatchWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"DeclarationBatch"> | Date | string
   declarationNumberSearch?: Prisma.StringNullableFilter<"DeclarationBatch"> | string | null
   notesSearch?: Prisma.StringNullableFilter<"DeclarationBatch"> | string | null
+  manualEntries?: Prisma.DeclarationManualEntryListRelationFilter
   statusHistory?: Prisma.DeclarationBatchStatusHistoryListRelationFilter
   createdByUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
@@ -377,6 +390,7 @@ export type DeclarationBatchOrderByWithRelationInput = {
   declarationNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   lastItemSequence?: Prisma.SortOrder
+  lastSubmissionAttempt?: Prisma.SortOrder
   periodStart?: Prisma.SortOrderInput | Prisma.SortOrder
   periodEnd?: Prisma.SortOrderInput | Prisma.SortOrder
   declarantIdSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -392,6 +406,7 @@ export type DeclarationBatchOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   declarationNumberSearch?: Prisma.SortOrderInput | Prisma.SortOrder
   notesSearch?: Prisma.SortOrderInput | Prisma.SortOrder
+  manualEntries?: Prisma.DeclarationManualEntryOrderByRelationAggregateInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryOrderByRelationAggregateInput
   createdByUser?: Prisma.UserOrderByWithRelationInput
   organization?: Prisma.OrganizationOrderByWithRelationInput
@@ -413,6 +428,7 @@ export type DeclarationBatchWhereUniqueInput = Prisma.AtLeast<{
   declarationNumber?: Prisma.StringNullableFilter<"DeclarationBatch"> | string | null
   status?: Prisma.EnumDeclarationBatchStatusFilter<"DeclarationBatch"> | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFilter<"DeclarationBatch"> | number
+  lastSubmissionAttempt?: Prisma.IntFilter<"DeclarationBatch"> | number
   periodStart?: Prisma.DateTimeNullableFilter<"DeclarationBatch"> | Date | string | null
   periodEnd?: Prisma.DateTimeNullableFilter<"DeclarationBatch"> | Date | string | null
   declarantIdSnapshot?: Prisma.StringNullableFilter<"DeclarationBatch"> | string | null
@@ -428,6 +444,7 @@ export type DeclarationBatchWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"DeclarationBatch"> | Date | string
   declarationNumberSearch?: Prisma.StringNullableFilter<"DeclarationBatch"> | string | null
   notesSearch?: Prisma.StringNullableFilter<"DeclarationBatch"> | string | null
+  manualEntries?: Prisma.DeclarationManualEntryListRelationFilter
   statusHistory?: Prisma.DeclarationBatchStatusHistoryListRelationFilter
   createdByUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
@@ -445,6 +462,7 @@ export type DeclarationBatchOrderByWithAggregationInput = {
   declarationNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   lastItemSequence?: Prisma.SortOrder
+  lastSubmissionAttempt?: Prisma.SortOrder
   periodStart?: Prisma.SortOrderInput | Prisma.SortOrder
   periodEnd?: Prisma.SortOrderInput | Prisma.SortOrder
   declarantIdSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -477,6 +495,7 @@ export type DeclarationBatchScalarWhereWithAggregatesInput = {
   declarationNumber?: Prisma.StringNullableWithAggregatesFilter<"DeclarationBatch"> | string | null
   status?: Prisma.EnumDeclarationBatchStatusWithAggregatesFilter<"DeclarationBatch"> | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntWithAggregatesFilter<"DeclarationBatch"> | number
+  lastSubmissionAttempt?: Prisma.IntWithAggregatesFilter<"DeclarationBatch"> | number
   periodStart?: Prisma.DateTimeNullableWithAggregatesFilter<"DeclarationBatch"> | Date | string | null
   periodEnd?: Prisma.DateTimeNullableWithAggregatesFilter<"DeclarationBatch"> | Date | string | null
   declarantIdSnapshot?: Prisma.StringNullableWithAggregatesFilter<"DeclarationBatch"> | string | null
@@ -499,6 +518,7 @@ export type DeclarationBatchCreateInput = {
   declarationNumber?: string | null
   status?: $Enums.DeclarationBatchStatus
   lastItemSequence?: number
+  lastSubmissionAttempt?: number
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
   declarantIdSnapshot?: string | null
@@ -513,6 +533,7 @@ export type DeclarationBatchCreateInput = {
   updatedAt?: Date | string
   declarationNumberSearch?: string | null
   notesSearch?: string | null
+  manualEntries?: Prisma.DeclarationManualEntryCreateNestedManyWithoutDeclarationBatchInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryCreateNestedManyWithoutDeclarationBatchInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedDeclarationBatchesInput
   organization: Prisma.OrganizationCreateNestedOneWithoutDeclarationBatchesInput
@@ -530,6 +551,7 @@ export type DeclarationBatchUncheckedCreateInput = {
   declarationNumber?: string | null
   status?: $Enums.DeclarationBatchStatus
   lastItemSequence?: number
+  lastSubmissionAttempt?: number
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
   declarantIdSnapshot?: string | null
@@ -545,6 +567,7 @@ export type DeclarationBatchUncheckedCreateInput = {
   updatedAt?: Date | string
   declarationNumberSearch?: string | null
   notesSearch?: string | null
+  manualEntries?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutDeclarationBatchInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryUncheckedCreateNestedManyWithoutDeclarationBatchInput
   exports?: Prisma.DeclarationExportUncheckedCreateNestedManyWithoutDeclarationBatchInput
   items?: Prisma.DeclarationItemUncheckedCreateNestedManyWithoutDeclarationBatchInput
@@ -557,6 +580,7 @@ export type DeclarationBatchUpdateInput = {
   declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -571,6 +595,7 @@ export type DeclarationBatchUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   declarationNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notesSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  manualEntries?: Prisma.DeclarationManualEntryUpdateManyWithoutDeclarationBatchNestedInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryUpdateManyWithoutDeclarationBatchNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedDeclarationBatchesNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutDeclarationBatchesNestedInput
@@ -588,6 +613,7 @@ export type DeclarationBatchUncheckedUpdateInput = {
   declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -603,6 +629,7 @@ export type DeclarationBatchUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   declarationNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notesSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  manualEntries?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   exports?: Prisma.DeclarationExportUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   items?: Prisma.DeclarationItemUncheckedUpdateManyWithoutDeclarationBatchNestedInput
@@ -617,6 +644,7 @@ export type DeclarationBatchCreateManyInput = {
   declarationNumber?: string | null
   status?: $Enums.DeclarationBatchStatus
   lastItemSequence?: number
+  lastSubmissionAttempt?: number
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
   declarantIdSnapshot?: string | null
@@ -639,6 +667,7 @@ export type DeclarationBatchUpdateManyMutationInput = {
   declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -662,6 +691,7 @@ export type DeclarationBatchUncheckedUpdateManyInput = {
   declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -696,6 +726,7 @@ export type DeclarationBatchCountOrderByAggregateInput = {
   declarationNumber?: Prisma.SortOrder
   status?: Prisma.SortOrder
   lastItemSequence?: Prisma.SortOrder
+  lastSubmissionAttempt?: Prisma.SortOrder
   periodStart?: Prisma.SortOrder
   periodEnd?: Prisma.SortOrder
   declarantIdSnapshot?: Prisma.SortOrder
@@ -718,6 +749,7 @@ export type DeclarationBatchAvgOrderByAggregateInput = {
   organizationId?: Prisma.SortOrder
   payerId?: Prisma.SortOrder
   lastItemSequence?: Prisma.SortOrder
+  lastSubmissionAttempt?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
 }
 
@@ -728,6 +760,7 @@ export type DeclarationBatchMaxOrderByAggregateInput = {
   declarationNumber?: Prisma.SortOrder
   status?: Prisma.SortOrder
   lastItemSequence?: Prisma.SortOrder
+  lastSubmissionAttempt?: Prisma.SortOrder
   periodStart?: Prisma.SortOrder
   periodEnd?: Prisma.SortOrder
   declarantIdSnapshot?: Prisma.SortOrder
@@ -752,6 +785,7 @@ export type DeclarationBatchMinOrderByAggregateInput = {
   declarationNumber?: Prisma.SortOrder
   status?: Prisma.SortOrder
   lastItemSequence?: Prisma.SortOrder
+  lastSubmissionAttempt?: Prisma.SortOrder
   periodStart?: Prisma.SortOrder
   periodEnd?: Prisma.SortOrder
   declarantIdSnapshot?: Prisma.SortOrder
@@ -774,6 +808,7 @@ export type DeclarationBatchSumOrderByAggregateInput = {
   organizationId?: Prisma.SortOrder
   payerId?: Prisma.SortOrder
   lastItemSequence?: Prisma.SortOrder
+  lastSubmissionAttempt?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
 }
 
@@ -867,6 +902,20 @@ export type DeclarationBatchUpdateOneRequiredWithoutSubmissionsNestedInput = {
   upsert?: Prisma.DeclarationBatchUpsertWithoutSubmissionsInput
   connect?: Prisma.DeclarationBatchWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.DeclarationBatchUpdateToOneWithWhereWithoutSubmissionsInput, Prisma.DeclarationBatchUpdateWithoutSubmissionsInput>, Prisma.DeclarationBatchUncheckedUpdateWithoutSubmissionsInput>
+}
+
+export type DeclarationBatchCreateNestedOneWithoutManualEntriesInput = {
+  create?: Prisma.XOR<Prisma.DeclarationBatchCreateWithoutManualEntriesInput, Prisma.DeclarationBatchUncheckedCreateWithoutManualEntriesInput>
+  connectOrCreate?: Prisma.DeclarationBatchCreateOrConnectWithoutManualEntriesInput
+  connect?: Prisma.DeclarationBatchWhereUniqueInput
+}
+
+export type DeclarationBatchUpdateOneRequiredWithoutManualEntriesNestedInput = {
+  create?: Prisma.XOR<Prisma.DeclarationBatchCreateWithoutManualEntriesInput, Prisma.DeclarationBatchUncheckedCreateWithoutManualEntriesInput>
+  connectOrCreate?: Prisma.DeclarationBatchCreateOrConnectWithoutManualEntriesInput
+  upsert?: Prisma.DeclarationBatchUpsertWithoutManualEntriesInput
+  connect?: Prisma.DeclarationBatchWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DeclarationBatchUpdateToOneWithWhereWithoutManualEntriesInput, Prisma.DeclarationBatchUpdateWithoutManualEntriesInput>, Prisma.DeclarationBatchUncheckedUpdateWithoutManualEntriesInput>
 }
 
 export type DeclarationBatchCreateNestedManyWithoutOrganizationInput = {
@@ -1000,6 +1049,7 @@ export type DeclarationBatchCreateWithoutStatusHistoryInput = {
   declarationNumber?: string | null
   status?: $Enums.DeclarationBatchStatus
   lastItemSequence?: number
+  lastSubmissionAttempt?: number
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
   declarantIdSnapshot?: string | null
@@ -1014,6 +1064,7 @@ export type DeclarationBatchCreateWithoutStatusHistoryInput = {
   updatedAt?: Date | string
   declarationNumberSearch?: string | null
   notesSearch?: string | null
+  manualEntries?: Prisma.DeclarationManualEntryCreateNestedManyWithoutDeclarationBatchInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedDeclarationBatchesInput
   organization: Prisma.OrganizationCreateNestedOneWithoutDeclarationBatchesInput
   payer: Prisma.PayerCreateNestedOneWithoutDeclarationBatchesInput
@@ -1030,6 +1081,7 @@ export type DeclarationBatchUncheckedCreateWithoutStatusHistoryInput = {
   declarationNumber?: string | null
   status?: $Enums.DeclarationBatchStatus
   lastItemSequence?: number
+  lastSubmissionAttempt?: number
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
   declarantIdSnapshot?: string | null
@@ -1045,6 +1097,7 @@ export type DeclarationBatchUncheckedCreateWithoutStatusHistoryInput = {
   updatedAt?: Date | string
   declarationNumberSearch?: string | null
   notesSearch?: string | null
+  manualEntries?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutDeclarationBatchInput
   exports?: Prisma.DeclarationExportUncheckedCreateNestedManyWithoutDeclarationBatchInput
   items?: Prisma.DeclarationItemUncheckedCreateNestedManyWithoutDeclarationBatchInput
   activeAssignments?: Prisma.DeclarationActiveAssignmentUncheckedCreateNestedManyWithoutDeclarationBatchInput
@@ -1072,6 +1125,7 @@ export type DeclarationBatchUpdateWithoutStatusHistoryInput = {
   declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1086,6 +1140,7 @@ export type DeclarationBatchUpdateWithoutStatusHistoryInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   declarationNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notesSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  manualEntries?: Prisma.DeclarationManualEntryUpdateManyWithoutDeclarationBatchNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedDeclarationBatchesNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutDeclarationBatchesNestedInput
   payer?: Prisma.PayerUpdateOneRequiredWithoutDeclarationBatchesNestedInput
@@ -1102,6 +1157,7 @@ export type DeclarationBatchUncheckedUpdateWithoutStatusHistoryInput = {
   declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1117,6 +1173,7 @@ export type DeclarationBatchUncheckedUpdateWithoutStatusHistoryInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   declarationNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notesSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  manualEntries?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   exports?: Prisma.DeclarationExportUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   items?: Prisma.DeclarationItemUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   activeAssignments?: Prisma.DeclarationActiveAssignmentUncheckedUpdateManyWithoutDeclarationBatchNestedInput
@@ -1128,6 +1185,7 @@ export type DeclarationBatchCreateWithoutExportsInput = {
   declarationNumber?: string | null
   status?: $Enums.DeclarationBatchStatus
   lastItemSequence?: number
+  lastSubmissionAttempt?: number
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
   declarantIdSnapshot?: string | null
@@ -1142,6 +1200,7 @@ export type DeclarationBatchCreateWithoutExportsInput = {
   updatedAt?: Date | string
   declarationNumberSearch?: string | null
   notesSearch?: string | null
+  manualEntries?: Prisma.DeclarationManualEntryCreateNestedManyWithoutDeclarationBatchInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryCreateNestedManyWithoutDeclarationBatchInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedDeclarationBatchesInput
   organization: Prisma.OrganizationCreateNestedOneWithoutDeclarationBatchesInput
@@ -1158,6 +1217,7 @@ export type DeclarationBatchUncheckedCreateWithoutExportsInput = {
   declarationNumber?: string | null
   status?: $Enums.DeclarationBatchStatus
   lastItemSequence?: number
+  lastSubmissionAttempt?: number
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
   declarantIdSnapshot?: string | null
@@ -1173,6 +1233,7 @@ export type DeclarationBatchUncheckedCreateWithoutExportsInput = {
   updatedAt?: Date | string
   declarationNumberSearch?: string | null
   notesSearch?: string | null
+  manualEntries?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutDeclarationBatchInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryUncheckedCreateNestedManyWithoutDeclarationBatchInput
   items?: Prisma.DeclarationItemUncheckedCreateNestedManyWithoutDeclarationBatchInput
   activeAssignments?: Prisma.DeclarationActiveAssignmentUncheckedCreateNestedManyWithoutDeclarationBatchInput
@@ -1200,6 +1261,7 @@ export type DeclarationBatchUpdateWithoutExportsInput = {
   declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1214,6 +1276,7 @@ export type DeclarationBatchUpdateWithoutExportsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   declarationNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notesSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  manualEntries?: Prisma.DeclarationManualEntryUpdateManyWithoutDeclarationBatchNestedInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryUpdateManyWithoutDeclarationBatchNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedDeclarationBatchesNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutDeclarationBatchesNestedInput
@@ -1230,6 +1293,7 @@ export type DeclarationBatchUncheckedUpdateWithoutExportsInput = {
   declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1245,6 +1309,7 @@ export type DeclarationBatchUncheckedUpdateWithoutExportsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   declarationNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notesSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  manualEntries?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   items?: Prisma.DeclarationItemUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   activeAssignments?: Prisma.DeclarationActiveAssignmentUncheckedUpdateManyWithoutDeclarationBatchNestedInput
@@ -1256,6 +1321,7 @@ export type DeclarationBatchCreateWithoutItemsInput = {
   declarationNumber?: string | null
   status?: $Enums.DeclarationBatchStatus
   lastItemSequence?: number
+  lastSubmissionAttempt?: number
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
   declarantIdSnapshot?: string | null
@@ -1270,6 +1336,7 @@ export type DeclarationBatchCreateWithoutItemsInput = {
   updatedAt?: Date | string
   declarationNumberSearch?: string | null
   notesSearch?: string | null
+  manualEntries?: Prisma.DeclarationManualEntryCreateNestedManyWithoutDeclarationBatchInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryCreateNestedManyWithoutDeclarationBatchInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedDeclarationBatchesInput
   organization: Prisma.OrganizationCreateNestedOneWithoutDeclarationBatchesInput
@@ -1286,6 +1353,7 @@ export type DeclarationBatchUncheckedCreateWithoutItemsInput = {
   declarationNumber?: string | null
   status?: $Enums.DeclarationBatchStatus
   lastItemSequence?: number
+  lastSubmissionAttempt?: number
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
   declarantIdSnapshot?: string | null
@@ -1301,6 +1369,7 @@ export type DeclarationBatchUncheckedCreateWithoutItemsInput = {
   updatedAt?: Date | string
   declarationNumberSearch?: string | null
   notesSearch?: string | null
+  manualEntries?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutDeclarationBatchInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryUncheckedCreateNestedManyWithoutDeclarationBatchInput
   exports?: Prisma.DeclarationExportUncheckedCreateNestedManyWithoutDeclarationBatchInput
   activeAssignments?: Prisma.DeclarationActiveAssignmentUncheckedCreateNestedManyWithoutDeclarationBatchInput
@@ -1328,6 +1397,7 @@ export type DeclarationBatchUpdateWithoutItemsInput = {
   declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1342,6 +1412,7 @@ export type DeclarationBatchUpdateWithoutItemsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   declarationNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notesSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  manualEntries?: Prisma.DeclarationManualEntryUpdateManyWithoutDeclarationBatchNestedInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryUpdateManyWithoutDeclarationBatchNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedDeclarationBatchesNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutDeclarationBatchesNestedInput
@@ -1358,6 +1429,7 @@ export type DeclarationBatchUncheckedUpdateWithoutItemsInput = {
   declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1373,6 +1445,7 @@ export type DeclarationBatchUncheckedUpdateWithoutItemsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   declarationNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notesSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  manualEntries?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   exports?: Prisma.DeclarationExportUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   activeAssignments?: Prisma.DeclarationActiveAssignmentUncheckedUpdateManyWithoutDeclarationBatchNestedInput
@@ -1384,6 +1457,7 @@ export type DeclarationBatchCreateWithoutActiveAssignmentsInput = {
   declarationNumber?: string | null
   status?: $Enums.DeclarationBatchStatus
   lastItemSequence?: number
+  lastSubmissionAttempt?: number
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
   declarantIdSnapshot?: string | null
@@ -1398,6 +1472,7 @@ export type DeclarationBatchCreateWithoutActiveAssignmentsInput = {
   updatedAt?: Date | string
   declarationNumberSearch?: string | null
   notesSearch?: string | null
+  manualEntries?: Prisma.DeclarationManualEntryCreateNestedManyWithoutDeclarationBatchInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryCreateNestedManyWithoutDeclarationBatchInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedDeclarationBatchesInput
   organization: Prisma.OrganizationCreateNestedOneWithoutDeclarationBatchesInput
@@ -1414,6 +1489,7 @@ export type DeclarationBatchUncheckedCreateWithoutActiveAssignmentsInput = {
   declarationNumber?: string | null
   status?: $Enums.DeclarationBatchStatus
   lastItemSequence?: number
+  lastSubmissionAttempt?: number
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
   declarantIdSnapshot?: string | null
@@ -1429,6 +1505,7 @@ export type DeclarationBatchUncheckedCreateWithoutActiveAssignmentsInput = {
   updatedAt?: Date | string
   declarationNumberSearch?: string | null
   notesSearch?: string | null
+  manualEntries?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutDeclarationBatchInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryUncheckedCreateNestedManyWithoutDeclarationBatchInput
   exports?: Prisma.DeclarationExportUncheckedCreateNestedManyWithoutDeclarationBatchInput
   items?: Prisma.DeclarationItemUncheckedCreateNestedManyWithoutDeclarationBatchInput
@@ -1456,6 +1533,7 @@ export type DeclarationBatchUpdateWithoutActiveAssignmentsInput = {
   declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1470,6 +1548,7 @@ export type DeclarationBatchUpdateWithoutActiveAssignmentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   declarationNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notesSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  manualEntries?: Prisma.DeclarationManualEntryUpdateManyWithoutDeclarationBatchNestedInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryUpdateManyWithoutDeclarationBatchNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedDeclarationBatchesNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutDeclarationBatchesNestedInput
@@ -1486,6 +1565,7 @@ export type DeclarationBatchUncheckedUpdateWithoutActiveAssignmentsInput = {
   declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1501,6 +1581,7 @@ export type DeclarationBatchUncheckedUpdateWithoutActiveAssignmentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   declarationNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notesSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  manualEntries?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   exports?: Prisma.DeclarationExportUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   items?: Prisma.DeclarationItemUncheckedUpdateManyWithoutDeclarationBatchNestedInput
@@ -1512,6 +1593,7 @@ export type DeclarationBatchCreateWithoutSubmissionsInput = {
   declarationNumber?: string | null
   status?: $Enums.DeclarationBatchStatus
   lastItemSequence?: number
+  lastSubmissionAttempt?: number
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
   declarantIdSnapshot?: string | null
@@ -1526,6 +1608,7 @@ export type DeclarationBatchCreateWithoutSubmissionsInput = {
   updatedAt?: Date | string
   declarationNumberSearch?: string | null
   notesSearch?: string | null
+  manualEntries?: Prisma.DeclarationManualEntryCreateNestedManyWithoutDeclarationBatchInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryCreateNestedManyWithoutDeclarationBatchInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedDeclarationBatchesInput
   organization: Prisma.OrganizationCreateNestedOneWithoutDeclarationBatchesInput
@@ -1542,6 +1625,7 @@ export type DeclarationBatchUncheckedCreateWithoutSubmissionsInput = {
   declarationNumber?: string | null
   status?: $Enums.DeclarationBatchStatus
   lastItemSequence?: number
+  lastSubmissionAttempt?: number
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
   declarantIdSnapshot?: string | null
@@ -1557,6 +1641,7 @@ export type DeclarationBatchUncheckedCreateWithoutSubmissionsInput = {
   updatedAt?: Date | string
   declarationNumberSearch?: string | null
   notesSearch?: string | null
+  manualEntries?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutDeclarationBatchInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryUncheckedCreateNestedManyWithoutDeclarationBatchInput
   exports?: Prisma.DeclarationExportUncheckedCreateNestedManyWithoutDeclarationBatchInput
   items?: Prisma.DeclarationItemUncheckedCreateNestedManyWithoutDeclarationBatchInput
@@ -1584,6 +1669,143 @@ export type DeclarationBatchUpdateWithoutSubmissionsInput = {
   declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
+  periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  submissionReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readyAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  exportedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  declarationNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notesSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  manualEntries?: Prisma.DeclarationManualEntryUpdateManyWithoutDeclarationBatchNestedInput
+  statusHistory?: Prisma.DeclarationBatchStatusHistoryUpdateManyWithoutDeclarationBatchNestedInput
+  createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedDeclarationBatchesNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutDeclarationBatchesNestedInput
+  payer?: Prisma.PayerUpdateOneRequiredWithoutDeclarationBatchesNestedInput
+  exports?: Prisma.DeclarationExportUpdateManyWithoutDeclarationBatchNestedInput
+  items?: Prisma.DeclarationItemUpdateManyWithoutDeclarationBatchNestedInput
+  activeAssignments?: Prisma.DeclarationActiveAssignmentUpdateManyWithoutDeclarationBatchNestedInput
+}
+
+export type DeclarationBatchUncheckedUpdateWithoutSubmissionsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  organizationId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  payerId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
+  lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
+  periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  submissionReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  readyAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  exportedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  declarationNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notesSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  manualEntries?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutDeclarationBatchNestedInput
+  statusHistory?: Prisma.DeclarationBatchStatusHistoryUncheckedUpdateManyWithoutDeclarationBatchNestedInput
+  exports?: Prisma.DeclarationExportUncheckedUpdateManyWithoutDeclarationBatchNestedInput
+  items?: Prisma.DeclarationItemUncheckedUpdateManyWithoutDeclarationBatchNestedInput
+  activeAssignments?: Prisma.DeclarationActiveAssignmentUncheckedUpdateManyWithoutDeclarationBatchNestedInput
+}
+
+export type DeclarationBatchCreateWithoutManualEntriesInput = {
+  id?: bigint | number
+  declarationNumber?: string | null
+  status?: $Enums.DeclarationBatchStatus
+  lastItemSequence?: number
+  lastSubmissionAttempt?: number
+  periodStart?: Date | string | null
+  periodEnd?: Date | string | null
+  declarantIdSnapshot?: string | null
+  submissionReference?: string | null
+  notes?: string | null
+  readyAt?: Date | string | null
+  exportedAt?: Date | string | null
+  submittedAt?: Date | string | null
+  acceptedAt?: Date | string | null
+  rejectedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  declarationNumberSearch?: string | null
+  notesSearch?: string | null
+  statusHistory?: Prisma.DeclarationBatchStatusHistoryCreateNestedManyWithoutDeclarationBatchInput
+  createdByUser: Prisma.UserCreateNestedOneWithoutCreatedDeclarationBatchesInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutDeclarationBatchesInput
+  payer: Prisma.PayerCreateNestedOneWithoutDeclarationBatchesInput
+  exports?: Prisma.DeclarationExportCreateNestedManyWithoutDeclarationBatchInput
+  items?: Prisma.DeclarationItemCreateNestedManyWithoutDeclarationBatchInput
+  activeAssignments?: Prisma.DeclarationActiveAssignmentCreateNestedManyWithoutDeclarationBatchInput
+  submissions?: Prisma.DeclarationSubmissionCreateNestedManyWithoutDeclarationBatchInput
+}
+
+export type DeclarationBatchUncheckedCreateWithoutManualEntriesInput = {
+  id?: bigint | number
+  organizationId: bigint | number
+  payerId: bigint | number
+  declarationNumber?: string | null
+  status?: $Enums.DeclarationBatchStatus
+  lastItemSequence?: number
+  lastSubmissionAttempt?: number
+  periodStart?: Date | string | null
+  periodEnd?: Date | string | null
+  declarantIdSnapshot?: string | null
+  submissionReference?: string | null
+  notes?: string | null
+  createdByUserId: bigint | number
+  readyAt?: Date | string | null
+  exportedAt?: Date | string | null
+  submittedAt?: Date | string | null
+  acceptedAt?: Date | string | null
+  rejectedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  declarationNumberSearch?: string | null
+  notesSearch?: string | null
+  statusHistory?: Prisma.DeclarationBatchStatusHistoryUncheckedCreateNestedManyWithoutDeclarationBatchInput
+  exports?: Prisma.DeclarationExportUncheckedCreateNestedManyWithoutDeclarationBatchInput
+  items?: Prisma.DeclarationItemUncheckedCreateNestedManyWithoutDeclarationBatchInput
+  activeAssignments?: Prisma.DeclarationActiveAssignmentUncheckedCreateNestedManyWithoutDeclarationBatchInput
+  submissions?: Prisma.DeclarationSubmissionUncheckedCreateNestedManyWithoutDeclarationBatchInput
+}
+
+export type DeclarationBatchCreateOrConnectWithoutManualEntriesInput = {
+  where: Prisma.DeclarationBatchWhereUniqueInput
+  create: Prisma.XOR<Prisma.DeclarationBatchCreateWithoutManualEntriesInput, Prisma.DeclarationBatchUncheckedCreateWithoutManualEntriesInput>
+}
+
+export type DeclarationBatchUpsertWithoutManualEntriesInput = {
+  update: Prisma.XOR<Prisma.DeclarationBatchUpdateWithoutManualEntriesInput, Prisma.DeclarationBatchUncheckedUpdateWithoutManualEntriesInput>
+  create: Prisma.XOR<Prisma.DeclarationBatchCreateWithoutManualEntriesInput, Prisma.DeclarationBatchUncheckedCreateWithoutManualEntriesInput>
+  where?: Prisma.DeclarationBatchWhereInput
+}
+
+export type DeclarationBatchUpdateToOneWithWhereWithoutManualEntriesInput = {
+  where?: Prisma.DeclarationBatchWhereInput
+  data: Prisma.XOR<Prisma.DeclarationBatchUpdateWithoutManualEntriesInput, Prisma.DeclarationBatchUncheckedUpdateWithoutManualEntriesInput>
+}
+
+export type DeclarationBatchUpdateWithoutManualEntriesInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
+  lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1605,15 +1827,17 @@ export type DeclarationBatchUpdateWithoutSubmissionsInput = {
   exports?: Prisma.DeclarationExportUpdateManyWithoutDeclarationBatchNestedInput
   items?: Prisma.DeclarationItemUpdateManyWithoutDeclarationBatchNestedInput
   activeAssignments?: Prisma.DeclarationActiveAssignmentUpdateManyWithoutDeclarationBatchNestedInput
+  submissions?: Prisma.DeclarationSubmissionUpdateManyWithoutDeclarationBatchNestedInput
 }
 
-export type DeclarationBatchUncheckedUpdateWithoutSubmissionsInput = {
+export type DeclarationBatchUncheckedUpdateWithoutManualEntriesInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   organizationId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   payerId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1633,6 +1857,7 @@ export type DeclarationBatchUncheckedUpdateWithoutSubmissionsInput = {
   exports?: Prisma.DeclarationExportUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   items?: Prisma.DeclarationItemUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   activeAssignments?: Prisma.DeclarationActiveAssignmentUncheckedUpdateManyWithoutDeclarationBatchNestedInput
+  submissions?: Prisma.DeclarationSubmissionUncheckedUpdateManyWithoutDeclarationBatchNestedInput
 }
 
 export type DeclarationBatchCreateWithoutOrganizationInput = {
@@ -1640,6 +1865,7 @@ export type DeclarationBatchCreateWithoutOrganizationInput = {
   declarationNumber?: string | null
   status?: $Enums.DeclarationBatchStatus
   lastItemSequence?: number
+  lastSubmissionAttempt?: number
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
   declarantIdSnapshot?: string | null
@@ -1654,6 +1880,7 @@ export type DeclarationBatchCreateWithoutOrganizationInput = {
   updatedAt?: Date | string
   declarationNumberSearch?: string | null
   notesSearch?: string | null
+  manualEntries?: Prisma.DeclarationManualEntryCreateNestedManyWithoutDeclarationBatchInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryCreateNestedManyWithoutDeclarationBatchInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedDeclarationBatchesInput
   payer: Prisma.PayerCreateNestedOneWithoutDeclarationBatchesInput
@@ -1669,6 +1896,7 @@ export type DeclarationBatchUncheckedCreateWithoutOrganizationInput = {
   declarationNumber?: string | null
   status?: $Enums.DeclarationBatchStatus
   lastItemSequence?: number
+  lastSubmissionAttempt?: number
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
   declarantIdSnapshot?: string | null
@@ -1684,6 +1912,7 @@ export type DeclarationBatchUncheckedCreateWithoutOrganizationInput = {
   updatedAt?: Date | string
   declarationNumberSearch?: string | null
   notesSearch?: string | null
+  manualEntries?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutDeclarationBatchInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryUncheckedCreateNestedManyWithoutDeclarationBatchInput
   exports?: Prisma.DeclarationExportUncheckedCreateNestedManyWithoutDeclarationBatchInput
   items?: Prisma.DeclarationItemUncheckedCreateNestedManyWithoutDeclarationBatchInput
@@ -1727,6 +1956,7 @@ export type DeclarationBatchScalarWhereInput = {
   declarationNumber?: Prisma.StringNullableFilter<"DeclarationBatch"> | string | null
   status?: Prisma.EnumDeclarationBatchStatusFilter<"DeclarationBatch"> | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFilter<"DeclarationBatch"> | number
+  lastSubmissionAttempt?: Prisma.IntFilter<"DeclarationBatch"> | number
   periodStart?: Prisma.DateTimeNullableFilter<"DeclarationBatch"> | Date | string | null
   periodEnd?: Prisma.DateTimeNullableFilter<"DeclarationBatch"> | Date | string | null
   declarantIdSnapshot?: Prisma.StringNullableFilter<"DeclarationBatch"> | string | null
@@ -1749,6 +1979,7 @@ export type DeclarationBatchCreateWithoutPayerInput = {
   declarationNumber?: string | null
   status?: $Enums.DeclarationBatchStatus
   lastItemSequence?: number
+  lastSubmissionAttempt?: number
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
   declarantIdSnapshot?: string | null
@@ -1763,6 +1994,7 @@ export type DeclarationBatchCreateWithoutPayerInput = {
   updatedAt?: Date | string
   declarationNumberSearch?: string | null
   notesSearch?: string | null
+  manualEntries?: Prisma.DeclarationManualEntryCreateNestedManyWithoutDeclarationBatchInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryCreateNestedManyWithoutDeclarationBatchInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedDeclarationBatchesInput
   organization: Prisma.OrganizationCreateNestedOneWithoutDeclarationBatchesInput
@@ -1778,6 +2010,7 @@ export type DeclarationBatchUncheckedCreateWithoutPayerInput = {
   declarationNumber?: string | null
   status?: $Enums.DeclarationBatchStatus
   lastItemSequence?: number
+  lastSubmissionAttempt?: number
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
   declarantIdSnapshot?: string | null
@@ -1793,6 +2026,7 @@ export type DeclarationBatchUncheckedCreateWithoutPayerInput = {
   updatedAt?: Date | string
   declarationNumberSearch?: string | null
   notesSearch?: string | null
+  manualEntries?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutDeclarationBatchInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryUncheckedCreateNestedManyWithoutDeclarationBatchInput
   exports?: Prisma.DeclarationExportUncheckedCreateNestedManyWithoutDeclarationBatchInput
   items?: Prisma.DeclarationItemUncheckedCreateNestedManyWithoutDeclarationBatchInput
@@ -1831,6 +2065,7 @@ export type DeclarationBatchCreateWithoutCreatedByUserInput = {
   declarationNumber?: string | null
   status?: $Enums.DeclarationBatchStatus
   lastItemSequence?: number
+  lastSubmissionAttempt?: number
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
   declarantIdSnapshot?: string | null
@@ -1845,6 +2080,7 @@ export type DeclarationBatchCreateWithoutCreatedByUserInput = {
   updatedAt?: Date | string
   declarationNumberSearch?: string | null
   notesSearch?: string | null
+  manualEntries?: Prisma.DeclarationManualEntryCreateNestedManyWithoutDeclarationBatchInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryCreateNestedManyWithoutDeclarationBatchInput
   organization: Prisma.OrganizationCreateNestedOneWithoutDeclarationBatchesInput
   payer: Prisma.PayerCreateNestedOneWithoutDeclarationBatchesInput
@@ -1861,6 +2097,7 @@ export type DeclarationBatchUncheckedCreateWithoutCreatedByUserInput = {
   declarationNumber?: string | null
   status?: $Enums.DeclarationBatchStatus
   lastItemSequence?: number
+  lastSubmissionAttempt?: number
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
   declarantIdSnapshot?: string | null
@@ -1875,6 +2112,7 @@ export type DeclarationBatchUncheckedCreateWithoutCreatedByUserInput = {
   updatedAt?: Date | string
   declarationNumberSearch?: string | null
   notesSearch?: string | null
+  manualEntries?: Prisma.DeclarationManualEntryUncheckedCreateNestedManyWithoutDeclarationBatchInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryUncheckedCreateNestedManyWithoutDeclarationBatchInput
   exports?: Prisma.DeclarationExportUncheckedCreateNestedManyWithoutDeclarationBatchInput
   items?: Prisma.DeclarationItemUncheckedCreateNestedManyWithoutDeclarationBatchInput
@@ -1914,6 +2152,7 @@ export type DeclarationBatchCreateManyOrganizationInput = {
   declarationNumber?: string | null
   status?: $Enums.DeclarationBatchStatus
   lastItemSequence?: number
+  lastSubmissionAttempt?: number
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
   declarantIdSnapshot?: string | null
@@ -1936,6 +2175,7 @@ export type DeclarationBatchUpdateWithoutOrganizationInput = {
   declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1950,6 +2190,7 @@ export type DeclarationBatchUpdateWithoutOrganizationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   declarationNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notesSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  manualEntries?: Prisma.DeclarationManualEntryUpdateManyWithoutDeclarationBatchNestedInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryUpdateManyWithoutDeclarationBatchNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedDeclarationBatchesNestedInput
   payer?: Prisma.PayerUpdateOneRequiredWithoutDeclarationBatchesNestedInput
@@ -1965,6 +2206,7 @@ export type DeclarationBatchUncheckedUpdateWithoutOrganizationInput = {
   declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1980,6 +2222,7 @@ export type DeclarationBatchUncheckedUpdateWithoutOrganizationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   declarationNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notesSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  manualEntries?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   exports?: Prisma.DeclarationExportUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   items?: Prisma.DeclarationItemUncheckedUpdateManyWithoutDeclarationBatchNestedInput
@@ -1993,6 +2236,7 @@ export type DeclarationBatchUncheckedUpdateManyWithoutOrganizationInput = {
   declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2016,6 +2260,7 @@ export type DeclarationBatchCreateManyPayerInput = {
   declarationNumber?: string | null
   status?: $Enums.DeclarationBatchStatus
   lastItemSequence?: number
+  lastSubmissionAttempt?: number
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
   declarantIdSnapshot?: string | null
@@ -2038,6 +2283,7 @@ export type DeclarationBatchUpdateWithoutPayerInput = {
   declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2052,6 +2298,7 @@ export type DeclarationBatchUpdateWithoutPayerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   declarationNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notesSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  manualEntries?: Prisma.DeclarationManualEntryUpdateManyWithoutDeclarationBatchNestedInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryUpdateManyWithoutDeclarationBatchNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedDeclarationBatchesNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutDeclarationBatchesNestedInput
@@ -2067,6 +2314,7 @@ export type DeclarationBatchUncheckedUpdateWithoutPayerInput = {
   declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2082,6 +2330,7 @@ export type DeclarationBatchUncheckedUpdateWithoutPayerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   declarationNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notesSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  manualEntries?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   exports?: Prisma.DeclarationExportUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   items?: Prisma.DeclarationItemUncheckedUpdateManyWithoutDeclarationBatchNestedInput
@@ -2095,6 +2344,7 @@ export type DeclarationBatchUncheckedUpdateManyWithoutPayerInput = {
   declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2119,6 +2369,7 @@ export type DeclarationBatchCreateManyCreatedByUserInput = {
   declarationNumber?: string | null
   status?: $Enums.DeclarationBatchStatus
   lastItemSequence?: number
+  lastSubmissionAttempt?: number
   periodStart?: Date | string | null
   periodEnd?: Date | string | null
   declarantIdSnapshot?: string | null
@@ -2140,6 +2391,7 @@ export type DeclarationBatchUpdateWithoutCreatedByUserInput = {
   declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2154,6 +2406,7 @@ export type DeclarationBatchUpdateWithoutCreatedByUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   declarationNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notesSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  manualEntries?: Prisma.DeclarationManualEntryUpdateManyWithoutDeclarationBatchNestedInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryUpdateManyWithoutDeclarationBatchNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutDeclarationBatchesNestedInput
   payer?: Prisma.PayerUpdateOneRequiredWithoutDeclarationBatchesNestedInput
@@ -2170,6 +2423,7 @@ export type DeclarationBatchUncheckedUpdateWithoutCreatedByUserInput = {
   declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2184,6 +2438,7 @@ export type DeclarationBatchUncheckedUpdateWithoutCreatedByUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   declarationNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notesSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  manualEntries?: Prisma.DeclarationManualEntryUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   statusHistory?: Prisma.DeclarationBatchStatusHistoryUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   exports?: Prisma.DeclarationExportUncheckedUpdateManyWithoutDeclarationBatchNestedInput
   items?: Prisma.DeclarationItemUncheckedUpdateManyWithoutDeclarationBatchNestedInput
@@ -2198,6 +2453,7 @@ export type DeclarationBatchUncheckedUpdateManyWithoutCreatedByUserInput = {
   declarationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDeclarationBatchStatusFieldUpdateOperationsInput | $Enums.DeclarationBatchStatus
   lastItemSequence?: Prisma.IntFieldUpdateOperationsInput | number
+  lastSubmissionAttempt?: Prisma.IntFieldUpdateOperationsInput | number
   periodStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   periodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   declarantIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2220,6 +2476,7 @@ export type DeclarationBatchUncheckedUpdateManyWithoutCreatedByUserInput = {
  */
 
 export type DeclarationBatchCountOutputType = {
+  manualEntries: number
   statusHistory: number
   exports: number
   items: number
@@ -2228,6 +2485,7 @@ export type DeclarationBatchCountOutputType = {
 }
 
 export type DeclarationBatchCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  manualEntries?: boolean | DeclarationBatchCountOutputTypeCountManualEntriesArgs
   statusHistory?: boolean | DeclarationBatchCountOutputTypeCountStatusHistoryArgs
   exports?: boolean | DeclarationBatchCountOutputTypeCountExportsArgs
   items?: boolean | DeclarationBatchCountOutputTypeCountItemsArgs
@@ -2243,6 +2501,13 @@ export type DeclarationBatchCountOutputTypeDefaultArgs<ExtArgs extends runtime.T
    * Select specific fields to fetch from the DeclarationBatchCountOutputType
    */
   select?: Prisma.DeclarationBatchCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * DeclarationBatchCountOutputType without action
+ */
+export type DeclarationBatchCountOutputTypeCountManualEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DeclarationManualEntryWhereInput
 }
 
 /**
@@ -2288,6 +2553,7 @@ export type DeclarationBatchSelect<ExtArgs extends runtime.Types.Extensions.Inte
   declarationNumber?: boolean
   status?: boolean
   lastItemSequence?: boolean
+  lastSubmissionAttempt?: boolean
   periodStart?: boolean
   periodEnd?: boolean
   declarantIdSnapshot?: boolean
@@ -2303,6 +2569,7 @@ export type DeclarationBatchSelect<ExtArgs extends runtime.Types.Extensions.Inte
   updatedAt?: boolean
   declarationNumberSearch?: boolean
   notesSearch?: boolean
+  manualEntries?: boolean | Prisma.DeclarationBatch$manualEntriesArgs<ExtArgs>
   statusHistory?: boolean | Prisma.DeclarationBatch$statusHistoryArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
@@ -2321,6 +2588,7 @@ export type DeclarationBatchSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   declarationNumber?: boolean
   status?: boolean
   lastItemSequence?: boolean
+  lastSubmissionAttempt?: boolean
   periodStart?: boolean
   periodEnd?: boolean
   declarantIdSnapshot?: boolean
@@ -2348,6 +2616,7 @@ export type DeclarationBatchSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   declarationNumber?: boolean
   status?: boolean
   lastItemSequence?: boolean
+  lastSubmissionAttempt?: boolean
   periodStart?: boolean
   periodEnd?: boolean
   declarantIdSnapshot?: boolean
@@ -2375,6 +2644,7 @@ export type DeclarationBatchSelectScalar = {
   declarationNumber?: boolean
   status?: boolean
   lastItemSequence?: boolean
+  lastSubmissionAttempt?: boolean
   periodStart?: boolean
   periodEnd?: boolean
   declarantIdSnapshot?: boolean
@@ -2392,8 +2662,9 @@ export type DeclarationBatchSelectScalar = {
   notesSearch?: boolean
 }
 
-export type DeclarationBatchOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "payerId" | "declarationNumber" | "status" | "lastItemSequence" | "periodStart" | "periodEnd" | "declarantIdSnapshot" | "submissionReference" | "notes" | "createdByUserId" | "readyAt" | "exportedAt" | "submittedAt" | "acceptedAt" | "rejectedAt" | "createdAt" | "updatedAt" | "declarationNumberSearch" | "notesSearch", ExtArgs["result"]["declarationBatch"]>
+export type DeclarationBatchOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "payerId" | "declarationNumber" | "status" | "lastItemSequence" | "lastSubmissionAttempt" | "periodStart" | "periodEnd" | "declarantIdSnapshot" | "submissionReference" | "notes" | "createdByUserId" | "readyAt" | "exportedAt" | "submittedAt" | "acceptedAt" | "rejectedAt" | "createdAt" | "updatedAt" | "declarationNumberSearch" | "notesSearch", ExtArgs["result"]["declarationBatch"]>
 export type DeclarationBatchInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  manualEntries?: boolean | Prisma.DeclarationBatch$manualEntriesArgs<ExtArgs>
   statusHistory?: boolean | Prisma.DeclarationBatch$statusHistoryArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
@@ -2418,6 +2689,7 @@ export type DeclarationBatchIncludeUpdateManyAndReturn<ExtArgs extends runtime.T
 export type $DeclarationBatchPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "DeclarationBatch"
   objects: {
+    manualEntries: Prisma.$DeclarationManualEntryPayload<ExtArgs>[]
     statusHistory: Prisma.$DeclarationBatchStatusHistoryPayload<ExtArgs>[]
     createdByUser: Prisma.$UserPayload<ExtArgs>
     organization: Prisma.$OrganizationPayload<ExtArgs>
@@ -2434,6 +2706,7 @@ export type $DeclarationBatchPayload<ExtArgs extends runtime.Types.Extensions.In
     declarationNumber: string | null
     status: $Enums.DeclarationBatchStatus
     lastItemSequence: number
+    lastSubmissionAttempt: number
     periodStart: Date | null
     periodEnd: Date | null
     declarantIdSnapshot: string | null
@@ -2843,6 +3116,7 @@ readonly fields: DeclarationBatchFieldRefs;
  */
 export interface Prisma__DeclarationBatchClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  manualEntries<T extends Prisma.DeclarationBatch$manualEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DeclarationBatch$manualEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeclarationManualEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   statusHistory<T extends Prisma.DeclarationBatch$statusHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DeclarationBatch$statusHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeclarationBatchStatusHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   createdByUser<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -2886,6 +3160,7 @@ export interface DeclarationBatchFieldRefs {
   readonly declarationNumber: Prisma.FieldRef<"DeclarationBatch", 'String'>
   readonly status: Prisma.FieldRef<"DeclarationBatch", 'DeclarationBatchStatus'>
   readonly lastItemSequence: Prisma.FieldRef<"DeclarationBatch", 'Int'>
+  readonly lastSubmissionAttempt: Prisma.FieldRef<"DeclarationBatch", 'Int'>
   readonly periodStart: Prisma.FieldRef<"DeclarationBatch", 'DateTime'>
   readonly periodEnd: Prisma.FieldRef<"DeclarationBatch", 'DateTime'>
   readonly declarantIdSnapshot: Prisma.FieldRef<"DeclarationBatch", 'String'>
@@ -3299,6 +3574,30 @@ export type DeclarationBatchDeleteManyArgs<ExtArgs extends runtime.Types.Extensi
    * Limit how many DeclarationBatches to delete.
    */
   limit?: number
+}
+
+/**
+ * DeclarationBatch.manualEntries
+ */
+export type DeclarationBatch$manualEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeclarationManualEntry
+   */
+  select?: Prisma.DeclarationManualEntrySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeclarationManualEntry
+   */
+  omit?: Prisma.DeclarationManualEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeclarationManualEntryInclude<ExtArgs> | null
+  where?: Prisma.DeclarationManualEntryWhereInput
+  orderBy?: Prisma.DeclarationManualEntryOrderByWithRelationInput | Prisma.DeclarationManualEntryOrderByWithRelationInput[]
+  cursor?: Prisma.DeclarationManualEntryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DeclarationManualEntryScalarFieldEnum | Prisma.DeclarationManualEntryScalarFieldEnum[]
 }
 
 /**

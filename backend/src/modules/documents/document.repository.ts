@@ -37,6 +37,11 @@ export type InvoiceDocumentRecord = Prisma.InvoiceDocumentGetPayload<{
 }>;
 
 export class DocumentRepository {
+  storageInventoryPage(afterId: bigint | null, tx: Prisma.TransactionClient) {
+    return tx.document.findMany({ where: afterId === null ? {} : { id: { gt: afterId } },
+      orderBy: { id: "asc" }, take: 500,
+      select: { id: true, organizationId: true, storageUri: true, storageProvider: true, sha256: true, sizeBytes: true } });
+  }
   findById(
     documentId: bigint,
     organizationId: bigint,

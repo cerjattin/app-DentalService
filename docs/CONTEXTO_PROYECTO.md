@@ -1,13 +1,15 @@
 # Contexto compartido del proyecto
 
-Fecha de consolidación: 30 de octubre de 2026. Repositorio: `C:\workspace\app-DentalService`.
+Actualizado por Arquitectura: 3 de noviembre de 2026 (NEG-DEP-12). Consolidación histórica inicial: 30 de octubre. Repositorio: `C:\workspace\app-DentalService`.
 
 ## Decisiones actuales del usuario
 
 1. Separar el trabajo en Arquitectura, Backend, Frontend, Lógica de negocio, Diseño y Base de datos, con seis chats especializados de Codex.
-2. Mantener backend y frontend en el repositorio y entorno local mientras se completa el MVP.
-3. Utilizar Supabase como base de datos objetivo y Vercel para el despliegue final.
-4. Conservar el trabajo local existente. La organización actual no publica código ni ejecuta migraciones.
+2. Preparar ahora el primer despliegue clínico, conservando desarrollo/QA local y Express/Prisma/JWT/RBAC. [Cierre vigente y contratos DEP10–12](negocio/CIERRE_PRIMER_DESPLIEGUE_20261103.md).
+3. Supabase PostgreSQL está incorporado en código y tiene baseline aplicado según DB. Vercel fue el destino inicial; Render + Supabase es la propuesta dentro de US$35/mes. No hay plataforma contratada ni publicación por esta preparación. [Configuración/runbook](arquitectura/NEG_DEP_12_RUNBOOK.md).
+4. Aplazar envío/presentación SVB por falta de fuente/formato; conservar historia y diagnóstico. Nuevas presentaciones manuales bloqueadas por configuración autoritativa DEP10. No inventar maestros, tarifas ni semántica para habilitar servicios.
+5. Preservar cambios locales. Correcciones/preparación/QA sintética autorizadas; commit/push/deploy/contratación y escrituras clínicas requieren operación concreta posterior. No ejecutar migraciones/seeds/cleanup/integración en clínica por esta ronda.
+6. Continuación del 3 de noviembre: cuenta Render disponible, único Supabase existente es clínico. Usuario decide **QA solo local por ahora**. No crear ni pedir proyecto/bucket cloud en esta ronda; Linux/Storage/host remotos PENDIENTES POR ALCANCE/ACCESO. Conservar requisitos futuros, sin sustituir QA con clínica ni declarar uso real apto por el aplazamiento. [Detalle](arquitectura/NEG_DEP_12_QA_ACCESO.md).
 
 ## Producto y arquitectura
 
@@ -15,23 +17,26 @@ ODONTHO SERVICES — SVB Billing App gestiona pacientes y seguros, citas, atenci
 
 Frontend: React, Vite, TypeScript, Tailwind 4, React Router, TanStack Query, React Hook Form y Zod. Backend: Node.js, Express, TypeScript, Prisma 7, validación Zod, JWT, RBAC, auditoría y PDFKit. API bajo `/api/v1`; salud fuera de ese prefijo.
 
-La base objetivo es **PostgreSQL administrado por Supabase**. Inicialmente Express mantiene autenticación, permisos, aislamiento por organización y reglas de negocio. La interfaz consume Express; no accede directamente a tablas de Supabase. Storage se evaluará para sustituir el almacenamiento local de firmas/PDF antes de Vercel.
+La implementación actual usa **PostgreSQL con PrismaPg**, un cliente compartido por runtime/scripts/seeds y migraciones separadas de MySQL. Express conserva autenticación, permisos, aislamiento por organización y reglas. La interfaz consume Express; no accede directamente a tablas ni claves privadas de Supabase. El adaptador opcional de Supabase Storage privado ya existe; configurar SUPABASE no transfiere documentos locales anteriores ni acredita persistencia remota.
 
 ## Estado comprobado en disco
 
 | Área | Evidencia local | Interpretación |
 | --- | --- | --- |
-| Git | HEAD `b31ac7e3f`, integración de operational-forward-fixes | Referencia de inspección; no se modificó el historial |
-| Base | `backend/prisma/schema.prisma` usa `provider = "mysql"`; adaptador `PrismaMariaDb` | Supabase pendiente de implementación |
+| Git | HEAD base `0bff419bd` + numerosas ediciones locales compartidas | HEAD solo no identifica la versión; manifiesto por archivo/hash en DEP12. Sin modificar historial |
+| Base local | Schema PostgreSQL, PrismaPg compartido, SQL reportes portado, historial PostgreSQL | Implementado localmente; MySQL es histórico, no runtime actual |
+| Base destino | [Entrega DB DEP12](base-de-datos/DEP12_PRIMER_DESPLIEGUE.md): cinco migraciones, dos permisos/cinco asignaciones, tres hallazgos fiscales y siete URI locales pendientes | Inspección protegida de DB; Arquitectura no aplicó/reparó destino ni copió objetos a QA |
 | Catálogo | Módulo `svb-catalog`, API compartida frontend y Services | Preservar MASTER-02R/MASTER-03; no reconstruir desde auditorías antiguas |
 | Citas | Diálogo compartido de creación, módulo appointments y clinic-locations | La creación ya existe; no tratarla como funcionalidad ausente |
 | Dashboard | Módulo reports, API frontend y reporte con filtros | Ya existe; tiene correcciones locales sin commit que deben conservarse |
-| Organización | Sin módulo organization ni rutas de organización montadas; Settings es informativo | MASTER-04A reportado en un chat no está confirmado en este checkout |
-| Firma/PDF | Documentos y almacenamiento `local://documents/` | Se requiere almacenamiento persistente remoto antes de Vercel |
+| Organización/casos | Rutas organization y treatment-cases montadas; contratos 03/04/05 y refacturación locales | Diagnóstico de ausencia del 30 de octubre superado; falta aceptación de destino |
+| Firma/PDF | Adaptadores LOCAL/SUPABASE, hashes, PDF y descargas autenticadas; configuración Vercel | Falta bucket remoto real, transición URI locales, reinicio/redespliegue y restore conjunto |
+| SVB | REAL_SVB bloqueado; captura/historia manual implementadas; DEP10 añade aplazamiento e integridad de factura completa | Captura campo por campo previa no autoriza presentar en primer despliegue |
+| Aceptación | [Entrega local Frontend](../frontend/docs/NEG_DEP_11_12_VALIDATION.md), Diseño R2 y [vinculación 092a](arquitectura/NEG_DEP_12_ENTREGA.md#vinculación-de-cierre-local-sin-nuevas-suites) | 167 fuentes Frontend y 6 finales Diseño coinciden con candidato; 379/16 de Negocio vinculados, sin repetir. DEP11 PARCIAL; [M01–M11](arquitectura/NEG_DEP_11_CHECKLIST_CIERRE_LOCAL.md) pendientes |
 | Auth | Access token y RBAC propios | Refresh/revocación siguen pendientes de DBR-001; no cambiar implícitamente por usar Supabase |
 | Diseño | Tokens en `frontend/src/index.css`; falta `Recursos/frontend-reference/` | Conservar UI existente; referencia original pendiente de recuperar |
 
-Al iniciar esta organización había cambios en `dashboard-report.tsx`, `operational-gaps.test.tsx`, un nuevo `dashboard-model.ts`, `.gitignore` y `.vscode/`. No atribuirlos a esta tarea ni sobrescribirlos.
+Al iniciar había cambios Dashboard/pruebas, `.gitignore` y `.vscode/`; ahora hay entregas de todas las áreas. No atribuirlas a Arquitectura ni sobrescribirlas. Cada área conserva archivos propios; Arquitectura posee contexto/plan y `deployment/`.
 
 ## Contexto recuperado de chats
 
@@ -70,4 +75,4 @@ Se revisó también el listado archivado: los tres chats archivados asociados a 
 
 ## Límites de esta consolidación
 
-La revisión fue estática y documental. No se comprobó una conexión Supabase, no se corrieron suites de producto, no se inspeccionaron datos clínicos y no se desplegó a Vercel. Los resultados de pruebas mencionados en chats anteriores siguen siendo evidencia histórica.
+El diagnóstico inicial fue estático. Después hubo implementación PostgreSQL y validaciones de las áreas: son evidencias fechadas, no ejecuciones frescas ni números sumables de Arquitectura. NEG-DEP-12 registra sus propios checks y snapshot en [entrega](arquitectura/NEG_DEP_12_ENTREGA.md). Preparación local, QA remoto, operación clínica y aceptación del cliente son estados distintos. No se publicó ni contrató desde este chat; toda puerta de destino sin evidencia continúa pendiente.

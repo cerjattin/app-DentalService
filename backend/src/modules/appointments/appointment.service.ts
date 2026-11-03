@@ -36,6 +36,7 @@ import type {
 
 import { toAppointmentResponse } from "./appointment.types.js";
 import { validateAssignableTreatmentCase } from "../treatment-cases/treatment-case.service.js";
+import { validateAccidentContext } from "./accident-context.service.js";
 
 function parseTimestamp(value: string, fieldName: string): Date {
   const date = new Date(value);
@@ -431,6 +432,7 @@ export class AppointmentService {
         async (tx) => {
           await validatePatient(tx, patientId, actor.organizationId);
           await validateAssignableTreatmentCase(tx, treatmentCaseId, patientId, actor.organizationId);
+          await validateAccidentContext(tx, accidentCaseId, patientId, actor.organizationId);
           await validateProvider(tx, providerId, actor.organizationId, true);
           await validateLocation(
             tx,
@@ -604,6 +606,12 @@ export class AppointmentService {
           }
 
           if (input.accidentCaseId !== undefined) {
+            const nextAccidentId = input.accidentCaseId === null ? null : BigInt(input.accidentCaseId);
+            if (nextAccidentId !== current.accidentCaseId) {
+              const clinicalData = await tx.encounterProcedure.findFirst({ where: { encounter: { appointmentId } }, select: { id: true } });
+              if (clinicalData) throw new AppError(409, "APPOINTMENT_CLINICAL_CONTEXT_LOCKED", "Accident context is frozen after procedures have been recorded");
+              await validateAccidentContext(tx, nextAccidentId, current.patientId, actor.organizationId);
+            }
             updateData.accidentCaseId =
               input.accidentCaseId === null ? null : BigInt(input.accidentCaseId);
           }

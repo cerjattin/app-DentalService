@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CheckCircle2, LockKeyhole, PenLine, Pencil } from 'lucide-react'
 import { useState } from 'react'
-import { Link, useParams } from 'react-router'
+import { Link, useParams, useSearchParams } from 'react-router'
 import { getApiErrorMessage } from '../../api'
 import { PermissionGuard } from '../../auth/permission-guard'
 import { hasPermission } from '../../auth/permissions'
@@ -39,6 +39,8 @@ import { SignatureDialog } from './signature-dialog'
 import { CorrectionWorkflow } from './correction-workflow'
 import { CorrectionItemDialog } from './correction-item-dialog'
 import { ReturnToCare } from './return-to-care'
+import { candidateKeys } from '../declarations/declaration-api'
+import { dashboardKeys } from '../dashboard/dashboard-api'
 
 export function InvoiceDetailPage() {
   const { invoiceId = '' } = useParams()
@@ -49,19 +51,21 @@ export function InvoiceDetailPage() {
   )
 }
 function InvoiceDetail({ id }: { id: string }) {
-  const [selected, setSelected] = useState('')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const requestedVersion = searchParams.get('versionId') ?? ''
   const query = useQuery({
     queryKey: invoiceKeys.detail(id),
     queryFn: ({ signal }) => getInvoice(id, signal),
   })
-  const selectedId = selected || query.data?.currentVersionId || ''
+  const validRequest = /^[1-9]\d*$/.test(requestedVersion)
+  const selectedId = validRequest ? requestedVersion : query.data?.currentVersionId || ''
   const historical = Boolean(
     selectedId && selectedId !== query.data?.currentVersionId,
   )
   const oldVersion = useQuery({
     queryKey: invoiceVersionKeys.detail(id, selectedId),
     queryFn: ({ signal }) => getInvoiceVersion(id, selectedId, signal),
-    enabled: historical,
+    enabled: Boolean(query.data) && historical,
   })
   if (query.isPending) return <LoadingState label="Loading invoice" />
   if (query.isError)
@@ -90,7 +94,7 @@ function InvoiceDetail({ id }: { id: string }) {
           <Select
             className="mt-1"
             value={selectedId}
-            onChange={(e) => setSelected(e.target.value)}
+            onChange={(e) => setSearchParams((params) => { params.set('versionId', e.target.value); return params })}
           >
             {invoice.versions.map((v) => (
               <option key={v.id} value={v.id}>
@@ -185,6 +189,8 @@ function VersionWorkspace({
         : 'invoice.close'
   const refresh = async () => {
     await Promise.all([
+      client.invalidateQueries({ queryKey: candidateKeys.all }),
+      client.invalidateQueries({ queryKey: dashboardKeys.all }),
       client.invalidateQueries({ queryKey: invoiceKeys.detail(invoice.id) }),
       client.invalidateQueries({ queryKey: invoiceKeys.lists() }),
       client.invalidateQueries({

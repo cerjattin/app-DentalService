@@ -1,0 +1,14 @@
+{
+  "mode": "SVB deferred; resolution of existing synthetic UNCERTAIN reservation",
+  "fileRequiredErrorVisible": true,
+  "fileFocus": {
+    "describedBy": "_r_3r_-file-hint _r_3r_-file-error",
+    "insideDialog": true,
+    "invalid": "true",
+    "tag": "INPUT",
+    "type": "file"
+  },
+  "reasonRetained": true,
+  "noFileUploaded": true,
+  "noReleaseSaved": true
+}

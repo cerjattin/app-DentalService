@@ -1,0 +1,7 @@
+.env
+.env.*
+storage/**
+dist/**
+tests/**
+postman/**
+docs/**

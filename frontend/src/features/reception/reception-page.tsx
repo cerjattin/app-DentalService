@@ -13,6 +13,7 @@ import { ErrorState } from '../../components/feedback/error-state'
 import { LoadingState } from '../../components/feedback/loading-state'
 import { StatusBadge } from '../../components/feedback/status-badge'
 import { Input } from '../../components/ui/input'
+import { Button } from '../../components/ui/button'
 import { Select } from '../../components/ui/select'
 import { formatBusinessDate, formatBusinessTime } from '../../lib/timezone'
 import type { Appointment, AppointmentListFilters, AppointmentStatus } from '../../types/appointment'
@@ -52,6 +53,7 @@ export function ReceptionPage() {
     queryKey: receptionKeys.worklist(today, status || undefined, search),
     queryFn: ({ signal }) => listAppointments(filters, signal),
     placeholderData: keepPreviousData,
+    refetchOnWindowFocus: true,
   })
 
   const columns = useMemo<DataTableColumn<Appointment>[]>(() => [
@@ -95,11 +97,13 @@ export function ReceptionPage() {
         description={`Today's front-desk appointment worklist for ${today}.`}
         actions={
           <div className="flex gap-2">
+            <Button variant="secondary" disabled={worklistQuery.isFetching} onClick={() => void worklistQuery.refetch()}>{worklistQuery.isFetching ? 'Refreshing…' : 'Refresh worklist'}</Button>
             <Link to="/appointments" className="inline-flex h-9 items-center gap-2 rounded-md border border-clinic-border-strong bg-white px-3 text-sm font-medium text-slate-700 hover:bg-slate-50"><CalendarDays size={16} />All appointments</Link>
             <AppointmentCreateAction />
           </div>
         }
       />
+      <p role="status" className="mb-3 text-xs text-slate-500">{worklistQuery.isFetching ? 'Updating worklist…' : worklistQuery.isError ? 'Refresh failed. Retry to obtain the current worklist.' : worklistQuery.dataUpdatedAt ? `Last updated ${formatBusinessTime(new Date(worklistQuery.dataUpdatedAt))} · America/Curacao` : 'Worklist not loaded.'}</p>
       <div className="mb-4 flex flex-col gap-3 rounded-lg border border-clinic-border bg-white p-4 md:flex-row md:items-end">
         <div className="min-w-0 flex-1">
           <label htmlFor="receptionSearch" className="mb-1.5 block text-sm font-medium text-slate-700">Search today's appointments</label>

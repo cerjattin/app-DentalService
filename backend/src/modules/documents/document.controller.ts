@@ -56,6 +56,7 @@ export const downloadDocument: RequestHandler = async (req, res) => {
   const result = await documentService.download(documentId, actor);
 
   res.setHeader("Content-Type", result.document.mimeType);
+  res.setHeader("Cache-Control", "private, no-store");
   res.setHeader(
     "Content-Disposition",
     `attachment; filename="${contentDispositionFilename(result.document.originalFilename)}"`,

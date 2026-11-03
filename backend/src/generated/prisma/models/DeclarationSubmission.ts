@@ -280,6 +280,7 @@ export type DeclarationSubmissionWhereInput = {
   submittedByUserId?: Prisma.BigIntFilter<"DeclarationSubmission"> | bigint | number
   submittedAt?: Prisma.DateTimeFilter<"DeclarationSubmission"> | Date | string
   respondedAt?: Prisma.DateTimeNullableFilter<"DeclarationSubmission"> | Date | string | null
+  manualEntry?: Prisma.XOR<Prisma.DeclarationManualEntryNullableScalarRelationFilter, Prisma.DeclarationManualEntryWhereInput> | null
   declarationBatch?: Prisma.XOR<Prisma.DeclarationBatchScalarRelationFilter, Prisma.DeclarationBatchWhereInput>
   declarationExport?: Prisma.XOR<Prisma.DeclarationExportNullableScalarRelationFilter, Prisma.DeclarationExportWhereInput> | null
   submittedByUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -298,6 +299,7 @@ export type DeclarationSubmissionOrderByWithRelationInput = {
   submittedByUserId?: Prisma.SortOrder
   submittedAt?: Prisma.SortOrder
   respondedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  manualEntry?: Prisma.DeclarationManualEntryOrderByWithRelationInput
   declarationBatch?: Prisma.DeclarationBatchOrderByWithRelationInput
   declarationExport?: Prisma.DeclarationExportOrderByWithRelationInput
   submittedByUser?: Prisma.UserOrderByWithRelationInput
@@ -320,6 +322,7 @@ export type DeclarationSubmissionWhereUniqueInput = Prisma.AtLeast<{
   submittedByUserId?: Prisma.BigIntFilter<"DeclarationSubmission"> | bigint | number
   submittedAt?: Prisma.DateTimeFilter<"DeclarationSubmission"> | Date | string
   respondedAt?: Prisma.DateTimeNullableFilter<"DeclarationSubmission"> | Date | string | null
+  manualEntry?: Prisma.XOR<Prisma.DeclarationManualEntryNullableScalarRelationFilter, Prisma.DeclarationManualEntryWhereInput> | null
   declarationBatch?: Prisma.XOR<Prisma.DeclarationBatchScalarRelationFilter, Prisma.DeclarationBatchWhereInput>
   declarationExport?: Prisma.XOR<Prisma.DeclarationExportNullableScalarRelationFilter, Prisma.DeclarationExportWhereInput> | null
   submittedByUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -373,6 +376,7 @@ export type DeclarationSubmissionCreateInput = {
   responseMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   submittedAt?: Date | string
   respondedAt?: Date | string | null
+  manualEntry?: Prisma.DeclarationManualEntryCreateNestedOneWithoutSubmissionInput
   declarationBatch: Prisma.DeclarationBatchCreateNestedOneWithoutSubmissionsInput
   declarationExport?: Prisma.DeclarationExportCreateNestedOneWithoutSubmissionsInput
   submittedByUser: Prisma.UserCreateNestedOneWithoutDeclarationSubmissionsInput
@@ -391,6 +395,7 @@ export type DeclarationSubmissionUncheckedCreateInput = {
   submittedByUserId: bigint | number
   submittedAt?: Date | string
   respondedAt?: Date | string | null
+  manualEntry?: Prisma.DeclarationManualEntryUncheckedCreateNestedOneWithoutSubmissionInput
 }
 
 export type DeclarationSubmissionUpdateInput = {
@@ -403,6 +408,7 @@ export type DeclarationSubmissionUpdateInput = {
   responseMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   respondedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  manualEntry?: Prisma.DeclarationManualEntryUpdateOneWithoutSubmissionNestedInput
   declarationBatch?: Prisma.DeclarationBatchUpdateOneRequiredWithoutSubmissionsNestedInput
   declarationExport?: Prisma.DeclarationExportUpdateOneWithoutSubmissionsNestedInput
   submittedByUser?: Prisma.UserUpdateOneRequiredWithoutDeclarationSubmissionsNestedInput
@@ -421,6 +427,7 @@ export type DeclarationSubmissionUncheckedUpdateInput = {
   submittedByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   respondedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  manualEntry?: Prisma.DeclarationManualEntryUncheckedUpdateOneWithoutSubmissionNestedInput
 }
 
 export type DeclarationSubmissionCreateManyInput = {
@@ -537,6 +544,11 @@ export type DeclarationSubmissionSumOrderByAggregateInput = {
   submittedByUserId?: Prisma.SortOrder
 }
 
+export type DeclarationSubmissionNullableScalarRelationFilter = {
+  is?: Prisma.DeclarationSubmissionWhereInput | null
+  isNot?: Prisma.DeclarationSubmissionWhereInput | null
+}
+
 export type DeclarationSubmissionCreateNestedManyWithoutDeclarationBatchInput = {
   create?: Prisma.XOR<Prisma.DeclarationSubmissionCreateWithoutDeclarationBatchInput, Prisma.DeclarationSubmissionUncheckedCreateWithoutDeclarationBatchInput> | Prisma.DeclarationSubmissionCreateWithoutDeclarationBatchInput[] | Prisma.DeclarationSubmissionUncheckedCreateWithoutDeclarationBatchInput[]
   connectOrCreate?: Prisma.DeclarationSubmissionCreateOrConnectWithoutDeclarationBatchInput | Prisma.DeclarationSubmissionCreateOrConnectWithoutDeclarationBatchInput[]
@@ -629,6 +641,22 @@ export type EnumDeclarationSubmissionStatusFieldUpdateOperationsInput = {
   set?: $Enums.DeclarationSubmissionStatus
 }
 
+export type DeclarationSubmissionCreateNestedOneWithoutManualEntryInput = {
+  create?: Prisma.XOR<Prisma.DeclarationSubmissionCreateWithoutManualEntryInput, Prisma.DeclarationSubmissionUncheckedCreateWithoutManualEntryInput>
+  connectOrCreate?: Prisma.DeclarationSubmissionCreateOrConnectWithoutManualEntryInput
+  connect?: Prisma.DeclarationSubmissionWhereUniqueInput
+}
+
+export type DeclarationSubmissionUpdateOneWithoutManualEntryNestedInput = {
+  create?: Prisma.XOR<Prisma.DeclarationSubmissionCreateWithoutManualEntryInput, Prisma.DeclarationSubmissionUncheckedCreateWithoutManualEntryInput>
+  connectOrCreate?: Prisma.DeclarationSubmissionCreateOrConnectWithoutManualEntryInput
+  upsert?: Prisma.DeclarationSubmissionUpsertWithoutManualEntryInput
+  disconnect?: Prisma.DeclarationSubmissionWhereInput | boolean
+  delete?: Prisma.DeclarationSubmissionWhereInput | boolean
+  connect?: Prisma.DeclarationSubmissionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DeclarationSubmissionUpdateToOneWithWhereWithoutManualEntryInput, Prisma.DeclarationSubmissionUpdateWithoutManualEntryInput>, Prisma.DeclarationSubmissionUncheckedUpdateWithoutManualEntryInput>
+}
+
 export type DeclarationSubmissionCreateNestedManyWithoutSubmittedByUserInput = {
   create?: Prisma.XOR<Prisma.DeclarationSubmissionCreateWithoutSubmittedByUserInput, Prisma.DeclarationSubmissionUncheckedCreateWithoutSubmittedByUserInput> | Prisma.DeclarationSubmissionCreateWithoutSubmittedByUserInput[] | Prisma.DeclarationSubmissionUncheckedCreateWithoutSubmittedByUserInput[]
   connectOrCreate?: Prisma.DeclarationSubmissionCreateOrConnectWithoutSubmittedByUserInput | Prisma.DeclarationSubmissionCreateOrConnectWithoutSubmittedByUserInput[]
@@ -681,6 +709,7 @@ export type DeclarationSubmissionCreateWithoutDeclarationBatchInput = {
   responseMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   submittedAt?: Date | string
   respondedAt?: Date | string | null
+  manualEntry?: Prisma.DeclarationManualEntryCreateNestedOneWithoutSubmissionInput
   declarationExport?: Prisma.DeclarationExportCreateNestedOneWithoutSubmissionsInput
   submittedByUser: Prisma.UserCreateNestedOneWithoutDeclarationSubmissionsInput
 }
@@ -697,6 +726,7 @@ export type DeclarationSubmissionUncheckedCreateWithoutDeclarationBatchInput = {
   submittedByUserId: bigint | number
   submittedAt?: Date | string
   respondedAt?: Date | string | null
+  manualEntry?: Prisma.DeclarationManualEntryUncheckedCreateNestedOneWithoutSubmissionInput
 }
 
 export type DeclarationSubmissionCreateOrConnectWithoutDeclarationBatchInput = {
@@ -753,6 +783,7 @@ export type DeclarationSubmissionCreateWithoutDeclarationExportInput = {
   responseMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   submittedAt?: Date | string
   respondedAt?: Date | string | null
+  manualEntry?: Prisma.DeclarationManualEntryCreateNestedOneWithoutSubmissionInput
   declarationBatch: Prisma.DeclarationBatchCreateNestedOneWithoutSubmissionsInput
   submittedByUser: Prisma.UserCreateNestedOneWithoutDeclarationSubmissionsInput
 }
@@ -769,6 +800,7 @@ export type DeclarationSubmissionUncheckedCreateWithoutDeclarationExportInput = 
   submittedByUserId: bigint | number
   submittedAt?: Date | string
   respondedAt?: Date | string | null
+  manualEntry?: Prisma.DeclarationManualEntryUncheckedCreateNestedOneWithoutSubmissionInput
 }
 
 export type DeclarationSubmissionCreateOrConnectWithoutDeclarationExportInput = {
@@ -797,6 +829,82 @@ export type DeclarationSubmissionUpdateManyWithWhereWithoutDeclarationExportInpu
   data: Prisma.XOR<Prisma.DeclarationSubmissionUpdateManyMutationInput, Prisma.DeclarationSubmissionUncheckedUpdateManyWithoutDeclarationExportInput>
 }
 
+export type DeclarationSubmissionCreateWithoutManualEntryInput = {
+  id?: bigint | number
+  attemptNumber: number
+  channel: $Enums.DeclarationSubmissionChannel
+  status: $Enums.DeclarationSubmissionStatus
+  externalReference?: string | null
+  requestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  responseMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  submittedAt?: Date | string
+  respondedAt?: Date | string | null
+  declarationBatch: Prisma.DeclarationBatchCreateNestedOneWithoutSubmissionsInput
+  declarationExport?: Prisma.DeclarationExportCreateNestedOneWithoutSubmissionsInput
+  submittedByUser: Prisma.UserCreateNestedOneWithoutDeclarationSubmissionsInput
+}
+
+export type DeclarationSubmissionUncheckedCreateWithoutManualEntryInput = {
+  id?: bigint | number
+  declarationBatchId: bigint | number
+  declarationExportId?: bigint | number | null
+  attemptNumber: number
+  channel: $Enums.DeclarationSubmissionChannel
+  status: $Enums.DeclarationSubmissionStatus
+  externalReference?: string | null
+  requestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  responseMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  submittedByUserId: bigint | number
+  submittedAt?: Date | string
+  respondedAt?: Date | string | null
+}
+
+export type DeclarationSubmissionCreateOrConnectWithoutManualEntryInput = {
+  where: Prisma.DeclarationSubmissionWhereUniqueInput
+  create: Prisma.XOR<Prisma.DeclarationSubmissionCreateWithoutManualEntryInput, Prisma.DeclarationSubmissionUncheckedCreateWithoutManualEntryInput>
+}
+
+export type DeclarationSubmissionUpsertWithoutManualEntryInput = {
+  update: Prisma.XOR<Prisma.DeclarationSubmissionUpdateWithoutManualEntryInput, Prisma.DeclarationSubmissionUncheckedUpdateWithoutManualEntryInput>
+  create: Prisma.XOR<Prisma.DeclarationSubmissionCreateWithoutManualEntryInput, Prisma.DeclarationSubmissionUncheckedCreateWithoutManualEntryInput>
+  where?: Prisma.DeclarationSubmissionWhereInput
+}
+
+export type DeclarationSubmissionUpdateToOneWithWhereWithoutManualEntryInput = {
+  where?: Prisma.DeclarationSubmissionWhereInput
+  data: Prisma.XOR<Prisma.DeclarationSubmissionUpdateWithoutManualEntryInput, Prisma.DeclarationSubmissionUncheckedUpdateWithoutManualEntryInput>
+}
+
+export type DeclarationSubmissionUpdateWithoutManualEntryInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  attemptNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  channel?: Prisma.EnumDeclarationSubmissionChannelFieldUpdateOperationsInput | $Enums.DeclarationSubmissionChannel
+  status?: Prisma.EnumDeclarationSubmissionStatusFieldUpdateOperationsInput | $Enums.DeclarationSubmissionStatus
+  externalReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  responseMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  respondedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  declarationBatch?: Prisma.DeclarationBatchUpdateOneRequiredWithoutSubmissionsNestedInput
+  declarationExport?: Prisma.DeclarationExportUpdateOneWithoutSubmissionsNestedInput
+  submittedByUser?: Prisma.UserUpdateOneRequiredWithoutDeclarationSubmissionsNestedInput
+}
+
+export type DeclarationSubmissionUncheckedUpdateWithoutManualEntryInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  declarationBatchId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  declarationExportId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  attemptNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  channel?: Prisma.EnumDeclarationSubmissionChannelFieldUpdateOperationsInput | $Enums.DeclarationSubmissionChannel
+  status?: Prisma.EnumDeclarationSubmissionStatusFieldUpdateOperationsInput | $Enums.DeclarationSubmissionStatus
+  externalReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  responseMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  submittedByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  respondedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
 export type DeclarationSubmissionCreateWithoutSubmittedByUserInput = {
   id?: bigint | number
   attemptNumber: number
@@ -807,6 +915,7 @@ export type DeclarationSubmissionCreateWithoutSubmittedByUserInput = {
   responseMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   submittedAt?: Date | string
   respondedAt?: Date | string | null
+  manualEntry?: Prisma.DeclarationManualEntryCreateNestedOneWithoutSubmissionInput
   declarationBatch: Prisma.DeclarationBatchCreateNestedOneWithoutSubmissionsInput
   declarationExport?: Prisma.DeclarationExportCreateNestedOneWithoutSubmissionsInput
 }
@@ -823,6 +932,7 @@ export type DeclarationSubmissionUncheckedCreateWithoutSubmittedByUserInput = {
   responseMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   submittedAt?: Date | string
   respondedAt?: Date | string | null
+  manualEntry?: Prisma.DeclarationManualEntryUncheckedCreateNestedOneWithoutSubmissionInput
 }
 
 export type DeclarationSubmissionCreateOrConnectWithoutSubmittedByUserInput = {
@@ -875,6 +985,7 @@ export type DeclarationSubmissionUpdateWithoutDeclarationBatchInput = {
   responseMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   respondedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  manualEntry?: Prisma.DeclarationManualEntryUpdateOneWithoutSubmissionNestedInput
   declarationExport?: Prisma.DeclarationExportUpdateOneWithoutSubmissionsNestedInput
   submittedByUser?: Prisma.UserUpdateOneRequiredWithoutDeclarationSubmissionsNestedInput
 }
@@ -891,6 +1002,7 @@ export type DeclarationSubmissionUncheckedUpdateWithoutDeclarationBatchInput = {
   submittedByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   respondedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  manualEntry?: Prisma.DeclarationManualEntryUncheckedUpdateOneWithoutSubmissionNestedInput
 }
 
 export type DeclarationSubmissionUncheckedUpdateManyWithoutDeclarationBatchInput = {
@@ -931,6 +1043,7 @@ export type DeclarationSubmissionUpdateWithoutDeclarationExportInput = {
   responseMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   respondedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  manualEntry?: Prisma.DeclarationManualEntryUpdateOneWithoutSubmissionNestedInput
   declarationBatch?: Prisma.DeclarationBatchUpdateOneRequiredWithoutSubmissionsNestedInput
   submittedByUser?: Prisma.UserUpdateOneRequiredWithoutDeclarationSubmissionsNestedInput
 }
@@ -947,6 +1060,7 @@ export type DeclarationSubmissionUncheckedUpdateWithoutDeclarationExportInput = 
   submittedByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   respondedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  manualEntry?: Prisma.DeclarationManualEntryUncheckedUpdateOneWithoutSubmissionNestedInput
 }
 
 export type DeclarationSubmissionUncheckedUpdateManyWithoutDeclarationExportInput = {
@@ -987,6 +1101,7 @@ export type DeclarationSubmissionUpdateWithoutSubmittedByUserInput = {
   responseMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   respondedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  manualEntry?: Prisma.DeclarationManualEntryUpdateOneWithoutSubmissionNestedInput
   declarationBatch?: Prisma.DeclarationBatchUpdateOneRequiredWithoutSubmissionsNestedInput
   declarationExport?: Prisma.DeclarationExportUpdateOneWithoutSubmissionsNestedInput
 }
@@ -1003,6 +1118,7 @@ export type DeclarationSubmissionUncheckedUpdateWithoutSubmittedByUserInput = {
   responseMetadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   respondedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  manualEntry?: Prisma.DeclarationManualEntryUncheckedUpdateOneWithoutSubmissionNestedInput
 }
 
 export type DeclarationSubmissionUncheckedUpdateManyWithoutSubmittedByUserInput = {
@@ -1034,6 +1150,7 @@ export type DeclarationSubmissionSelect<ExtArgs extends runtime.Types.Extensions
   submittedByUserId?: boolean
   submittedAt?: boolean
   respondedAt?: boolean
+  manualEntry?: boolean | Prisma.DeclarationSubmission$manualEntryArgs<ExtArgs>
   declarationBatch?: boolean | Prisma.DeclarationBatchDefaultArgs<ExtArgs>
   declarationExport?: boolean | Prisma.DeclarationSubmission$declarationExportArgs<ExtArgs>
   submittedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1092,6 +1209,7 @@ export type DeclarationSubmissionSelectScalar = {
 
 export type DeclarationSubmissionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "declarationBatchId" | "declarationExportId" | "attemptNumber" | "channel" | "status" | "externalReference" | "requestMetadata" | "responseMetadata" | "submittedByUserId" | "submittedAt" | "respondedAt", ExtArgs["result"]["declarationSubmission"]>
 export type DeclarationSubmissionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  manualEntry?: boolean | Prisma.DeclarationSubmission$manualEntryArgs<ExtArgs>
   declarationBatch?: boolean | Prisma.DeclarationBatchDefaultArgs<ExtArgs>
   declarationExport?: boolean | Prisma.DeclarationSubmission$declarationExportArgs<ExtArgs>
   submittedByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1110,6 +1228,7 @@ export type DeclarationSubmissionIncludeUpdateManyAndReturn<ExtArgs extends runt
 export type $DeclarationSubmissionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "DeclarationSubmission"
   objects: {
+    manualEntry: Prisma.$DeclarationManualEntryPayload<ExtArgs> | null
     declarationBatch: Prisma.$DeclarationBatchPayload<ExtArgs>
     declarationExport: Prisma.$DeclarationExportPayload<ExtArgs> | null
     submittedByUser: Prisma.$UserPayload<ExtArgs>
@@ -1521,6 +1640,7 @@ readonly fields: DeclarationSubmissionFieldRefs;
  */
 export interface Prisma__DeclarationSubmissionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  manualEntry<T extends Prisma.DeclarationSubmission$manualEntryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DeclarationSubmission$manualEntryArgs<ExtArgs>>): Prisma.Prisma__DeclarationManualEntryClient<runtime.Types.Result.GetResult<Prisma.$DeclarationManualEntryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   declarationBatch<T extends Prisma.DeclarationBatchDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DeclarationBatchDefaultArgs<ExtArgs>>): Prisma.Prisma__DeclarationBatchClient<runtime.Types.Result.GetResult<Prisma.$DeclarationBatchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   declarationExport<T extends Prisma.DeclarationSubmission$declarationExportArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DeclarationSubmission$declarationExportArgs<ExtArgs>>): Prisma.Prisma__DeclarationExportClient<runtime.Types.Result.GetResult<Prisma.$DeclarationExportPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   submittedByUser<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -1963,6 +2083,25 @@ export type DeclarationSubmissionDeleteManyArgs<ExtArgs extends runtime.Types.Ex
    * Limit how many DeclarationSubmissions to delete.
    */
   limit?: number
+}
+
+/**
+ * DeclarationSubmission.manualEntry
+ */
+export type DeclarationSubmission$manualEntryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeclarationManualEntry
+   */
+  select?: Prisma.DeclarationManualEntrySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeclarationManualEntry
+   */
+  omit?: Prisma.DeclarationManualEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeclarationManualEntryInclude<ExtArgs> | null
+  where?: Prisma.DeclarationManualEntryWhereInput
 }
 
 /**

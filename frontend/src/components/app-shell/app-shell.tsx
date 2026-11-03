@@ -4,6 +4,7 @@ import { Outlet, useLocation } from 'react-router'
 import { useAuth } from '../../auth/use-auth'
 import { Sidebar } from './sidebar'
 import { Topbar } from './topbar'
+import { EnvironmentNotice } from './environment-notice'
 
 const pageTitles: Record<string, { title: string; subtitle?: string }> = {
   '/dashboard': { title: 'Dashboard', subtitle: 'Operational overview' },
@@ -80,6 +81,7 @@ export function AppShell() {
         </DialogPrimitive.Portal>
       </DialogPrimitive.Root>
       <div className="flex min-w-0 flex-1 flex-col">
+        <EnvironmentNotice />
         <Topbar
           title={page.title}
           subtitle={page.subtitle}

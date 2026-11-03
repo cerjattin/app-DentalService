@@ -18,6 +18,7 @@ import { PageHeader } from '../../components/app-shell/page-header'
 import { LoadingState } from '../../components/feedback/loading-state'
 import { StatusBadge } from '../../components/feedback/status-badge'
 import { FormField } from '../../components/forms/form-field'
+import { UnsavedChanges } from '../../components/forms/unsaved-changes'
 import { Button } from '../../components/ui/button'
 import { Textarea } from '../../components/ui/textarea'
 import { formatBusinessDate, formatBusinessDateTime } from '../../lib/timezone'
@@ -484,6 +485,8 @@ function EncounterNotes({
       </dl>
     )
   return (
+    <>
+    <UnsavedChanges active={form.formState.isDirty} />
     <form
       className="space-y-4"
       onSubmit={form.handleSubmit((values) => mutation.mutate(values))}
@@ -522,5 +525,6 @@ function EncounterNotes({
         </Button>
       </PermissionGuard>
     </form>
+    </>
   )
 }

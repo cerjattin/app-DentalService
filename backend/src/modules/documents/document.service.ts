@@ -125,7 +125,7 @@ export class DocumentService {
         data: {
           organizationId: actor.organizationId,
           documentType: input.documentType,
-          storageProvider: "LOCAL",
+          storageProvider: documentStorage.provider,
           storageUri,
           originalFilename,
           mimeType,

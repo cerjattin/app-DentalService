@@ -49,7 +49,11 @@ export const addDeclarationItemSchema = z.strictObject({
   invoiceItemId: bigintId,
 });
 
-export const createDeclarationExportSchema = z.object({
+export const presentationPurposeSchema = z.enum(["TECHNICAL", "REAL_SVB"]);
+export const markDeclarationReadySchema = z.strictObject({ presentationPurpose: presentationPurposeSchema.optional() });
+
+export const createDeclarationExportSchema = z.strictObject({
+  presentationPurpose: presentationPurposeSchema.optional(),
   format: z
     .string()
     .trim()

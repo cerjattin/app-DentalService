@@ -1,0 +1,9 @@
+{
+  "operation": "fileChooser.setFiles",
+  "fileType": "text/plain synthetic invalid fixture",
+  "result": "NOT_EXECUTED",
+  "reason": "ChatGPT Chrome extension requires Allow access to file URLs",
+  "permissionChanged": false,
+  "fileUploaded": false,
+  "externalPresentation": false
+}

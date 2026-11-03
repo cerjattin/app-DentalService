@@ -22,4 +22,4 @@ openApiRegistry.registerPath({ method: "get", path: "/api/v1/reports/dashboard",
 openApiRegistry.registerPath({ method: "get", path: "/api/v1/clinic-locations", tags: ["Clinic locations"], summary: "Look up clinic locations",
   description: "Requires clinic_location.read. Returns only non-archived locations in the authenticated organization. IDs remain strings.",
   security: [{ operationalBearerAuth: [] }], request: { query: z.object({ isActive: z.enum(["true","false"]).optional() }) },
-  responses: { 200: { description: "Locations", content: json(z.object({ success: z.literal(true), data: z.array(z.object({ id, code: z.string(), name: z.string(), isActive: z.boolean() })) })) }, ...errors } });
+  responses: { 200: { description: "Locations including the stored policlinic code (not an approval of its official meaning)", content: json(z.object({ success: z.literal(true), data: z.array(z.object({ id, code: z.string(), name: z.string(), isActive: z.boolean(), policlinicCode: z.string().nullable() })) })) }, ...errors } });

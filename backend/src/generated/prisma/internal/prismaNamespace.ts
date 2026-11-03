@@ -409,6 +409,8 @@ export const ModelName = {
   DeclarationItem: 'DeclarationItem',
   DeclarationActiveAssignment: 'DeclarationActiveAssignment',
   DeclarationSubmission: 'DeclarationSubmission',
+  DeclarationManualEntry: 'DeclarationManualEntry',
+  DeclarationManualResult: 'DeclarationManualResult',
   DiagnosisCode: 'DiagnosisCode',
   Document: 'Document',
   EncounterDiagnosis: 'EncounterDiagnosis',
@@ -453,7 +455,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "accidentCase" | "appointmentStatusHistory" | "appointment" | "auditLog" | "clinicLocation" | "clinicalEncounter" | "declarationBatchStatusHistory" | "declarationBatch" | "declarationExport" | "declarationItem" | "declarationActiveAssignment" | "declarationSubmission" | "diagnosisCode" | "document" | "encounterDiagnosis" | "encounterProcedure" | "invoiceCorrection" | "invoiceDocument" | "invoiceItem" | "invoiceStatusHistory" | "invoiceVersion" | "invoice" | "numberSequence" | "organization" | "patientInsurance" | "patient" | "payer" | "permission" | "provider" | "referrer" | "rolePermission" | "role" | "signature" | "svbAuthorizationItem" | "svbAuthorization" | "svbProcedure" | "svbTariff" | "systemSetting" | "treatmentCase" | "userRole" | "user"
+    modelProps: "accidentCase" | "appointmentStatusHistory" | "appointment" | "auditLog" | "clinicLocation" | "clinicalEncounter" | "declarationBatchStatusHistory" | "declarationBatch" | "declarationExport" | "declarationItem" | "declarationActiveAssignment" | "declarationSubmission" | "declarationManualEntry" | "declarationManualResult" | "diagnosisCode" | "document" | "encounterDiagnosis" | "encounterProcedure" | "invoiceCorrection" | "invoiceDocument" | "invoiceItem" | "invoiceStatusHistory" | "invoiceVersion" | "invoice" | "numberSequence" | "organization" | "patientInsurance" | "patient" | "payer" | "permission" | "provider" | "referrer" | "rolePermission" | "role" | "signature" | "svbAuthorizationItem" | "svbAuthorization" | "svbProcedure" | "svbTariff" | "systemSetting" | "treatmentCase" | "userRole" | "user"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1342,6 +1344,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.DeclarationSubmissionCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.DeclarationSubmissionCountAggregateOutputType> | number
+        }
+      }
+    }
+    DeclarationManualEntry: {
+      payload: Prisma.$DeclarationManualEntryPayload<ExtArgs>
+      fields: Prisma.DeclarationManualEntryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DeclarationManualEntryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeclarationManualEntryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DeclarationManualEntryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeclarationManualEntryPayload>
+        }
+        findFirst: {
+          args: Prisma.DeclarationManualEntryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeclarationManualEntryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DeclarationManualEntryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeclarationManualEntryPayload>
+        }
+        findMany: {
+          args: Prisma.DeclarationManualEntryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeclarationManualEntryPayload>[]
+        }
+        create: {
+          args: Prisma.DeclarationManualEntryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeclarationManualEntryPayload>
+        }
+        createMany: {
+          args: Prisma.DeclarationManualEntryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DeclarationManualEntryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeclarationManualEntryPayload>[]
+        }
+        delete: {
+          args: Prisma.DeclarationManualEntryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeclarationManualEntryPayload>
+        }
+        update: {
+          args: Prisma.DeclarationManualEntryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeclarationManualEntryPayload>
+        }
+        deleteMany: {
+          args: Prisma.DeclarationManualEntryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DeclarationManualEntryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DeclarationManualEntryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeclarationManualEntryPayload>[]
+        }
+        upsert: {
+          args: Prisma.DeclarationManualEntryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeclarationManualEntryPayload>
+        }
+        aggregate: {
+          args: Prisma.DeclarationManualEntryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDeclarationManualEntry>
+        }
+        groupBy: {
+          args: Prisma.DeclarationManualEntryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DeclarationManualEntryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DeclarationManualEntryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DeclarationManualEntryCountAggregateOutputType> | number
+        }
+      }
+    }
+    DeclarationManualResult: {
+      payload: Prisma.$DeclarationManualResultPayload<ExtArgs>
+      fields: Prisma.DeclarationManualResultFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DeclarationManualResultFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeclarationManualResultPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DeclarationManualResultFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeclarationManualResultPayload>
+        }
+        findFirst: {
+          args: Prisma.DeclarationManualResultFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeclarationManualResultPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DeclarationManualResultFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeclarationManualResultPayload>
+        }
+        findMany: {
+          args: Prisma.DeclarationManualResultFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeclarationManualResultPayload>[]
+        }
+        create: {
+          args: Prisma.DeclarationManualResultCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeclarationManualResultPayload>
+        }
+        createMany: {
+          args: Prisma.DeclarationManualResultCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DeclarationManualResultCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeclarationManualResultPayload>[]
+        }
+        delete: {
+          args: Prisma.DeclarationManualResultDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeclarationManualResultPayload>
+        }
+        update: {
+          args: Prisma.DeclarationManualResultUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeclarationManualResultPayload>
+        }
+        deleteMany: {
+          args: Prisma.DeclarationManualResultDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DeclarationManualResultUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DeclarationManualResultUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeclarationManualResultPayload>[]
+        }
+        upsert: {
+          args: Prisma.DeclarationManualResultUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeclarationManualResultPayload>
+        }
+        aggregate: {
+          args: Prisma.DeclarationManualResultAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDeclarationManualResult>
+        }
+        groupBy: {
+          args: Prisma.DeclarationManualResultGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DeclarationManualResultGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DeclarationManualResultCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DeclarationManualResultCountAggregateOutputType> | number
         }
       }
     }
@@ -3671,6 +3821,7 @@ export const DeclarationBatchScalarFieldEnum = {
   declarationNumber: 'declarationNumber',
   status: 'status',
   lastItemSequence: 'lastItemSequence',
+  lastSubmissionAttempt: 'lastSubmissionAttempt',
   periodStart: 'periodStart',
   periodEnd: 'periodEnd',
   declarantIdSnapshot: 'declarantIdSnapshot',
@@ -3763,6 +3914,52 @@ export const DeclarationSubmissionScalarFieldEnum = {
 } as const
 
 export type DeclarationSubmissionScalarFieldEnum = (typeof DeclarationSubmissionScalarFieldEnum)[keyof typeof DeclarationSubmissionScalarFieldEnum]
+
+
+export const DeclarationManualEntryScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  declarationBatchId: 'declarationBatchId',
+  state: 'state',
+  claimKey: 'claimKey',
+  contentHash: 'contentHash',
+  contentSnapshot: 'contentSnapshot',
+  preparedByUserId: 'preparedByUserId',
+  preparedAt: 'preparedAt',
+  uncertaintyReason: 'uncertaintyReason',
+  releaseReason: 'releaseReason',
+  releasedAt: 'releasedAt',
+  resolutionDocumentId: 'resolutionDocumentId',
+  recordKey: 'recordKey',
+  recordHash: 'recordHash',
+  submissionId: 'submissionId',
+  receiptDocumentId: 'receiptDocumentId',
+  receiptSha256: 'receiptSha256',
+  externalSubmittedAt: 'externalSubmittedAt',
+  confirmedAt: 'confirmedAt'
+} as const
+
+export type DeclarationManualEntryScalarFieldEnum = (typeof DeclarationManualEntryScalarFieldEnum)[keyof typeof DeclarationManualEntryScalarFieldEnum]
+
+
+export const DeclarationManualResultScalarFieldEnum = {
+  id: 'id',
+  manualEntryId: 'manualEntryId',
+  organizationId: 'organizationId',
+  idempotencyKey: 'idempotencyKey',
+  requestHash: 'requestHash',
+  status: 'status',
+  resultDocumentId: 'resultDocumentId',
+  resultSha256: 'resultSha256',
+  externalReference: 'externalReference',
+  reason: 'reason',
+  externalRespondedAt: 'externalRespondedAt',
+  recordedByUserId: 'recordedByUserId',
+  recordedAt: 'recordedAt',
+  lineResults: 'lineResults'
+} as const
+
+export type DeclarationManualResultScalarFieldEnum = (typeof DeclarationManualResultScalarFieldEnum)[keyof typeof DeclarationManualResultScalarFieldEnum]
 
 
 export const DiagnosisCodeScalarFieldEnum = {
@@ -5126,6 +5323,8 @@ export type GlobalOmitConfig = {
   declarationItem?: Prisma.DeclarationItemOmit
   declarationActiveAssignment?: Prisma.DeclarationActiveAssignmentOmit
   declarationSubmission?: Prisma.DeclarationSubmissionOmit
+  declarationManualEntry?: Prisma.DeclarationManualEntryOmit
+  declarationManualResult?: Prisma.DeclarationManualResultOmit
   diagnosisCode?: Prisma.DiagnosisCodeOmit
   document?: Prisma.DocumentOmit
   encounterDiagnosis?: Prisma.EncounterDiagnosisOmit

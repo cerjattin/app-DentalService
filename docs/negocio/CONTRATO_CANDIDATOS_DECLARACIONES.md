@@ -1,14 +1,14 @@
 # NEG-FUNC-04 — Candidatos de declaración y asignación exclusiva
 
-Fecha: 2026-10-31. Prioridad propuesta: P1. Estado: **especificación pendiente de implementación**.
+Contrato de origen: 2026-10-31. Estado actualizado el 2026-11-02: **implementado en Backend/Frontend local**, con los límites de aceptación de la [verificación actual](VERIFICACION_CONTRATOS_03_05_20261102.md). La entrega concreta y los códigos de diagnóstico están en el [informe Backend](../../backend/docs/NEG_FUNC_03_04_05.md).
 
 ## Objetivo y evidencia
 
-Sustituir la introducción manual de InvoiceItem IDs por selección de ítems reales y evitar asignar un ítem simultáneamente a dos declaraciones activas. En el checkout revisado no existe un endpoint de candidatos; [addItem](../../backend/src/modules/declarations/declaration.service.ts) y la clave única actual verifican duplicados dentro del mismo lote, no exclusividad entre lotes.
+Sustituir la introducción manual de InvoiceItem IDs por selección de ítems reales y evitar asignar un ítem simultáneamente a dos declaraciones activas. La carencia inicial motivó el contrato; la entrega comprobada ya incluye candidatos, propiedad activa exclusiva, contador persistente y resolución Draft. No volver a implementar esas funciones por la descripción de origen.
 
 Leer [NEG-FE-REBILL-02](CONTRATO_FRONTEND_REFACTURACION_DRAFT.md) para retiro/cancelación Draft y [NEG-FUNC-03](CONTRATO_ORGANIZACION_SVB.md) para el Declarant ID. La confirmación del usuario sobre el contrato anterior se registra en el índice; comprobar su entrega efectiva al integrar, sin volver a implementar rutas que ya estén disponibles.
 
-## API nueva propuesta — no publicada
+## API de origen — publicada en la entrega local
 
 `GET /api/v1/declarations/:declarationId/candidates`, con `declaration.read` e `invoice.read`. Solo para un Draft de la organización del actor. Respuesta paginada en el envelope existente: `data: DeclarationCandidate[]`, `meta: { page, pageSize, total, totalPages }`.
 
@@ -76,7 +76,7 @@ Tras éxito/integración con retiro y cancelación, invalidar candidatos del lot
 6. Fallos de auditoría/transacción no dejan asignaciones parciales; sin permisos se rechaza la petición aunque se construya manualmente.
 7. Confirmar comportamiento con corrección de factura y cambio concurrente a READY. No acreditar concurrencia/rollback solo con dobles de repositorio.
 
-Backend entrega API/errores y diseño de integridad; Frontend consume después y actualiza pruebas Declarations/Billing/Dashboard. Ejecutar integración en PostgreSQL local dedicado y aceptación de navegador contra QA, sin operar sobre clínica. Documentar resultados reales, rutas, archivos y bloqueos pendientes. Este documento no acredita implementación ni valida formatos oficiales SVB.
+Backend entrega API/errores y diseño de integridad; Frontend consume después y actualiza pruebas Declarations/Billing/Dashboard. Ejecutar integración en PostgreSQL local dedicado y aceptación de navegador contra QA, sin operar sobre clínica. El estado de implementación y las pruebas comprobadas están en el informe del encabezado; esa evidencia no valida por sí sola formatos oficiales SVB.
 
 ## Asistentes que deben atender y resolver
 

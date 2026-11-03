@@ -1,5 +1,7 @@
 import { isTransactionConflict } from "../../infrastructure/database/transaction-conflict.js";
 import { assertDeclarationIdentity, invoiceDeclarant, declarationSnapshot } from "./declaration-identity.js";
+import { assertSvbPresentationPurpose, type SvbPresentationPurpose } from "../svb-readiness/svb-readiness.service.js";
+import { assertNoManualEntry } from "./manual-entry.repository.js";
 import { normalizeSearch } from "../../infrastructure/database/text-search.js";
 import { Prisma } from "../../generated/prisma/client.js";
 
@@ -631,6 +633,7 @@ export class DeclarationService {
         }
 
         assertEditableDraft(declaration);
+        await assertNoManualEntry(declaration.id,tx);
         assertDeclarationIdentity(declaration);
 
         const duplicate = await declarationRepository.findItemByInvoiceItem(
@@ -702,6 +705,7 @@ export class DeclarationService {
     declarationId: bigint,
     actor: AuthenticatedRequestContext,
     metadata: RequestSecurityMetadata,
+    presentationPurpose: SvbPresentationPurpose = "TECHNICAL",
   ) {
     const declaration = await serializableTransaction(async (tx) => {
       const current = await declarationRepository.lockBatch(tx, declarationId, actor.organizationId);
@@ -715,6 +719,8 @@ export class DeclarationService {
       }
 
       assertEditableDraft(current);
+      await assertNoManualEntry(current.id,tx);
+      assertSvbPresentationPurpose(presentationPurpose);
       assertDeclarationIdentity(current);
 
       if (current.items.length === 0) {
@@ -746,6 +752,7 @@ export class DeclarationService {
           changedByUserId: actor.userId,
           metadata: {
             source: "api",
+            presentationPurpose,
           },
         },
       });
@@ -764,6 +771,7 @@ export class DeclarationService {
         newValues: {
           status: updated.status,
           readyAt: updated.readyAt?.toISOString() ?? null,
+          presentationPurpose,
         },
         ...auditTechnicalFields(metadata),
       });
@@ -850,11 +858,7 @@ export class DeclarationService {
 
     try {
       const submission = await serializableTransaction(async (tx) => {
-        const current = await declarationRepository.findById(
-          declarationId,
-          actor.organizationId,
-          tx,
-        );
+        const current = await declarationRepository.lockBatch(tx,declarationId,actor.organizationId);
 
         if (!current) {
           throw new AppError(
@@ -865,6 +869,7 @@ export class DeclarationService {
         }
 
         assertSubmittable(current);
+        await assertNoManualEntry(current.id,tx);
 
         const activeSubmission = await tx.declarationSubmission.findFirst({
           where: {
@@ -909,20 +914,14 @@ export class DeclarationService {
           },
         });
 
-        const maxAttempt = await tx.declarationSubmission.aggregate({
-          where: {
-            declarationBatchId: current.id,
-          },
-          _max: {
-            attemptNumber: true,
-          },
-        });
+        const ordinal = await tx.declarationBatch.update({ where: { id: current.id },
+          data: { lastSubmissionAttempt: { increment: 1 } }, select: { lastSubmissionAttempt: true } });
 
         const created = await tx.declarationSubmission.create({
           data: {
             declarationBatchId: current.id,
             declarationExportId: declarationExport.id,
-            attemptNumber: (maxAttempt._max.attemptNumber ?? 0) + 1,
+            attemptNumber: ordinal.lastSubmissionAttempt,
             channel: adapterResult.channel,
             status: "SUBMITTED",
             externalReference: adapterResult.externalReference ?? null,
@@ -1009,6 +1008,9 @@ export class DeclarationService {
           "Declaration submission not found",
         );
       }
+
+      const manual = await tx.declarationManualEntry.findUnique({ where: { submissionId: existing.id }, select: { id: true } });
+      if (manual) throw new AppError(409,"MANUAL_RESULT_EVIDENCE_REQUIRED","Use the official-result endpoint with evidence and explicit per-line outcomes");
 
       if (current.status !== "SUBMITTED" || existing.status !== "SUBMITTED") {
         throw new AppError(
@@ -1111,6 +1113,7 @@ export class DeclarationService {
     }
 
     assertReadyForExport(declaration);
+    assertSvbPresentationPurpose(input.presentationPurpose ?? "TECHNICAL");
 
     if (declaration.items.length === 0) {
       throw new AppError(
@@ -1171,6 +1174,7 @@ export class DeclarationService {
         }
 
         assertReadyForExport(current);
+        await assertNoManualEntry(current.id,tx);
 
         const duplicate = await tx.declarationExport.findFirst({
           where: {
@@ -1192,7 +1196,7 @@ export class DeclarationService {
           data: {
             organizationId: actor.organizationId,
             documentType: "DECLARATION_EXPORT",
-            storageProvider: "LOCAL",
+            storageProvider: documentStorage.provider,
             storageUri,
             originalFilename: `${current.declarationNumber ?? current.id.toString()}-${input.format.toLowerCase()}.${rendered.extension}`,
             mimeType: rendered.mimeType,
@@ -1202,6 +1206,8 @@ export class DeclarationService {
               schemaVersion: SCHEMA_VERSION,
               adapterVersion: ADAPTER_VERSION,
               headerRow: false,
+              presentationPurpose: "TECHNICAL",
+              realSubmissionEnabled: false,
             },
             createdByUserId: actor.userId,
           },
@@ -1222,6 +1228,8 @@ export class DeclarationService {
             metadata: {
               sha256: contentHash,
               headerRow: false,
+              presentationPurpose: "TECHNICAL",
+              realSubmissionEnabled: false,
             },
           },
           select: declarationExportSelect,

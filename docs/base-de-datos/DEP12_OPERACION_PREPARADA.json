@@ -1,0 +1,121 @@
+{
+  "contract": "DEP12-B/C",
+  "schemaVersion": 1,
+  "preparedAt": "2026-11-03T20:51:19.051Z",
+  "status": "PREPARED_LOCAL",
+  "operationalApplicationExecuted": false,
+  "deploymentConfiguration": {
+    "SVB_MANUAL_RECORDING_ENABLED": false,
+    "realSvbSubmissionEnabled": false
+  },
+  "sourceRevision": "0bff419bd",
+  "workingChangesRequireReleaseManifest": true,
+  "targetFingerprint": "314ed3166b5c5648b8f7e848947f5b41cf5f252b94d7ece794b0bf766a118afb",
+  "migrations": [
+    {
+      "name": "20261030000000_init",
+      "checksum": "3ee7dd600de6123044d0ad3d3dbf2042c2f495839b21361399d1204d922c88e5",
+      "targetState": "MATCH"
+    },
+    {
+      "name": "20261031000000_declaration_assignment",
+      "checksum": "f32d1ea796f650fe4673276a075a5b82eefc620e839c42f40b80407da6c534e3",
+      "targetState": "PENDING"
+    },
+    {
+      "name": "20261031010000_treatment_case_usage",
+      "checksum": "c0dc0a1e69400df31daef4b7bec1fcc00415d0ee6850de169fdbdc3e08739f7c",
+      "targetState": "PENDING"
+    },
+    {
+      "name": "20261031020000_declaration_integrity",
+      "checksum": "c08888b85e5da477e50818c982c429bffaab3a4632b30248e0ac5ee84ac06239",
+      "targetState": "PENDING"
+    },
+    {
+      "name": "20261031030000_declaration_evidence_checks",
+      "checksum": "ea412c96bd8c5f92cb97cc096d0b59318c600737354b8d9721b00cd3a038dc01",
+      "targetState": "PENDING"
+    },
+    {
+      "name": "20261103000000_manual_portal",
+      "checksum": "e467d9d8a14ec5cd81f7ade0c90683810d31f749e7294ecb39e7e4676a42e1a7",
+      "targetState": "PENDING"
+    }
+  ],
+  "permissions": {
+    "policyHash": "a3b1fd01d06f88140af7d779a0cbac3603daf7b5d9a2d4248d7fe071f6d90b1a",
+    "expectedDiff": "411f9a3c6517252771fce685dec2572fbc9c165e595f2af5c54091246528140d",
+    "diff": {
+      "createPermissions": [
+        "treatment_case.manage",
+        "treatment_case.read"
+      ],
+      "addGrants": [
+        {
+          "role": "ADMIN",
+          "code": "treatment_case.read"
+        },
+        {
+          "role": "ADMIN",
+          "code": "treatment_case.manage"
+        },
+        {
+          "role": "RECEPTION",
+          "code": "treatment_case.read"
+        },
+        {
+          "role": "PROVIDER",
+          "code": "treatment_case.read"
+        },
+        {
+          "role": "PROVIDER",
+          "code": "treatment_case.manage"
+        }
+      ],
+      "removeGrants": [],
+      "blocked": []
+    },
+    "expectedActorId": null,
+    "reasonToApprove": null
+  },
+  "fiscal": {
+    "invalidOrganizations": 2,
+    "inconsistentDrafts": 1,
+    "sourceValuesApproved": false,
+    "sourceAvailability": "NOT_AVAILABLE_CONFIRMED_BY_USER",
+    "sourceAvailabilityConfirmedOn": "2026-11-03",
+    "automaticRepairs": 0,
+    "protectedPlan": "backend/storage/dep12-db-qa/fiscal-plan-final.json"
+  },
+  "documents": {
+    "priorUriGroups": [
+      {
+        "provider": "LOCAL_URI",
+        "count": 7,
+        "bytes": "654296"
+      }
+    ],
+    "remoteQaBucketConfigured": false,
+    "remoteObjectRecoveryVerified": false,
+    "automaticUriChanges": 0
+  },
+  "verification": {
+    "backendTests": 482,
+    "testFiles": 59,
+    "failed": 0,
+    "skipped": 0,
+    "typecheck": "PASS",
+    "build": "PASS",
+    "source": "backend/storage/dep12-db-qa/acceptance-results.json"
+  },
+  "sequence": [
+    "Approve release/target/window/owner and fiscal sources",
+    "Backup DB+objects and validate isolated restore on the chosen topology",
+    "Stop destination writers and repeat protected preflight/diff",
+    "Apply five known pending migrations in order with one owner",
+    "Apply reviewed permissions-only diff with target/diff/active actor/reason",
+    "Verify inventory/diagnoses/roles and destination smoke; keep SVB deferred"
+  ],
+  "rollback": "Suspend affected writes; preserve original history/evidence; restore validated DB+objects in a separate target and reconcile later facts. Do not reset, rewrite applied migrations or edit signed snapshots."
+}

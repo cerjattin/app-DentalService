@@ -1,0 +1,20 @@
+{
+  "viewport": "768x1024",
+  "openByKeyboard": "Enter",
+  "tabLoopBackward": {
+    "tag": "BUTTON",
+    "text": "FEc32b1c3eQA Frontend service",
+    "withinDialog": true
+  },
+  "tabLoopForward": {
+    "label": "Close dialog",
+    "tag": "BUTTON",
+    "withinDialog": true
+  },
+  "escapeFocus": {
+    "label": null,
+    "tag": "BODY",
+    "text": "OSOdontho ServicesSVB BillingWorkspaceDashboardReceptionPatientsAppointmentsSVBInvoicesDeclarationsAdministrationAdministrationUsersProvidersServicesSettingsQA · design-dep11-r2SVB submission pending · No automatic submissionClinical WorkspaceEncounter and procedures04:54 PMQA ADMINADMINQASign outClinical workspaceFEc32b1c3e-000004Appointment detailsQA FrontendQA-FE-1 · Document not providedPatient recordQA ProviderQA Frontend clinicNov 3, 2026, 5:00 PMIn progressEncounterOpenStarted Nov 3, 2026, 4:26 PMChief complaintClinical notesSave notesDiagnosesAdd diagnosisNo diagnoses recorded.Treatment contextPerformed procedures retain their frozen external Treatment ID below.Internal treatment case reference19Performed proceduresAdd procedureAdded the wrong service? Remove it and add the correct procedure before completing the encounter. Previously invoiced services remain in invoice history.ProcedureQuantity / tariffClinical contextActionsNo performed procedures recorded.AuthorizationsAdd authorizationSearch authorizationsNo authorizations found.Page 1 of 1InsuranceQA Frontend Payer012345678ActiveJan 01, 2020 - Not providedCompletionComplete encounter"
+  },
+  "passed": false
+}

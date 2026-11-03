@@ -1,0 +1,10 @@
+{
+  "secondClientUpdatedOwnAppointment": "343",
+  "newReasonVisible": true,
+  "searchRetained": "QA",
+  "statusRetained": "IN_PROGRESS",
+  "lastUpdatedIndicatorVisible": true,
+  "manualRefreshVerified": true,
+  "automaticFocusRefresh": "source present; not independently exercised",
+  "discardedProbe": "Initial searches used reason/full name; replaced with supported q=QA before the measured second-client update"
+}

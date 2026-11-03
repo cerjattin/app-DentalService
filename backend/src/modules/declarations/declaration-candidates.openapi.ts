@@ -3,12 +3,14 @@ import { openApiRegistry } from "../../docs/openapi.registry.js";
 import { apiErrorSchema } from "../../docs/common.schemas.js";
 import { declarationCandidatesQuerySchema, declarationReasonSchema } from "./declaration.schemas.js";
 import { svbIssueCodes, svbIssueFields } from "./export/declaration-row.mapper.js";
+import { realPresentationReadinessSchema } from "../svb-readiness/svb-readiness.openapi.js";
 const candidate = openApiRegistry.register("DeclarationCandidate", z.object({
   invoiceId: z.string(), invoiceVersionId: z.string(), invoiceItemId: z.string(), invoiceNumber: z.string().nullable(),
   versionNumber: z.number().int(), detailInvoiceNumber: z.string().nullable(), serviceDate: z.string(),
   procedureCode: z.string(), procedureDescription: z.string(), providerIdSnapshot: z.string(), insuredIdSnapshot: z.string(),
   amount: z.string(), currencyCode: z.string(), svbReadiness: z.enum(["COMPLETE", "INCOMPLETE"]),
   issues: z.array(z.object({ field: z.enum(svbIssueFields), code: z.enum(svbIssueCodes) })),
+  realPresentationReadiness: realPresentationReadinessSchema,
 }));
 openApiRegistry.registerPath({ method: "get", path: "/api/v1/declarations/{id}/candidates", tags: ["Declarations"],
   summary: "List available current closed invoice items without reserving them", security: [{ operationalBearerAuth: [] }],

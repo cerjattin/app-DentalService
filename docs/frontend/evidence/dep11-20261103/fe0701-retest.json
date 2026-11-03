@@ -1,0 +1,24 @@
+{
+  "date": "2026-11-03T20:54:59.080Z",
+  "environment": "QA explicit synthetic flag only 3409/55443; no external portal",
+  "technicalFixture": {
+    "organizationId": "84",
+    "invoiceId": "235",
+    "versionId": "250",
+    "itemIds": [
+      "299",
+      "300"
+    ],
+    "appointmentId": "345",
+    "encounterId": "316",
+    "technicalClosedFixtureNotSignatureEvidence": true
+  },
+  "clinicalAppointmentId": "346",
+  "clinicalEncounterId": "317",
+  "declarationId": "139",
+  "incompleteStatus": 409,
+  "incompleteCode": "MANUAL_ENTRY_INCOMPLETE_INVOICE",
+  "fullPreparationId": "55",
+  "fullPreparationState": "PREPARED",
+  "pass": true
+}

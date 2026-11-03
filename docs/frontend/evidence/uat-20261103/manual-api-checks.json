@@ -1,0 +1,92 @@
+{
+  "date": "2026-11-03T13:44:06.448Z",
+  "environment": "isolated local synthetic Frontend QA",
+  "declarationId": "135",
+  "submissionId": "23",
+  "entryId": "54",
+  "receiptDocumentId": "156",
+  "resultDocumentId": "157",
+  "applicationTransmittedToSvb": false,
+  "externalReceiptIsSynthetic": true,
+  "externalResponseIsSynthetic": true,
+  "checks": [
+    {
+      "name": "Release UNCERTAIN with proof",
+      "actual": 200,
+      "expected": 200,
+      "pass": true
+    },
+    {
+      "name": "Prepare replay",
+      "actual": 200,
+      "expected": 200,
+      "pass": true
+    },
+    {
+      "name": "Prepare replay same ID",
+      "actual": "54",
+      "expected": "54",
+      "pass": true
+    },
+    {
+      "name": "Receipt required",
+      "actual": 400,
+      "expected": 400,
+      "pass": true
+    },
+    {
+      "name": "Submission exact replay",
+      "actual": 200,
+      "expected": 200,
+      "pass": true
+    },
+    {
+      "name": "Replay same submission",
+      "actual": "23",
+      "expected": "23",
+      "pass": true
+    },
+    {
+      "name": "Conflicting duplicate blocked",
+      "actual": 409,
+      "expected": 409,
+      "pass": true
+    },
+    {
+      "name": "Legacy result cannot bypass proof",
+      "actual": 409,
+      "expected": 409,
+      "pass": true
+    },
+    {
+      "name": "Official-result exact replay",
+      "actual": 200,
+      "expected": 200,
+      "pass": true
+    },
+    {
+      "name": "Final result has every item",
+      "actual": 22,
+      "expected": 22,
+      "pass": true
+    },
+    {
+      "name": "Recorded presentation blocks correction",
+      "actual": 409,
+      "expected": 409,
+      "pass": true
+    },
+    {
+      "name": "Evidenced partial result stored",
+      "actual": "PARTIALLY_REJECTED",
+      "expected": "PARTIALLY_REJECTED",
+      "pass": true
+    },
+    {
+      "name": "No technical export required",
+      "actual": 0,
+      "expected": 0,
+      "pass": true
+    }
+  ]
+}

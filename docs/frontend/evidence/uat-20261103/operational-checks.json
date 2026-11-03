@@ -1,0 +1,104 @@
+{
+  "date": "2026-11-03T13:46:42.958Z",
+  "environment": "isolated local synthetic Frontend QA",
+  "appointmentId": "340",
+  "invoiceId": "232",
+  "checks": [
+    {
+      "name": "Original appointment remains completed",
+      "actual": "COMPLETED",
+      "expected": "COMPLETED",
+      "pass": true
+    },
+    {
+      "name": "Invoice ID retained",
+      "actual": "232",
+      "expected": "232",
+      "pass": true
+    },
+    {
+      "name": "Invoice number retained",
+      "actual": "FEc32b1c3e-000001",
+      "expected": "FEc32b1c3e-000001",
+      "pass": true
+    },
+    {
+      "name": "Corrected exact total",
+      "actual": "2042.40",
+      "expected": "2042.40",
+      "pass": true
+    },
+    {
+      "name": "Second logical invoice blocked",
+      "actual": 409,
+      "expected": 409,
+      "pass": true
+    },
+    {
+      "name": "One logical invoice",
+      "actual": 1,
+      "expected": 1,
+      "pass": true
+    },
+    {
+      "name": "External treatment zeros preserved",
+      "actual": "0000001",
+      "expected": "0000001",
+      "pass": true
+    },
+    {
+      "name": "Used case is not editable",
+      "actual": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "Used case edit blocked",
+      "actual": 409,
+      "expected": 409,
+      "pass": true
+    },
+    {
+      "name": "Active provider overlap rejected",
+      "actual": 409,
+      "expected": 409,
+      "pass": true
+    },
+    {
+      "name": "Boundary excluded from previous business day",
+      "actual": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "name": "Boundary included in Curaçao date",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "Billed removed procedure retained VOID",
+      "actual": "VOID",
+      "expected": "VOID",
+      "pass": true
+    },
+    {
+      "name": "Replacement quantity exact",
+      "actual": "2.00",
+      "expected": "2.00",
+      "pass": true
+    },
+    {
+      "name": "Original version retained",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "Corrected current version closed",
+      "actual": "CLOSED",
+      "expected": "CLOSED",
+      "pass": true
+    }
+  ]
+}

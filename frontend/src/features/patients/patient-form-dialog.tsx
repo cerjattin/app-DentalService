@@ -143,7 +143,7 @@ export function PatientFormDialog({
       description="Enter only information confirmed by the patient."
       size="wide"
     >
-      <form className="space-y-5" onSubmit={handleSubmit((values) => onSubmit(toDto(values)))}>
+      <form noValidate className="space-y-5" onSubmit={handleSubmit((values) => onSubmit(toDto(values)))}>
         <div className="grid gap-4 sm:grid-cols-2">
           <FormField label="First name" htmlFor="firstName" error={errors.firstName?.message}>
             <Input id="firstName" autoFocus {...register('firstName')} />

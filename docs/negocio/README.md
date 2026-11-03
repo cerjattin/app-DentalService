@@ -1,5 +1,17 @@
 # Lógica de negocio
 
+## Primer despliegue — alcance vigente 2026-11-03
+
+El envío a SVB queda aplazado por instrucción actual del usuario. La revisión inicial identificó integridad de factura completa (FE-07-01), aceptación de navegador/roles/UX y preparación del destino. DEP10 ya tiene corrección Backend y reensayo integrado de factura parcial/completa; las áreas continúan el cierre local. [Estado actual, evidencia y contratos DEP10–12](CIERRE_PRIMER_DESPLIEGUE_20261103.md). La continuación incluye comprobación propia de Negocio: lint y 379 pruebas Frontend aprobados. Las fuentes SVB sin confirmar permanecen en la fase aplazada; no se inventan valores para el piloto clínico independiente.
+
+La continuación acreditó DEP10 en código y en regresiones independientes Backend/DB de 482 pruebas cada una, sin sumarlas; Frontend/Diseño completan aceptación integrada. El usuario decidió **QA únicamente local por ahora**, con cuenta Render disponible y sin Supabase QA separado. Mantener los requisitos remotos pendientes y regenerar el candidato después de las correcciones actuales; no confundir preparación local con despliegue ni uso clínico aceptado.
+
+## Estado comprobado y cierre del MVP — 2026-11-02
+
+Los contratos 03/04/05 están implementados en Backend/Frontend local, con soporte PostgreSQL y resolución de Draft del contrato anterior. Ver [verificación actual y límites de evidencia](VERIFICACION_CONTRATOS_03_05_20261102.md): hoy pasaron Backend typecheck/build y 124 unitarias, Frontend lint/build y 330 pruebas. No se repitió integración PostgreSQL ni navegador hoy; las entregas previas conservan sus evidencias propias.
+
+El usuario confirmó piloto con **datos reales y presentación manual real en portal SVB**. Se prepararon [contratos finales 06–09 y encargos](CONTRATOS_FINALES_MVP_CLIENTE.md): datos/reglas/formato SVB, registro de presentación/comprobante/respuesta, entorno operativo/recuperación y aceptación integral con cliente. Estas funciones faltantes y controles aún no se acreditan implementados por esta preparación. No se ejecutaron migraciones/seeds/presentaciones ni escrituras sobre clínica.
+
 ## Responsabilidad y ubicación
 
 Definir casos de uso, invariantes, estados y criterios de aceptación. La implementación autoritativa permanece en `backend/src/modules/*/*.service.ts`, apoyada por constraints y transacciones; la UI refleja las reglas mediante contratos explícitos.

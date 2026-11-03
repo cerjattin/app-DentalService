@@ -1,0 +1,65 @@
+{
+  "date": "2026-11-03",
+  "environment": "isolated synthetic design QA",
+  "method": "Browser UI observations plus explicit DOM attributes; not an automated acceptance suite",
+  "observations": [
+    {
+      "status": "FAIL",
+      "returnedNote": "SYNTHETIC BASELINE SAVED NOTE",
+      "dirtyNote": "SYNTHETIC UNSAVED DESIGN DEP11 — must survive navigation",
+      "exitWarningObserved": false,
+      "id": "DES-DEP11-01",
+      "encounterId": "314",
+      "appointmentId": "343"
+    },
+    {
+      "activeElement": "BODY",
+      "id": "DES-DEP11-02",
+      "status": "FAIL",
+      "action": "Escape after procedure validation",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      }
+    },
+    {
+      "status": "PARTIAL_FAIL",
+      "newAppointmentVisibleOnAppointments": true,
+      "boundedLatencyTested": false,
+      "receptionRowsDisplayed": 2,
+      "id": "DES-DEP11-03",
+      "manualRefreshVisible": false,
+      "newSyntheticAppointmentId": "343"
+    },
+    {
+      "id": "MODAL-VALIDATION",
+      "quantity": "0",
+      "invalidProcedureSubmitted": false,
+      "insuranceSelected": false,
+      "quantityAriaDescribedby": "procedure-quantity-description",
+      "status": "PASS_SCOPED",
+      "firstInvalidFocus": "Procedure insurance",
+      "quantityAriaInvalid": "true"
+    },
+    {
+      "afterPageShortcuts": {
+        "innerWidth": 1280,
+        "innerHeight": 720,
+        "devicePixelRatio": 1.0000000149011612
+      },
+      "nativeVerification": "Stopped before verified URL",
+      "id": "ZOOM-200",
+      "status": "NOT_EXECUTED",
+      "equivalentTo200Percent": false
+    },
+    {
+      "status": "PARTIAL_OBSERVED",
+      "deferredApiAcceptance": false,
+      "modalMessage": "SVB submission pending — file specification not confirmed.",
+      "externalPresentationPerformed": false,
+      "id": "SVB-SCOPE",
+      "shellInitial": "SVB: manual portal entry · No automatic submission",
+      "shellAfterHmr": "SVB submission pending · No automatic submission"
+    }
+  ]
+}

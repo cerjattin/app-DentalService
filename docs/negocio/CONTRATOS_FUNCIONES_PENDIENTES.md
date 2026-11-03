@@ -1,10 +1,10 @@
 # Contratos de funciones pendientes — índice de ejecución
 
-Fecha de revisión: 2026-10-31. Alcance: nuevos contratos funcionales del MVP local. La preparación de estos documentos no ejecuta producto ni todas las fases del plan. Los encargos delimitan la implementación y verificación de cada función; no incluyen migraciones/seeds contra clínica ni despliegue.
+Fecha de revisión actualizada: 2026-11-02. Alcance: seguimiento de contratos y cierre del MVP local. NEG-FUNC-03/04/05 tienen implementación local comprobada; ver [verificación](VERIFICACION_CONTRATOS_03_05_20261102.md). La siguiente entrega está en los [contratos finales para datos reales y portal SVB](CONTRATOS_FINALES_MVP_CLIENTE.md).
 
 ## Entrega anterior y estado de evidencia
 
-El usuario confirmó como realizados los pendientes de NEG-FE-REBILL-02. Se conserva esa confirmación y no se vuelve a encargar su implementación. En este checkout, sin embargo, la [preparación Frontend](../frontend/PREPARACION_NEG_FE_REBILL_02.md) aún dice que las nuevas mutaciones dependen de Backend, y las [rutas de declaraciones inspeccionadas](../../backend/src/modules/declarations/declaration.routes.ts) no incluyen retiro/cancelación. La aceptación de esa entrega en este checkout queda por reconciliar con su código/evidencia de entrega; no se la utiliza como prueba automática de disponibilidad de API para los contratos siguientes.
+La discrepancia de evidencia registrada el 31 de octubre sobre NEG-FE-REBILL-02 queda resuelta en código local: las rutas de retiro/cancelación Draft y los detalles de bloqueo están publicados e integrados. La [preparación Frontend](../frontend/PREPARACION_NEG_FE_REBILL_02.md) es histórica; la [validación de entrega](../../frontend/docs/NEG_FUNC_03_04_05_VALIDATION.md) y las [rutas actuales](../../backend/src/modules/declarations/declaration.routes.ts) describen la implementación. La aceptación integral de firma/PDF y entorno del piloto continúa en NEG-FINAL-09.
 
 Las guías comunes mantienen algunas referencias históricas MySQL. El schema/runtime revisados ya apuntan a PostgreSQL; no se vuelve a encargar la migración por esa prosa antigua. La aplicación/aceptación del destino y sus datos se comprueba con evidencias propias, sin ejecutar operaciones sobre clínica para preparar estos documentos. No se cambian contexto/plan compartidos de Arquitectura en esta entrega.
 
@@ -16,7 +16,7 @@ Las guías comunes mantienen algunas referencias históricas MySQL. El schema/ru
 | 2 | [NEG-FUNC-04 — Candidatos y asignación exclusiva](CONTRATO_CANDIDATOS_DECLARACIONES.md) | Elegir ítems reales sin copiar IDs y evitar duplicaciones entre lotes activos | Backend + Base de datos; consumir retiro/cancelación efectivos y reglas del Declarant ID |
 | 3 | [NEG-FUNC-05 — Casos de tratamiento](CONTRATO_CASOS_TRATAMIENTO.md) | Registrar referencia externa y seleccionarla para el paciente/cita correctos | Backend + permisos; Frontend después del contrato HTTP publicado |
 
-Todos son especificaciones propuestas, todavía no endpoints implementados. El orden prioriza configuración y seguridad de facturación; el diseño y las pruebas de módulos independientes pueden prepararse sin habilitar una API inexistente.
+Los tres ya tienen implementación Backend/Frontend y evidencia de QA local. No se vuelven a encargar desde cero. La publicación de migraciones/roles en el entorno exacto del piloto y el cierre transversal se comprueban separadamente; no se deducen de un commit ni de conteos históricos.
 
 Los [encargos ejecutables por asistente](ENCARGOS_ASISTENTES_FUNC03_05.md) detallan responsabilidades, tareas B03/DB03/FE03 a B05/DB05/FE05, archivos, dependencias, textos listos para entregar a cada chat y matriz de cierre. Backend es dueño de las reglas ejecutables; Base de datos de su integridad; Frontend de su integración. Diseño, Negocio y Arquitectura mantienen sus responsabilidades de revisión y coordinación.
 
@@ -38,4 +38,4 @@ Cada módulo entrega primero servicio Backend, esquema de validación, rutas mon
 
 Conservar Express/Prisma/Auth/RBAC propios, IDs y Decimal como strings, America/Curacao, aislamiento por organización y snapshots históricos. No ejecutar integración contra Supabase operativo ni sembrar datos para simular aceptación clínica. No sobrescribir cambios locales o staged de otros chats, ni hacer commit/push/merge/despliegue.
 
-Esta entrega contiene únicamente documentación. Se verifican enlaces/rutas referenciadas y espacios/diff; no se atribuyen nuevas ejecuciones de pruebas de producto ni aceptación PostgreSQL/navegador a la creación de los contratos.
+La redacción inicial de contratos fue documental. La revisión del 2 de noviembre ejecutó comprobaciones de producto registradas en su informe, sin pruebas destructivas sobre clínica ni aceptación ficticia de PostgreSQL/navegador.

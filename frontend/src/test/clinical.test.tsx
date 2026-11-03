@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { MemoryRouter, Route, Routes } from 'react-router'
+import { createMemoryRouter, RouterProvider, MemoryRouter, Route, Routes } from 'react-router'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { authStore } from '../auth/auth-store'
 import { ClinicalAppointmentPage } from '../features/clinical/clinical-appointment-page'
@@ -232,6 +232,7 @@ function boundary(
       return ok(enc)
     }
     if (path === `/patients/${pid}/insurance`) return ok([policy])
+    if (path === '/svb-pilot/readiness') return ok({ contract: 'NEG-FINAL-06', status: 'BLOCKED', realSubmissionEnabled: false, sourceSheet: null, destinationFormat: null, enabledServiceCodes: [], enabledCaseTypes: [], unresolvedFields: ['NumberOfTreatments', 'Assistance', 'PoliClinic', 'ReferralEvidence'], issues: [{ field: 'SourceSheet', code: 'SVB_SOURCE_RULES_NOT_CONFIGURED' }, { field: 'DestinationFormat', code: 'SVB_DESTINATION_FORMAT_NOT_VERIFIED' }] })
     if (path === '/diagnosis-codes') return ok([code], true)
     if (path === '/svb-procedures')
       return ok(
@@ -290,7 +291,7 @@ function boundary(
   vi.stubGlobal('fetch', mock)
   return { calls, mock }
 }
-function renderClinical(permissions = fullPermissions) {
+function renderClinical(permissions = fullPermissions, dataRouter = false) {
   authStore.setSession('test-memory-token', {
     id: '111',
     email: 'qa@example.test',
@@ -300,6 +301,10 @@ function renderClinical(permissions = fullPermissions) {
     roles: [],
     permissions,
   })
+  if (dataRouter) return renderWithProviders(<RouterProvider router={createMemoryRouter([
+    { path: '/clinical/:appointmentId', element: <ClinicalAppointmentPage /> },
+    { path: '/appointments/:appointmentId', element: <h1>Appointment destination</h1> },
+  ], { initialEntries: [`/clinical/${aid}`] })} />)
   return renderWithProviders(
     <MemoryRouter initialEntries={[`/clinical/${aid}`]}>
       <Routes>
@@ -718,6 +723,24 @@ describe('performed procedures, tariffs and authorizations', () => {
       screen.queryByRole('button', { name: 'Edit authorization' }),
     ).not.toBeInTheDocument()
   })
+  it.each([
+    ['SVB_REFERRAL_FLOW_NOT_SUPPORTED', 'authorized referral evidence'],
+    ['ACCIDENT_INSURANCE_CONTEXT_MISMATCH', 'does not match the insurance'],
+  ])('keeps procedure input on %s without offering snapshot overrides', async (code, message) => {
+    const api = boundary({ fail: `POST /clinical-encounters/${eid}/procedures`, failCode: code })
+    renderClinical(); await addProcedureForm()
+    await userEvent.type(screen.getByLabelText('Procedure notes'), 'Keep QA source notes')
+    await userEvent.click(screen.getByRole('button', { name: 'Save procedure' }))
+    expect(await screen.findByRole('alert')).toHaveTextContent(message)
+    expect(screen.getByLabelText('Procedure notes')).toHaveValue('Keep QA source notes')
+    expect(screen.getByLabelText('Quantity')).toHaveValue('2.00')
+    expect(screen.queryByLabelText('Number of treatments')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Assistance')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Referrer ID')).not.toBeInTheDocument()
+    const post = api.calls.find((call) => call.method === 'POST')?.body
+    expect(post).not.toHaveProperty('numberOfTreatmentsSnapshot')
+    expect(post).not.toHaveProperty('referrerId')
+  })
   it('maps procedure validation errors without displaying raw backend text', async () => {
     boundary({
       fail: `POST /clinical-encounters/${eid}/procedures`,
@@ -847,5 +870,29 @@ describe('performed procedures, tariffs and authorizations', () => {
       '123456789012345.67',
     )
     expect(positiveQuantitySchema.safeParse('1.234').success).toBe(false)
+  })
+})
+
+
+describe('clinical unsaved navigation recovery (DEP11)', () => {
+  it('keeps notes after cancel and failed save, protects reload, and allows navigation only after saving', async () => {
+    const api = boundary({ fail: `PATCH /clinical-encounters/${eid}` }); renderClinical(fullPermissions, true)
+    const notes = await screen.findByLabelText('Clinical notes')
+    await userEvent.type(notes, 'SYNTHETIC retained clinical draft')
+    const unload = new Event('beforeunload', { cancelable: true }); window.dispatchEvent(unload); expect(unload.defaultPrevented).toBe(true)
+    await userEvent.click(screen.getByRole('link', { name: 'Appointment details' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Keep editing' }))
+    expect(notes).toHaveValue('SYNTHETIC retained clinical draft')
+    await userEvent.click(screen.getByRole('button', { name: 'Save notes' }))
+    await waitFor(() => expect(api.calls.some(c => c.method === 'PATCH')).toBe(true))
+    expect(notes).toHaveValue('SYNTHETIC retained clinical draft')
+    await userEvent.click(screen.getByRole('link', { name: 'Appointment details' }))
+    expect(screen.getByRole('dialog', { name: 'Discard unsaved changes?' })).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'Keep editing' }))
+    boundary()
+    await userEvent.click(screen.getByRole('button', { name: 'Save notes' }))
+    await screen.findByText('Clinical notes saved.')
+    await userEvent.click(screen.getByRole('link', { name: 'Appointment details' }))
+    expect(await screen.findByRole('heading', { name: 'Appointment destination' })).toBeInTheDocument()
   })
 })

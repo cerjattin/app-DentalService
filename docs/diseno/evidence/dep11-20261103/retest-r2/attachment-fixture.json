@@ -1,0 +1,13 @@
+{
+  "environment": "isolated synthetic design QA only",
+  "purpose": "Visual missing/invalid attachment validation on historical reservation resolution",
+  "technicalFixtureOnly": true,
+  "realSignatureAcceptance": false,
+  "externalPresentation": false,
+  "declarationId": "138",
+  "declarationNumber": "FEc32b1c3e-000007",
+  "entryId": "55",
+  "state": "UNCERTAIN",
+  "invoiceId": "230",
+  "invoiceItems": 1
+}

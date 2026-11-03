@@ -355,10 +355,10 @@ function session(perms = permissions) {
     permissions: perms,
   })
 }
-function renderBilling(list = false, perms = permissions) {
+function renderBilling(list = false, perms = permissions, search = '') {
   session(perms)
   return renderWithProviders(
-    <MemoryRouter initialEntries={[list ? '/invoices' : `/invoices/${iid}`]}>
+    <MemoryRouter initialEntries={[list ? '/invoices' : `/invoices/${iid}${search}`]}>
       <Routes>
         <Route path="/invoices" element={<InvoicesPage />} />
         <Route path="/invoices/:invoiceId" element={<InvoiceDetailPage />} />
@@ -565,6 +565,20 @@ describe('F06 invoice list and contract', () => {
 })
 
 describe('F06 invoice version lifecycle', () => {
+  it('opens the historical version requested by a source link without editing it', async () => {
+    const { calls } = boundary({ historical: true }); renderBilling(false, permissions, '?versionId=7777')
+    expect(await screen.findByText('Version 2 - Original')).toBeInTheDocument()
+    expect(screen.getByLabelText('Invoice version')).toHaveValue('7777')
+    expect(screen.getByText('This version is read only.')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Prepare for signature' })).not.toBeInTheDocument()
+    expect(calls.some((call) => call.path.endsWith('/versions/7777'))).toBe(true)
+    expect(calls.every((call) => call.method === 'GET')).toBe(true)
+  })
+  it('ignores malformed version references without requesting an invented resource', async () => {
+    const { calls } = boundary(); renderBilling(false, permissions, '?versionId=..%2Fevil')
+    await screen.findByText('QA-PROC-A'); expect(screen.getByLabelText('Invoice version')).toHaveValue(vid)
+    expect(calls.some((call) => call.path.includes('evil'))).toBe(false)
+  })
   it('shows detail loading', () => {
     boundary({ pending: `GET /invoices/${iid}` })
     renderBilling()
@@ -699,6 +713,30 @@ describe('F06 invoice version lifecycle', () => {
 })
 
 describe('F06 signature and binary documents', () => {
+  it('captures a keyboard drawing with OTHER provenance after explicit review', async () => {
+    const context = canvasMock(); const { calls } = boundary({ status: 'PENDING_SIGNATURE' }); renderBilling()
+    await userEvent.click(await screen.findByRole('button', { name: 'Capture signature' }))
+    await screen.findByText(/QA-INVOICE-1 \/ v1/)
+    await userEvent.click(screen.getByRole('button', { name: 'Draw using keyboard' }))
+    const pad = screen.getByRole('img', { name: 'Signature drawing area' })
+    expect(pad).toHaveFocus()
+    await userEvent.keyboard(' {ArrowRight}{ArrowDown}{ArrowRight} ')
+    expect(context.stroke).toHaveBeenCalledTimes(3)
+    expect(screen.getByRole('checkbox')).not.toBeChecked()
+    await userEvent.click(screen.getByRole('checkbox'))
+    await userEvent.click(screen.getByRole('button', { name: 'Save signature' }))
+    await screen.findByRole('button', { name: 'Confirm signed' })
+    expect(calls.find((call) => call.method === 'POST' && call.path.endsWith('/signatures'))?.body).toMatchObject({ captureMethod: 'OTHER', expectedContentHash: hash })
+  })
+  it('protects an unsaved drawing when closing the signature dialog', async () => {
+    canvasMock(); boundary({ status: 'PENDING_SIGNATURE' }); renderBilling(); await draw()
+    await userEvent.click(screen.getByRole('button', { name: 'Cancel' }))
+    expect(screen.getByRole('dialog', { name: 'Discard unsaved signature?' })).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'Keep reviewing' }))
+    expect(screen.getByText('Signature captured locally')).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'Cancel' })); await userEvent.click(screen.getByRole('button', { name: 'Discard signature' }))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
   it.each([
     ['touch', 'TOUCHSCREEN'],
     ['pen', 'SIGNATURE_PAD'],

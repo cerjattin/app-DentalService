@@ -1,0 +1,975 @@
+{
+  "date": "2026-11-03T21:06:25.964698+00:00",
+  "scope": "Frontend local source and build only; no deployment",
+  "files": [
+    {
+      "path": "frontend/eslint.config.js",
+      "sha256": "f19395caf80173ffbd41ab74f8eef4fc26c042f84a937de4a6286ec5c13ad401"
+    },
+    {
+      "path": "frontend/package-lock.json",
+      "sha256": "459153c87f1fde6a9f92465d7c8f3dee4d39ae4604baa091d1c90732bb49fb81"
+    },
+    {
+      "path": "frontend/package.json",
+      "sha256": "ee37ad947744bb9ff94755b1574c6f5649b1485efe488e36581dee3387523922"
+    },
+    {
+      "path": "frontend/src/api/api-error.ts",
+      "sha256": "16fe3aced48f939d0d552432049fb386720209353b651ee52b8740614a8bdee5"
+    },
+    {
+      "path": "frontend/src/api/client.ts",
+      "sha256": "869a7d3da7c27ea0224052f3a1591d3143a84022b4210c5ba032837a4fa0e532"
+    },
+    {
+      "path": "frontend/src/api/error-messages.ts",
+      "sha256": "8861f8d85ee8806df6cbf9712a31731e3d4383e6f6115dcfdf16d367d0dbd131"
+    },
+    {
+      "path": "frontend/src/api/index.ts",
+      "sha256": "1cdfc8d9ceb46ba1779348c80b0a1e3c645aa191298c6809176bc8109521e502"
+    },
+    {
+      "path": "frontend/src/api/unauthorized-handler.ts",
+      "sha256": "81946a9aaa19a3955c4a771b08a01b2ff732f7d665b83d9ed3bdb7c72fb897b2"
+    },
+    {
+      "path": "frontend/src/app/deployment-context.ts",
+      "sha256": "affbc655d3d87922fbabc12b9fa306c4fa0a79dba6de7af8e3b81c9a7dd997d6"
+    },
+    {
+      "path": "frontend/src/app/providers.tsx",
+      "sha256": "8e121e7d17fb1e5872d846d0ded98546d8183b08dd4c1d1343ded3a67cfe169d"
+    },
+    {
+      "path": "frontend/src/app/query-client.ts",
+      "sha256": "66d8a48ecf86ee285f451f557518ca31c8949de6b1c0131bee957be32adf2187"
+    },
+    {
+      "path": "frontend/src/App.tsx",
+      "sha256": "0a067ba49de4aa8a257a240c0a81777ef6ffa647b43b4927b1ec37f9c96eeb26"
+    },
+    {
+      "path": "frontend/src/assets/hero.png",
+      "sha256": "881ffbcaafc212e49addad08846a5b82761355fa20624253af3477ba33262c5c"
+    },
+    {
+      "path": "frontend/src/assets/react.svg",
+      "sha256": "35ef61ed53b323ae94a16a8ec659b3d0af3880698791133f23b084085ab1c2e5"
+    },
+    {
+      "path": "frontend/src/assets/vite.svg",
+      "sha256": "2f1f6c6f90a0ef7422cbb4cfafcd8ad329c507a18afdc34cc21fa72179b9c54a"
+    },
+    {
+      "path": "frontend/src/auth/auth-api.ts",
+      "sha256": "bcb4a5326bb50e94a57062c8312dcb14e2108d2028860fc928c206b8446095cf"
+    },
+    {
+      "path": "frontend/src/auth/auth-context-value.ts",
+      "sha256": "f91ca3385f96bc4600c14746761f20be445a10a755b6d186b3558288b5b93638"
+    },
+    {
+      "path": "frontend/src/auth/auth-context.tsx",
+      "sha256": "bc2e39bd89135fae2c58ae27f0a065aeb527dee0df38d3b5132a7bb06177ede7"
+    },
+    {
+      "path": "frontend/src/auth/auth-store.ts",
+      "sha256": "378a5d1e937d801dab359f97d041547ffda8d8f3d9b5ca4b08ebe092764c27c5"
+    },
+    {
+      "path": "frontend/src/auth/permission-guard.tsx",
+      "sha256": "fd2129ce079ab9b14f3ea43a3cc8e02984df1401edbf607479a35752127a16ed"
+    },
+    {
+      "path": "frontend/src/auth/permissions.ts",
+      "sha256": "366bd8649fcf405ba0deb8db5e41d61d970fa17d99f951e74bae9c7cdd7b1c41"
+    },
+    {
+      "path": "frontend/src/auth/require-auth.tsx",
+      "sha256": "99a9d5fff4e03d69b25506d01aa0dff56560ecd4e134f002155b810555966111"
+    },
+    {
+      "path": "frontend/src/auth/use-auth.ts",
+      "sha256": "674c8703858dce2b20555367a1ff3eaae415660d62fb56a5276993f4e097f2aa"
+    },
+    {
+      "path": "frontend/src/components/app-shell/app-shell.tsx",
+      "sha256": "9ac799f664bc0a0a2f047bc2e5467d792b152ef04139543b6cf14c59bf955f71"
+    },
+    {
+      "path": "frontend/src/components/app-shell/environment-notice.tsx",
+      "sha256": "3fde98aa6763666b032a7c7b6ceee858ad3cb79f6c6f9d8f7478b7a17d9df462"
+    },
+    {
+      "path": "frontend/src/components/app-shell/navigation.ts",
+      "sha256": "4655f33e8a44e3936ca62f843640363965f0f72124ece07aea7fadb0878c7673"
+    },
+    {
+      "path": "frontend/src/components/app-shell/page-header.tsx",
+      "sha256": "8ad425dd22971a7e87ac1126127df26802f8fb7a8609573b155a497470080163"
+    },
+    {
+      "path": "frontend/src/components/app-shell/sidebar.tsx",
+      "sha256": "09a0fb30582a9288c1df4e8c8aa25679e4927073c6ba4a7eeffa8ccc1f902fad"
+    },
+    {
+      "path": "frontend/src/components/app-shell/topbar.tsx",
+      "sha256": "90a9acaf54936195c3db72b58d99da5b5d1f2e595eae2a53af63321329f90677"
+    },
+    {
+      "path": "frontend/src/components/data-table/data-table.tsx",
+      "sha256": "5493790578add04d9891a69e4487a0015f0b8d082a8e2945f3d4329471ce1fed"
+    },
+    {
+      "path": "frontend/src/components/feedback/empty-state.tsx",
+      "sha256": "c80364f53d5003423abb3ac63394d44aa265bdb8ded575010ab54efe49543cdd"
+    },
+    {
+      "path": "frontend/src/components/feedback/error-state.tsx",
+      "sha256": "29aeb37d4969231cdc1947d1b5edee61e8bb0042d8354b214741d5383b90f349"
+    },
+    {
+      "path": "frontend/src/components/feedback/loading-state.tsx",
+      "sha256": "ce652a7984f67e9f0d27865fdafb0d997a8a1ce4299aff98c23dd39337f270ff"
+    },
+    {
+      "path": "frontend/src/components/feedback/status-badge.tsx",
+      "sha256": "bd5b0ead26a5b4854eb062f2d9ca3f7acec9626a6ae0240361b77db635afbcd0"
+    },
+    {
+      "path": "frontend/src/components/forms/form-field.tsx",
+      "sha256": "f2617f0ccee0d334e4474b17a3cc3b067e649246da2c3696e9018cf6c98885c0"
+    },
+    {
+      "path": "frontend/src/components/forms/unsaved-changes.tsx",
+      "sha256": "68a4395b9bd6c02b7956114db8798166b50b7cb2b83b782c3a7680d67f7f9870"
+    },
+    {
+      "path": "frontend/src/components/ui/button.tsx",
+      "sha256": "82d22b3618e47a9ca8ab45344a54af373bcd4bf1190d0df187beb886daf71234"
+    },
+    {
+      "path": "frontend/src/components/ui/card.tsx",
+      "sha256": "2287bf0582adf96b8e32a695fc1dde5413c37983e98e3e9c28de31a98a405cc0"
+    },
+    {
+      "path": "frontend/src/components/ui/checkbox.tsx",
+      "sha256": "195c04a71b2fc5955d1ddf95f865642feefbdf3f90ad21ea5b57ff57889ed3c0"
+    },
+    {
+      "path": "frontend/src/components/ui/confirm-dialog.tsx",
+      "sha256": "7565638b38a9ba5de0a651f2f1e86cfeb864a3c513cd736400b21c245ec43685"
+    },
+    {
+      "path": "frontend/src/components/ui/dialog.tsx",
+      "sha256": "0facf1792dee42d968d3754332732c4e7789c19d2c79fcd7c91ed5985855273d"
+    },
+    {
+      "path": "frontend/src/components/ui/input.tsx",
+      "sha256": "17754dd38ec62d69ace64a51031f18ea220c4a33f1408cd42f224b16fda2e284"
+    },
+    {
+      "path": "frontend/src/components/ui/select.tsx",
+      "sha256": "cda3b2bd9d90d11d0348aeb27e7e7287ab0ad15df3b1f3a195544a1a16dc72d5"
+    },
+    {
+      "path": "frontend/src/components/ui/textarea.tsx",
+      "sha256": "a2b6f526cb72c1bf73fd0d074836c7fc974f685f5a0e2cf41b12e16c1c279ccc"
+    },
+    {
+      "path": "frontend/src/features/administration/admin-page.tsx",
+      "sha256": "0a97be87df3323beeffc3eb2b0120ab71d5fc655fa81105d5d4b37abafff4b49"
+    },
+    {
+      "path": "frontend/src/features/administration/admin-providers-page.tsx",
+      "sha256": "c627767bd67a276e51d305a9c38de68a759bf68c27bfcf64b9800c40beccabe5"
+    },
+    {
+      "path": "frontend/src/features/administration/admin-settings-page.tsx",
+      "sha256": "4bc8295b2479874cf1927339e954c114d5939f53b6244e0f3b1413c68e5434e5"
+    },
+    {
+      "path": "frontend/src/features/administration/admin-users-page.tsx",
+      "sha256": "1f73bd51402d79599d38fe075a5a22b3e1a18d22470b7b12e0e5f2fb34cb086f"
+    },
+    {
+      "path": "frontend/src/features/administration/administration-api.ts",
+      "sha256": "776788e2ee33e503c34dbd53b63f5304be12cb8539acb5b8545459066af5f86a"
+    },
+    {
+      "path": "frontend/src/features/administration/administration-dialogs.tsx",
+      "sha256": "ddb1ce3e422394655c45007ba5b7e3921c99c0c7e40309098254b707631ba0a5"
+    },
+    {
+      "path": "frontend/src/features/administration/administration-model.ts",
+      "sha256": "1da3a7a8ae411115d8b67cb7bfe4d4822c3c70f7d6e41c802ec16cb40fe9193a"
+    },
+    {
+      "path": "frontend/src/features/administration/services/service-detail-page.tsx",
+      "sha256": "4caee3a511066a6a5491b3231ffa0563258783a14232f955a3db59c83c151d92"
+    },
+    {
+      "path": "frontend/src/features/administration/services/service-dialogs.tsx",
+      "sha256": "56f687bd0d2cb0eb936c6fcb6230c37f3eb7934aec20d5991197a4516aa59770"
+    },
+    {
+      "path": "frontend/src/features/administration/services/service-model.ts",
+      "sha256": "1ddcb456746bce580c07fef033804bdb53e51b4760f80c9f5dbd5928b518dd71"
+    },
+    {
+      "path": "frontend/src/features/administration/services/service-ui.tsx",
+      "sha256": "061a3ed023c066e1de88da26958cb81d351b57da1eaaf8713f9b56ad690558d8"
+    },
+    {
+      "path": "frontend/src/features/administration/services/services-page.tsx",
+      "sha256": "1f0bc996c305e1caac913c046110c63fa526d0a78222596a55a3608d637c0f19"
+    },
+    {
+      "path": "frontend/src/features/appointments/appointment-actions.tsx",
+      "sha256": "be8f23a18e7a8ddc226dad046263961cea89674e10d27d417c16fe8c4904c9c2"
+    },
+    {
+      "path": "frontend/src/features/appointments/appointment-api.ts",
+      "sha256": "334e1cc9056b1f9605b57e89cc5d335becce05e9638a7bc1bb55cbe0ace64c6b"
+    },
+    {
+      "path": "frontend/src/features/appointments/appointment-create-dialog.tsx",
+      "sha256": "5c51da7e08540dc61367d688ae275e1fe912cee88c59f04c4fc1e58d33bbd264"
+    },
+    {
+      "path": "frontend/src/features/appointments/appointment-create-model.ts",
+      "sha256": "4c2f4b30ae4b3aa69b80ad1efadc9149837a81adfbb88e53a9bc900b8976fc7b"
+    },
+    {
+      "path": "frontend/src/features/appointments/appointment-detail-page.tsx",
+      "sha256": "76359997c366363e8d5cce1af3d6f00217ede8f3ab0447e145547f29dc377043"
+    },
+    {
+      "path": "frontend/src/features/appointments/appointment-model.ts",
+      "sha256": "19c6b3e0c39cb35ad892dbe839e1493739277e14542feac2d3d171941579ca1a"
+    },
+    {
+      "path": "frontend/src/features/appointments/appointment-transition-dialog.tsx",
+      "sha256": "cdd495d4fd4047aee76dd9c6f87cc08ca8459fbe5931fa9d4f238ca66d78f795"
+    },
+    {
+      "path": "frontend/src/features/appointments/appointment-update-dialog.tsx",
+      "sha256": "15ce37f1cb3828e25f295fa53ef0ab6b8da1fe174c4a4c2a05a4a4aea4fe8757"
+    },
+    {
+      "path": "frontend/src/features/appointments/appointments-page.tsx",
+      "sha256": "6b912e8c0eb4d67fe016870a08d73f563a51542188815474cbbcd844d77544e5"
+    },
+    {
+      "path": "frontend/src/features/auth/access-denied-page.tsx",
+      "sha256": "ccd64a6400bef6895d36619d88a9729f13ee6739f736c302014ab648b680fe06"
+    },
+    {
+      "path": "frontend/src/features/auth/login-page.tsx",
+      "sha256": "aa07c41d3810498fcf387a61779f8db9348e31a140c56c9608c269b23c31823f"
+    },
+    {
+      "path": "frontend/src/features/auth/not-found-page.tsx",
+      "sha256": "1c74995efdca8531f08128727795dac217c2a1938daac5d24b4f27bcaa1ef9b7"
+    },
+    {
+      "path": "frontend/src/features/billing/appointment-billing.tsx",
+      "sha256": "1b6ee01009117b1fb7d9ccb3e4b0797dc36f27258e7e97d3c99fa6118906d428"
+    },
+    {
+      "path": "frontend/src/features/billing/billing-api.ts",
+      "sha256": "ee5489ab8334e9390e81e581189c10a84d07b25cbd54589ba6292b763a2de90d"
+    },
+    {
+      "path": "frontend/src/features/billing/billing-model.ts",
+      "sha256": "5ee706e13806934369fe02fc4c7f38ac359a19b4636fdba8a87b53517e80f3d1"
+    },
+    {
+      "path": "frontend/src/features/billing/billing-ui.tsx",
+      "sha256": "93e4d79d18043ac47383109c4bfbc1d41d1666d2cc9aa77e375ce3fef75336c2"
+    },
+    {
+      "path": "frontend/src/features/billing/correction-item-dialog.tsx",
+      "sha256": "f6c3c387e6bd6e522f7dfb24abd6fac5508c17c5f86c0249ba8b45d8235fbfc1"
+    },
+    {
+      "path": "frontend/src/features/billing/correction-workflow.tsx",
+      "sha256": "2f02d93194db0eb8724c94cad86adaa604676f10592d04b2a7e25fd0b442d5a6"
+    },
+    {
+      "path": "frontend/src/features/billing/declaration-assignment-model.ts",
+      "sha256": "67a964f45113563a9b4cd003415c69ec7662f737acdd5ca927e48c32d5bee21b"
+    },
+    {
+      "path": "frontend/src/features/billing/declaration-assignments.tsx",
+      "sha256": "b219591531134acd09a23da90e368ce61982c8279edb4091a0e0d30ced325f4c"
+    },
+    {
+      "path": "frontend/src/features/billing/invoice-detail-page.tsx",
+      "sha256": "dbec0a8c4c3d6d8783a24681df6956c7e619685d97b7d81437526ec5af2fa5b4"
+    },
+    {
+      "path": "frontend/src/features/billing/invoice-documents.tsx",
+      "sha256": "1659dceb0098cbdcde4a6aba720355683ca0d56226c769103e42a7ed94f11740"
+    },
+    {
+      "path": "frontend/src/features/billing/invoices-page.tsx",
+      "sha256": "d2c56b6cb18593c21b2b247e54864bbc7098ff5cb3148f6b9087acc34f32bcea"
+    },
+    {
+      "path": "frontend/src/features/billing/return-to-care.tsx",
+      "sha256": "539d420c4bd6ad20d4aab95daeef62e93a8553a16a53f94b6e83ef1e6c59c815"
+    },
+    {
+      "path": "frontend/src/features/billing/signature-dialog.tsx",
+      "sha256": "22bd62b96c856d8ff343028d015f73ee2542c291bed3425be077ca57e13d4ebc"
+    },
+    {
+      "path": "frontend/src/features/clinical/authorization-section.tsx",
+      "sha256": "6a7ea8eade1af87e5b87b3ac33b56377544f989f4040fda7f1605712cfb39a0d"
+    },
+    {
+      "path": "frontend/src/features/clinical/catalogue-search.tsx",
+      "sha256": "58cd361166828341f1a226f6f9c3fcaf19ddc6faa485a38bf44d902bd8a8d3f2"
+    },
+    {
+      "path": "frontend/src/features/clinical/clinical-api.ts",
+      "sha256": "7b147336b7b802535a413485b147cede402772c5a8b5b1d6e3508e6256e69c9d"
+    },
+    {
+      "path": "frontend/src/features/clinical/clinical-appointment-page.tsx",
+      "sha256": "026ce0770b8bd836927939a4aeff5a0b89663ccf05e639b782c632922e31b281"
+    },
+    {
+      "path": "frontend/src/features/clinical/clinical-model.ts",
+      "sha256": "3cebc78b22faceb0fe8bedfc0beb700be414e374de2d6da3b451b260286b0068"
+    },
+    {
+      "path": "frontend/src/features/clinical/clinical-ui.tsx",
+      "sha256": "456a22f1aa8c85c63eec5ad2ce2556bab3e3bb5eae40c70e429b569ff6570191"
+    },
+    {
+      "path": "frontend/src/features/clinical/diagnosis-section.tsx",
+      "sha256": "f387cc2028be6ee0e464e7b02b44be956ef72358bacc394244129452f6a7e6a3"
+    },
+    {
+      "path": "frontend/src/features/clinical/procedure-section.tsx",
+      "sha256": "5f52d6ca4f43fe00dec8fba8cf1a02a1fcf8fac3b8cc3f93742d3f3a61971683"
+    },
+    {
+      "path": "frontend/src/features/dashboard/dashboard-api.ts",
+      "sha256": "90656bf04050da6ec4b172ffc98c231dd5950d63a949e902f9a8ef6d0a82501c"
+    },
+    {
+      "path": "frontend/src/features/dashboard/dashboard-model.ts",
+      "sha256": "a700ad0859d25b016b03dc7b461f4a730d847ec815400798518f8f4d4bbea378"
+    },
+    {
+      "path": "frontend/src/features/dashboard/dashboard-page.tsx",
+      "sha256": "19d52515e652bf4477f2a11da09593286dba93a1c5447d4fff4187660d3fac6a"
+    },
+    {
+      "path": "frontend/src/features/dashboard/dashboard-report.tsx",
+      "sha256": "a88ddb4c99083ecd7bccdbad56242e1ce2d21fa1cd3618897787c6822774cf1f"
+    },
+    {
+      "path": "frontend/src/features/declarations/declaration-api.ts",
+      "sha256": "a34b62ce55c6e6ad69ae3a47f2a6043905b4039ca3721ed4968be0094ee882ee"
+    },
+    {
+      "path": "frontend/src/features/declarations/declaration-cache.ts",
+      "sha256": "e54d03e3aa78535540823ca361ae2fd63cc24cc29a6e8a0be8898157b13e5a20"
+    },
+    {
+      "path": "frontend/src/features/declarations/declaration-candidate-dialog.tsx",
+      "sha256": "a2bbc9cfa2472f71fefefaa3ba2866d059a85bb69b17ff57eca6a2b53295b4ce"
+    },
+    {
+      "path": "frontend/src/features/declarations/declaration-detail-page.tsx",
+      "sha256": "ede6fddd09e07f94f1b3b9140caf9d3c55be33c21a47d029d6adf5c72a8efd0c"
+    },
+    {
+      "path": "frontend/src/features/declarations/declaration-dialogs.tsx",
+      "sha256": "192af1b673592fb0465e6a3dcbe53940187c8af6b9d8310322ea5a150ec14484"
+    },
+    {
+      "path": "frontend/src/features/declarations/declaration-draft-actions.tsx",
+      "sha256": "0b383a5a178adba1de9382e9f559ac23659c7c6440a87e81e442c8c987df43f1"
+    },
+    {
+      "path": "frontend/src/features/declarations/declaration-model.ts",
+      "sha256": "002ad857906beb426b96177a23f6780be44eb94412f0fbc0325056cfbdecb38d"
+    },
+    {
+      "path": "frontend/src/features/declarations/declarations-page.tsx",
+      "sha256": "b796210c3c3bcec1fb2095eabd37b32bf9edc00ac03e53058c710bc691afc75f"
+    },
+    {
+      "path": "frontend/src/features/declarations/manual-entry-api.ts",
+      "sha256": "bdfa935f713b7ebc1f3eff6265676aee4385a2f15c49e3692263a94cdf24a066"
+    },
+    {
+      "path": "frontend/src/features/declarations/manual-entry-dialog.tsx",
+      "sha256": "a7d65c2e518b00cb674193baa4a77d55b3f3c5cd333d5f6a8f7ec3ba3dc4c16d"
+    },
+    {
+      "path": "frontend/src/features/declarations/manual-entry-panel.tsx",
+      "sha256": "a492de4fd5684cdf9ab4698d34df912c1faf3f3c957ff16d19f7f43de50a81c8"
+    },
+    {
+      "path": "frontend/src/features/declarations/manual-portal-workflow.tsx",
+      "sha256": "659780777757949c580d5f8196814bdd67396ba1fb55cb395d5b58bbfa1c3b61"
+    },
+    {
+      "path": "frontend/src/features/declarations/svb-data-guidance.ts",
+      "sha256": "7ffea1deaba0413327899ffcfb1a8685cb07bbf840c8ea50e4f02e262951b745"
+    },
+    {
+      "path": "frontend/src/features/declarations/svb-data-review.tsx",
+      "sha256": "0ae1225a5800dfb9da6466d19e04bb105db7bd6d44f23c14db49d145052864a7"
+    },
+    {
+      "path": "frontend/src/features/patients/insurance-form-dialog.tsx",
+      "sha256": "3990050f5fc12794b50d32e30a578d68c233a282a2addb768a41a695ab325c36"
+    },
+    {
+      "path": "frontend/src/features/patients/patient-api.ts",
+      "sha256": "9ea18747a472b2045c1396114e36b0dcea868d650edbc7c274616b1d708cd74f"
+    },
+    {
+      "path": "frontend/src/features/patients/patient-detail-page.tsx",
+      "sha256": "668780e245a7d7c248f4d29d9ef15e0d30442669996a0bd0138c8cdf061cd66a"
+    },
+    {
+      "path": "frontend/src/features/patients/patient-form-dialog.tsx",
+      "sha256": "fbdbeb986c5ec6ff7f73e49059e7fd46be387beaf6970dade55ee620b44ec906"
+    },
+    {
+      "path": "frontend/src/features/patients/patient-formatters.ts",
+      "sha256": "6ad5c7aae5e7df231ce1377efb0d825f36b3c0ea2f61954433a6e2afb0b56373"
+    },
+    {
+      "path": "frontend/src/features/patients/patients-page.tsx",
+      "sha256": "d448b26a94ae36cd7604389301529883e50a5f1589ad44d0fa9c8ff7a17f9ae9"
+    },
+    {
+      "path": "frontend/src/features/patients/verify-insurance-dialog.tsx",
+      "sha256": "9c331d83a81d4fd38aa0edb3d6186cf9bde918cc8053d4a74096a923506a34e6"
+    },
+    {
+      "path": "frontend/src/features/reception/reception-page.tsx",
+      "sha256": "b6562c18c519a8e70142cc969c6b2e821b85a6724858b1aa47e520298eb8d819"
+    },
+    {
+      "path": "frontend/src/features/shared/foundation-page.tsx",
+      "sha256": "7e8447b47ade3eb26f812140143d5b449b1c81f37786035aad6b4a6e660d101e"
+    },
+    {
+      "path": "frontend/src/features/svb-catalog/svb-catalog-api.ts",
+      "sha256": "5e0b48e6ea6d9c4d6511d4fb5036a5cad9d67203e654d2feb3f9617e585c144f"
+    },
+    {
+      "path": "frontend/src/features/svb-readiness/svb-pilot-notice.tsx",
+      "sha256": "21fdaf26195c558e69a235e4488547b7eb6c850c1d6004ffd9f852bc3264817d"
+    },
+    {
+      "path": "frontend/src/features/svb-readiness/svb-readiness-api.ts",
+      "sha256": "4dbb4b2befcd4cece6fb92e94944055fccdf99d28add2bea1f98007f960113e0"
+    },
+    {
+      "path": "frontend/src/features/svb-readiness/use-svb-pilot-readiness.ts",
+      "sha256": "c2dca446e3275c5258040ed5ee77f82168f98b3c0d1b38b83002e2178e779a0c"
+    },
+    {
+      "path": "frontend/src/features/treatment-cases/treatment-case-api.ts",
+      "sha256": "01e4c2bc35f6faeea17960782b9da9934d4615b5ed617f986c3b1e39f65ff4ed"
+    },
+    {
+      "path": "frontend/src/features/treatment-cases/treatment-case-form.tsx",
+      "sha256": "5fe751f5672f125bc79683f8f1056b5f35f9166da8dd28db6bca3699da984a65"
+    },
+    {
+      "path": "frontend/src/features/treatment-cases/treatment-case-model.ts",
+      "sha256": "843be1c4be28bd70fc52c562cc06b7e12358d603bb1962d8cf1a790288895d67"
+    },
+    {
+      "path": "frontend/src/features/treatment-cases/treatment-case-selector.tsx",
+      "sha256": "9a7c518a0f2e1f03b7e1611e072e0539af6fdb0ad8eef44ce9c569084773f1e6"
+    },
+    {
+      "path": "frontend/src/features/treatment-cases/treatment-cases-section.tsx",
+      "sha256": "c80acf8915d4a01500ae104faa889719b7d21d18cdf3731d2a373e67616ab775"
+    },
+    {
+      "path": "frontend/src/index.css",
+      "sha256": "f2a5d180cf4d3ee8edd9634e7c252b4bf53f0b0a752a5baeff62689a4c3fe917"
+    },
+    {
+      "path": "frontend/src/lib/cn.ts",
+      "sha256": "76db4720b8835194b5bb3c6e4f1049914e39a24121dee582eca62039c8c16dfb"
+    },
+    {
+      "path": "frontend/src/lib/download.ts",
+      "sha256": "dfc4673b923b7c28ee9b47e269c5c36b8b9320ccb31fb0536c5f005392cdb200"
+    },
+    {
+      "path": "frontend/src/lib/timezone.ts",
+      "sha256": "336ee5b5dc831af1be3f3ac6dd0156b8432e2b54d9c3c7ead16fbf8450eac557"
+    },
+    {
+      "path": "frontend/src/main.tsx",
+      "sha256": "eaa1c2131830c5b9120cce7bda892edec8ba346a7d6a9ef7948a59f3ac1e6f9c"
+    },
+    {
+      "path": "frontend/src/routes/permission-route.tsx",
+      "sha256": "678f100ae51ec7a6a1c7f7041bb3b75d6c10f625d6a036193cc0ef182e16a218"
+    },
+    {
+      "path": "frontend/src/routes/route-load-boundary.tsx",
+      "sha256": "2b1cdc9a4d6cf0e398a2542fa7f6d6fe007bbca696ea97b750161043c44b328b"
+    },
+    {
+      "path": "frontend/src/routes/route-permissions.ts",
+      "sha256": "5bf76b7043f18fb2d638a492c7de84d0a1d22733713ac98c0ac1108cd5c990d0"
+    },
+    {
+      "path": "frontend/src/routes/router.tsx",
+      "sha256": "4477df56473ce5b50f95929f1c84dfc948121d7c7a243ad7eead786e628a904d"
+    },
+    {
+      "path": "frontend/src/test/administration.test.tsx",
+      "sha256": "fd10c8e9462c0f3c90bcc59113d2001f1ca5404e362dfbe1e7887b71048d8f24"
+    },
+    {
+      "path": "frontend/src/test/appointments.test.tsx",
+      "sha256": "0bb1316f58a280881efc39c2abeda48e3f005a3bf948e13935915d943fc9618c"
+    },
+    {
+      "path": "frontend/src/test/billing.test.tsx",
+      "sha256": "49826d26743fd61342e925a8c00f61f6c96748c090c69840c09e8138c6b24bfe"
+    },
+    {
+      "path": "frontend/src/test/clinical.test.tsx",
+      "sha256": "766c95aab84d0aef5d254517d359b160c49fc446ee372095228a5d38157242b7"
+    },
+    {
+      "path": "frontend/src/test/corrections.test.tsx",
+      "sha256": "4f976a50b5aad95b2ade556f74adfe6bb7694be12f9e2f3dffa4d576eeea557c"
+    },
+    {
+      "path": "frontend/src/test/declarations.test.tsx",
+      "sha256": "2ea37937b79dbc8b6dbedcd25f8a374788cd732239febe73b456c67081ab25a7"
+    },
+    {
+      "path": "frontend/src/test/dep11.test.tsx",
+      "sha256": "32155d025f7c7c52d7d4f8312fb9d308ac0cd83af413af356adbe0363269a002"
+    },
+    {
+      "path": "frontend/src/test/fixtures/svb-readiness.ts",
+      "sha256": "05f01ef427b9fee765937d8abfc8293172c99055d2149c4849452318c814d7ae"
+    },
+    {
+      "path": "frontend/src/test/foundation.test.tsx",
+      "sha256": "a88a2e81702ea166c8669e596efa5085503e56c07dff6071abd0f2923479dc87"
+    },
+    {
+      "path": "frontend/src/test/hardening.test.tsx",
+      "sha256": "895eee84e67d533ba0f7d917510cefb61e3f66532c2f7620eadac37a7fbebd78"
+    },
+    {
+      "path": "frontend/src/test/manual-entry.test.tsx",
+      "sha256": "7df5cf92ce90adf2d6c22d97fd4091acaa914a05e40358204aae71ffba36a7fe"
+    },
+    {
+      "path": "frontend/src/test/neg-final-06.test.tsx",
+      "sha256": "61b37f27483c96945c3f2d3fe61163d7f55aee79025c0e1c2ba852f05a18833c"
+    },
+    {
+      "path": "frontend/src/test/neg-final-07-09.test.tsx",
+      "sha256": "4d24f24e94e5ffa184cbe50ce471999b4a3a57bcff6e9f9bba7b4c27e0a97486"
+    },
+    {
+      "path": "frontend/src/test/neg-func-03-05.test.tsx",
+      "sha256": "d1e375a8a91ffab0dfdc28ffb9fc57523c902fa6757af5e852da5295e327a39c"
+    },
+    {
+      "path": "frontend/src/test/operational-gaps.test.tsx",
+      "sha256": "74c85f2d764920d059a124035f3a47b3bc4ebd5cd29d8aa3a0f2d64a921d749d"
+    },
+    {
+      "path": "frontend/src/test/patients.test.tsx",
+      "sha256": "71c739d78852f3a7ff9b9de8c7eed2124e3a38baa1b5340a071241dba308167e"
+    },
+    {
+      "path": "frontend/src/test/services.test.tsx",
+      "sha256": "4111b78b12f3cf357654efe84d603ff515ae158c558aab36461ed038171973aa"
+    },
+    {
+      "path": "frontend/src/test/setup.ts",
+      "sha256": "d02f7d3a62a95a1294100794fef28eace5e7bc6e12687fd1ca404733de4837a9"
+    },
+    {
+      "path": "frontend/src/test/test-utils.tsx",
+      "sha256": "7efc3a055a4bf6c6ed6f1d152285a2ee85ec65bdef57b20be54aa2290f4f352a"
+    },
+    {
+      "path": "frontend/src/types/administration.ts",
+      "sha256": "4305b08b11544b734d257baed00858f7c39210828cb7052834eb50f7f7942778"
+    },
+    {
+      "path": "frontend/src/types/appointment.ts",
+      "sha256": "d90b7549bff7cabba48d05bb38a451de2e717342e02e533cfd9ebf84e0043ac2"
+    },
+    {
+      "path": "frontend/src/types/auth.ts",
+      "sha256": "2af7c99299ecd3d124e41ec2424afa1c953bc655d94d2ca19bb421c09dc8fbc7"
+    },
+    {
+      "path": "frontend/src/types/billing.ts",
+      "sha256": "068543d9c6abc9171d00b73275b2ce94448901f82ae2053632e2de6c8f68ede1"
+    },
+    {
+      "path": "frontend/src/types/clinical.ts",
+      "sha256": "93b9e83750fa57274ebe010965405c27c58845801313ad904dcd4ff7386d4a0b"
+    },
+    {
+      "path": "frontend/src/types/core.ts",
+      "sha256": "82571e0aec92541d379bc2ad3c87e77903ff813b3dc9d5e459fb92f9a84d8c70"
+    },
+    {
+      "path": "frontend/src/types/declaration.ts",
+      "sha256": "125ae74b3aa0ceb09406a13939d5421373d24fabfb949e218d6d89e22f723538"
+    },
+    {
+      "path": "frontend/src/types/manual-entry.ts",
+      "sha256": "43e0ea55620c55fbdc2d78689aa0556a580704c215b951c1753937896b44b344"
+    },
+    {
+      "path": "frontend/src/types/patient.ts",
+      "sha256": "2ce6ffcc1a16f4869a88d78f9eaa87127f3381c5ddc3f9a24a39c59c8f864bd5"
+    },
+    {
+      "path": "frontend/src/types/reporting.ts",
+      "sha256": "756334be6f233c82eac20a524b2e1c2e8a4709294aa366e9562110d99847f602"
+    },
+    {
+      "path": "frontend/src/types/svb-catalog.ts",
+      "sha256": "ef5d264f163a5e209e0818ff2d2c5b2246de5f0703e3fa709bd7b67f0c0f481f"
+    },
+    {
+      "path": "frontend/src/types/svb-readiness.ts",
+      "sha256": "4ddd37850b6d2c5a9e133855816a53a45bc9a4bbc1dd4b75aafb77d3b605e96a"
+    },
+    {
+      "path": "frontend/src/types/treatment-case.ts",
+      "sha256": "425ecf10a3e936fe17fb884b66e70431e39458265b636093bc23726e243a3c3b"
+    },
+    {
+      "path": "frontend/vite.config.ts",
+      "sha256": "09448def23c21bfa02ae71c71f61aa7afe60fd181b07a1aecb9807c244679f86"
+    }
+  ],
+  "sourceManifestSha256": "cf4dc2837fc83da743eced978bddbea5c8068081fc7de6d775dac1363d9cc0e1",
+  "buildFiles": [
+    {
+      "path": "dist/assets/access-denied-page-jFOMN0Ot.js",
+      "sha256": "b08e24e1966c9db668ab822c7bf4b4586070fa1b753835477086746cb51b046a"
+    },
+    {
+      "path": "dist/assets/admin-page-s6yHtxrl.js",
+      "sha256": "bdffc42142065fba36d93e767d50d00ccd5d8f7f25db73525b7aad6bb3fb2a08"
+    },
+    {
+      "path": "dist/assets/admin-providers-page-hlOAQBjV.js",
+      "sha256": "8b0b709169685326c9f7fb0886ff0f5997088d3e5dd354397b0eb43ac19e184e"
+    },
+    {
+      "path": "dist/assets/admin-settings-page-CP4DeBEp.js",
+      "sha256": "5fe114a02916c8019ee70569639201612eb8cde025faf9e1a9cc2a2804a5540f"
+    },
+    {
+      "path": "dist/assets/admin-users-page-BdxP-Ij1.js",
+      "sha256": "d7ea345f0a77a7fbf5673bb6125f0fb3eeca7b06ab8ffd5f1715707970023724"
+    },
+    {
+      "path": "dist/assets/administration-dialogs-BhPQDHMy.js",
+      "sha256": "2f95d7ae125e362d339fb176a18df48d09c226fe9c2f39656c6319b0387cc648"
+    },
+    {
+      "path": "dist/assets/administration-model-BYAzHjvY.js",
+      "sha256": "41aa9173f18cef9491d48c98f0e996f5f4260fcd78fe81f1a7215a276d49b7c6"
+    },
+    {
+      "path": "dist/assets/appointment-api-XSKREAKo.js",
+      "sha256": "bd47298909ae0228ea67414e6f5d2c600eed512fe4effd572d31f4f97e66b014"
+    },
+    {
+      "path": "dist/assets/appointment-billing-9jkhthf3.js",
+      "sha256": "b3a2b49bb39d4e851e53943c3f2798362fa2bf638c44bc4c3d116c6117e65855"
+    },
+    {
+      "path": "dist/assets/appointment-create-dialog-D4yYaU_f.js",
+      "sha256": "7a268b3b87b6654e32e5d7e45c555cb18814c688205430aa32c6a78e55e18a32"
+    },
+    {
+      "path": "dist/assets/appointment-detail-page-CzitML-W.js",
+      "sha256": "9af61dc61f31b71ac64966ac1f4aded336a1e082013e8097569cd8ff4b6f75ab"
+    },
+    {
+      "path": "dist/assets/appointment-model-B7nQ0TgN.js",
+      "sha256": "32005f4fca25bf2ab392d44e972ed6f438f0253251ca7a47cdae69f7cede4519"
+    },
+    {
+      "path": "dist/assets/appointments-page-D3Zmb6p-.js",
+      "sha256": "c98baf0f36555041c8d2595d803b383f8f6b149d9ad1a07cce6931238d16667a"
+    },
+    {
+      "path": "dist/assets/arrow-left-CV9wrupZ.js",
+      "sha256": "0f4032d9a0f6572ce9c9e6774371d6adf903c2a780e922a2236121f82be87c02"
+    },
+    {
+      "path": "dist/assets/billing-api-Da761wc2.js",
+      "sha256": "85e9a503fad86af41e1342635ac970d597401ace61a27f592574e607ae6bb1f1"
+    },
+    {
+      "path": "dist/assets/billing-ui-DkVQsAJ6.js",
+      "sha256": "a7707258672f8d9342630065c04f1116b81d96547736cf6f289bd02ed9a1903c"
+    },
+    {
+      "path": "dist/assets/card-DGTL0bWM.js",
+      "sha256": "6ae933580bd7e0187c96456adb423eced1711b9c6e02e7bd648daabc7f7f9a6e"
+    },
+    {
+      "path": "dist/assets/checkbox-XsQO-w3l.js",
+      "sha256": "dff88c380a4603f17d60dc0f8cd2c3a96b9dc52b0059545940dbc24cb441588a"
+    },
+    {
+      "path": "dist/assets/chevron-right-CWOWBc-P.js",
+      "sha256": "ac487642fd737c01a0001fd6a508233df9d7b34456c68c197cb7f6219f1e5bed"
+    },
+    {
+      "path": "dist/assets/clinical-api-CxJWH2wg.js",
+      "sha256": "da70ff51fd3c8cf1fcc8cb4e4f1f5ae45982f44d1f6dba3b46e1243be0f5be8a"
+    },
+    {
+      "path": "dist/assets/clinical-appointment-page-DUp4wnCF.js",
+      "sha256": "87fd91c6ff447326f2fc462af21eba2968cbd201782545c554570ae44306b022"
+    },
+    {
+      "path": "dist/assets/confirm-dialog-D3gO6MTY.js",
+      "sha256": "199b04172d29b4d0d62ad872b3de2613378021f91c1c0ceee7079988e37390fc"
+    },
+    {
+      "path": "dist/assets/dashboard-api-DLPZ_znt.js",
+      "sha256": "6342e746d0c1a66325c290e34f2b7ed2451877d93699862b189c7867a711e07d"
+    },
+    {
+      "path": "dist/assets/dashboard-page-Dd1cLsZi.js",
+      "sha256": "8d5e7b1ae3b1e841c4f77b4e0ff82dbba8545b38ba14625060fcdc9473f21a20"
+    },
+    {
+      "path": "dist/assets/data-table-CaeER2-D.js",
+      "sha256": "a043fdf4f4be8f6f65bb41fd320053ad759b2c98ead144cf1c4e8da3423197c0"
+    },
+    {
+      "path": "dist/assets/declaration-api-8szZ4G0f.js",
+      "sha256": "d3c572a2710cc5302ed992d070e1abe1e1ebb2f9a5a666cf8c5091cec17a49e3"
+    },
+    {
+      "path": "dist/assets/declaration-detail-page-BSYqZSjk.js",
+      "sha256": "fc4712846d5b3d9d7613df176b42d297351837f288defaf77defb0a5f5dfc96e"
+    },
+    {
+      "path": "dist/assets/declaration-dialogs-BLicsJnY.js",
+      "sha256": "1df39e3396a4702c3240f4ee38a577d05eafa9b9cd57287af818bce8e6ef39ab"
+    },
+    {
+      "path": "dist/assets/declarations-page-kWRdGRtC.js",
+      "sha256": "0abdab5ee67f567fe0265b02f6019b3607dc3f03684e295394237881cd05018b"
+    },
+    {
+      "path": "dist/assets/dialog-CX2lqVlu.js",
+      "sha256": "9039fd48e03459335faf5d313895f9f3b34d39339615b1c9242ba44b0114ca95"
+    },
+    {
+      "path": "dist/assets/download-aUyzlEcV.js",
+      "sha256": "8c03c2f04e3e0721aae3c5c7d433c3c2cd810aac0742d7999232151cde42820a"
+    },
+    {
+      "path": "dist/assets/empty-state-Db-CgDRw.js",
+      "sha256": "1e116e9f7bdcf8a2f71591e39dedd8b3a9f834bce3e1bc3ee65c241127383fd5"
+    },
+    {
+      "path": "dist/assets/form-field--EmKUMPc.js",
+      "sha256": "d87f2fb98495f51ee6687fb0eb324bd3ed3fc2049f93282855f68fc324b2cd11"
+    },
+    {
+      "path": "dist/assets/index-Ccf5Bx4D.js",
+      "sha256": "b8701bb9916ebf5dd47b4394c5881c33d2f46a9e92c699de87795d7592f11878"
+    },
+    {
+      "path": "dist/assets/index-Lv7pM7iX.css",
+      "sha256": "14be6ee82e57295a1dfd371f6715fdec2bb59aa17e6324b785844a77afacb5f8"
+    },
+    {
+      "path": "dist/assets/input-BNDLk8qr.js",
+      "sha256": "a4df4d254903ad92fe0d6564af6cda81ff5c480b8a486b3d7fc39c322dfaa72a"
+    },
+    {
+      "path": "dist/assets/invoice-detail-page-dSPOoOnc.js",
+      "sha256": "71117d5e49efbb6d886316d76154b5f0b44eb2e0e73bc088c1928d76e1b4042e"
+    },
+    {
+      "path": "dist/assets/invoices-page-emkjE2kj.js",
+      "sha256": "5b493f735fbd36d99844a6a436ef6dba0ee197d66c510f5936abd5e08f82685c"
+    },
+    {
+      "path": "dist/assets/jsx-runtime-BaFqF1ed.js",
+      "sha256": "45419cae90826de001bf43b085a3f16c1a785f6ff42d7d68ce54ab259acd7a98"
+    },
+    {
+      "path": "dist/assets/login-page-Dv74BVPT.js",
+      "sha256": "7668aa292d86c498693fc5a5cee5bee1be51100e8ce736f37094a016addf5d37"
+    },
+    {
+      "path": "dist/assets/not-found-page-Cb8Suzhs.js",
+      "sha256": "bea5e25ccd9ce19fe5dd7847d2e510ccd0d00dbb2449e9ea45a1ba1ea07be306"
+    },
+    {
+      "path": "dist/assets/page-header-CuHUiInR.js",
+      "sha256": "ba98f29df318135e4c3e9b910811d8bc4f4023bf4908c4c594a06f1cc0376796"
+    },
+    {
+      "path": "dist/assets/patient-api-BmIZz2Jb.js",
+      "sha256": "d337cf093a227091d4dc3ad6bca95d658df0e4c9672ff2bb38b483d874e4ad7d"
+    },
+    {
+      "path": "dist/assets/patient-detail-page-Do4e0sf-.js",
+      "sha256": "804664e6c579b5423d161c861dde23a7e4f8a0f9e932154290d1b67c653b724e"
+    },
+    {
+      "path": "dist/assets/patient-form-dialog-VpN9z3Tv.js",
+      "sha256": "0565a244beeb9c322ec7f4b612c3516b2ea8ca96b77c42934efe67943988432b"
+    },
+    {
+      "path": "dist/assets/patient-formatters-BGjAW41B.js",
+      "sha256": "5ccf1569147c5e7e5ed0c2718905b00c8d425cc1036dc70eed151a0d3fc029ce"
+    },
+    {
+      "path": "dist/assets/patients-page-Ct6SrsTy.js",
+      "sha256": "9aef1dcdf9868ea62d97fa4be10f7b6698925d7066e118f22298dca3c4464cf1"
+    },
+    {
+      "path": "dist/assets/pencil-DJ7Ru3uH.js",
+      "sha256": "27888d14a9131020f89fd590bc9da450bd12657cc30659cf4bf5fe07fdda3cdf"
+    },
+    {
+      "path": "dist/assets/permission-guard-BqNdcKmq.js",
+      "sha256": "401f11a39663bc6b07edce86ba169a8ef60bba4fae3ee99b125b7b622ef801e3"
+    },
+    {
+      "path": "dist/assets/plus-Z-URepoY.js",
+      "sha256": "77fc6d57ec5c45db6a16d2a6958ce60d3213d2fff0832265bd9d41abbd1f7555"
+    },
+    {
+      "path": "dist/assets/reception-page-C8YFXeYS.js",
+      "sha256": "cde49bebdc450a9acc773e36428e0bbb0b93f238132b45ba5669040a0cfdc0cc"
+    },
+    {
+      "path": "dist/assets/schemas-BvUBkBF4.js",
+      "sha256": "ecfda40f9fd9d35caaf4a8fbc5efe17ec200a3994945de1de347279c17229e92"
+    },
+    {
+      "path": "dist/assets/search-Do7HaxGz.js",
+      "sha256": "c5e251f830251526277d7568276019684f435d3004866bcc335b7ca033f1c0b7"
+    },
+    {
+      "path": "dist/assets/select-Db_SbYK8.js",
+      "sha256": "21cd930b8867298fd6cd7d9c0aff4b41b6e1423149d159536303056a974a4211"
+    },
+    {
+      "path": "dist/assets/service-detail-page-Cexd_BSk.js",
+      "sha256": "4a292dbc0dbca9c42b6467a5efda9bf1bbc0f6de27f9cb5b072c75bb259ef8a7"
+    },
+    {
+      "path": "dist/assets/service-ui-CcAaxkMj.js",
+      "sha256": "90551653d651b4b33e9d0386129c15bda3f202450c48427134e9ecb00a97c28b"
+    },
+    {
+      "path": "dist/assets/services-page-eERWFTZw.js",
+      "sha256": "a1623f8a8fb4eb35d19d28728d687c748daa1c801951194a9306495c552be772"
+    },
+    {
+      "path": "dist/assets/shield-check-DrtohLSP.js",
+      "sha256": "0a53df8395f4032a2d95a7707d1f9d86bf3d5e9cdb0085eb0209a419e9370417"
+    },
+    {
+      "path": "dist/assets/status-badge-BveWfhMv.js",
+      "sha256": "935a1cd5ad70a33c2504f8c75b7e41a3b1735e4fe1b2b85e4a77da3d308dace6"
+    },
+    {
+      "path": "dist/assets/svb-catalog-api-D5ARdKXE.js",
+      "sha256": "5dfd3256011e39c03a03132c63ef960260b09d6e28928fd587168229b83df372"
+    },
+    {
+      "path": "dist/assets/svb-data-guidance-DtxPFmpq.js",
+      "sha256": "f0c0a0a47a77108d11a615208c1a45d298140899afdbf1b53344086ef9ec586c"
+    },
+    {
+      "path": "dist/assets/svb-pilot-notice-C0o6s7ZP.js",
+      "sha256": "43b326a7bff65da1e73918f37319d606a2747f9db103ab72b8124c0c1d4c501a"
+    },
+    {
+      "path": "dist/assets/textarea-BP_0hUqY.js",
+      "sha256": "6bea45704993522fea0d8df01647972929e52613c51ddf188e25398137a4b82e"
+    },
+    {
+      "path": "dist/assets/treatment-case-api-s4gsVVQa.js",
+      "sha256": "fc0a0dd8d640bcc767b218bd1334e5936c464b1f21a1b5041be81c35379e8509"
+    },
+    {
+      "path": "dist/assets/treatment-case-selector-C5JmAJST.js",
+      "sha256": "dadc9fd172d961f4024bde6d3c71dbf29ab6be7c214faa914cea6586368583c5"
+    },
+    {
+      "path": "dist/assets/unsaved-changes-CDbQ79W6.js",
+      "sha256": "1f00cda9dc950bc25d704ef9cb3af4ec488219992885e7eda0216e803d571f46"
+    },
+    {
+      "path": "dist/assets/useMutation-CuzDotNI.js",
+      "sha256": "ca2d779f349d782dd1c2b90afd15803989c1a7db9efcf07794e2e83721eba2c0"
+    },
+    {
+      "path": "dist/assets/useMutationState-CB2Am8TR.js",
+      "sha256": "a821bbd0ff3bb4c24aaa3c2bc06f1ed06c134c29eb3383b285682c0ea088ff35"
+    },
+    {
+      "path": "dist/assets/useQuery-BlAffqNC.js",
+      "sha256": "48ab6afd2c1c40f228bd70190b51a68500c1ca3c91ba3a0830f98f9aa871191d"
+    },
+    {
+      "path": "dist/favicon.svg",
+      "sha256": "61bc9a161de58248288e6905425d7180f0624c2865007b97d763fdac12043a66"
+    },
+    {
+      "path": "dist/icons.svg",
+      "sha256": "7ca2d67c9c3aebf50cdc8709ee8aacf8cdb8cc7ea6325ea94939caef5da1c53d"
+    },
+    {
+      "path": "dist/index.html",
+      "sha256": "a55d49d634be82ed2dc400fa11877f81be0ca6a1b8a6d30711a1805b6aee250d"
+    }
+  ],
+  "buildManifestSha256": "33d974209ebd818443fced66ea503dcf2812c1e227d59924ecdb4fbcfca61ba9",
+  "checks": {
+    "ownFocusedClinicalManual": "53/53 PASS",
+    "ownAvailabilityFocus": "2/2 PASS",
+    "ownLint": "PASS exit 0",
+    "ownBuild": "PASS exit 0",
+    "independentNegocioSuite": "379/379 PASS in 16 files; independent run, not repeated Frontend run",
+    "independentNegocioInputHash": "036cdc50a6468f31f2f766bd540073ec3c3c0b1f10875e69d316f0c89a3a88ae"
+  },
+  "noDeploymentPerformed": true
+}

@@ -1,0 +1,12 @@
+{
+  "phase": "R2",
+  "savedNote": "SYNTHETIC DESIGN DEP11 R2 UNSAVED NOTE",
+  "preserved": true,
+  "guardObserved": [
+    "Appointment details",
+    "Reception sidebar",
+    "Browser Back"
+  ],
+  "keepEditingRetainedText": true,
+  "saveThenNavigate": true
+}

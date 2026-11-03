@@ -11,6 +11,8 @@ import "../modules/invoices/invoice-clinical-reopen.openapi.js";
 import "../modules/organization/organization.openapi.js";
 import "../modules/declarations/declaration-candidates.openapi.js";
 import "../modules/treatment-cases/treatment-case.openapi.js";
+import "../modules/svb-readiness/svb-readiness.openapi.js";
+import "../modules/declarations/manual-entry.openapi.js";
 
 import { openApiRegistry } from "./openapi.registry.js";
 

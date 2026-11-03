@@ -1,0 +1,84 @@
+Browser tab: 1209239816, Title: "frontend", URL: "http://127.0.0.1:5179/reception".
+0 AXWebArea frontend, URL: 127.0.0.1:5179/reception
+	1 container root
+		2 container
+			3 text OS Odontho Services SVB BILLING
+			4 text WORKSPACE
+			5 link Description: Dashboard, Value: 127.0.0.1:5179/dashboard
+			6 link Description: Reception, Value: 127.0.0.1:5179/reception
+			7 link Description: Patients, Value: 127.0.0.1:5179/patients
+			8 link Description: Appointments, Value: 127.0.0.1:5179/appointments
+			9 text SVB
+			10 link Description: Invoices, Value: 127.0.0.1:5179/invoices
+			11 link Description: Declarations, Value: 127.0.0.1:5179/declarations
+			12 text ADMINISTRATION
+			13 link Description: Administration, Value: 127.0.0.1:5179/admin
+			14 link Description: Users, Value: 127.0.0.1:5179/admin/users
+			15 link Description: Providers, Value: 127.0.0.1:5179/admin/providers
+			16 link Description: Services, Value: 127.0.0.1:5179/admin/services
+			17 link Description: Settings, Value: 127.0.0.1:5179/admin/settings
+		18 container Application environment
+			19 container
+				20 text QA  ·  design-dep11-r2
+			21 text SVB submission pending · No automatic submission
+		22 container
+			23 heading Reception, Value: 1
+				24 text Reception
+			25 text Front desk workspace 04:56 PM QA ADMIN ADMIN QA
+			26 button Sign out
+		27 container
+			28 heading Reception, Value: 2
+				29 text Reception
+			30 text Today's front-desk appointment worklist for 2026-11-03.
+			31 button Refresh worklist
+			32 link Description: All appointments, Value: 127.0.0.1:5179/appointments
+			33 button Create appointment
+			34 text Last updated 04:57 PM · America/Curacao Search today's appointments
+			35 text field (settable) Search today's appointments, Value: QA, ID: receptionSearch
+			36 button Clear search
+			37 text Status
+			38 pop up button (collapsed, settable) Status, Value: In progress, ID: receptionStatus, Secondary Actions: Expand
+				39 menu
+					40 All statuses
+					41 Scheduled
+					42 Confirmed
+					43 Checked in
+					44 (selected) In progress
+					45 Completed
+					46 Cancelled
+					47 No-show
+			48 text Today 1  appointment
+			49 container Scrollable data table
+				50 table
+					51 row
+						52 cell
+							53 text TIME
+						54 cell
+							55 text PATIENT
+						56 cell
+							57 text PROVIDER
+						58 cell
+							59 text REASON
+						60 cell
+							61 text STATUS
+						62 cell
+							63 text RECEPTION ACTION
+					64 row
+						65 cell
+							66 text 05:00 PM
+						67 cell
+							68 link Description: QA Frontend, Value: 127.0.0.1:5179/patients/287
+							69 text QA-FE-1
+						70 cell
+							71 text QA Provider
+							72 text QA Frontend clinic
+						73 cell
+							74 text SYNTHETIC DESIGN DEP11 R2 WORKLIST UPDATED
+						75 cell
+							76 text In progress
+						77 cell
+							78 button Complete appointment
+							79 button Cancel
+							80 link Description: Details, Value: 127.0.0.1:5179/appointments/343
+
+The focused UI element is 35 text field (settable) Search today's appointments, Value: QA, ID: receptionSearch

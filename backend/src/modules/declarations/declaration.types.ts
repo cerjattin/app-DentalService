@@ -1,6 +1,7 @@
 import type { Prisma } from "../../generated/prisma/client.js";
 import { formatDateOnly } from "../../shared/utils/date-only.js";
 import { toDocumentResponse } from "../documents/document.types.js";
+import { realSvbPresentationReadiness } from "../svb-readiness/svb-readiness.service.js";
 
 import type {
   DeclarationBatchRecord,
@@ -55,6 +56,7 @@ export function toDeclarationExportResponse(row: DeclarationExportRecord) {
     exportedByUserId: row.exportedByUserId.toString(),
     exportedAt: row.exportedAt.toISOString(),
     metadata: row.metadata,
+    realPresentationReadiness: realSvbPresentationReadiness(),
     document: toDocumentResponse(row.document),
   };
 }
@@ -75,6 +77,15 @@ export function toDeclarationSubmissionResponse(
     submittedByUserId: row.submittedByUserId.toString(),
     submittedAt: row.submittedAt.toISOString(),
     respondedAt: row.respondedAt?.toISOString() ?? null,
+    manualEntry: row.manualEntry ? { id: row.manualEntry.id.toString(), state: row.manualEntry.state,
+      entryMode: "MANUAL_ENTRY", contentHash: row.manualEntry.contentHash,
+      receiptDocumentId: row.manualEntry.receiptDocumentId?.toString() ?? null, receiptSha256: row.manualEntry.receiptSha256,
+      externalSubmittedAt: row.manualEntry.externalSubmittedAt?.toISOString() ?? null,
+      recordedAt: row.manualEntry.confirmedAt?.toISOString() ?? null,
+      result: row.manualEntry.result ? { id: row.manualEntry.result.id.toString(), status: row.manualEntry.result.status,
+        documentId: row.manualEntry.result.resultDocumentId.toString(), sha256: row.manualEntry.result.resultSha256,
+        externalRespondedAt: row.manualEntry.result.externalRespondedAt.toISOString(),
+        recordedAt: row.manualEntry.result.recordedAt.toISOString(), lines: row.manualEntry.result.lineResults } : null } : null,
   };
 }
 
@@ -85,6 +96,7 @@ export function toDeclarationBatchResponse(row: DeclarationBatchRecord) {
     payerId: row.payerId.toString(),
     declarationNumber: row.declarationNumber,
     status: row.status,
+    realPresentationReadiness: realSvbPresentationReadiness(),
     periodStart: formatDateOnly(row.periodStart),
     periodEnd: formatDateOnly(row.periodEnd),
     declarantIdSnapshot: row.declarantIdSnapshot,

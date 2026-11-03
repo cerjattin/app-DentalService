@@ -78,6 +78,16 @@ export type DeclarationActiveAssignment = Prisma.DeclarationActiveAssignmentMode
  */
 export type DeclarationSubmission = Prisma.DeclarationSubmissionModel
 /**
+ * Model DeclarationManualEntry
+ *
+ */
+export type DeclarationManualEntry = Prisma.DeclarationManualEntryModel
+/**
+ * Model DeclarationManualResult
+ *
+ */
+export type DeclarationManualResult = Prisma.DeclarationManualResultModel
+/**
  * Model DiagnosisCode
  * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
  */

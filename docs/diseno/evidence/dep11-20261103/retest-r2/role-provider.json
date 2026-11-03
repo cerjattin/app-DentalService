@@ -1,0 +1,7 @@
+{
+  "roleLabel": "PROVIDER",
+  "clinicalNotesFields": 1,
+  "addProcedureButtons": 1,
+  "completeEncounterButtons": 1,
+  "interpretation": "Observed UI controls agree with recorded permissions; no extra grants"
+}

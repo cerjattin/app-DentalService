@@ -1,14 +1,14 @@
 # NEG-FUNC-03 — Organización actual y Declarant ID
 
-Fecha: 2026-10-31. Prioridad propuesta: P1. Estado: **especificación pendiente de implementación Backend y Frontend**.
+Contrato de origen: 2026-10-31. Estado actualizado el 2026-11-02: **implementado en Backend/Frontend local**, con los límites de aceptación descritos en la [verificación actual](VERIFICACION_CONTRATOS_03_05_20261102.md). El contenido siguiente conserva la especificación de origen; la entrega HTTP efectiva está en el [informe Backend](../../backend/docs/NEG_FUNC_03_04_05.md).
 
 ## Objetivo y evidencia
 
-Permitir configurar la organización de la sesión desde Settings y eliminar la captura arbitraria del Declarant ID en declaraciones. En el checkout revisado existen `Organization.declarantId`, permisos `organization.read/update` y la página `/admin/settings`, pero no hay un módulo de organización montado y Settings es informativo. El [servicio de declaraciones](../../backend/src/modules/declarations/declaration.service.ts) aún admite un snapshot suministrado por el cliente. No dar MASTER-04A por implementado a partir de un reporte histórico.
+Permitir configurar la organización de la sesión desde Settings y eliminar la captura arbitraria del Declarant ID en declaraciones. Al redactar el contrato no había módulo montado ni Settings operativo y se admitía un snapshot de cliente. La entrega local comprobada el 2 de noviembre implementa esas funciones y rechaza el override; no se usa la descripción inicial como estado actual.
 
 Este contrato cubre una sola organización: la del actor autenticado. No crea organizaciones, no cambia la organización de una sesión y no publica un editor general de SystemSetting, secretos, Auth o infraestructura.
 
-## API propuesta — todavía no disponible
+## API de origen — publicada en la entrega local
 
 Prefijo `/api/v1`; Bearer y envelopes actuales. Backend publica primero rutas, OpenAPI, validación, permisos, pruebas y handoff.
 
@@ -61,4 +61,4 @@ Impacto: Backend Organization/Invoices/Declarations, Frontend Settings/Declarati
 
 Responsable principal: **Odontho · Backend**, encargo B03. **Base de datos** resuelve DB03; **Frontend** implementa FE03 una vez entregada la API. Diseño revisa interacción; Negocio comprueba invariantes; Arquitectura coordina el cierre.
 
-Los pasos concretos, archivos, aclaración del lote vacío después de retirar ítems, diagnóstico de Draft legados y texto de encargo están en [encargos ejecutables](ENCARGOS_ASISTENTES_FUNC03_05.md). Este detalle no acredita que la función esté implementada ni habilita por sí solo operaciones sobre datos.
+Los pasos concretos y encargos originales se conservan en [encargos ejecutables](ENCARGOS_ASISTENTES_FUNC03_05.md) como trazabilidad. El estado comprobado actual es el del encabezado y su informe de verificación; la redacción del contrato no habilita por sí sola operaciones sobre datos.

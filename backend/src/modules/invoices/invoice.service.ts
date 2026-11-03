@@ -1,4 +1,5 @@
 import { normalizeSearch } from "../../infrastructure/database/text-search.js";
+import { assertNoManualInvoicePresentation } from "../declarations/manual-entry.repository.js";
 import { Prisma } from "../../generated/prisma/client.js";
 
 import { prisma } from "../../infrastructure/database/prisma.js";
@@ -1023,6 +1024,7 @@ export class InvoiceService {
       }
 
       const sourceVersion = assertClosedSourceForCorrection(current);
+      await assertNoManualInvoicePresentation(current.id,tx);
 
       const created = await tx.invoiceCorrection.create({
         data: {
@@ -2734,7 +2736,7 @@ export class InvoiceService {
           data: {
             organizationId: actor.organizationId,
             documentType: "SIGNED_INVOICE_PDF",
-            storageProvider: "LOCAL",
+            storageProvider: documentStorage.provider,
             storageUri,
             originalFilename: `${invoiceNumber}-v${version.versionNumber}-svb.pdf`,
             mimeType: "application/pdf",
@@ -2784,7 +2786,7 @@ export class InvoiceService {
             documentId: document.id.toString(),
             documentType: "SIGNED_INVOICE_PDF",
             documentRole: "SIGNED_INVOICE_PDF",
-            storageProvider: "LOCAL",
+            storageProvider: documentStorage.provider,
             sizeBytes: pdfBytes.length.toString(),
             sha256: documentSha256,
           },

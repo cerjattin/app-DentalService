@@ -1,5 +1,17 @@
 # API Freeze Backend
 
+## NEG-DEP-10/12 — alcance clínico, SVB aplazado (2026-11-03)
+
+Esta actualización prevalece sobre la habilitación manual anterior: `manualPortalRecordingEnabled` es false por defecto y nuevo prepare/registro devuelve 409 SVB_PRESENTATION_DEFERRED. Solo QA explícito local _test puede habilitarlo con SVB_MANUAL_RECORDING_ENABLED=true y NODE_ENV=test. Historia/replays/resolución permanecen accesibles. Prepare/registro QA requieren una sola invoice/versión CLOSED con conjunto exacto completo de ítems: MANUAL_ENTRY_SINGLE_INVOICE_REQUIRED / MANUAL_ENTRY_INCOMPLETE_INVOICE. [Contrato, orden de validación, runtime/Storage y evidencia](NEG_DEP_10_12.md). No cambia schema ni SQL aplicado.
+
+## NEG-FINAL-07/08/09 — 2026-11-03
+
+Canal confirmado: captura campo por campo. Siete operaciones montadas para expediente interno congelado, reserva/incertidumbre, registro humano con comprobante y resultado de todas las líneas. No requiere export ni adaptador SVB. [Rutas, entradas, permisos, errores y modelo](NEG_FINAL_07_09.md); [validación y límites operativos](NEG_FINAL_09_BACKEND_VALIDATION.md). JSON interno no es archivo oficial. Se conservan bloqueos de fuente y propósito REAL_SVB en ready/export.
+
+## NEG-FINAL-06 — controles independientes, 2026-11-02
+
+Publicado GET `/api/v1/svb-pilot/readiness` (`svb_procedure.read`), con piloto real bloqueado y listas habilitadas vacías mientras no exista ficha/forma destino aprobada. GET clinic-locations añade policlinicCode almacenado. Declaraciones/candidatos/exports añaden realPresentationReadiness; READY/export admiten presentationPurpose opcional TECHNICAL/REAL_SVB. REAL_SVB devuelve 409 SVB_REAL_PRESENTATION_NOT_ENABLED; omisión conserva el recorrido técnico anterior y no certifica portal. Captura de procedimientos tiene cuerpos estrictos, bloqueo de nuevos requiresReferral sin flujo soportado y validación de accidentes/paciente/seguro/organización. [API exacta, errores, procedencia, archivos, pruebas y funciones pendientes de fuente](NEG_FINAL_06.md). PATCH de configuración de sedes y registro de accidentes/remitentes continúan sin publicar por dependencia explícita del contrato 06.
+
 ## NEG-FUNC-03/04/05 — 2026-10-31
 
 Backend publica GET/PATCH `/api/v1/organization`, GET `/api/v1/declarations/:id/candidates`, DELETE `/api/v1/declarations/:id/items/:itemId`, POST `/api/v1/declarations/:id/cancel` y GET/list/POST/PATCH de `/api/v1/patients/:patientId/treatment-cases`. Nuevos lotes no aceptan Declarant ID cliente no nulo: se vincula desde la primera factura CLOSED vigente. Asignación activa exclusiva, contador persistente y primera utilización de caso requieren las migraciones nuevas. [Contrato publicado, DTO, errores, permisos, integridad, archivos y evidencia](NEG_FUNC_03_04_05.md). Esta adición sustituye las limitaciones históricas sobre organización; no acredita entrega Frontend ni despliegue operativo.

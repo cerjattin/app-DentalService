@@ -1,0 +1,73 @@
+{
+  "info": {
+    "name": "ODONTHO NEG-FINAL-07 — field-by-field manual portal record",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Synthetic dedicated QA only. baseUrl has no /api/v1 suffix. Use a session-owned DRAFT with current CLOSED items. Do not run the collection indiscriminately: UNCERTAIN/release is an alternative to recording; after release prepare again with a new key. Manually set real fixture IDs, hash, evidence and past offset timestamps. Keys must be stable across retries; regenerate only for a new operation. No request transmits anything to SVB. This is an internal dossier, never an official upload file. Do not execute on clinic data."
+  },
+  "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+  "variable": [
+    { "key": "qaDeclarationId", "value": "" },
+    { "key": "manualEntryId", "value": "" },
+    { "key": "contentHash", "value": "" },
+    { "key": "receiptDocumentId", "value": "" },
+    { "key": "submissionId", "value": "" },
+    { "key": "resultDocumentId", "value": "" },
+    { "key": "declarationItemId", "value": "" },
+    { "key": "prepareKey", "value": "SYNTHETIC-prepare-0001" },
+    { "key": "recordKey", "value": "SYNTHETIC-record-0001" },
+    { "key": "resultKey", "value": "SYNTHETIC-result-0001" },
+    { "key": "portalSubmittedAt", "value": "2026-09-01T10:00:00-04:00" },
+    { "key": "portalRespondedAt", "value": "2026-09-02T10:00:00-04:00" }
+  ],
+  "item": [
+    {
+      "name": "Preview internal field dossier — no reservation or presentation",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/declarations/{{qaDeclarationId}}/manual-entry" }
+    },
+    {
+      "name": "Download internal JSON — not an official SVB file",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/declarations/{{qaDeclarationId}}/manual-entry/download" }
+    },
+    {
+      "name": "Prepare and reserve BEFORE portal entry — retain id/hash and key",
+      "request": { "method": "POST", "url": "{{baseUrl}}/api/v1/declarations/{{qaDeclarationId}}/manual-entry/prepare",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"idempotencyKey\": \"{{prepareKey}}\"\n}" }
+      }
+    },
+    {
+      "name": "Upload SYNTHETIC receipt — choose local PDF and retain returned id",
+      "request": { "method": "POST", "url": "{{baseUrl}}/api/v1/documents?documentType=OTHER&originalFilename=synthetic-receipt.pdf",
+        "header": [{ "key": "Content-Type", "value": "application/pdf" }], "body": { "mode": "file", "file": { "src": "" } }
+      }
+    },
+    {
+      "name": "Record synthetic human-attested portal entry — exact replay is 200",
+      "request": { "method": "POST", "url": "{{baseUrl}}/api/v1/declarations/{{qaDeclarationId}}/submissions/manual",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"manualEntryId\": \"{{manualEntryId}}\",\n  \"expectedContentHash\": \"{{contentHash}}\",\n  \"receiptDocumentId\": \"{{receiptDocumentId}}\",\n  \"externalReference\": \"0000123\",\n  \"submittedAt\": \"{{portalSubmittedAt}}\",\n  \"idempotencyKey\": \"{{recordKey}}\",\n  \"confirmation\": \"ALREADY_ENTERED_IN_OFFICIAL_PORTAL\"\n}" }
+      }
+    },
+    {
+      "name": "Record synthetic official result — one-line example, include ALL actual lines",
+      "request": { "method": "POST", "url": "{{baseUrl}}/api/v1/declarations/{{qaDeclarationId}}/submissions/{{submissionId}}/official-result",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"status\": \"ACCEPTED\",\n  \"externalReference\": \"0000123-result\",\n  \"respondedAt\": \"{{portalRespondedAt}}\",\n  \"resultDocumentId\": \"{{resultDocumentId}}\",\n  \"idempotencyKey\": \"{{resultKey}}\",\n  \"lines\": [{ \"declarationItemId\": \"{{declarationItemId}}\", \"status\": \"ACCEPTED\" }]\n}" }
+      }
+    },
+    {
+      "name": "ALTERNATIVE: mark uncertain BEFORE recording — keeps reservation",
+      "request": { "method": "POST", "url": "{{baseUrl}}/api/v1/declarations/{{qaDeclarationId}}/manual-entry/{{manualEntryId}}/uncertain",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"reason\": \"Synthetic portal timeout; verify outcome before any retry\"\n}" }
+      }
+    },
+    {
+      "name": "ALTERNATIVE: release after verified non-presentation with proof — never RECORDED",
+      "request": { "method": "POST", "url": "{{baseUrl}}/api/v1/declarations/{{qaDeclarationId}}/manual-entry/{{manualEntryId}}/release",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"reason\": \"Synthetic verification: no external entry exists\",\n  \"confirmation\": \"NOT_PRESENTED_VERIFIED\",\n  \"resolutionDocumentId\": \"{{receiptDocumentId}}\"\n}" }
+      }
+    }
+  ]
+}

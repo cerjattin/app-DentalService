@@ -1,5 +1,11 @@
 # ODONTHO SVB Backend Postman QA
 
+DEP10/12 vigente: SVB aplazado, nuevas preparaciones/registros devuelven SVB_PRESENTATION_DEFERRED por defecto. [Capacidad Backend, integridad completa y replays](../docs/NEG_DEP_10_12.md). La colección manual siguiente solo se ensaya con habilitación explícita QA local; no sirve para activar el portal en el primer despliegue.
+
+NEG-FINAL-07/08/09 (2026-11-03): [colección manual](NEG_FINAL_07_MANUAL.postman_collection.json), [contrato y cuerpos](../docs/NEG_FINAL_07_09.md), [QA fresco](../docs/NEG_FINAL_09_BACKEND_VALIDATION.md). Captura campo por campo sin archivo: preparar, entrar en portal fuera de la aplicación, subir comprobante y registrar. Colección de ejemplo NO ejecutada en clínica. Usar fixtures propios y claves estables; las peticiones de incertidumbre/liberación son alternativas al registro, no correr todo indiscriminadamente.
+
+NEG-FINAL-06 (2026-11-02): [colección de controles](NEG_FINAL_06.postman_collection.json) y [handoff Backend](../docs/NEG_FINAL_06.md). La ficha clínica no existe: el piloto real está BLOCKED, sin servicios/casos aprobados. Las nuevas peticiones prueban el rechazo de REAL_SVB en un Draft/READY técnico de QA; configurar qaDraftDeclarationId/qaReadyDeclarationId explícitos. Las colecciones técnicas anteriores no acreditan aceptación del portal. No se ejecutó Postman contra clínica como parte de esta entrega.
+
 NEG-FUNC-03/04/05 (2026-10-31): la colección principal ya no envía `declarantIdSnapshot` al crear declaraciones. Backend rechaza un string cliente y vincula la identidad desde la primera factura CLOSED. Consultar [rutas y escenarios nuevos](../docs/NEG_FUNC_03_04_05.md); la colección complementaria `NEG_FUNC_03_04_05.postman_collection.json` cubre las nuevas operaciones. No se ejecutó Postman contra clínica/Supabase operativo como parte de esta entrega.
 
 Sprint 19A/B prepara aceptación manual end-to-end del backend. No modifica `prisma/seed.ts`, schema, migraciones ni permisos.

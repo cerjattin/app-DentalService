@@ -1,0 +1,43 @@
+{
+  "invoiceId": "232",
+  "invoiceNumber": "FEc32b1c3e-000001",
+  "versionId": "246",
+  "versionNumber": 1,
+  "documentId": "151",
+  "pdfSha256": "d65d0da03b08a429ce209674c407751ac45673603b2d17b3e317a48be67dba36",
+  "bytes": 331117,
+  "signatures": [
+    {
+      "id": "72",
+      "invoiceVersionId": "246",
+      "patientId": "287",
+      "signatureDocumentId": "150",
+      "signatureType": "PATIENT",
+      "signerName": "QA Frontend",
+      "signerRelationship": null,
+      "captureMethod": "OTHER",
+      "signedContentHash": "120ce5e7b954022dad13fddb56d161a4e5759c676ee53badc2605a0f08e1e1b8",
+      "signatureHash": "9a0135805cda5858d7b60cfb5441da399a9aeb410cc258cb525e6fada8609ad4",
+      "status": "VALID",
+      "signedAt": "2026-11-03T13:11:26.075Z",
+      "capturedByUserId": "168",
+      "deviceIdentifier": null,
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+      "metadata": null,
+      "voidedAt": null,
+      "voidedByUserId": null,
+      "voidReason": null,
+      "createdAt": "2026-11-03T13:11:26.076Z",
+      "document": {
+        "id": "150",
+        "documentType": "SIGNATURE",
+        "originalFilename": "signature-v246.png",
+        "mimeType": "image/png",
+        "sizeBytes": "11518",
+        "sha256": "9a0135805cda5858d7b60cfb5441da399a9aeb410cc258cb525e6fada8609ad4",
+        "createdAt": "2026-11-03T13:11:26.038Z"
+      }
+    }
+  ]
+}

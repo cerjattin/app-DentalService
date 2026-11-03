@@ -1,5 +1,13 @@
 # Frontend Handoff
 
+## NEG-DEP-10/12 — prioridad sobre el flujo manual anterior
+
+Primer despliegue con SVB aplazado: `manualPortalRecordingEnabled=false` por defecto; false/ausente/error no habilita preparar ni registrar. API directa rechaza nuevo prepare/registro con 409 SVB_PRESENTATION_DEFERRED. Mostrar “SVB submission pending — file specification not confirmed.” Historial, descarga interna, replays y resolución de reservas existentes se conservan. En QA explícito Backend impone factura/versión única CLOSED y todos sus ítems, con MANUAL_ENTRY_SINGLE_INVOICE_REQUIRED / MANUAL_ENTRY_INCOMPLETE_INVOICE, también al registrar. [Contrato exacto y pruebas](NEG_DEP_10_12.md). No basta guardia de pantalla; no transmitir al portal.
+
+## NEG-FINAL-06 — alcance publicado 2026-11-02
+
+Ver [handoff de datos y fuentes pendientes](NEG_FINAL_06.md). Se pueden leer `policlinicCode` de sedes y el estado GET `/svb-pilot/readiness`; realPresentationReadiness aparece en candidatos/declaraciones/exports y está BLOCKED. COMPLETE/READY y archivos actuales son validación técnica, no aprobación real. Una solicitud explícita REAL_SVB en READY/export recibe SVB_REAL_PRESENTATION_NOT_ENABLED. No habilitar captura NumberOfTreatments/Assistance, PATCH de SVB settings ni registro/lookup de accidente/remitente hasta publicar su contrato de fuente. Captura requiresReferral devuelve SVB_REFERRAL_FLOW_NOT_SUPPORTED; vínculos de accidente usan ACCIDENT_CASE_NOT_FOUND / ACCIDENT_INSURANCE_CONTEXT_MISMATCH / APPOINTMENT_CLINICAL_CONTEXT_LOCKED. POST/PATCH de procedimientos ahora rechazan campos desconocidos; no enviar quantity en PATCH ni snapshots/Referrer IDs por libre.
+
 ## NEG-FUNC-03/04/05 — API publicada 2026-10-31
 
 Integrar FE03/04/05 con el [contrato Backend publicado](NEG_FUNC_03_04_05.md): Settings con revisión/motivo, Declarant ID administrado desde snapshots de factura, selección paginada de candidatos y casos por paciente. POST `/declarations` ahora rechaza Declarant ID no nulo del cliente; enviar ausencia/null. Los permisos nuevos `treatment_case.read/manage` requieren sincronización persistida antes de habilitar controles. DELETE Draft recibe body JSON `{ reason }`; cancelación conserva historial; ambos retornan Declaration completo. Candidates requiere declaración e invoice read. `isEditable` de casos es calculado por servidor. Aplicar las nuevas migraciones antes de usar estas rutas en otro entorno; no se ejecutaron sobre Supabase operativo desde esta entrega.
@@ -84,10 +92,10 @@ PostgreSQL preparation: no Frontend API change. The local backend can be started
 
 1. Create declaration batch for payer/period.
 2. Add closed invoice items.
-3. Mark ready.
-4. Export in supported format: `CSV`, `TXT`, `JSON`, `XML`, `XLSX`, `API_PAYLOAD`.
-5. Submit only after export. Without adapter, backend returns `SUBMISSION_ADAPTER_NOT_CONFIGURED`.
-6. Record/read submission result when available.
+3. For the current field-by-field manual portal workflow, read and prepare `/manual-entry` before the operator enters the portal. No READY/export is required for this workflow.
+4. Record the completed external action with proof through `/submissions/manual`; later record all line outcomes through `/official-result`. Download/preparation does not imply submission or acceptance.
+5. Technical ready/export and the existing adapter path remain separate. Without a configured transport adapter the old submit route returns `SUBMISSION_ADAPTER_NOT_CONFIGURED`.
+6. Exact permissions, DTOs, errors, immutable state and uncertainty handling: [manual entry handoff](NEG_FINAL_07_09.md). Do not use internal files as an official SVB upload layout.
 
 ## Files And Binaries
 

@@ -1,0 +1,66 @@
+{
+  "date": "2026-11-03",
+  "phase": "Independent browser observation R2, not a product test suite",
+  "environment": "own isolated synthetic QA",
+  "globalDep11Approved": false,
+  "observations": [
+    {
+      "status": "PASS_SCOPED",
+      "nativeReloadAndFailureTests": "PENDING",
+      "id": "DES-01",
+      "routes": [
+        "Appointment details",
+        "Reception sidebar",
+        "Back"
+      ],
+      "notePreserved": true,
+      "saveThenNavigate": true
+    },
+    {
+      "status": "PASS_SCOPED_SETTLED",
+      "allModalFamilies": "PENDING",
+      "tag": "BUTTON",
+      "id": "DES-02",
+      "finalFocus": "Add procedure",
+      "intermediateBodyWasTransient": true
+    },
+    {
+      "status": "PASS_MANUAL_REFRESH",
+      "search": "QA",
+      "statusFilter": "IN_PROGRESS",
+      "id": "DES-03",
+      "automaticFocusRefresh": "PENDING_INDEPENDENT",
+      "manualRefresh": true
+    },
+    {
+      "status": "PASS_REQUIRED_FILE_ASSOCIATION_AND_FOCUS",
+      "invalid": "true",
+      "focusType": "file",
+      "releaseSaved": false,
+      "id": "DES-04",
+      "uploadAndRetry": "PENDING",
+      "fileSelection": "BLOCKED_BY_EXTENSION_FILE_URL_PERMISSION"
+    },
+    {
+      "reception": "read-only",
+      "provider": "editable according to permissions",
+      "id": "ROLES",
+      "wholeUatMatrix": "PENDING",
+      "status": "PASS_SCOPED_CLINICAL_VISIBILITY"
+    },
+    {
+      "newNativeAttempt": false,
+      "reason": "Previous native URL verification unreliable; page shortcuts are not browser zoom",
+      "id": "ZOOM-200",
+      "status": "MANUAL_ACCEPTANCE_PENDING"
+    },
+    {
+      "status": "DEFERRED_BY_SCOPE",
+      "frontendManualRecording": false,
+      "performed": false,
+      "remainingReceiptSubmissionResolution": false,
+      "syntheticAuxiliaryFixture": "UNCERTAIN preparation55; auxiliary backend stopped",
+      "id": "SVB_EXTERNAL"
+    }
+  ]
+}

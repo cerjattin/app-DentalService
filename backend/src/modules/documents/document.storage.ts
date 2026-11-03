@@ -4,6 +4,7 @@ import path from "node:path";
 
 import { env } from "../../config/env.js";
 import { AppError } from "../../shared/errors/app-error.js";
+import { SupabaseDocumentStorage } from "./supabase-document.storage.js";
 
 const STORAGE_URI_PREFIX = "local://documents/";
 
@@ -22,7 +23,7 @@ function storageRoot() {
   return root;
 }
 
-function normalizeStorageKey(key: string) {
+export function normalizeStorageKey(key: string) {
   const normalized = key.replaceAll("\\", "/");
 
   if (
@@ -30,7 +31,11 @@ function normalizeStorageKey(key: string) {
     normalized.startsWith("/") ||
     normalized.includes("../") ||
     normalized.includes("/..") ||
-    normalized === ".."
+    normalized === ".." ||
+    normalized
+      .split("/")
+      .some((segment) => segment === "." || segment === "") ||
+    /[\u0000-\u001f\u007f]/.test(normalized)
   ) {
     throw new AppError(
       400,
@@ -62,6 +67,12 @@ export function sha256Hex(bytes: Buffer) {
 }
 
 export function storageUriFromKey(key: string) {
+  if (env.DOCUMENT_STORAGE_PROVIDER === "SUPABASE")
+    return remoteStorage().uriFromKey(key);
+  return localStorageUriFromKey(key);
+}
+
+function localStorageUriFromKey(key: string) {
   return `${STORAGE_URI_PREFIX}${normalizeStorageKey(key)}`;
 }
 
@@ -93,14 +104,14 @@ export class LocalDocumentStorage {
       ) {
         const existing = await readFile(target);
         if (sha256Hex(existing) === sha256Hex(bytes)) {
-          return storageUriFromKey(key);
+          return localStorageUriFromKey(key);
         }
       }
 
       throw error;
     }
 
-    return storageUriFromKey(key);
+    return localStorageUriFromKey(key);
   }
 
   async read(storageUri: string) {
@@ -150,4 +161,53 @@ export class LocalDocumentStorage {
   }
 }
 
-export const documentStorage = new LocalDocumentStorage();
+const localStorage = new LocalDocumentStorage();
+let remote: SupabaseDocumentStorage | undefined;
+function remoteStorage() {
+  if (
+    !env.SUPABASE_URL ||
+    !env.SUPABASE_SERVICE_ROLE_KEY ||
+    !env.SUPABASE_STORAGE_BUCKET
+  ) {
+    throw new AppError(
+      503,
+      "DOCUMENT_STORAGE_UNAVAILABLE",
+      "Private document storage is not configured",
+    );
+  }
+  return (remote ??= new SupabaseDocumentStorage({
+    url: env.SUPABASE_URL,
+    key: env.SUPABASE_SERVICE_ROLE_KEY,
+    bucket: env.SUPABASE_STORAGE_BUCKET,
+  }));
+}
+function reader(uri: string) {
+  if (uri.startsWith(STORAGE_URI_PREFIX)) return localStorage;
+  if (uri.startsWith("supabase://documents/")) return remoteStorage();
+  throw new AppError(
+    409,
+    "DOCUMENT_STORAGE_UNSUPPORTED",
+    "Document storage provider is unsupported",
+  );
+}
+export const documentStorage = {
+  get provider(): "LOCAL" | "OTHER" {
+    return env.DOCUMENT_STORAGE_PROVIDER === "SUPABASE" ? "OTHER" : "LOCAL";
+  },
+  write(key: string, bytes: Buffer) {
+    return (
+      env.DOCUMENT_STORAGE_PROVIDER === "SUPABASE"
+        ? remoteStorage()
+        : localStorage
+    ).write(key, bytes);
+  },
+  read(uri: string) {
+    return reader(uri).read(uri);
+  },
+  remove(uri: string) {
+    return reader(uri).remove(uri);
+  },
+  exists(uri: string) {
+    return reader(uri).exists(uri);
+  },
+};

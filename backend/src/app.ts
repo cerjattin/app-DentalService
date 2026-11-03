@@ -50,6 +50,7 @@ import { dashboardRouter } from "./modules/reports/dashboard.routes.js";
 import { clinicLocationRouter } from "./modules/clinic-locations/clinic-location.routes.js";
 import { organizationRouter } from "./modules/organization/organization.routes.js";
 import { treatmentCaseRouter } from "./modules/treatment-cases/treatment-case.routes.js";
+import { svbReadinessRouter } from "./modules/svb-readiness/svb-readiness.routes.js";
 export const app = express();
 
 app.disable("x-powered-by");
@@ -127,6 +128,9 @@ app.use("/api/v1/providers", providerRouter);
 app.use("/api/v1/clinic-locations", clinicLocationRouter);
 app.use("/api/v1/reports", dashboardRouter);
 app.use("/api/v1/organization", organizationRouter);
+app.use("/api/v1/svb-pilot", svbReadinessRouter);
 app.use(notFoundMiddleware);
 
 app.use(errorHandler);
+
+export default app;

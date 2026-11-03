@@ -1,0 +1,7 @@
+{
+  "roleLabel": "RECEPTION",
+  "clinicalNotesFields": 0,
+  "addProcedureButtons": 0,
+  "completeEncounterButtons": 0,
+  "interpretation": "Visibility verified against existing server permissions; not authorization by role name"
+}

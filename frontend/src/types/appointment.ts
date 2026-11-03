@@ -31,6 +31,7 @@ export interface AppointmentProvider {
 }
 
 export interface AppointmentLocation {
+  policlinicCode?: string | null
   id: EntityId
   code: string
   name: string

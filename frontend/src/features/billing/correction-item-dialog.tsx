@@ -11,6 +11,9 @@ import type { InvoiceItem, UpdateCorrectionInvoiceItemDto } from '../../types/bi
 import { correctionKeys, invoiceKeys, invoiceVersionKeys, updateCorrectionItem } from './billing-api'
 import { correctionItemSchema } from './billing-model'
 import { BillingError } from './billing-ui'
+import { svbFieldGuidance } from '../declarations/svb-data-guidance'
+import { candidateKeys } from '../declarations/declaration-api'
+import { dashboardKeys } from '../dashboard/dashboard-api'
 
 type Values = z.infer<typeof correctionItemSchema>
 const nullable = (value: string) => value || null
@@ -41,6 +44,8 @@ export function CorrectionItemDialog({ invoiceId, item, close, saved }: { invoic
     onSuccess: async () => {
       saved(); close()
       await Promise.all([
+        client.invalidateQueries({ queryKey: candidateKeys.all }),
+        client.invalidateQueries({ queryKey: dashboardKeys.all }),
         client.invalidateQueries({ queryKey: invoiceKeys.detail(invoiceId) }),
         client.invalidateQueries({ queryKey: invoiceVersionKeys.invoice(invoiceId) }),
         client.invalidateQueries({ queryKey: correctionKeys.invoice(invoiceId) }),
@@ -61,6 +66,7 @@ export function CorrectionItemDialog({ invoiceId, item, close, saved }: { invoic
           {field('authorizationIdSnapshot', 'Authorization ID')}{field('diagnosticCodeSnapshot', 'Diagnosis code')}{field('treatmentIdSnapshot', 'Treatment ID')}{field('accidentFormNumberSnapshot', 'Accident form number')}
           {field('numberOfTreatmentsSnapshot', 'Number of treatments')}{field('assistanceSnapshot', 'Assistance')}{field('referrerIdSnapshot', 'Referrer ID')}{field('policlinicSnapshot', 'Policlinic')}
         </div>
+        <p className="text-sm text-slate-600">{svbFieldGuidance.NumberOfTreatments} {svbFieldGuidance.Assistance} Changing these fields does not establish pilot eligibility.</p>
         <FormField label="Additional note" htmlFor="correction-item-additionalNote" error={form.formState.errors.additionalNote?.message}>
           <Textarea id="correction-item-additionalNote" {...form.register('additionalNote')} />
         </FormField>

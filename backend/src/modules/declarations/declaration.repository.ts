@@ -61,6 +61,9 @@ export const declarationSubmissionSelect = {
   submittedByUserId: true,
   submittedAt: true,
   respondedAt: true,
+  manualEntry: { select: { id: true, state: true, contentHash: true, receiptDocumentId: true, receiptSha256: true,
+    externalSubmittedAt: true, confirmedAt: true, result: { select: { id: true, status: true, resultDocumentId: true,
+      resultSha256: true, externalRespondedAt: true, recordedAt: true, lineResults: true } } } },
 } satisfies Prisma.DeclarationSubmissionSelect;
 
 export const declarationBatchSelect = {

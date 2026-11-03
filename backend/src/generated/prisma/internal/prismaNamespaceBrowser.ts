@@ -63,6 +63,8 @@ export const ModelName = {
   DeclarationItem: 'DeclarationItem',
   DeclarationActiveAssignment: 'DeclarationActiveAssignment',
   DeclarationSubmission: 'DeclarationSubmission',
+  DeclarationManualEntry: 'DeclarationManualEntry',
+  DeclarationManualResult: 'DeclarationManualResult',
   DiagnosisCode: 'DiagnosisCode',
   Document: 'Document',
   EncounterDiagnosis: 'EncounterDiagnosis',
@@ -251,6 +253,7 @@ export const DeclarationBatchScalarFieldEnum = {
   declarationNumber: 'declarationNumber',
   status: 'status',
   lastItemSequence: 'lastItemSequence',
+  lastSubmissionAttempt: 'lastSubmissionAttempt',
   periodStart: 'periodStart',
   periodEnd: 'periodEnd',
   declarantIdSnapshot: 'declarantIdSnapshot',
@@ -343,6 +346,52 @@ export const DeclarationSubmissionScalarFieldEnum = {
 } as const
 
 export type DeclarationSubmissionScalarFieldEnum = (typeof DeclarationSubmissionScalarFieldEnum)[keyof typeof DeclarationSubmissionScalarFieldEnum]
+
+
+export const DeclarationManualEntryScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  declarationBatchId: 'declarationBatchId',
+  state: 'state',
+  claimKey: 'claimKey',
+  contentHash: 'contentHash',
+  contentSnapshot: 'contentSnapshot',
+  preparedByUserId: 'preparedByUserId',
+  preparedAt: 'preparedAt',
+  uncertaintyReason: 'uncertaintyReason',
+  releaseReason: 'releaseReason',
+  releasedAt: 'releasedAt',
+  resolutionDocumentId: 'resolutionDocumentId',
+  recordKey: 'recordKey',
+  recordHash: 'recordHash',
+  submissionId: 'submissionId',
+  receiptDocumentId: 'receiptDocumentId',
+  receiptSha256: 'receiptSha256',
+  externalSubmittedAt: 'externalSubmittedAt',
+  confirmedAt: 'confirmedAt'
+} as const
+
+export type DeclarationManualEntryScalarFieldEnum = (typeof DeclarationManualEntryScalarFieldEnum)[keyof typeof DeclarationManualEntryScalarFieldEnum]
+
+
+export const DeclarationManualResultScalarFieldEnum = {
+  id: 'id',
+  manualEntryId: 'manualEntryId',
+  organizationId: 'organizationId',
+  idempotencyKey: 'idempotencyKey',
+  requestHash: 'requestHash',
+  status: 'status',
+  resultDocumentId: 'resultDocumentId',
+  resultSha256: 'resultSha256',
+  externalReference: 'externalReference',
+  reason: 'reason',
+  externalRespondedAt: 'externalRespondedAt',
+  recordedByUserId: 'recordedByUserId',
+  recordedAt: 'recordedAt',
+  lineResults: 'lineResults'
+} as const
+
+export type DeclarationManualResultScalarFieldEnum = (typeof DeclarationManualResultScalarFieldEnum)[keyof typeof DeclarationManualResultScalarFieldEnum]
 
 
 export const DiagnosisCodeScalarFieldEnum = {

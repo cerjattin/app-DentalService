@@ -65,7 +65,7 @@ export function addDeclarationItem(id: EntityId, invoiceItemId: EntityId) {
   })
 }
 export function markDeclarationReady(id: EntityId) {
-  return apiFetch<Declaration>(`/declarations/${id}/ready`, { method: 'POST' })
+  return apiFetch<Declaration>(`/declarations/${id}/ready`, { method: 'POST', body: { presentationPurpose: 'TECHNICAL' } })
 }
 export function listDeclarationExports(id: EntityId, signal?: AbortSignal) {
   return apiFetch<DeclarationExport[]>(`/declarations/${id}/exports`, {
@@ -78,7 +78,7 @@ export function createDeclarationExport(
 ) {
   return apiFetch<DeclarationExport>(`/declarations/${id}/exports`, {
     method: 'POST',
-    body: { format },
+    body: { format, presentationPurpose: 'TECHNICAL' },
   })
 }
 export function downloadDeclarationExport(

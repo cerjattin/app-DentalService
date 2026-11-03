@@ -11,6 +11,7 @@ import {
   createDeclarationSchema,
   declarationSubmissionResultSchema,
   listDeclarationsQuerySchema,
+  markDeclarationReadySchema,
 } from "./declaration.schemas.js";
 import { declarationService } from "./declaration.service.js";
 import { declarationCandidatesQuerySchema, declarationReasonSchema } from "./declaration.schemas.js";
@@ -114,10 +115,12 @@ export const addDeclarationItem: RequestHandler = async (req, res) => {
 export const markDeclarationReady: RequestHandler = async (req, res) => {
   const actor = requireAuth(req);
   const declarationId = parseBigIntId(req.params.id, "declarationId");
+  const input = markDeclarationReadySchema.parse(req.body ?? {});
   const result = await declarationService.markReady(
     declarationId,
     actor,
     securityMetadata(req, res),
+    input.presentationPurpose ?? "TECHNICAL",
   );
 
   res.status(200).json(successResponse(result));

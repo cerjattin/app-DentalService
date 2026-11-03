@@ -441,3 +441,18 @@ describe('foundation type and timezone behavior', () => {
     expect(formatBusinessDateTime(timestamp)).toContain('2026')
   })
 })
+
+
+it('returns to the protected invoice version after login instead of racing back to Dashboard', async () => {
+  vi.stubGlobal('fetch', vi.fn(async (url) => new Response(JSON.stringify({ success: true, data: String(url).endsWith('/auth/login') ? { accessToken: 'qa-memory', user: testUser, tokenType: 'Bearer', expiresIn: '15m' } : testUser }), { headers: { 'Content-Type': 'application/json' } })))
+  const router = createMemoryRouter([
+    { path: '/login', element: <LoginPage /> },
+    { path: '/invoices/:id', element: <div>Protected invoice destination</div> },
+    { path: '/dashboard', element: <div>Unexpected Dashboard</div> },
+  ], { initialEntries: [{ pathname: '/login', state: { from: { pathname: '/invoices/232', search: '?versionId=246', hash: '#documents' } } }] })
+  renderWithProviders(<RouterProvider router={router} />)
+  await userEvent.type(screen.getByLabelText('Email'), testUser.email); await userEvent.type(screen.getByLabelText('Password'), 'synthetic-password')
+  await userEvent.click(screen.getByRole('button', { name: 'Sign in' }))
+  expect(await screen.findByText('Protected invoice destination')).toBeInTheDocument()
+  expect(router.state.location.pathname + router.state.location.search + router.state.location.hash).toBe('/invoices/232?versionId=246#documents')
+})

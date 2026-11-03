@@ -1,0 +1,152 @@
+Browser tab: 1209239816, Title: "frontend", URL: "http://127.0.0.1:5179/declarations/138".
+0 AXWebArea frontend, URL: 127.0.0.1:5179/declarations/138
+	1 container root
+		2 container
+			3 text OS Odontho Services SVB BILLING
+			4 text WORKSPACE
+			5 link Description: Dashboard, Value: 127.0.0.1:5179/dashboard
+			6 link Description: Reception, Value: 127.0.0.1:5179/reception
+			7 link Description: Patients, Value: 127.0.0.1:5179/patients
+			8 link Description: Appointments, Value: 127.0.0.1:5179/appointments
+			9 text SVB
+			10 link Description: Invoices, Value: 127.0.0.1:5179/invoices
+			11 link Description: Declarations, Value: 127.0.0.1:5179/declarations
+			12 text ADMINISTRATION
+			13 link Description: Administration, Value: 127.0.0.1:5179/admin
+			14 link Description: Users, Value: 127.0.0.1:5179/admin/users
+			15 link Description: Providers, Value: 127.0.0.1:5179/admin/providers
+			16 link Description: Services, Value: 127.0.0.1:5179/admin/services
+			17 link Description: Settings, Value: 127.0.0.1:5179/admin/settings
+		18 container Application environment
+			19 container
+				20 text QA  ·  design-dep11-r2
+			21 text SVB submission pending · No automatic submission
+		22 container
+			23 heading Declaration Detail, Value: 1
+				24 text Declaration Detail
+			25 text Items, exports and submissions 05:01 PM QA ADMIN ADMIN QA
+			26 button Sign out
+		27 container
+			28 link Description: Back to declarations, Value: 127.0.0.1:5179/declarations
+			29 heading FEc32b1c3e-000007, Value: 2
+				30 text FEc32b1c3e-000007
+			31 text FEc32b1c3e - QA Frontend Payer Draft
+			32 definition list
+				33 container Period
+					34 text Period
+				35 text Not specified
+			36 definition list
+				37 container Declarant ID
+					38 text Declarant ID
+				39 text 00781
+			40 definition list
+				41 container Submission reference
+					42 text Submission reference
+				43 text No reference recorded
+			44 definition list
+				45 container Created
+					46 text Created
+				47 text Nov 3, 2026, 5:01 PM
+			48 container Real SVB presentation
+				49 text SVB submission pending — file specification not confirmed.
+				50 heading Real SVB presentation blocked, Value: 3
+					51 text Real SVB presentation blocked
+				52 content list
+					53 text Clinic-approved source and capture rules are not configured.
+					54 text The destination file format has not been verified for the SVB portal.
+				55 text New manual preparations and presentation records are unavailable. History and resolution of existing records remain available with permission.
+				56 container
+					57 text Certified SVB services:  None
+				58 container
+					59 text Certified SVB case types:  None
+				60 container
+					61 text Unresolved requirements:  NumberOfTreatments, Assistance, PoliClinic, ReferralEvidence
+				62 text Clinical workflows remain available according to permissions and supported service requirements. Technical checks and generated exports do not confirm acceptance by the SVB portal. No real presentation is performed here.
+			63 container Manual SVB workflow
+				64 heading Manual SVB presentation, Value: 2
+					65 text Manual SVB presentation
+				66 container
+					67 text SVB submission pending — file specification not confirmed.  The retained manual workflow uses one manual presentation per invoice, including its procedures. Internal downloads do not prove presentation.
+				68 button (disabled) Official portal deferred
+				69 text Opening the portal or downloading a file changes no status. Check the portal before repeating an entry with an uncertain outcome. Record the receipt and official response separately.
+				70 text A receipt is not acceptance. Acceptance is not payment.
+				71 text SVB submission pending — file specification not confirmed.
+				72 container
+					73 text Internal dossier ·  ODONTHO_MANUAL_ENTRY_V1  ·  Preparation 55: UNCERTAIN
+				74 container
+					75 text SHA-256:  52d954d7fccf8605571ccf6c463330d4bd90e4af6c30450a037c1032eda8392e
+				76 container
+					77 text Backend total:  ANG 88.80
+				78 content list
+					79 container
+						80 text Line  1  · 
+						81 link Description: F-FEc32b1c3e-1 / v1, Value: 127.0.0.1:5179/invoices/230?versionId=244
+						82 text  ·  QA  ·  Café treatment  · Quantity  1.00  · Tariff  88.80  ·  ANG 88.80
+				83 container
+					84 text Prepared by user  168  ·  Nov 3, 2026, 5:01 PM
+				85 container
+					86 text Uncertain outcome:  SYNTHETIC QA UNCERTAIN state for attachment validation. No portal was opened; no external presentation occurred. . Check the official portal before repeating any entry.
+				87 button Download internal dossier
+				88 button (disabled) Prepare manual entry
+				89 button (disabled) Record portal entry
+				90 button (disabled) Record SVB result
+				91 button Release verified preparation
+				92 button (collapsed) Manual entry worksheet, Secondary Actions: Expand
+					93 text Manual entry worksheet
+				94 container
+					95 text Application status:  DRAFT
+			96 heading Declaration items, Value: 2
+				97 text Declaration items
+			98 button Add item, Help: Invoice read permission is required to select candidates.
+			99 button Validate and mark ready
+			100 text Items are immutable snapshots of the exact invoice version accepted by the Backend.
+			101 container Scrollable data table
+				102 table
+					103 row
+						104 cell
+							105 text #
+						106 cell
+							107 text INVOICE
+						108 cell
+							109 text SERVICE DATE
+						110 cell
+							111 text INSURED ID
+						112 cell
+							113 text TREATMENT ID
+						114 cell
+							115 text AMOUNT
+						116 cell
+							117 text LINE STATUS
+						118 cell
+							119 text ACTIONS
+					120 row
+						121 cell
+							122 text 1
+						123 cell
+							124 text F-FEc32b1c3e-1
+							125 container
+								126 text Item  250
+						127 cell
+							128 text 2026-09-01
+						129 cell
+							130 text 012345678
+						131 cell
+							132 text 000001
+						133 cell
+							134 text 88.80
+						135 cell
+							136 text Pending
+						137 cell
+							138 button Review SVB snapshot line 1
+							139 button Remove item 121
+			140 heading Exports, Value: 2
+				141 text Exports
+			142 text Exports generated here are for technical review. They are not verified files for real SVB presentation.
+			143 text No export has been generated.
+			144 heading Submission history, Value: 2
+				145 text Submission history
+			146 text Recorded history is shown below. Manual portal actions and external results must be supported by their own evidence.
+			147 text No submission attempts recorded.
+			148 button Cancel draft declaration
+
+The focused UI element is 91 button Release verified preparation

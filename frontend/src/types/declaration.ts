@@ -1,5 +1,6 @@
 import type { DocumentMetadata } from './billing'
 import type { DecimalString, EntityId } from './core'
+import type { RealSvbPresentationReadiness } from './svb-readiness'
 
 export type DeclarationStatus =
   | 'DRAFT'
@@ -47,6 +48,7 @@ export interface DeclarationItem {
 }
 
 export interface DeclarationExport {
+  realPresentationReadiness?: RealSvbPresentationReadiness
   id: EntityId
   declarationBatchId: EntityId
   documentId: EntityId
@@ -76,6 +78,7 @@ export interface DeclarationSubmission {
 }
 
 export interface Declaration {
+  realPresentationReadiness?: RealSvbPresentationReadiness
   id: EntityId
   organizationId: EntityId
   payerId: EntityId
@@ -118,6 +121,7 @@ export interface CreateDeclarationDto {
 }
 
 export interface DeclarationCandidate {
+  realPresentationReadiness?: RealSvbPresentationReadiness
   invoiceId: EntityId
   invoiceVersionId: EntityId
   invoiceItemId: EntityId

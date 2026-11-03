@@ -35,7 +35,7 @@ function boundary(options: { empty?: boolean; error?: string; code?: string; sta
       const empty = options.empty || (u.searchParams.get('q') && options.providerSearch === 'empty')
       return ok(empty ? [] : [{ id, firstName: 'QA', lastName: 'Provider', isActive: true }], { total: empty ? 0 : 1, totalPages: 1 })
     }
-    if (path === '/clinic-locations') return ok(options.empty ? [] : [{ id, code: 'MAIN', name: 'QA Clinic', isActive: true }])
+    if (path === '/clinic-locations') return ok(options.empty ? [] : [{ id, code: 'MAIN', name: 'QA Clinic', isActive: true, policlinicCode: 'P' }])
     if (path === '/appointments' && method === 'POST') return ok({ id, appointmentNumber: 'APT-QA', ...(body as object) })
     if (path === '/appointments') return ok([], { total: 0, totalPages: 0 })
     throw new Error('Unexpected: ' + method + ' ' + path)
@@ -54,6 +54,12 @@ async function fill(u: ReturnType<typeof userEvent.setup>) {
 }
 afterEach(() => { authStore.clearSession(); vi.unstubAllGlobals(); vi.restoreAllMocks() })
 describe('Appointment creation correction', () => {
+  it('shows the recorded location SVB code without making it an editable fiscal field', async () => {
+    const calls = boundary(); const u = await open(); await u.selectOptions(screen.getByLabelText('Clinic location'), id)
+    expect(screen.getByText('SVB policlinic code: P. New service snapshots use the recorded location configuration.')).toBeInTheDocument()
+    expect(screen.queryByLabelText('Policlinic')).not.toBeInTheDocument()
+    expect(calls.every((call) => call.method === 'GET')).toBe(true)
+  })
   it('posts opaque IDs and the exact creation DTO', async () => { const calls = boundary(); await createAppointment({ patientId: id, providerId: id, clinicLocationId: id, scheduledStart: '2026-10-28T13:00:00Z', scheduledEnd: '2026-10-28T13:30:00Z' }); expect(calls[0]).toMatchObject({ method: 'POST', path: '/appointments', body: { patientId: id, providerId: id, clinicLocationId: id } }) })
   it('loads the active location lookup with string identities', async () => { const calls = boundary(); expect((await listClinicLocations())[0]?.id).toBe(id); expect(calls[0]?.query.get('isActive')).toBe('true') })
   it('hides creation without appointment.create', () => { render(undefined, ['appointment.read']); expect(screen.queryByRole('button', { name: 'Create appointment' })).not.toBeInTheDocument() })

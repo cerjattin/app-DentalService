@@ -12,6 +12,7 @@ import { FormField } from '../../components/forms/form-field'
 import { Button } from '../../components/ui/button'
 import { Card } from '../../components/ui/card'
 import { Input } from '../../components/ui/input'
+import { EnvironmentNotice } from '../../components/app-shell/environment-notice'
 
 const loginSchema = z.object({
   email: z.string().trim().toLowerCase().email('Enter a valid email address.'),
@@ -28,8 +29,10 @@ export function LoginPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const from = useMemo(() => {
-    const state = location.state as { from?: { pathname?: string } } | null
-    return state?.from?.pathname ?? '/dashboard'
+    const state = location.state as { from?: { pathname?: string; search?: string; hash?: string } } | null
+    const target = state?.from
+    return target?.pathname?.startsWith('/') && !target.pathname.startsWith('//') && target.pathname !== '/login'
+      ? `${target.pathname}${target.search ?? ''}${target.hash ?? ''}` : '/dashboard'
   }, [location.state])
 
   const form = useForm<LoginFormValues>({
@@ -62,7 +65,7 @@ export function LoginPage() {
   })
 
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />
+    return <Navigate to={from} replace />
   }
 
   return (
@@ -91,6 +94,7 @@ export function LoginPage() {
       </section>
       <section className="flex items-center justify-center px-5 py-10">
         <Card className="w-full max-w-md p-7">
+          <div className="mb-5"><EnvironmentNotice /></div>
           <div className="mb-6">
             <h2 className="text-xl font-semibold text-slate-900">Sign in</h2>
             <p className="mt-1 text-sm text-slate-500">

@@ -1,0 +1,43 @@
+{
+  "date": "2026-11-03T13:49:33.542Z",
+  "environment": "isolated synthetic Frontend QA",
+  "data": {
+    "period": {
+      "from": "2026-11-03",
+      "to": "2026-11-03",
+      "timezone": "America/Curacao"
+    },
+    "providerId": null,
+    "kpis": {
+      "production": [
+        {
+          "currencyCode": "ANG",
+          "amount": "2042.40"
+        }
+      ],
+      "svbBilled": [],
+      "patientsSeen": 1,
+      "appointments": 2,
+      "pendingSignatures": 0,
+      "closedInvoices": 1,
+      "toDeclare": 0
+    },
+    "productionTimeline": [
+      {
+        "date": "2026-11-03",
+        "currencyCode": "ANG",
+        "amount": "2042.40",
+        "chartPercent": 100
+      }
+    ],
+    "productionByProvider": [
+      {
+        "providerId": "287",
+        "providerName": "QA Provider",
+        "currencyCode": "ANG",
+        "amount": "2042.40",
+        "chartPercent": 100
+      }
+    ]
+  }
+}

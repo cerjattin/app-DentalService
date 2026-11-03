@@ -1,0 +1,25 @@
+Browser tab: 1209239816, Title: "frontend", URL: "http://127.0.0.1:5179/declarations/138".
+0 AXWebArea frontend, URL: 127.0.0.1:5179/declarations/138
+	1 container Release preparation, ID: radix-_r_3v_
+		2 heading Release preparation, Value: 2, ID: radix-_r_40_
+			3 text Release preparation
+		4 text This records an operator action supported by evidence. The application does not submit to SVB.
+		5 button Close dialog
+		6 container
+			7 text Preparation  55  · Frozen SHA-256  52d954d7fccf8605571ccf6c463330d4bd90e4af6c30450a037c1032eda8392e
+		8 container
+			9 container
+				10 text Reason / explanation
+				11 text field (settable) Reason / explanation
+			12 container
+				13 text Portal verification evidence
+				14 button Portal verification evidence Private evidence is uploaded to this application's backend. It is not sent to SVB.
+				15 text Private evidence is uploaded to this application's backend. It is not sent to SVB.
+			16 container
+				17 checkbox (settable, integer) Value: 0, Description: I checked the official portal and verified that this invoice was NOT presented. Releasing permits a new preparation.
+				18 text I checked the official portal and verified that this invoice was NOT presented. Releasing permits a new preparation.
+			21 text Explicit confirmation is required. Enter the reason. Do not invent an external reference. Attach the external evidence before recording.
+			19 button Cancel
+			20 button Release preparation
+
+The focused UI element is 20 button Release preparation

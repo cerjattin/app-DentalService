@@ -1,14 +1,14 @@
 # NEG-FUNC-05 — Registro y selección de casos de tratamiento
 
-Fecha: 2026-10-31. Prioridad propuesta: P1 para completar el contexto clínico. Estado: **especificación pendiente de implementación y publicación API**.
+Contrato de origen: 2026-10-31. Estado actualizado el 2026-11-02: **implementado en Backend/Frontend local**, con los límites de aceptación de la [verificación actual](VERIFICACION_CONTRATOS_03_05_20261102.md). La API efectiva añade `isEditable` de servidor y protección persistente de primera vinculación; ver [entrega Backend](../../backend/docs/NEG_FUNC_03_04_05.md).
 
 ## Objetivo y evidencia
 
-Permitir registrar un caso del paciente y seleccionarlo al crear/editar una cita, sin introducir manualmente claves internas. El [modelo](../../backend/prisma/schema.prisma) ya contiene TreatmentCase y Appointment.treatmentCaseId. Los schemas de citas admiten la referencia y EncounterProcedure copia TreatmentCase.treatmentId al snapshot, pero no hay un flujo práctico de consulta/registro montado.
+Permitir registrar un caso del paciente y seleccionarlo al crear/editar una cita, sin introducir manualmente claves internas. La carencia inicial ya tiene solución local: módulo montado de casos, permisos, formulario/selector y validación de contexto. Se conserva el vínculo entre TreatmentCase, Appointment y el snapshot externo del procedimiento.
 
 Este contrato no inventa un sistema de numeración SVB ni la semántica de NumberOfTreatments/Assistance. TreatmentCase.id es una clave interna; treatmentId es una referencia externa distinta, aportada por una fuente autorizada. Tampoco crea un gestor general de accidentes/remitentes, ni cambia automáticamente estados de cita, atención o factura.
 
-## API y permisos propuestos — no existentes
+## API y permisos de origen — publicados en la entrega local
 
 Prefijo `/api/v1`, envelopes y paginación actuales. Rutas limitadas al paciente y organización del actor:
 

@@ -1,0 +1,53 @@
+{
+  "date": "2026-11-03",
+  "environment": "isolated synthetic design QA",
+  "uiControl": "Stopped: current Windows Chrome URL could not be verified",
+  "frozenArtifactApproved": false,
+  "files": [
+    {
+      "path": "frontend/src/features/clinical/clinical-appointment-page.tsx",
+      "sha256": "c5d3ce7f830293d111447525724214a6fc5365ea0e4e01bba8881ac5dc836707",
+      "changedDuringInspection": false
+    },
+    {
+      "path": "frontend/src/features/billing/signature-dialog.tsx",
+      "sha256": "22bd62b96c856d8ff343028d015f73ee2542c291bed3425be077ca57e13d4ebc",
+      "changedDuringInspection": false
+    },
+    {
+      "path": "frontend/src/features/billing/invoice-documents.tsx",
+      "sha256": "1659dceb0098cbdcde4a6aba720355683ca0d56226c769103e42a7ed94f11740",
+      "changedDuringInspection": false
+    },
+    {
+      "path": "frontend/src/features/billing/invoice-detail-page.tsx",
+      "sha256": "dbec0a8c4c3d6d8783a24681df6956c7e619685d97b7d81437526ec5af2fa5b4",
+      "changedDuringInspection": false
+    },
+    {
+      "path": "frontend/src/features/declarations/manual-entry-panel.tsx",
+      "sha256": "a492de4fd5684cdf9ab4698d34df912c1faf3f3c957ff16d19f7f43de50a81c8",
+      "changedDuringInspection": false
+    },
+    {
+      "path": "frontend/src/components/app-shell/environment-notice.tsx",
+      "sha256": "3fde98aa6763666b032a7c7b6ceee858ad3cb79f6c6f9d8f7478b7a17d9df462",
+      "changedDuringInspection": true
+    },
+    {
+      "path": "frontend/src/components/ui/dialog.tsx",
+      "sha256": "79f58b744efad00eefcd26c4f0f6c4e7c245ef94e2e84947e5ac1c3f0d6bc9a5",
+      "changedDuringInspection": false
+    },
+    {
+      "path": "frontend/src/components/forms/unsaved-changes.tsx",
+      "sha256": "68a4395b9bd6c02b7956114db8798166b50b7cb2b83b782c3a7680d67f7f9870",
+      "changedDuringInspection": false
+    },
+    {
+      "path": "frontend/src/app/query-client.ts",
+      "sha256": "66d8a48ecf86ee285f451f557518ca31c8949de6b1c0131bee957be32adf2187",
+      "changedDuringInspection": false
+    }
+  ]
+}

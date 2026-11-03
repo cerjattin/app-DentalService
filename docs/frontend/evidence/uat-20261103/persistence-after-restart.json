@@ -1,0 +1,58 @@
+{
+  "date": "2026-11-03T13:47:46.972Z",
+  "environment": "isolated Frontend QA after backend process restart",
+  "documents": [
+    {
+      "documentId": "150",
+      "kind": "signature",
+      "version": "246",
+      "status": 200,
+      "hashVerified": true,
+      "bytes": 11518,
+      "pass": true
+    },
+    {
+      "documentId": "152",
+      "kind": "signature",
+      "version": "247",
+      "status": 200,
+      "hashVerified": true,
+      "bytes": 14065,
+      "pass": true
+    },
+    {
+      "documentId": "151",
+      "kind": "PDF",
+      "version": "246",
+      "status": 200,
+      "hashVerified": true,
+      "bytes": 331117,
+      "pass": true
+    },
+    {
+      "documentId": "153",
+      "kind": "PDF",
+      "version": "247",
+      "status": 200,
+      "hashVerified": true,
+      "bytes": 361707,
+      "pass": true
+    },
+    {
+      "documentId": "156",
+      "kind": "manual evidence",
+      "status": 200,
+      "hashVerified": true,
+      "bytes": 132952,
+      "pass": true
+    },
+    {
+      "documentId": "157",
+      "kind": "manual evidence",
+      "status": 200,
+      "hashVerified": true,
+      "bytes": 132952,
+      "pass": true
+    }
+  ]
+}

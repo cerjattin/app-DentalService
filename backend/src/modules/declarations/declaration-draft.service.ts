@@ -6,6 +6,7 @@ import { auditService, auditTechnicalFields } from "../audit/audit.service.js";
 import type { AuthenticatedRequestContext, RequestSecurityMetadata } from "../auth/auth.types.js";
 import { declarationRepository, declarationBatchSelect, type DeclarationBatchRecord } from "./declaration.repository.js";
 import { toDeclarationBatchResponse, toDeclarationItemResponse } from "./declaration.types.js";
+import { assertNoManualEntry } from "./manual-entry.repository.js";
 
 function assertDraft(batch: DeclarationBatchRecord | null): asserts batch is DeclarationBatchRecord {
   if (!batch) throw new AppError(404, "DECLARATION_NOT_FOUND", "Declaration not found");
@@ -19,6 +20,7 @@ export async function changeDraftDeclaration(id: bigint, itemId: bigint | null, 
       return await prisma.$transaction(async (tx) => {
         const batch = await declarationRepository.lockBatch(tx, id, actor.organizationId);
         assertDraft(batch);
+        await assertNoManualEntry(id,tx);
         const item = itemId === null ? null : batch.items.find((v) => v.id === itemId);
         if (itemId !== null && !item) throw new AppError(404, "DECLARATION_ITEM_NOT_FOUND", "Declaration item not found");
         if (item) {

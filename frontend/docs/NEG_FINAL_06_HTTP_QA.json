@@ -1,0 +1,17 @@
+{
+  "date": "2026-11-02",
+  "environment": "local dedicated PostgreSQL QA, odontho_neg_func_test",
+  "organizationId": "43",
+  "declarationId": "136",
+  "pilotReadStatus": 200,
+  "pilotStatus": "BLOCKED",
+  "realSubmissionEnabled": false,
+  "enabledServiceCodes": [],
+  "enabledCaseTypes": [],
+  "realReadyStatus": 409,
+  "realReadyErrorCode": "SVB_REAL_PRESENTATION_NOT_ENABLED",
+  "declarationStatusBefore": "DRAFT",
+  "declarationStatusAfter": "DRAFT",
+  "itemSnapshotsUnchanged": true,
+  "unresolvedFieldsUnfilled": true
+}

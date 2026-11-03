@@ -16,6 +16,21 @@ describe("GET /api/openapi.json", () => {
 
     expect(response.body.paths["/health/ready"]).toBeDefined();
   });
+  it("publishes manual portal input, immutable evidence and internal dossier contracts", async () => {
+    const { body } = await request(app).get("/api/openapi.json").expect(200);
+    for (const [method,suffix] of [
+      ["get","/manual-entry"], ["get","/manual-entry/download"], ["post","/manual-entry/prepare"],
+      ["post","/manual-entry/{entryId}/uncertain"], ["post","/manual-entry/{entryId}/release"],
+      ["post","/submissions/manual"], ["post","/submissions/{submissionId}/official-result"],
+    ]) {
+      const operation = body.paths[`/api/v1/declarations/{id}${suffix}`][method!];
+      expect(operation.security).toEqual([{ operationalBearerAuth: [] }]);
+      expect(operation.responses[409]).toBeDefined();
+      if (method === "post") expect(operation.requestBody.required).toBe(true);
+    }
+    expect(body.components.schemas.DeclarationManualEntry.properties.receiptDocumentId.type).toBe("string");
+    expect(body.components.schemas.DeclarationManualDossier.properties.content.properties.items.items.properties.assistance.type).toBe("string");
+  });
   it("documents all nine catalogue operations, permissions and DTOs", async () => {
     const { body } = await request(app).get("/api/openapi.json").expect(200);
     const root = "/api/v1/svb-procedures";

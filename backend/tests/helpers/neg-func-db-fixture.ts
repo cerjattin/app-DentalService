@@ -9,7 +9,7 @@ export async function insertDbRow(
   values: Record<string, unknown>,
 ): Promise<string> {
   const columns = Object.keys(values);
-  if (![table, ...columns].every((value) => /^[a-z_]+$/.test(value)))
+  if (![table, ...columns].every((value) => /^[a-z_][a-z_0-9]*$/.test(value)))
     throw new Error("Unexpected fixture identifier");
   const result = await db.query<{ id: string }>(
     `INSERT INTO "${table}" (${columns.map((c) => `"${c}"`).join(",")})

@@ -1,0 +1,12 @@
+{
+  "environment": "isolated synthetic design QA",
+  "database": "odontho_design_dep11_20261103_test",
+  "organizationId": "84",
+  "appointmentId": "343",
+  "encounterId": "314",
+  "sourceInvoiceId": "232",
+  "sourceVersionId": "247",
+  "svbProcedureId": "148",
+  "patientInsuranceId": "272",
+  "sourceAppointmentId": "340"
+}

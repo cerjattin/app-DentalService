@@ -1,0 +1,11 @@
+{
+  "date": "2026-11-03T13:35:54.231Z",
+  "declarationId": "134",
+  "invoiceId": "232",
+  "versionId": "247",
+  "invoiceItems": 22,
+  "packetItems": 1,
+  "prepareStatus": 201,
+  "expected": "Reject incomplete per-invoice dossier",
+  "blockedByBackend": false
+}

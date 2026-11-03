@@ -14,6 +14,9 @@ import { authorizationService } from "../authorizations/authorization.service.js
 import { clinicalEncounterRepository } from "../clinical-encounters/clinical-encounter.repository.js";
 import { svbCatalogService } from "../svb-catalog/svb-catalog.service.js";
 import { assertProcedureBillingEditable } from "../invoices/invoice-clinical-reopen.service.js";
+import { assertSupportedReferralFlow } from "../svb-readiness/svb-readiness.service.js";
+import { svbCatalogRepository } from "../svb-catalog/svb-catalog.repository.js";
+import { validateAccidentContext } from "../appointments/accident-context.service.js";
 
 import {
   encounterProcedureRepository,
@@ -462,6 +465,8 @@ export class EncounterProcedureService {
       currencyCode: DEFAULT_CURRENCY_CODE,
     });
 
+    assertSupportedReferralFlow(tariffResolution.procedure.requiresReferral);
+
     if (tariffResolution.procedure.requiresAuthorization) {
       if (authorizationItemId === null) {
         throw new AppError(
@@ -497,6 +502,19 @@ export class EncounterProcedureService {
       }
 
       assertEncounterEditable(currentEncounter.status);
+      // Master writers take FOR UPDATE on the same procedure. A referral flag
+      // changed after preflight must not bypass this check or consume coverage.
+      await tx.$queryRaw`SELECT id FROM svb_procedures WHERE id = ${svbProcedureId} FOR SHARE`;
+      const currentProcedure = await svbCatalogRepository.findProcedureById(svbProcedureId, tx);
+      if (!currentProcedure) throw new AppError(404, "SVB_PROCEDURE_NOT_FOUND", "SVB procedure not found");
+      assertSupportedReferralFlow(currentProcedure.requiresReferral);
+      if (currentProcedure.requiresAuthorization && authorizationItemId === null) {
+        throw new AppError(409, "PROCEDURE_AUTHORIZATION_REQUIRED", "This SVB procedure requires authorization");
+      }
+      const captureProvider = await tx.provider.findFirst({
+        where: { id: currentEncounter.providerId, organizationId: actor.organizationId }, select: { svbProviderId: true },
+      });
+      if (!captureProvider) throw new AppError(404, "PROVIDER_NOT_FOUND", "Provider not found");
 
       const insurance = await tx.patientInsurance.findFirst({
         where: {
@@ -576,6 +594,7 @@ export class EncounterProcedureService {
           organizationId: actor.organizationId,
         },
         select: {
+          accidentCaseId: true,
           treatmentCase: {
             select: {
               organizationId: true,
@@ -583,13 +602,9 @@ export class EncounterProcedureService {
               treatmentId: true,
             },
           },
-          accidentCase: {
-            select: {
-              accidentFormNumber: true,
-            },
-          },
           clinicLocation: {
             select: {
+              organizationId: true,
               policlinicCode: true,
             },
           },
@@ -603,8 +618,13 @@ export class EncounterProcedureService {
           "Appointment not found",
         );
       }
+      if (appointmentSvbContext.clinicLocation.organizationId !== actor.organizationId) {
+        throw new AppError(404, "LOCATION_NOT_FOUND", "Location not found");
+      }
 
       let authorizationExternalId: string | null = null;
+      const accident = await validateAccidentContext(tx, appointmentSvbContext.accidentCaseId,
+        currentEncounter.appointment.patient.id, actor.organizationId, patientInsuranceId);
       if (appointmentSvbContext.treatmentCase &&
           (appointmentSvbContext.treatmentCase.organizationId !== actor.organizationId ||
            appointmentSvbContext.treatmentCase.patientId !== currentEncounter.appointment.patient.id)) {
@@ -637,7 +657,7 @@ export class EncounterProcedureService {
           performedByProviderId: currentEncounter.providerId,
           procedureCodeSnapshot: tariffResolution.procedure.code,
           procedureDescriptionSnapshot: tariffResolution.procedure.description,
-          providerIdSnapshot: currentEncounter.provider.svbProviderId,
+          providerIdSnapshot: captureProvider.svbProviderId,
           insuredIdSnapshot: insurance.insuredId,
           unitTariffSnapshot: unitTariff,
           currencyCodeSnapshot: tariffResolution.tariff.currencyCode,
@@ -648,7 +668,7 @@ export class EncounterProcedureService {
           treatmentIdSnapshot:
             appointmentSvbContext.treatmentCase?.treatmentId ?? null,
           accidentFormNumberSnapshot:
-            appointmentSvbContext.accidentCase?.accidentFormNumber ?? null,
+            accident?.accidentFormNumber ?? null,
           // NumberOfTreatments and Assistance intentionally remain unset here.
           // Their definitive SVB semantics are still an external contract blocker;
           // do not derive either value from quantity or invent a backend default.
@@ -672,6 +692,21 @@ export class EncounterProcedureService {
         entityId: procedure.id,
         entityKey: `${currentEncounter.appointment.appointmentNumber}:${procedure.procedureCodeSnapshot}`,
         newValues: toAuditValues(procedure),
+        metadata: {
+          svbSourceState: "UNAPPROVED",
+          svbContract: "NEG-FINAL-06",
+          captureRequirements: {
+            requiresReferral: currentProcedure.requiresReferral,
+            requiresAuthorization: currentProcedure.requiresAuthorization,
+          },
+          origins: {
+            providerId: "CLINICAL_ENCOUNTER_PROVIDER", insuredId: "PATIENT_INSURANCE",
+            treatmentId: "APPOINTMENT_TREATMENT_CASE", accidentFormNumber: "APPOINTMENT_ACCIDENT_CASE",
+            policlinic: "APPOINTMENT_CLINIC_LOCATION", authorizationId: "VALIDATED_AUTHORIZATION_ITEM",
+            numberOfTreatments: "UNRESOLVED", assistance: "UNRESOLVED", referrerId: "UNSUPPORTED_WORKFLOW",
+            serviceDate: "APPOINTMENT_SCHEDULE_START_AMERICA_CURACAO", tariff: "SVB_TARIFF_BY_DATE_AND_CURRENCY",
+          },
+        },
         ...auditTechnicalFields(metadata),
       });
 

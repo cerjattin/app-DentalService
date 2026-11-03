@@ -1,0 +1,97 @@
+Browser tab: 1209239816, Title: "frontend", URL: "http://127.0.0.1:5179/clinical/343".
+0 AXWebArea frontend, URL: 127.0.0.1:5179/clinical/343
+	1 container root
+		2 container
+			3 text OS Odontho Services SVB BILLING
+			4 text WORKSPACE
+			5 link Description: Dashboard, Value: 127.0.0.1:5179/dashboard
+			6 link Description: Reception, Value: 127.0.0.1:5179/reception
+			7 link Description: Patients, Value: 127.0.0.1:5179/patients
+			8 link Description: Appointments, Value: 127.0.0.1:5179/appointments
+			9 text SVB
+			10 link Description: Invoices, Value: 127.0.0.1:5179/invoices
+			11 link Description: Declarations, Value: 127.0.0.1:5179/declarations
+			12 text ADMINISTRATION
+			13 link Description: Administration, Value: 127.0.0.1:5179/admin
+			14 link Description: Users, Value: 127.0.0.1:5179/admin/users
+			15 link Description: Providers, Value: 127.0.0.1:5179/admin/providers
+			16 link Description: Services, Value: 127.0.0.1:5179/admin/services
+			17 link Description: Settings, Value: 127.0.0.1:5179/admin/settings
+		18 container Application environment
+			19 container
+				20 text QA  ·  design-dep11-r2
+			21 text SVB submission pending · No automatic submission
+		22 container
+			23 heading Clinical Workspace, Value: 1
+				24 text Clinical Workspace
+			25 text Encounter and procedures 04:53 PM QA ADMIN ADMIN QA
+			26 button Sign out
+		27 container
+			28 heading Clinical workspace, Value: 2
+				29 text Clinical workspace
+			30 text FEc32b1c3e-000004
+			31 link Description: Appointment details, Value: 127.0.0.1:5179/appointments/343
+			32 heading QA Frontend, Value: 2
+				33 text QA Frontend
+			34 text QA-FE-1  · Document not provided
+			35 link Description: Patient record, Value: 127.0.0.1:5179/patients/287
+			36 text QA Provider QA Frontend clinic Nov 3, 2026, 5:00 PM In progress
+			37 heading Encounter, Value: 3
+				38 text Encounter
+			39 text Open Started  Nov 3, 2026, 4:26 PM
+			40 container
+				41 text Chief complaint
+				42 text entry area (settable) Chief complaint, Value: SYNTHETIC DESIGN QA, ID: chief-complaint
+				43 text Clinical notes
+				44 text entry area (settable) Clinical notes, Value: SYNTHETIC DESIGN DEP11 R2 UNSAVED NOTE, ID: clinical-notes
+				45 button Save notes
+			46 heading Diagnoses, Value: 3
+				47 text Diagnoses
+			48 button Add diagnosis
+			49 text No diagnoses recorded.
+			50 heading Treatment context, Value: 3
+				51 text Treatment context
+			52 text Performed procedures retain their frozen external Treatment ID below.
+			53 definition list
+				54 container Internal treatment case reference
+					55 text Internal treatment case reference
+				56 text 19
+			57 heading Performed procedures, Value: 3
+				58 text Performed procedures
+			59 button Add procedure
+			60 text Added the wrong service? Remove it and add the correct procedure before completing the encounter. Previously invoiced services remain in invoice history.
+			61 container Scrollable data table
+				62 table
+					63 row
+						64 cell
+							65 text PROCEDURE
+						66 cell
+							67 text QUANTITY / TARIFF
+						68 cell
+							69 text CLINICAL CONTEXT
+						70 cell
+							71 text ACTIONS
+					72 row
+						73 cell
+							74 text No performed procedures recorded.
+			75 heading Authorizations, Value: 3
+				76 text Authorizations
+			77 button Add authorization
+			78 container
+				79 text Search authorizations
+				80 text field (settable) Search authorizations, ID: authorization-search
+			81 text No authorizations found.
+			82 button (disabled) Previous results
+			83 text Page  1  of  1
+			84 button (disabled) Next results
+			85 container
+				86 heading Insurance, Value: 3
+					87 text Insurance
+				88 text QA Frontend Payer 012345678 Active Jan 01, 2020  - Not provided
+			89 container
+				90 heading Completion, Value: 3
+					91 text Completion
+				92 text Save clinical notes before completion.
+				93 button (disabled) Complete encounter
+
+The focused UI element is 31 link Description: Appointment details, URL: 127.0.0.1:5179/appointments/343

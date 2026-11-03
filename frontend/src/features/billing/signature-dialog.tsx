@@ -21,6 +21,8 @@ import {
 } from './billing-api'
 import { BillingError } from './billing-ui'
 import { billingLabel, signerSchema } from './billing-model'
+import { ConfirmDialog } from '../../components/ui/confirm-dialog'
+import { UnsavedChanges } from '../../components/forms/unsaved-changes'
 
 export function SignatureDialog({
   invoiceId,
@@ -44,6 +46,10 @@ export function SignatureDialog({
   const method = useRef<CaptureMethod>('MOUSE')
   const [ink, setInk] = useState(false)
   const [canvasError, setCanvasError] = useState('')
+  const [discard, setDiscard] = useState(false)
+  const [keyboardFocused, setKeyboardFocused] = useState(false)
+  const [keyboardPen, setKeyboardPen] = useState(false)
+  const [keyboardPoint, setKeyboardPoint] = useState({ x: 600, y: 200 })
   const content = useQuery({
     queryKey: signatureKeys.content(invoiceId, version.id),
     queryFn: ({ signal }) => getSignatureContent(invoiceId, version.id, signal),
@@ -123,17 +129,21 @@ export function SignatureDialog({
     uploaded.current = null
     setInk(false)
     setCanvasError('')
+    setKeyboardPen(false)
+    setKeyboardPoint({ x: 600, y: 200 })
     form.setValue('confirmed', false)
   }
   const ready = content.data && content.data.contentHash === version.contentHash
+  const dirty = ink || form.formState.isDirty
+  const close = () => { if (!busy.current) { if (dirty) setDiscard(true); else onClose() } }
   return (
-    <Dialog
+    <><UnsavedChanges active={dirty && !save.isPending} /><Dialog
       open
       size="wide"
       title={`Signature - version ${version.versionNumber}`}
       description="Review the invoice and signer details before saving permanent signature evidence."
       onOpenChange={(open) => {
-        if (!open && !busy.current) onClose()
+        if (!open) close()
       }}
     >
       {content.isPending ? (
@@ -242,14 +252,39 @@ export function SignatureDialog({
             </FormField>
           ) : null}
         </fieldset>
-        <div className="overflow-hidden rounded-md border-2 border-dashed border-slate-300 bg-white">
+        <p id="signature-keyboard-help" className="text-sm text-slate-600">Draw with a pointer, or focus the drawing area and use the arrow keys. Space lowers or lifts the pen; Escape lifts it. Hold Shift for larger steps. Save only after reviewing the signer and invoice.</p>
+        <Button variant="secondary" disabled={!ready || save.isPending} onClick={() => canvas.current?.focus()}>Draw using keyboard</Button>
+        <div className="relative overflow-hidden rounded-md border-2 border-dashed border-slate-300 bg-white">
           <canvas
             ref={canvas}
             width={1200}
             height={400}
             aria-label="Signature drawing area"
             role="img"
-            className="block aspect-[3/1] w-full touch-none"
+            tabIndex={0}
+            aria-describedby="signature-keyboard-help"
+            className="block aspect-[3/1] w-full touch-none focus-visible:outline-2 focus-visible:outline-clinic-blue"
+            onFocus={() => setKeyboardFocused(true)}
+            onBlur={() => { setKeyboardFocused(false); setKeyboardPen(false) }}
+            onKeyDown={(event) => {
+              if (busy.current || !ready) return
+              if (event.key === ' ') { event.preventDefault(); setKeyboardPen(!keyboardPen); return }
+              if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); setKeyboardPen(false); return }
+              const directions: Record<string, [number, number]> = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }
+              if (!Object.hasOwn(directions, event.key)) return
+              event.preventDefault()
+              const direction = directions[event.key]!
+              const step = event.shiftKey ? 30 : 10
+              const next = { x: Math.max(0, Math.min(1200, keyboardPoint.x + direction[0] * step)), y: Math.max(0, Math.min(400, keyboardPoint.y + direction[1] * step)) }
+              if (keyboardPen && (next.x !== keyboardPoint.x || next.y !== keyboardPoint.y)) {
+                const context = event.currentTarget.getContext('2d')
+                if (!context) { setCanvasError('Signature capture is unavailable in this browser.'); return }
+                context.strokeStyle = '#0b1f3a'; context.lineWidth = 3; context.lineCap = 'round'; context.lineJoin = 'round'
+                context.beginPath(); context.moveTo(keyboardPoint.x, keyboardPoint.y); context.lineTo(next.x, next.y); context.stroke()
+                method.current = 'OTHER'; uploaded.current = null; setInk(true); form.setValue('confirmed', false)
+              }
+              setKeyboardPoint(next)
+            }}
             onPointerDown={(e) => {
               if (busy.current || !ready || drawing.current || e.button !== 0)
                 return
@@ -261,6 +296,8 @@ export function SignatureDialog({
                 return
               }
               e.currentTarget.setPointerCapture(e.pointerId)
+              setKeyboardFocused(false)
+              setKeyboardPen(false)
               drawing.current = point(e)
               if (!ink)
                 method.current =
@@ -308,7 +345,9 @@ export function SignatureDialog({
               drawing.current = null
             }}
           />
+          {keyboardFocused ? <span aria-hidden="true" className="pointer-events-none absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-clinic-blue" style={{ left: `${keyboardPoint.x / 12}%`, top: `${keyboardPoint.y / 4}%` }} /> : null}
         </div>
+        {keyboardFocused ? <p role="status" className="text-xs">Keyboard pen: {keyboardPen ? 'down — arrow keys draw' : 'up — press Space to draw'}</p> : null}
         <div className="flex items-center justify-between">
           <span role="status" className="text-sm text-slate-500">
             {ink ? 'Signature captured locally' : 'Signature required'}
@@ -336,7 +375,7 @@ export function SignatureDialog({
           <Button
             variant="secondary"
             disabled={save.isPending}
-            onClick={onClose}
+            onClick={close}
           >
             Cancel
           </Button>
@@ -346,6 +385,6 @@ export function SignatureDialog({
           </Button>
         </div>
       </form>
-    </Dialog>
+    </Dialog><ConfirmDialog open={discard} title="Discard unsaved signature?" description="The drawing and signer changes have not been saved to this invoice version." confirmLabel="Discard signature" cancelLabel="Keep reviewing" onCancel={() => setDiscard(false)} onConfirm={onClose} /></>
   )
 }
