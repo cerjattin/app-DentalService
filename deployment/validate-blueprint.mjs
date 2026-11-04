@@ -10,7 +10,7 @@ const require = createRequire(import.meta.url);
 async function main() {
   const [schemaPath, output, blueprintName = 'render.yaml'] = process.argv.slice(2);
   if (!schemaPath || !output) throw new Error('Supply an official schema file and a new report file');
-  if (!['render.yaml', 'render-qa.yaml'].includes(blueprintName)) throw new Error('Select a supported deployment template');
+  if (!['render.yaml', 'render-qa.yaml', 'render-free.yaml'].includes(blueprintName)) throw new Error('Select a supported deployment template');
   // Reuse the installed Backend dev dependency, without installing anything.
   const Ajv2020 = require(path.join(root, 'backend/node_modules/ajv/dist/2020.js'));
   const schemaBytes = await readFile(path.resolve(schemaPath));

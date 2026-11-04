@@ -81,14 +81,34 @@ test('the smoke rejects a frontend built from another release', async () => {
   assert.equal(report.passed, false);
   assert.equal(report.results.find(x => x.check === 'spa-javascript-asset-and-version').status, 'FAIL');
 });
-test('the Blueprint has no automatic deployment, data operation, or frontend secret', async () => {
-  const blueprint = JSON.parse(await readFile(new URL('../render.yaml', import.meta.url), 'utf8'));
+for (const template of ['render.yaml', 'render-qa.yaml', 'render-free.yaml']) {
+test(`${template} has no automatic deployment, data operation, or frontend secret`, async () => {
+  const blueprint = JSON.parse(await readFile(new URL(`../${template}`, import.meta.url), 'utf8'));
   for (const service of blueprint.services) {
     assert.equal(service.autoDeployTrigger, 'off');
-    assert.doesNotMatch(service.buildCommand + (service.startCommand ?? ''), /migrate|seed|bootstrap|cleanup/);
-    if (service.runtime === 'static') assert.ok(service.envVars.every(x => x.key === 'NODE_VERSION' || x.key.startsWith('VITE_')));
+    assert.doesNotMatch(service.buildCommand + (service.startCommand ?? '') + (service.preDeployCommand ?? ''), /migrate|seed|bootstrap|cleanup/);
+    if (service.runtime === 'static') assert.ok(service.envVars.every(x => ['NODE_VERSION', 'SKIP_INSTALL_DEPS'].includes(x.key) || x.key.startsWith('VITE_')));
   }
   const backend = blueprint.services.find(x => x.runtime === 'node');
   assert.equal(backend.envVars.find(x => x.key === 'DOCUMENT_STORAGE_PROVIDER').value, 'SUPABASE');
   assert.equal(backend.envVars.find(x => x.key === 'SVB_MANUAL_RECORDING_ENABLED').value, 'false');
+});
+}
+
+test('the clinical Free deployment cannot provision paid compute or a replacement database', async () => {
+  const blueprint = JSON.parse(await readFile(new URL('../render-free.yaml', import.meta.url), 'utf8'));
+  assert.deepEqual(blueprint.services.map(x => x.runtime).sort(), ['node', 'static']);
+  assert.equal(blueprint.databases, undefined);
+  for (const service of blueprint.services) {
+    assert.equal(service.disk, undefined);
+    assert.equal(service.scaling, undefined);
+    assert.equal(service.plan, service.runtime === 'static' ? undefined : 'free');
+  }
+  const api = blueprint.services.find(x => x.runtime === 'node');
+  assert.ok(api.envVars.some(x => x.fromGroup === 'odontho-clinical-tls'), 'CA secret file must be available from a preconfigured group at first deploy');
+  for (const key of ['DATABASE_URL', 'SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY', 'SUPABASE_STORAGE_BUCKET']) {
+    const entry = api.envVars.find(x => x.key === key);
+    assert.equal(entry.sync, false);
+    assert.equal(entry.value, undefined);
+  }
 });
