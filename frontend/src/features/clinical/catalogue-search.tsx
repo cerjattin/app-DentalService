@@ -38,7 +38,7 @@ export function CatalogueSearch({
         : searchProcedures(search.q, search.page, serviceDate, signal),
   })
   const label =
-    kind === 'diagnosis' ? 'Search diagnosis codes' : 'Search SVB procedures'
+    kind === 'diagnosis' ? 'Search diagnosis codes' : 'Search services'
   return (
     <div className="space-y-3">
       <FormField label={label} htmlFor={`${kind}-search`}>
@@ -80,12 +80,6 @@ export function CatalogueSearch({
                       {row.code}
                     </span>
                     {row.description}
-                    {'requiresAuthorization' in row &&
-                    row.requiresAuthorization ? (
-                      <span className="ml-2 text-xs text-amber-700">
-                        Authorization required
-                      </span>
-                    ) : null}
                   </span>
                 </Button>
               </li>

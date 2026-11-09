@@ -852,7 +852,7 @@ describe("Encounter Procedure API", () => {
       expect(response.body.data).toMatchObject({
         procedureCodeSnapshot: before.procedureCodeSnapshot,
         procedureDescriptionSnapshot: before.procedureDescriptionSnapshot,
-        unitTariffSnapshot: before.unitTariffSnapshot.toFixed(2),
+        unitTariffSnapshot: before.unitTariffSnapshot?.toFixed(2) ?? null,
       });
     } finally {
       await request(app)

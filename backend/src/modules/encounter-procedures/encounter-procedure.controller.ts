@@ -7,7 +7,7 @@ import { parseBigIntId } from "../../shared/utils/parse-bigint-id.js";
 import type { RequestSecurityMetadata } from "../auth/auth.types.js";
 
 import {
-  createEncounterProcedureSchema,
+  captureEncounterProcedureSchema,
   updateEncounterProcedureSchema,
 } from "./encounter-procedure.schemas.js";
 import { encounterProcedureService } from "./encounter-procedure.service.js";
@@ -71,14 +71,11 @@ export const getEncounterProcedure: RequestHandler = async (req, res) => {
 export const createEncounterProcedure: RequestHandler = async (req, res) => {
   const actor = requireAuth(req);
   const encounterId = parseBigIntId(req.params.encounterId, "encounterId");
-  const input = createEncounterProcedureSchema.parse(req.body);
-
-  const result = await encounterProcedureService.create(
-    encounterId,
-    input,
-    actor,
-    securityMetadata(req, res),
-  );
+  const input = captureEncounterProcedureSchema.parse(req.body);
+  const metadata = securityMetadata(req, res);
+  const result = "patientInsuranceId" in input
+    ? await encounterProcedureService.create(encounterId, input, actor, metadata)
+    : await encounterProcedureService.recordService(encounterId, input, actor, metadata);
 
   res.status(201).json(successResponse(result));
 };

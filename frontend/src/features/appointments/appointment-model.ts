@@ -57,33 +57,9 @@ export interface AppointmentTransition {
 export function availableTransitions(
   status: AppointmentStatus,
 ): AppointmentTransition[] {
-  if (status === 'SCHEDULED') {
-    return [
-      { status: 'CONFIRMED', label: 'Confirm', permission: 'appointment.update', tone: 'secondary' },
-      { status: 'CHECKED_IN', label: 'Check in', permission: 'appointment.check_in', tone: 'primary' },
-      { status: 'CANCELLED', label: 'Cancel', permission: 'appointment.cancel', tone: 'danger', requiresDialog: true },
-      { status: 'NO_SHOW', label: 'Mark no-show', permission: 'appointment.cancel', tone: 'secondary', requiresDialog: true },
-    ]
-  }
-  if (status === 'CONFIRMED') {
-    return [
-      { status: 'CHECKED_IN', label: 'Check in', permission: 'appointment.check_in', tone: 'primary' },
-      { status: 'CANCELLED', label: 'Cancel', permission: 'appointment.cancel', tone: 'danger', requiresDialog: true },
-      { status: 'NO_SHOW', label: 'Mark no-show', permission: 'appointment.cancel', tone: 'secondary', requiresDialog: true },
-    ]
-  }
-  if (status === 'CHECKED_IN') {
-    return [
-      { status: 'IN_PROGRESS', label: 'Start appointment', permission: 'appointment.start', tone: 'primary' },
-      { status: 'CANCELLED', label: 'Cancel', permission: 'appointment.cancel', tone: 'danger', requiresDialog: true },
-      { status: 'NO_SHOW', label: 'Mark no-show', permission: 'appointment.cancel', tone: 'secondary', requiresDialog: true },
-    ]
-  }
-  if (status === 'IN_PROGRESS') {
-    return [
-      { status: 'COMPLETED', label: 'Complete appointment', permission: 'appointment.complete', tone: 'primary' },
-      { status: 'CANCELLED', label: 'Cancel', permission: 'appointment.cancel', tone: 'danger', requiresDialog: true },
-    ]
-  }
-  return []
+  if (!['SCHEDULED', 'CONFIRMED', 'CHECKED_IN'].includes(status)) return []
+  return [
+    ...(status === 'SCHEDULED' ? [{ status: 'CONFIRMED', label: 'Confirm', permission: 'appointment.update', tone: 'secondary' } as const] : []),
+    { status: 'CANCELLED', label: 'Cancel', permission: 'appointment.cancel', tone: 'danger', requiresDialog: true },
+  ]
 }

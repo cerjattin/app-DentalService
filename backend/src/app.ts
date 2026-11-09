@@ -4,6 +4,7 @@ import express from "express";
 import helmet from "helmet";
 
 import { corsOptions } from "./config/cors.config.js";
+import { dentalinkRouter } from "./modules/dentalink/dentalink.routes.js";
 
 import { appointmentRouter } from "./modules/appointments/appointment.routes.js";
 import { authorizationRouter } from "./modules/authorizations/authorization.routes.js";
@@ -129,6 +130,7 @@ app.use("/api/v1/clinic-locations", clinicLocationRouter);
 app.use("/api/v1/reports", dashboardRouter);
 app.use("/api/v1/organization", organizationRouter);
 app.use("/api/v1/svb-pilot", svbReadinessRouter);
+app.use("/api/v1/integrations/dentalink",dentalinkRouter);
 app.use(notFoundMiddleware);
 
 app.use(errorHandler);

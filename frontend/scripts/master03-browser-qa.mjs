@@ -15,7 +15,7 @@ const { chromium } = await import(pathToFileURL(process.env.MASTER03_PLAYWRIGHT_
 const db = new URL(process.env.DATABASE_URL)
 assert.equal(db.pathname, '/odontho_master03_test')
 assert(['127.0.0.1', 'localhost'].includes(db.hostname))
-const output = resolve(root, 'frontend/qa/master03')
+const output = resolve(root, process.env.MASTER03_QA_OUTPUT_DIR ?? 'frontend/qa/master03')
 await mkdir(output, { recursive: true })
 const report = { status: 'IN_PROGRESS', network: [], consoleErrors: [], consoleWarnings: [], pageErrors: [], failedRequests: [], responsive: [], steps: [] }
 const backend = spawn(process.execPath, ['dist/src/server.js'], { cwd: resolve(root, 'backend'), env: { ...process.env, PORT: '3403', HOST: '127.0.0.1', CORS_ALLOWED_ORIGINS: 'http://127.0.0.1:5173' }, stdio: 'inherit' })
@@ -61,13 +61,13 @@ async function saveResponse(action, method, suffix) {
 async function clinicalSearch(appointmentId, active, snapshotDescription) {
   await page.getByRole('link', { name: 'Appointments', exact: true }).click()
   await page.getByRole('link', { name: 'View', exact: true }).click()
-  await page.getByRole('link', { name: 'Open clinical workspace', exact: true }).click()
+  await page.getByRole('link', { name: 'Open service attention', exact: true }).click()
   await page.waitForURL(`**/clinical/${appointmentId}`)
-  await page.getByText(snapshotDescription, { exact: true }).waitFor()
-  await page.getByRole('button', { name: 'Add procedure', exact: true }).click()
-  const search = page.getByLabel('Search SVB procedures')
-  await search.fill(code)
-  await page.waitForResponse((r) => r.url().includes('/svb-procedures?') && new URL(r.url()).searchParams.get('q') === code)
+  await page.getByRole('cell', { name: new RegExp(snapshotDescription) }).waitFor()
+  await page.getByRole('button', { name: 'Add service', exact: true }).click()
+  const results = page.waitForResponse((r) => r.url().includes('/svb-procedures?') && new URL(r.url()).searchParams.get('q') === code)
+  await page.getByLabel('Search services', { exact: true }).fill(code)
+  await results
   const match = page.getByRole('button', { name: new RegExp(code) })
   if (active) await match.waitFor()
   else { await page.getByText('No matching codes found.', { exact: true }).waitFor(); assert.equal(await match.count(), 0) }
@@ -99,7 +99,7 @@ try {
   const encounter = await prisma.clinicalEncounter.create({ data: { appointmentId: appointment.id, providerId: provider.id, status: 'OPEN', startedAt: new Date('2026-10-28T13:00:00Z'), createdByUserId: admin.id } })
   report.appointmentId = appointment.id.toString()
   report.encounterId = encounter.id.toString()
-  browser = await chromium.launch({ headless: true })
+  browser = await chromium.launch({ headless: true, channel: process.env.MASTER03_BROWSER_CHANNEL })
   page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
   page.on('console', (m) => { if (m.type() === 'error') report.consoleErrors.push(m.text()); if (m.type() === 'warning') report.consoleWarnings.push(m.text()) })
   page.on('pageerror', (e) => report.pageErrors.push(e.message))

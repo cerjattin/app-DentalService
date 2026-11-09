@@ -47,12 +47,30 @@ export const clinicalEncounterDetailSelect = {
   },
 } satisfies Prisma.ClinicalEncounterSelect;
 
-export type ClinicalEncounterDetailRecord =
-  Prisma.ClinicalEncounterGetPayload<{
-    select: typeof clinicalEncounterDetailSelect;
-  }>;
+export type ClinicalEncounterDetailRecord = Prisma.ClinicalEncounterGetPayload<{
+  select: typeof clinicalEncounterDetailSelect;
+}>;
 
 export class ClinicalEncounterRepository {
+  async lockForAppointment(
+    tx: Prisma.TransactionClient,
+    appointmentId: bigint,
+    organizationId: bigint,
+  ) {
+    await tx.$queryRaw`SELECT id FROM appointments WHERE id=${appointmentId} AND organization_id=${organizationId} FOR UPDATE`;
+    await tx.$queryRaw`SELECT ce.id FROM clinical_encounters ce JOIN appointments a ON a.id=ce.appointment_id
+      WHERE a.id=${appointmentId} AND a.organization_id=${organizationId} FOR UPDATE OF ce`;
+  }
+  async lockForEncounter(
+    tx: Prisma.TransactionClient,
+    encounterId: bigint,
+    organizationId: bigint,
+  ) {
+    await tx.$queryRaw`SELECT a.id FROM appointments a JOIN clinical_encounters ce ON ce.appointment_id=a.id
+      WHERE ce.id=${encounterId} AND a.organization_id=${organizationId} FOR UPDATE OF a`;
+    await tx.$queryRaw`SELECT ce.id FROM clinical_encounters ce JOIN appointments a ON a.id=ce.appointment_id
+      WHERE ce.id=${encounterId} AND a.organization_id=${organizationId} FOR UPDATE OF ce`;
+  }
   findById(
     encounterId: bigint,
     organizationId: bigint,

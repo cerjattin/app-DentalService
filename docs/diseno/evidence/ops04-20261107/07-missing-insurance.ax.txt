@@ -1,0 +1,25 @@
+Browser tab: 1209241459, Title: "frontend", URL: "http://127.0.0.1:5187/login".
+1 AXWebArea frontend, URL: 127.0.0.1:5187/login
+	2 container
+		3 text OS
+		4 text Odontho Services
+		5 text SVB BILLING SYSTEM
+		6 heading Clinical billing access for SVB workflows, Value: 1
+			7 text Clinical billing access for SVB workflows
+		8 text Internal workspace for patient intake, clinical activity, invoices, signatures, and declarations.
+		9 container Application environment
+			10 container
+				11 text QA  ·  design-ops04-20261107
+			12 text SVB submission pending · No automatic submission
+		13 heading Sign in, Value: 2
+			14 text Sign in
+		15 text Use your Odontho Services account to continue.
+		16 container
+			17 text Email
+			18 text field (settable) Email
+			19 text Password
+			20 text field (settable) Password
+			21 button Show password
+			22 button Sign in
+
+The focused UI element is 18 text field (settable) Email

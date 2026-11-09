@@ -1,0 +1,48 @@
+{
+  "date": "2026-11-09T11:33:16.703Z",
+  "environment": "Dedicated local OPS QA 55473/3427",
+  "invoiceId": "1",
+  "invoiceNumber": "QAOPS-000001",
+  "versions": [
+    {
+      "id": "1",
+      "status": "SUPERSEDED",
+      "total": "15.38"
+    },
+    {
+      "id": "2",
+      "status": "CLOSED",
+      "total": "24.60"
+    }
+  ],
+  "checks": {
+    "sameLogicalInvoice": true,
+    "currentVersionIs2": true,
+    "originalSuperseded": true,
+    "originalAmountUnchanged": true,
+    "originalPdfUnchanged": true,
+    "originalSignatureUnchanged": true,
+    "replacementClosed": true,
+    "replacementTotal": true
+  },
+  "dentalink": {
+    "accounts": [
+      {
+        "id": "1",
+        "externalAccountId": "QA-OPS-LOCAL-0001",
+        "enabled": false
+      }
+    ],
+    "profiles": {
+      "ADMIN": {
+        "accountListStatus": 200
+      },
+      "RECEPTION": {
+        "accountListStatus": 200
+      },
+      "PROVIDER": {
+        "accountListStatus": 403
+      }
+    }
+  }
+}

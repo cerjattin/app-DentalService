@@ -6,7 +6,7 @@ Pantallas, navegación, formularios, permisos de interfaz, estado remoto, caché
 
 ## Organización actual
 
-- `src/features/`: Auth, Reception, Patients, Appointments, Clinical, Billing, Declarations, Administration y Dashboard.
+- `src/features/`: Auth, Reception, Patients, Appointments, Clinical, Billing, Declarations, Administration, Dashboard y preparación Dentalink.
 - `src/api/`: transporte HTTP y errores.
 - `src/auth/`: sesión en memoria y permisos.
 - `src/features/svb-catalog/`: API y query keys compartidos por Clinical y Services.
@@ -33,6 +33,10 @@ Desde `frontend`: `npm.cmd run lint`, `npm.cmd run build`, `npm.cmd test`. QA de
 Coordinar experiencia y componentes con Diseño; reglas con Negocio; campos y errores con Backend. Entregar archivos, pruebas y estados pendiente/bloqueado; documentar gaps en vez de simular funcionalidades sin contrato.
 
 Fuentes: [gaps](../../frontend/docs/KNOWN_CONTRACT_GAPS.md) y [correcciones operativas](../../frontend/docs/OPERATIONAL_CORRECTIONS.md).
+
+## Entrega OPS-02 — 2026-11-09
+
+La validación local abarca cita, atención por servicios, cobro, firma y corrección de la misma factura con PDF por versión. La preparación Dentalink consume la API interna publicada y se verificó con un lector sintético de dos páginas. Se documentan las evidencias, el guion para Diseño y las dependencias de la cola por estado, la conexión real y el destino publicado. [Entrega OPS-02](OPS_02_ENTREGA.md)
 
 ## Validación local contra Supabase — 2026-10-30
 

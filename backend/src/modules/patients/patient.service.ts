@@ -36,11 +36,25 @@ export class PatientService {
     actor: AuthenticatedRequestContext,
     metadata: RequestSecurityMetadata,
   ) {
+    const created = await prisma.$transaction((tx) =>
+      this.createWithinTransaction(tx, input, actor, metadata),
+    );
+    return toPatientResponse(created);
+  }
+
+  async createWithinTransaction(
+    tx: Prisma.TransactionClient,
+    input: CreatePatientInput,
+    actor: AuthenticatedRequestContext,
+    metadata: RequestSecurityMetadata,
+    importAudit = false,
+  ) {
     if (input.documentType && input.documentNumber) {
       const existing = await patientRepository.findByDocument(
         actor.organizationId,
         input.documentType,
         input.documentNumber,
+        tx,
       );
 
       if (existing) {
@@ -52,141 +66,139 @@ export class PatientService {
       }
     }
 
-    const created = await prisma.$transaction(async (tx) => {
-      const allocatedNumber =
-        await numberSequenceService.allocateWithinTransaction(tx, {
-          organizationId: actor.organizationId,
-
-          sequenceType: "PATIENT",
-        });
-
-      const patient = await tx.patient.create({
-        data: {
-          organizationId: actor.organizationId,
-
-          patientNumber: allocatedNumber.formatted,
-
-          firstName: input.firstName.trim(),
-
-          lastName: input.lastName.trim(),
-
-          ...(input.middleName !== undefined
-            ? {
-                middleName: input.middleName,
-              }
-            : {}),
-
-          ...(input.secondLastName !== undefined
-            ? {
-                secondLastName: input.secondLastName,
-              }
-            : {}),
-
-          ...(input.dateOfBirth !== undefined
-            ? {
-                dateOfBirth:
-                  input.dateOfBirth === null
-                    ? null
-                    : parseDateOnly(input.dateOfBirth, "dateOfBirth"),
-              }
-            : {}),
-
-          ...(input.sex !== undefined
-            ? {
-                sex: input.sex,
-              }
-            : {}),
-
-          ...(input.documentType !== undefined
-            ? {
-                documentType: input.documentType,
-              }
-            : {}),
-
-          ...(input.documentNumber !== undefined
-            ? {
-                documentNumber: input.documentNumber,
-              }
-            : {}),
-
-          ...(input.email !== undefined
-            ? {
-                email: input.email,
-              }
-            : {}),
-
-          ...(input.phone !== undefined
-            ? {
-                phone: input.phone,
-              }
-            : {}),
-
-          ...(input.mobilePhone !== undefined
-            ? {
-                mobilePhone: input.mobilePhone,
-              }
-            : {}),
-
-          ...(input.addressLine1 !== undefined
-            ? {
-                addressLine1: input.addressLine1,
-              }
-            : {}),
-
-          ...(input.addressLine2 !== undefined
-            ? {
-                addressLine2: input.addressLine2,
-              }
-            : {}),
-
-          ...(input.city !== undefined
-            ? {
-                city: input.city,
-              }
-            : {}),
-
-          ...(input.countryCode !== undefined
-            ? {
-                countryCode: input.countryCode,
-              }
-            : {}),
-        },
-
-        select: patientDetailSelect,
-      });
-
-      await auditService.writeWithinTransaction(tx, {
+    const allocatedNumber =
+      await numberSequenceService.allocateWithinTransaction(tx, {
         organizationId: actor.organizationId,
 
-        actorUserId: actor.userId,
-
-        action: "PATIENT_CREATE",
-
-        entityType: "PATIENT",
-
-        entityId: patient.id,
-
-        entityKey: patient.patientNumber,
-
-        newValues: {
-          patientNumber: patient.patientNumber,
-
-          firstName: patient.firstName,
-
-          lastName: patient.lastName,
-
-          documentType: patient.documentType,
-
-          documentNumber: patient.documentNumber,
-        },
-
-        ...auditTechnicalFields(metadata),
+        sequenceType: "PATIENT",
       });
 
-      return patient;
+    const patient = await tx.patient.create({
+      data: {
+        organizationId: actor.organizationId,
+
+        patientNumber: allocatedNumber.formatted,
+
+        firstName: input.firstName.trim(),
+
+        lastName: input.lastName.trim(),
+
+        ...(input.middleName !== undefined
+          ? {
+              middleName: input.middleName,
+            }
+          : {}),
+
+        ...(input.secondLastName !== undefined
+          ? {
+              secondLastName: input.secondLastName,
+            }
+          : {}),
+
+        ...(input.dateOfBirth !== undefined
+          ? {
+              dateOfBirth:
+                input.dateOfBirth === null
+                  ? null
+                  : parseDateOnly(input.dateOfBirth, "dateOfBirth"),
+            }
+          : {}),
+
+        ...(input.sex !== undefined
+          ? {
+              sex: input.sex,
+            }
+          : {}),
+
+        ...(input.documentType !== undefined
+          ? {
+              documentType: input.documentType,
+            }
+          : {}),
+
+        ...(input.documentNumber !== undefined
+          ? {
+              documentNumber: input.documentNumber,
+            }
+          : {}),
+
+        ...(input.email !== undefined
+          ? {
+              email: input.email,
+            }
+          : {}),
+
+        ...(input.phone !== undefined
+          ? {
+              phone: input.phone,
+            }
+          : {}),
+
+        ...(input.mobilePhone !== undefined
+          ? {
+              mobilePhone: input.mobilePhone,
+            }
+          : {}),
+
+        ...(input.addressLine1 !== undefined
+          ? {
+              addressLine1: input.addressLine1,
+            }
+          : {}),
+
+        ...(input.addressLine2 !== undefined
+          ? {
+              addressLine2: input.addressLine2,
+            }
+          : {}),
+
+        ...(input.city !== undefined
+          ? {
+              city: input.city,
+            }
+          : {}),
+
+        ...(input.countryCode !== undefined
+          ? {
+              countryCode: input.countryCode,
+            }
+          : {}),
+      },
+
+      select: patientDetailSelect,
     });
 
-    return toPatientResponse(created);
+    await auditService.writeWithinTransaction(tx, {
+      organizationId: actor.organizationId,
+
+      actorUserId: actor.userId,
+
+      action: "PATIENT_CREATE",
+
+      entityType: "PATIENT",
+
+      entityId: patient.id,
+
+      entityKey: patient.patientNumber,
+
+      newValues: importAudit
+        ? { source: "DENTALINK", patientId: patient.id.toString() }
+        : {
+            patientNumber: patient.patientNumber,
+
+            firstName: patient.firstName,
+
+            lastName: patient.lastName,
+
+            documentType: patient.documentType,
+
+            documentNumber: patient.documentNumber,
+          },
+
+      ...auditTechnicalFields(metadata),
+    });
+
+    return patient;
   }
 
   async getById(patientId: bigint, actor: AuthenticatedRequestContext) {

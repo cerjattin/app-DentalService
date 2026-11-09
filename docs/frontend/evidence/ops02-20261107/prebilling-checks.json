@@ -1,0 +1,303 @@
+{
+  "date": "2026-11-08T15:20:26.606Z",
+  "environment": "Frontend OPS isolated 3427/55473/_test",
+  "organizationId": "2",
+  "profiles": [
+    {
+      "role": "ADMIN",
+      "permissions": [
+        "dashboard.read",
+        "organization.read",
+        "organization.update",
+        "clinic_location.read",
+        "clinic_location.manage",
+        "user.read",
+        "user.create",
+        "user.update",
+        "user.assign_roles",
+        "role.read",
+        "role.manage",
+        "provider.read",
+        "provider.create",
+        "provider.update",
+        "patient.read",
+        "patient.create",
+        "patient.update",
+        "patient.archive",
+        "treatment_case.read",
+        "treatment_case.manage",
+        "insurance.read",
+        "insurance.create",
+        "insurance.update",
+        "insurance.verify",
+        "appointment.read",
+        "appointment.create",
+        "appointment.update",
+        "appointment.check_in",
+        "appointment.start",
+        "appointment.complete",
+        "appointment.cancel",
+        "encounter.read",
+        "encounter.create",
+        "encounter.update",
+        "encounter.complete",
+        "encounter.void",
+        "diagnosis.read",
+        "diagnosis.assign",
+        "svb_procedure.read",
+        "svb_procedure.manage",
+        "svb_tariff.read",
+        "svb_tariff.manage",
+        "authorization.read",
+        "authorization.create",
+        "authorization.update",
+        "procedure.read",
+        "procedure.add",
+        "procedure.update",
+        "procedure.void",
+        "invoice.read",
+        "invoice.create",
+        "invoice.prepare_signature",
+        "invoice.sign",
+        "invoice.close",
+        "invoice.request_correction",
+        "invoice.apply_correction",
+        "invoice.cancel",
+        "signature.capture",
+        "signature.void",
+        "document.read",
+        "document.generate",
+        "document.upload",
+        "declaration.read",
+        "declaration.create",
+        "declaration.update",
+        "declaration.export",
+        "declaration.submit",
+        "audit.read",
+        "settings.read",
+        "settings.update"
+      ],
+      "organizationId": "2"
+    },
+    {
+      "role": "RECEPTION",
+      "permissions": [
+        "dashboard.read",
+        "organization.read",
+        "clinic_location.read",
+        "provider.read",
+        "patient.read",
+        "patient.create",
+        "patient.update",
+        "treatment_case.read",
+        "insurance.read",
+        "insurance.create",
+        "insurance.update",
+        "insurance.verify",
+        "appointment.read",
+        "appointment.create",
+        "appointment.update",
+        "appointment.check_in",
+        "appointment.cancel",
+        "encounter.read",
+        "diagnosis.read",
+        "svb_procedure.read",
+        "svb_tariff.read",
+        "authorization.read",
+        "authorization.create",
+        "authorization.update",
+        "procedure.read",
+        "invoice.read",
+        "invoice.create",
+        "invoice.prepare_signature",
+        "invoice.sign",
+        "invoice.close",
+        "invoice.request_correction",
+        "signature.capture",
+        "document.read",
+        "document.generate",
+        "document.upload",
+        "declaration.read"
+      ],
+      "organizationId": "2"
+    },
+    {
+      "role": "PROVIDER",
+      "permissions": [
+        "dashboard.read",
+        "organization.read",
+        "clinic_location.read",
+        "provider.read",
+        "patient.read",
+        "treatment_case.read",
+        "treatment_case.manage",
+        "insurance.read",
+        "appointment.read",
+        "appointment.start",
+        "appointment.complete",
+        "encounter.read",
+        "encounter.create",
+        "encounter.update",
+        "encounter.complete",
+        "diagnosis.read",
+        "diagnosis.assign",
+        "svb_procedure.read",
+        "svb_tariff.read",
+        "authorization.read",
+        "procedure.read",
+        "procedure.add",
+        "procedure.update",
+        "procedure.void",
+        "invoice.read",
+        "document.read",
+        "document.generate"
+      ],
+      "organizationId": "2"
+    }
+  ],
+  "appointmentId": "1",
+  "encounterId": "1",
+  "serviceIds": [
+    "2"
+  ],
+  "checks": [
+    {
+      "name": "ADMIN scope",
+      "actual": "2",
+      "expected": "2",
+      "pass": true
+    },
+    {
+      "name": "RECEPTION scope",
+      "actual": "2",
+      "expected": "2",
+      "pass": true
+    },
+    {
+      "name": "PROVIDER scope",
+      "actual": "2",
+      "expected": "2",
+      "pass": true
+    },
+    {
+      "name": "Reception cannot start professional attention",
+      "actual": 403,
+      "expected": 403,
+      "pass": true
+    },
+    {
+      "name": "Provider cannot invoice",
+      "actual": 403,
+      "expected": 403,
+      "pass": true
+    },
+    {
+      "name": "Appointment jointly completed",
+      "actual": "COMPLETED",
+      "expected": "COMPLETED",
+      "pass": true
+    },
+    {
+      "name": "Rescheduled before start",
+      "actual": "2026-11-06T14:45:00.000Z",
+      "expected": "2026-11-06T14:45:00.000Z",
+      "pass": true
+    },
+    {
+      "name": "Attention jointly completed",
+      "actual": "COMPLETED",
+      "expected": "COMPLETED",
+      "pass": true
+    },
+    {
+      "name": "One service after remove/re-add",
+      "actual": 1,
+      "expected": 1,
+      "pass": true
+    },
+    {
+      "name": "Decimal quantity retained",
+      "actual": "1.25",
+      "expected": "1.25",
+      "pass": true
+    },
+    {
+      "name": "Unrequired capture patientInsuranceId",
+      "actual": null,
+      "expected": null,
+      "pass": true
+    },
+    {
+      "name": "Unrequired capture svbTariffId",
+      "actual": null,
+      "expected": null,
+      "pass": true
+    },
+    {
+      "name": "Unrequired capture unitTariffSnapshot",
+      "actual": null,
+      "expected": null,
+      "pass": true
+    },
+    {
+      "name": "Unrequired capture currencyCodeSnapshot",
+      "actual": null,
+      "expected": null,
+      "pass": true
+    },
+    {
+      "name": "Unrequired capture amount",
+      "actual": null,
+      "expected": null,
+      "pass": true
+    },
+    {
+      "name": "Unrequired capture diagnosisId",
+      "actual": null,
+      "expected": null,
+      "pass": true
+    },
+    {
+      "name": "Unrequired capture authorizationItemId",
+      "actual": null,
+      "expected": null,
+      "pass": true
+    },
+    {
+      "name": "Master authorization flag unchanged",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "Master referral flag unchanged",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "Completed attention without pricing",
+      "actual": 1,
+      "expected": 1,
+      "pass": true
+    },
+    {
+      "name": "Unpriced units count",
+      "actual": "1.25",
+      "expected": "1.25",
+      "pass": true
+    },
+    {
+      "name": "Unpriced production has no fabricated amount",
+      "actual": 0,
+      "expected": 0,
+      "pass": true
+    },
+    {
+      "name": "SVB remains deferred",
+      "actual": false,
+      "expected": false,
+      "pass": true
+    }
+  ]
+}

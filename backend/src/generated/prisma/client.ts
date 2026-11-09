@@ -256,3 +256,28 @@ export type UserRole = Prisma.UserRoleModel
  *
  */
 export type User = Prisma.UserModel
+/**
+ * Model DentalinkAccount
+ *
+ */
+export type DentalinkAccount = Prisma.DentalinkAccountModel
+/**
+ * Model DentalinkMapping
+ *
+ */
+export type DentalinkMapping = Prisma.DentalinkMappingModel
+/**
+ * Model DentalinkImportRun
+ *
+ */
+export type DentalinkImportRun = Prisma.DentalinkImportRunModel
+/**
+ * Model DentalinkImportItem
+ *
+ */
+export type DentalinkImportItem = Prisma.DentalinkImportItemModel
+/**
+ * Model DentalinkExternalIdentity
+ *
+ */
+export type DentalinkExternalIdentity = Prisma.DentalinkExternalIdentityModel

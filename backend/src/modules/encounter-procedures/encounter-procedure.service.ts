@@ -25,6 +25,7 @@ import {
 } from "./encounter-procedure.repository.js";
 import type {
   CreateEncounterProcedureInput,
+  RecordPerformedServiceInput,
   UpdateEncounterProcedureInput,
 } from "./encounter-procedure.schemas.js";
 import { toEncounterProcedureResponse } from "./encounter-procedure.types.js";
@@ -92,9 +93,9 @@ function assertDateWithin(
 function toAuditValues(procedure: EncounterProcedureRecord) {
   return {
     encounterId: procedure.encounterId.toString(),
-    patientInsuranceId: procedure.patientInsuranceId.toString(),
+    patientInsuranceId: procedure.patientInsuranceId?.toString() ?? null,
     svbProcedureId: procedure.svbProcedureId.toString(),
-    svbTariffId: procedure.svbTariffId.toString(),
+    svbTariffId: procedure.svbTariffId?.toString() ?? null,
     authorizationItemId: procedure.authorizationItemId?.toString() ?? null,
     diagnosisId: procedure.diagnosisId?.toString() ?? null,
     performedByProviderId: procedure.performedByProviderId.toString(),
@@ -102,10 +103,10 @@ function toAuditValues(procedure: EncounterProcedureRecord) {
     procedureDescriptionSnapshot: procedure.procedureDescriptionSnapshot,
     providerIdSnapshot: procedure.providerIdSnapshot,
     insuredIdSnapshot: procedure.insuredIdSnapshot,
-    unitTariffSnapshot: procedure.unitTariffSnapshot.toFixed(2),
+    unitTariffSnapshot: procedure.unitTariffSnapshot?.toFixed(2) ?? null,
     currencyCodeSnapshot: procedure.currencyCodeSnapshot,
     quantity: procedure.quantity.toFixed(2),
-    amount: procedure.amount.toFixed(2),
+    amount: procedure.amount?.toFixed(2) ?? null,
     authorizationIdSnapshot: procedure.authorizationIdSnapshot,
     diagnosticCodeSnapshot: procedure.diagnosticCodeSnapshot,
     treatmentIdSnapshot: procedure.treatmentIdSnapshot,
@@ -378,6 +379,68 @@ async function releaseAuthorizationQuantity(input: {
 }
 
 export class EncounterProcedureService {
+  async recordService(
+    encounterId: bigint,
+    input: RecordPerformedServiceInput,
+    actor: AuthenticatedRequestContext,
+    metadata: RequestSecurityMetadata,
+  ) {
+    const quantity = new Prisma.Decimal(input.quantity);
+    assertPositiveQuantity(quantity);
+
+    const recorded = await serializableTransaction(async (tx) => {
+      await clinicalEncounterRepository.lockForEncounter(tx,encounterId,actor.organizationId);
+      const encounter = await clinicalEncounterRepository.findById(encounterId, actor.organizationId, tx);
+      if (!encounter) throw new AppError(404, "CLINICAL_ENCOUNTER_NOT_FOUND", "Service attention not found");
+      assertEncounterEditable(encounter.status);
+      if (!["IN_PROGRESS", "COMPLETED"].includes(encounter.appointment.status)) {
+        throw new AppError(409, "INVALID_APPOINTMENT_STATUS", "The appointment must be in service attention");
+      }
+
+      const service = await svbCatalogRepository.findProcedureById(BigInt(input.svbProcedureId), tx);
+      if (!service?.isActive) throw new AppError(404, "SVB_PROCEDURE_NOT_FOUND", "Active service not found");
+      const context = await tx.appointment.findUniqueOrThrow({
+        where: { id: encounter.appointmentId },
+        select: { clinicLocation: { select: { organizationId: true, policlinicCode: true } },
+          treatmentCase: { select: { organizationId: true, patientId: true, treatmentId: true } },
+          accidentCase: { select: { patientId: true, accidentFormNumber: true } } },
+      });
+
+      const row = await tx.encounterProcedure.create({
+        data: {
+          encounterId,
+          svbProcedureId: service.id,
+          performedByProviderId: encounter.providerId,
+          procedureCodeSnapshot: service.code,
+          procedureDescriptionSnapshot: service.description,
+          providerIdSnapshot: encounter.provider.svbProviderId,
+          policlinicSnapshot: context.clinicLocation.organizationId === actor.organizationId ? context.clinicLocation.policlinicCode : null,
+          treatmentIdSnapshot: context.treatmentCase?.organizationId === actor.organizationId &&
+            context.treatmentCase.patientId === encounter.appointment.patient.id ? context.treatmentCase.treatmentId : null,
+          accidentFormNumberSnapshot: context.accidentCase?.patientId === encounter.appointment.patient.id
+            ? context.accidentCase.accidentFormNumber : null,
+          quantity,
+          performedAt: new Date(),
+          createdByUserId: actor.userId,
+        },
+        select: encounterProcedureSelect,
+      });
+      await auditService.writeWithinTransaction(tx, {
+        organizationId: actor.organizationId,
+        actorUserId: actor.userId,
+        action: "ENCOUNTER_PROCEDURE_CREATE",
+        entityType: "ENCOUNTER_PROCEDURE",
+        entityId: row.id,
+        entityKey: `${encounter.appointment.appointmentNumber}:${row.procedureCodeSnapshot}`,
+        newValues: toAuditValues(row),
+        metadata: { source: "service_attention", pricing: "deferred" },
+        ...auditTechnicalFields(metadata),
+      });
+      return row;
+    });
+
+    return toEncounterProcedureResponse(recorded);
+  }
   async list(encounterId: bigint, actor: AuthenticatedRequestContext) {
     const encounter = await clinicalEncounterRepository.findById(
       encounterId,
@@ -487,6 +550,7 @@ export class EncounterProcedureService {
     }
 
     const created = await serializableTransaction(async (tx) => {
+      await clinicalEncounterRepository.lockForEncounter(tx,encounterId,actor.organizationId);
       const currentEncounter = await clinicalEncounterRepository.findById(
         encounterId,
         actor.organizationId,
@@ -724,6 +788,7 @@ export class EncounterProcedureService {
     metadata: RequestSecurityMetadata,
   ) {
     const updated = await serializableTransaction(async (tx) => {
+      await clinicalEncounterRepository.lockForEncounter(tx,encounterId,actor.organizationId);
       const encounter = await clinicalEncounterRepository.findById(
         encounterId,
         actor.organizationId,
@@ -846,6 +911,7 @@ export class EncounterProcedureService {
     metadata: RequestSecurityMetadata,
   ) {
     const removed = await serializableTransaction(async (tx) => {
+      await clinicalEncounterRepository.lockForEncounter(tx,encounterId,actor.organizationId);
       const encounter = await clinicalEncounterRepository.findById(
         encounterId,
         actor.organizationId,

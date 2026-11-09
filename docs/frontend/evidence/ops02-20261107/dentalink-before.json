@@ -1,0 +1,53 @@
+{
+  "date": "2026-11-09T11:37:11.155Z",
+  "accountId": "1",
+  "runId": "1",
+  "source": "SYNTHETIC",
+  "realConnectionVerified": false,
+  "state": "PREVIEW_READY",
+  "contentHash": "49f1c612eed9b6db7462834577dc80ee9e15ccf3a167f662c77df769fc4ecec2",
+  "counts": {
+    "pages": 2,
+    "ready": 2,
+    "total": 3,
+    "issues": 1,
+    "skipped": 0,
+    "imported": 0,
+    "sourceMode": "SYNTHETIC"
+  },
+  "cacheControl": "private, no-store",
+  "patientTotal": 1,
+  "appointmentTotal": 1,
+  "items": [
+    {
+      "id": "1",
+      "entityType": "PATIENT",
+      "externalId": "000-QA-PATIENT",
+      "disposition": "READY",
+      "issueCodes": [],
+      "patientId": null,
+      "appointmentId": null
+    },
+    {
+      "id": "2",
+      "entityType": "APPOINTMENT",
+      "externalId": "000-QA-APPOINTMENT",
+      "disposition": "READY",
+      "issueCodes": [],
+      "patientId": null,
+      "appointmentId": null
+    },
+    {
+      "id": "3",
+      "entityType": "APPOINTMENT",
+      "externalId": "000-QA-ISSUE",
+      "disposition": "ISSUE",
+      "issueCodes": [
+        "UNSUPPORTED_SOURCE_STATUS",
+        "PROVIDER_MAPPING_MISSING"
+      ],
+      "patientId": null,
+      "appointmentId": null
+    }
+  ]
+}

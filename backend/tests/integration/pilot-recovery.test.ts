@@ -166,6 +166,8 @@ describe.skipIf(!process.env.RESTORE_TEST_DATABASE_URL)(
         expect(report.restored).toBe(true);
         expect(report.documentsVerified).toBe(4);
         expect(report.operationalReadinessApproved).toBe(false);
+        expect(report.tableAndSequenceFingerprints.some(row => row.table === "$schema")).toBe(true);
+        expect(report.stages.at(-1)?.phase).toBe("completed");
         const childEnv: NodeJS.ProcessEnv = {
           ...process.env,
           DATABASE_URL: process.env.RESTORE_TEST_DATABASE_URL!,

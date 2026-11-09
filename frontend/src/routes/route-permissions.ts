@@ -8,4 +8,5 @@ export const routePermissions: Record<string, string[]> = {
   services: ['svb_procedure.read'],
   admin: ['user.read', 'provider.read', 'role.read', 'svb_procedure.read', 'organization.read'],
   settings: ['organization.read'],
+  dentalink: ['dentalink.read'],
 }

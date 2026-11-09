@@ -300,6 +300,7 @@ export type ClinicLocationWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"ClinicLocation"> | Date | string
   archivedAt?: Prisma.DateTimeNullableFilter<"ClinicLocation"> | Date | string | null
   codeSearch?: Prisma.StringFilter<"ClinicLocation"> | string
+  dentalinkMappings?: Prisma.DentalinkMappingListRelationFilter
   appointments?: Prisma.AppointmentListRelationFilter
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
 }
@@ -320,6 +321,7 @@ export type ClinicLocationOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   codeSearch?: Prisma.SortOrder
+  dentalinkMappings?: Prisma.DentalinkMappingOrderByRelationAggregateInput
   appointments?: Prisma.AppointmentOrderByRelationAggregateInput
   organization?: Prisma.OrganizationOrderByWithRelationInput
 }
@@ -328,6 +330,7 @@ export type ClinicLocationWhereUniqueInput = Prisma.AtLeast<{
   id?: bigint | number
   organizationId_code?: Prisma.ClinicLocationOrganizationIdCodeCompoundUniqueInput
   organizationId_policlinicCode?: Prisma.ClinicLocationOrganizationIdPoliclinicCodeCompoundUniqueInput
+  organizationId_id?: Prisma.ClinicLocationOrganizationIdIdCompoundUniqueInput
   AND?: Prisma.ClinicLocationWhereInput | Prisma.ClinicLocationWhereInput[]
   OR?: Prisma.ClinicLocationWhereInput[]
   NOT?: Prisma.ClinicLocationWhereInput | Prisma.ClinicLocationWhereInput[]
@@ -345,9 +348,10 @@ export type ClinicLocationWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"ClinicLocation"> | Date | string
   archivedAt?: Prisma.DateTimeNullableFilter<"ClinicLocation"> | Date | string | null
   codeSearch?: Prisma.StringFilter<"ClinicLocation"> | string
+  dentalinkMappings?: Prisma.DentalinkMappingListRelationFilter
   appointments?: Prisma.AppointmentListRelationFilter
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
-}, "id" | "organizationId_code" | "organizationId_policlinicCode">
+}, "id" | "organizationId_code" | "organizationId_policlinicCode" | "organizationId_id">
 
 export type ClinicLocationOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -408,6 +412,7 @@ export type ClinicLocationCreateInput = {
   updatedAt?: Date | string
   archivedAt?: Date | string | null
   codeSearch?: string
+  dentalinkMappings?: Prisma.DentalinkMappingCreateNestedManyWithoutClinicLocationInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutClinicLocationInput
   organization: Prisma.OrganizationCreateNestedOneWithoutClinicLocationsInput
 }
@@ -428,6 +433,7 @@ export type ClinicLocationUncheckedCreateInput = {
   updatedAt?: Date | string
   archivedAt?: Date | string | null
   codeSearch?: string
+  dentalinkMappings?: Prisma.DentalinkMappingUncheckedCreateNestedManyWithoutClinicLocationInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClinicLocationInput
 }
 
@@ -446,6 +452,7 @@ export type ClinicLocationUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  dentalinkMappings?: Prisma.DentalinkMappingUpdateManyWithoutClinicLocationNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutClinicLocationNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutClinicLocationsNestedInput
 }
@@ -466,6 +473,7 @@ export type ClinicLocationUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  dentalinkMappings?: Prisma.DentalinkMappingUncheckedUpdateManyWithoutClinicLocationNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClinicLocationNestedInput
 }
 
@@ -535,6 +543,11 @@ export type ClinicLocationOrganizationIdCodeCompoundUniqueInput = {
 export type ClinicLocationOrganizationIdPoliclinicCodeCompoundUniqueInput = {
   organizationId: bigint | number
   policlinicCode: string
+}
+
+export type ClinicLocationOrganizationIdIdCompoundUniqueInput = {
+  organizationId: bigint | number
+  id: bigint | number
 }
 
 export type ClinicLocationCountOrderByAggregateInput = {
@@ -611,6 +624,11 @@ export type ClinicLocationOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type ClinicLocationNullableScalarRelationFilter = {
+  is?: Prisma.ClinicLocationWhereInput | null
+  isNot?: Prisma.ClinicLocationWhereInput | null
+}
+
 export type ClinicLocationCreateNestedOneWithoutAppointmentsInput = {
   create?: Prisma.XOR<Prisma.ClinicLocationCreateWithoutAppointmentsInput, Prisma.ClinicLocationUncheckedCreateWithoutAppointmentsInput>
   connectOrCreate?: Prisma.ClinicLocationCreateOrConnectWithoutAppointmentsInput
@@ -671,6 +689,22 @@ export type ClinicLocationUncheckedUpdateManyWithoutOrganizationNestedInput = {
   deleteMany?: Prisma.ClinicLocationScalarWhereInput | Prisma.ClinicLocationScalarWhereInput[]
 }
 
+export type ClinicLocationCreateNestedOneWithoutDentalinkMappingsInput = {
+  create?: Prisma.XOR<Prisma.ClinicLocationCreateWithoutDentalinkMappingsInput, Prisma.ClinicLocationUncheckedCreateWithoutDentalinkMappingsInput>
+  connectOrCreate?: Prisma.ClinicLocationCreateOrConnectWithoutDentalinkMappingsInput
+  connect?: Prisma.ClinicLocationWhereUniqueInput
+}
+
+export type ClinicLocationUpdateOneWithoutDentalinkMappingsNestedInput = {
+  create?: Prisma.XOR<Prisma.ClinicLocationCreateWithoutDentalinkMappingsInput, Prisma.ClinicLocationUncheckedCreateWithoutDentalinkMappingsInput>
+  connectOrCreate?: Prisma.ClinicLocationCreateOrConnectWithoutDentalinkMappingsInput
+  upsert?: Prisma.ClinicLocationUpsertWithoutDentalinkMappingsInput
+  disconnect?: Prisma.ClinicLocationWhereInput | boolean
+  delete?: Prisma.ClinicLocationWhereInput | boolean
+  connect?: Prisma.ClinicLocationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ClinicLocationUpdateToOneWithWhereWithoutDentalinkMappingsInput, Prisma.ClinicLocationUpdateWithoutDentalinkMappingsInput>, Prisma.ClinicLocationUncheckedUpdateWithoutDentalinkMappingsInput>
+}
+
 export type ClinicLocationCreateWithoutAppointmentsInput = {
   id?: bigint | number
   code: string
@@ -686,6 +720,7 @@ export type ClinicLocationCreateWithoutAppointmentsInput = {
   updatedAt?: Date | string
   archivedAt?: Date | string | null
   codeSearch?: string
+  dentalinkMappings?: Prisma.DentalinkMappingCreateNestedManyWithoutClinicLocationInput
   organization: Prisma.OrganizationCreateNestedOneWithoutClinicLocationsInput
 }
 
@@ -705,6 +740,7 @@ export type ClinicLocationUncheckedCreateWithoutAppointmentsInput = {
   updatedAt?: Date | string
   archivedAt?: Date | string | null
   codeSearch?: string
+  dentalinkMappings?: Prisma.DentalinkMappingUncheckedCreateNestedManyWithoutClinicLocationInput
 }
 
 export type ClinicLocationCreateOrConnectWithoutAppointmentsInput = {
@@ -738,6 +774,7 @@ export type ClinicLocationUpdateWithoutAppointmentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  dentalinkMappings?: Prisma.DentalinkMappingUpdateManyWithoutClinicLocationNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutClinicLocationsNestedInput
 }
 
@@ -757,6 +794,7 @@ export type ClinicLocationUncheckedUpdateWithoutAppointmentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  dentalinkMappings?: Prisma.DentalinkMappingUncheckedUpdateManyWithoutClinicLocationNestedInput
 }
 
 export type ClinicLocationCreateWithoutOrganizationInput = {
@@ -774,6 +812,7 @@ export type ClinicLocationCreateWithoutOrganizationInput = {
   updatedAt?: Date | string
   archivedAt?: Date | string | null
   codeSearch?: string
+  dentalinkMappings?: Prisma.DentalinkMappingCreateNestedManyWithoutClinicLocationInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutClinicLocationInput
 }
 
@@ -792,6 +831,7 @@ export type ClinicLocationUncheckedCreateWithoutOrganizationInput = {
   updatedAt?: Date | string
   archivedAt?: Date | string | null
   codeSearch?: string
+  dentalinkMappings?: Prisma.DentalinkMappingUncheckedCreateNestedManyWithoutClinicLocationInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClinicLocationInput
 }
 
@@ -842,6 +882,98 @@ export type ClinicLocationScalarWhereInput = {
   codeSearch?: Prisma.StringFilter<"ClinicLocation"> | string
 }
 
+export type ClinicLocationCreateWithoutDentalinkMappingsInput = {
+  id?: bigint | number
+  code: string
+  name: string
+  policlinicCode?: string | null
+  addressLine1?: string | null
+  addressLine2?: string | null
+  city?: string | null
+  countryCode?: string
+  phone?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  archivedAt?: Date | string | null
+  codeSearch?: string
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutClinicLocationInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutClinicLocationsInput
+}
+
+export type ClinicLocationUncheckedCreateWithoutDentalinkMappingsInput = {
+  id?: bigint | number
+  organizationId: bigint | number
+  code: string
+  name: string
+  policlinicCode?: string | null
+  addressLine1?: string | null
+  addressLine2?: string | null
+  city?: string | null
+  countryCode?: string
+  phone?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  archivedAt?: Date | string | null
+  codeSearch?: string
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClinicLocationInput
+}
+
+export type ClinicLocationCreateOrConnectWithoutDentalinkMappingsInput = {
+  where: Prisma.ClinicLocationWhereUniqueInput
+  create: Prisma.XOR<Prisma.ClinicLocationCreateWithoutDentalinkMappingsInput, Prisma.ClinicLocationUncheckedCreateWithoutDentalinkMappingsInput>
+}
+
+export type ClinicLocationUpsertWithoutDentalinkMappingsInput = {
+  update: Prisma.XOR<Prisma.ClinicLocationUpdateWithoutDentalinkMappingsInput, Prisma.ClinicLocationUncheckedUpdateWithoutDentalinkMappingsInput>
+  create: Prisma.XOR<Prisma.ClinicLocationCreateWithoutDentalinkMappingsInput, Prisma.ClinicLocationUncheckedCreateWithoutDentalinkMappingsInput>
+  where?: Prisma.ClinicLocationWhereInput
+}
+
+export type ClinicLocationUpdateToOneWithWhereWithoutDentalinkMappingsInput = {
+  where?: Prisma.ClinicLocationWhereInput
+  data: Prisma.XOR<Prisma.ClinicLocationUpdateWithoutDentalinkMappingsInput, Prisma.ClinicLocationUncheckedUpdateWithoutDentalinkMappingsInput>
+}
+
+export type ClinicLocationUpdateWithoutDentalinkMappingsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  policlinicCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  countryCode?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  appointments?: Prisma.AppointmentUpdateManyWithoutClinicLocationNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutClinicLocationsNestedInput
+}
+
+export type ClinicLocationUncheckedUpdateWithoutDentalinkMappingsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  organizationId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  policlinicCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  countryCode?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClinicLocationNestedInput
+}
+
 export type ClinicLocationCreateManyOrganizationInput = {
   id?: bigint | number
   code: string
@@ -874,6 +1006,7 @@ export type ClinicLocationUpdateWithoutOrganizationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  dentalinkMappings?: Prisma.DentalinkMappingUpdateManyWithoutClinicLocationNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutClinicLocationNestedInput
 }
 
@@ -892,6 +1025,7 @@ export type ClinicLocationUncheckedUpdateWithoutOrganizationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   codeSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  dentalinkMappings?: Prisma.DentalinkMappingUncheckedUpdateManyWithoutClinicLocationNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClinicLocationNestedInput
 }
 
@@ -918,10 +1052,12 @@ export type ClinicLocationUncheckedUpdateManyWithoutOrganizationInput = {
  */
 
 export type ClinicLocationCountOutputType = {
+  dentalinkMappings: number
   appointments: number
 }
 
 export type ClinicLocationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  dentalinkMappings?: boolean | ClinicLocationCountOutputTypeCountDentalinkMappingsArgs
   appointments?: boolean | ClinicLocationCountOutputTypeCountAppointmentsArgs
 }
 
@@ -933,6 +1069,13 @@ export type ClinicLocationCountOutputTypeDefaultArgs<ExtArgs extends runtime.Typ
    * Select specific fields to fetch from the ClinicLocationCountOutputType
    */
   select?: Prisma.ClinicLocationCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ClinicLocationCountOutputType without action
+ */
+export type ClinicLocationCountOutputTypeCountDentalinkMappingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DentalinkMappingWhereInput
 }
 
 /**
@@ -959,6 +1102,7 @@ export type ClinicLocationSelect<ExtArgs extends runtime.Types.Extensions.Intern
   updatedAt?: boolean
   archivedAt?: boolean
   codeSearch?: boolean
+  dentalinkMappings?: boolean | Prisma.ClinicLocation$dentalinkMappingsArgs<ExtArgs>
   appointments?: boolean | Prisma.ClinicLocation$appointmentsArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.ClinicLocationCountOutputTypeDefaultArgs<ExtArgs>
@@ -1022,6 +1166,7 @@ export type ClinicLocationSelectScalar = {
 
 export type ClinicLocationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "code" | "name" | "policlinicCode" | "addressLine1" | "addressLine2" | "city" | "countryCode" | "phone" | "isActive" | "createdAt" | "updatedAt" | "archivedAt" | "codeSearch", ExtArgs["result"]["clinicLocation"]>
 export type ClinicLocationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  dentalinkMappings?: boolean | Prisma.ClinicLocation$dentalinkMappingsArgs<ExtArgs>
   appointments?: boolean | Prisma.ClinicLocation$appointmentsArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.ClinicLocationCountOutputTypeDefaultArgs<ExtArgs>
@@ -1036,6 +1181,7 @@ export type ClinicLocationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Typ
 export type $ClinicLocationPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ClinicLocation"
   objects: {
+    dentalinkMappings: Prisma.$DentalinkMappingPayload<ExtArgs>[]
     appointments: Prisma.$AppointmentPayload<ExtArgs>[]
     organization: Prisma.$OrganizationPayload<ExtArgs>
   }
@@ -1449,6 +1595,7 @@ readonly fields: ClinicLocationFieldRefs;
  */
 export interface Prisma__ClinicLocationClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  dentalinkMappings<T extends Prisma.ClinicLocation$dentalinkMappingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClinicLocation$dentalinkMappingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DentalinkMappingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   appointments<T extends Prisma.ClinicLocation$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClinicLocation$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
@@ -1893,6 +2040,30 @@ export type ClinicLocationDeleteManyArgs<ExtArgs extends runtime.Types.Extension
    * Limit how many ClinicLocations to delete.
    */
   limit?: number
+}
+
+/**
+ * ClinicLocation.dentalinkMappings
+ */
+export type ClinicLocation$dentalinkMappingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DentalinkMapping
+   */
+  select?: Prisma.DentalinkMappingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DentalinkMapping
+   */
+  omit?: Prisma.DentalinkMappingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DentalinkMappingInclude<ExtArgs> | null
+  where?: Prisma.DentalinkMappingWhereInput
+  orderBy?: Prisma.DentalinkMappingOrderByWithRelationInput | Prisma.DentalinkMappingOrderByWithRelationInput[]
+  cursor?: Prisma.DentalinkMappingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DentalinkMappingScalarFieldEnum | Prisma.DentalinkMappingScalarFieldEnum[]
 }
 
 /**

@@ -61,6 +61,7 @@ export async function getDashboard(query: DashboardQuery, organizationId: bigint
       FROM encounter_procedures ep JOIN clinical_encounters ce ON ce.id = ep.encounter_id
       JOIN appointments a ON a.id = ce.appointment_id JOIN providers p ON p.id = ep.performed_by_provider_id AND p.organization_id = a.organization_id
       WHERE a.organization_id = ${organizationId} AND ep.status = 'PERFORMED' AND ce.status <> 'VOID'
+        AND ep.amount IS NOT NULL
         AND COALESCE(ep.performed_at, ce.started_at) >= ${start} AND COALESCE(ep.performed_at, ce.started_at) < ${end} ${performed}
       GROUP BY date, ep.performed_by_provider_id, p.first_name, p.last_name, ep.currency_code_snapshot`);
     const billed = await tx.$queryRaw<Money[]>(Prisma.sql`
@@ -81,6 +82,16 @@ export async function getDashboard(query: DashboardQuery, organizationId: bigint
     const appointments = await tx.$queryRaw<Array<{ count: string }>>(Prisma.sql`
       SELECT CAST(COUNT(*) AS TEXT) count FROM appointments a
       WHERE a.organization_id = ${organizationId} AND a.scheduled_start_at >= ${start} AND a.scheduled_start_at < ${end} ${assigned}`);
+    const serviceVolume = await tx.$queryRaw<Array<{ providerId: bigint; providerName: string; attentions: string; units: string }>>(Prisma.sql`
+      SELECT ce.provider_id "providerId", CONCAT(p.first_name, ' ', p.last_name) "providerName",
+        COUNT(DISTINCT ce.id)::text attentions, SUM(ep.quantity)::text units
+      FROM clinical_encounters ce JOIN appointments a ON a.id = ce.appointment_id
+      JOIN providers p ON p.id = ce.provider_id AND p.organization_id = a.organization_id
+      JOIN encounter_procedures ep ON ep.encounter_id = ce.id AND ep.status = 'PERFORMED'
+      WHERE a.organization_id = ${organizationId} AND ce.status = 'COMPLETED' AND a.status = 'COMPLETED'
+        AND ce.started_at >= ${start} AND ce.started_at < ${end} ${seenProvider}
+      GROUP BY ce.provider_id, p.first_name, p.last_name
+      ORDER BY COUNT(DISTINCT ce.id) DESC, ce.provider_id`);
     const invoiceCounts = await tx.$queryRaw<Array<{ pending: string; closed: string; toDeclare: string }>>(Prisma.sql`
       SELECT CAST(COUNT(DISTINCT CASE WHEN iv.status = 'PENDING_SIGNATURE' AND i.current_version_id = iv.id THEN i.id END) AS TEXT) pending,
         CAST(COUNT(DISTINCT CASE WHEN iv.status = 'CLOSED' THEN i.id END) AS TEXT) closed,
@@ -95,8 +106,12 @@ export async function getDashboard(query: DashboardQuery, organizationId: bigint
     const summary = summarizeProduction(rows);
     return { period: { from: query.from, to: query.to, timezone: "America/Curacao" }, providerId: query.providerId ?? null,
       kpis: { production: summary.production, svbBilled: total(billed), patientsSeen: Number(seen[0]?.count ?? 0),
-        appointments: Number(appointments[0]?.count ?? 0), pendingSignatures: Number(invoiceCounts[0]?.pending ?? 0),
+        appointments: Number(appointments[0]?.count ?? 0),
+        completedAttentions: serviceVolume.reduce((sum, row) => sum + Number(row.attentions), 0),
+        pendingSignatures: Number(invoiceCounts[0]?.pending ?? 0),
         closedInvoices: Number(invoiceCounts[0]?.closed ?? 0), toDeclare: Number(invoiceCounts[0]?.toDeclare ?? 0) },
-      productionTimeline: summary.productionTimeline, productionByProvider: summary.productionByProvider };
+      productionTimeline: summary.productionTimeline, productionByProvider: summary.productionByProvider,
+      serviceVolumeByProvider: serviceVolume.map((row) => ({ providerId: row.providerId.toString(), providerName: row.providerName,
+        attentions: Number(row.attentions), units: new Prisma.Decimal(row.units).toFixed(2) })) };
   }, { isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead, timeout: 15000 });
 }

@@ -1,5 +1,13 @@
 # Frontend Handoff
 
+## OPS-01 — entrega HTTP para OPS-02
+
+[Contrato consumible vigente](OPS_01_API.md): doce operaciones `/integrations/dentalink`, todas montadas y documentadas en OpenAPI. Cuenta disabled por defecto; habilitar lógica no conecta. Estado NOT_CONFIGURED/canPreview=false es recuperable y nunca equivale a sincronización real. No enviar token, URL, cursor ni payloads desde UI. Preview/confirm tienen claves estables independientes; listar ejecuciones permite recuperar una operación tras recarga. Items privados requieren dentalink.read + patient.read + appointment.read. Confirm usa expectedContentHash y permisos de creación local; incidencias no se fusionan automáticamente. Preparación sintética y conexión real se muestran por separado. Atención mantiene cuerpo mínimo sin datos médicos y cotiza al facturar; inicio de atención reabierta devuelve la misma OPEN con cita COMPLETED. SVB continúa pendiente.
+
+## Atención por servicios (2026-11-06)
+
+Frontend inicia desde la cita confirmada, registra `svbProcedureId` y `quantity` y entrega a Recepción mediante `finish-services`. Importes pendientes viajan como `null`. La factura resuelve el contexto de cobro y conserva el flujo de firma por versión. Ver [DTO, permisos y estados](../../docs/negocio/CONTRATO_ATENCION_FACTURACION_DENTALINK_20261106.md).
+
 ## NEG-DEP-10/12 — prioridad sobre el flujo manual anterior
 
 Primer despliegue con SVB aplazado: `manualPortalRecordingEnabled=false` por defecto; false/ausente/error no habilita preparar ni registrar. API directa rechaza nuevo prepare/registro con 409 SVB_PRESENTATION_DEFERRED. Mostrar “SVB submission pending — file specification not confirmed.” Historial, descarga interna, replays y resolución de reservas existentes se conservan. En QA explícito Backend impone factura/versión única CLOSED y todos sus ítems, con MANUAL_ENTRY_SINGLE_INVOICE_REQUIRED / MANUAL_ENTRY_INCOMPLETE_INVOICE, también al registrar. [Contrato exacto y pruebas](NEG_DEP_10_12.md). No basta guardia de pantalla; no transmitir al portal.

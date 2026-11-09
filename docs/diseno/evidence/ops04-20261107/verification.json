@@ -1,0 +1,42 @@
+{
+  "closedOn": "2026-11-08",
+  "scope": "Design assessment, isolated synthetic local QA; no clinical or deployed environment acceptance",
+  "backendRuntime": "Sources loaded at Nov 8 restart; source-resume.json identifies the files fingerprinted then",
+  "sourceDrift": {
+    "betweenStartAndResume": ["backend/src/modules/clinical-encounters/clinical-encounter.service.ts"],
+    "betweenResumeAndClose": ["backend/src/modules/invoices/invoice.service.ts"],
+    "laterDiskChangeCoveredByRuntimeQA": false
+  },
+  "syntheticFinalState": {
+    "appointmentId": "1",
+    "appointmentStatus": "COMPLETED",
+    "invoiceId": "1",
+    "invoiceNumber": "QA-000001",
+    "invoiceStatus": "CLOSED",
+    "versions": [
+      {"number": 1, "status": "SUPERSEDED", "amount": "24.60", "currency": "ANG"},
+      {"number": 2, "status": "CLOSED", "amount": "15.38", "currency": "ANG"}
+    ],
+    "currentServiceQuantity": "1.25",
+    "currentServiceStatus": "PERFORMED"
+  },
+  "reproducedP2": [
+    "DES-OPS-01: BODY focus after successful service save, repeated for Provider and Admin",
+    "DES-OPS-02: Escape while drawing opens unsaved signature discard dialog",
+    "DES-OPS-03: insurance error mismatches missing-coverage context; no direct corrective action",
+    "DES-OPS-04: billing review rows do not show invoice state or outstanding task"
+  ],
+  "fileChooserProbe": {
+    "date": "2026-11-08",
+    "selection": "BLOCKED_BY_EXTENSION_FILE_URL_ACCESS_PERMISSION",
+    "applicationUploadValidated": false,
+    "browserPermissionChanged": false,
+    "svbEnabled": false
+  },
+  "pdf": {"version": 1, "renderInspected": true, "downloadMatchesStoredSHA256": true},
+  "tablet": {"emulatedWidth": 768, "emulatedHeight": 1024, "physicalDeviceValidated": false},
+  "browserZoom200Validated": false,
+  "productSuitesRunByDesign": [],
+  "ownProcessesStopped": true,
+  "clientAcceptance": "PENDING"
+}

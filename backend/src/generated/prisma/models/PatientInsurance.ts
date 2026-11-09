@@ -665,10 +665,12 @@ export type PatientInsuranceCreateNestedOneWithoutEncounterProceduresInput = {
   connect?: Prisma.PatientInsuranceWhereUniqueInput
 }
 
-export type PatientInsuranceUpdateOneRequiredWithoutEncounterProceduresNestedInput = {
+export type PatientInsuranceUpdateOneWithoutEncounterProceduresNestedInput = {
   create?: Prisma.XOR<Prisma.PatientInsuranceCreateWithoutEncounterProceduresInput, Prisma.PatientInsuranceUncheckedCreateWithoutEncounterProceduresInput>
   connectOrCreate?: Prisma.PatientInsuranceCreateOrConnectWithoutEncounterProceduresInput
   upsert?: Prisma.PatientInsuranceUpsertWithoutEncounterProceduresInput
+  disconnect?: Prisma.PatientInsuranceWhereInput | boolean
+  delete?: Prisma.PatientInsuranceWhereInput | boolean
   connect?: Prisma.PatientInsuranceWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.PatientInsuranceUpdateToOneWithWhereWithoutEncounterProceduresInput, Prisma.PatientInsuranceUpdateWithoutEncounterProceduresInput>, Prisma.PatientInsuranceUncheckedUpdateWithoutEncounterProceduresInput>
 }

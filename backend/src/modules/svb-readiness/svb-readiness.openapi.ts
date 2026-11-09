@@ -3,7 +3,7 @@ import { openApiRegistry } from "../../docs/openapi.registry.js";
 import { apiErrorSchema } from "../../docs/common.schemas.js";
 import { realSvbBlockerCodes } from "./svb-readiness.service.js";
 import { createDeclarationExportSchema, markDeclarationReadySchema } from "../declarations/declaration.schemas.js";
-import { createEncounterProcedureSchema, updateEncounterProcedureSchema } from "../encounter-procedures/encounter-procedure.schemas.js";
+import { captureEncounterProcedureSchema, updateEncounterProcedureSchema } from "../encounter-procedures/encounter-procedure.schemas.js";
 
 export const realPresentationReadinessSchema = openApiRegistry.register("RealSvbPresentationReadiness", z.object({
   status: z.literal("BLOCKED"), realSubmissionEnabled: z.literal(false),
@@ -32,10 +32,12 @@ for (const [action, body] of [["ready", markDeclarationReadySchema], ["exports",
     responses: { [action === "ready" ? 200 : 201]: { description: "Existing declaration/export envelope plus realPresentationReadiness" }, ...errors },
   });
 }
-for (const [method, schema] of [["post", createEncounterProcedureSchema], ["patch", updateEncounterProcedureSchema]] as const) {
+for (const [method, schema] of [["post", captureEncounterProcedureSchema], ["patch", updateEncounterProcedureSchema]] as const) {
   openApiRegistry.registerPath({ method, path: "/api/v1/clinical-encounters/{encounterId}/procedures" + (method === "patch" ? "/{encounterProcedureId}" : ""),
-    tags: ["Encounter procedures"], summary: "Capture clinical care without client overrides of SVB snapshots",
-    description: "Requires procedure.update. Strict body; fiscal snapshots, referrer IDs and unresolved NumberOfTreatments/Assistance are not client fields. New capture of a service requiring referral returns SVB_REFERRAL_FLOW_NOT_SUPPORTED until authorized evidence rules exist. Existing accident references are validated against patient/organization/insurance before snapshot or consumption. Errors: ACCIDENT_CASE_NOT_FOUND, ACCIDENT_INSURANCE_CONTEXT_MISMATCH. Signed history is never filled from current masters.",
+    tags: ["Encounter procedures"], summary: method === "post" ? "Record a performed service" : "Update legacy procedure metadata",
+    description: method === "post"
+      ? "Requires procedure.update. The service-attention body contains svbProcedureId and optional quantity. Billing fields are null until invoicing. The existing body with patientInsuranceId retains the legacy capture rules. SVB eligibility is validated separately."
+      : "Requires procedure.update. This legacy operation updates diagnosis and notes on a performed row. Fiscal snapshots are server-owned.",
     security: [{ operationalBearerAuth: [] }], request: { params: z.object({ encounterId: z.string().regex(/^[1-9]\d*$/),
       ...(method === "patch" ? { encounterProcedureId: z.string().regex(/^[1-9]\d*$/) } : {}) }),
       body: { required: true, content: { "application/json": { schema } } } },

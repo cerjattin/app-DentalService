@@ -1,0 +1,28 @@
+{
+  "date": "2026-11-08T15:29:28.978Z",
+  "invoiceId": "1",
+  "invoiceNumber": "QAOPS-000001",
+  "versionId": "1",
+  "versionNumber": 1,
+  "versionStatus": "CLOSED",
+  "total": "15.38",
+  "documentId": "2",
+  "documentSha256": "faa6d9cb0c136dba62170737140f5ef7c12fc70f9763a0369b25385989276975",
+  "browserDownloaded": true,
+  "browserDownloadName": "QAOPS-000001-v1-svb.pdf",
+  "browserDownloadBytes": 285520,
+  "browserDownloadMtime": "2026-11-08T15:28:02.394Z",
+  "browserDownloadSha256": "faa6d9cb0c136dba62170737140f5ef7c12fc70f9763a0369b25385989276975",
+  "matchesStoredMetadata": true,
+  "matchesApiBytes": true,
+  "signatures": [
+    {
+      "id": "1",
+      "invoiceVersionId": "1",
+      "signatureDocumentId": "1",
+      "signatureHash": "80de16ac4df470dd5f248b3f10780267305459e27d4daba92ba18aa89a2cbd6e",
+      "signedContentHash": "8c4b1eefc608554b4c99ae7ea2bb1140d1e9e151fc5048a8476486e723230859",
+      "status": "VALID"
+    }
+  ]
+}

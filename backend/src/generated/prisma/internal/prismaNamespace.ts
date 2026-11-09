@@ -439,7 +439,12 @@ export const ModelName = {
   SystemSetting: 'SystemSetting',
   TreatmentCase: 'TreatmentCase',
   UserRole: 'UserRole',
-  User: 'User'
+  User: 'User',
+  DentalinkAccount: 'DentalinkAccount',
+  DentalinkMapping: 'DentalinkMapping',
+  DentalinkImportRun: 'DentalinkImportRun',
+  DentalinkImportItem: 'DentalinkImportItem',
+  DentalinkExternalIdentity: 'DentalinkExternalIdentity'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -455,7 +460,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "accidentCase" | "appointmentStatusHistory" | "appointment" | "auditLog" | "clinicLocation" | "clinicalEncounter" | "declarationBatchStatusHistory" | "declarationBatch" | "declarationExport" | "declarationItem" | "declarationActiveAssignment" | "declarationSubmission" | "declarationManualEntry" | "declarationManualResult" | "diagnosisCode" | "document" | "encounterDiagnosis" | "encounterProcedure" | "invoiceCorrection" | "invoiceDocument" | "invoiceItem" | "invoiceStatusHistory" | "invoiceVersion" | "invoice" | "numberSequence" | "organization" | "patientInsurance" | "patient" | "payer" | "permission" | "provider" | "referrer" | "rolePermission" | "role" | "signature" | "svbAuthorizationItem" | "svbAuthorization" | "svbProcedure" | "svbTariff" | "systemSetting" | "treatmentCase" | "userRole" | "user"
+    modelProps: "accidentCase" | "appointmentStatusHistory" | "appointment" | "auditLog" | "clinicLocation" | "clinicalEncounter" | "declarationBatchStatusHistory" | "declarationBatch" | "declarationExport" | "declarationItem" | "declarationActiveAssignment" | "declarationSubmission" | "declarationManualEntry" | "declarationManualResult" | "diagnosisCode" | "document" | "encounterDiagnosis" | "encounterProcedure" | "invoiceCorrection" | "invoiceDocument" | "invoiceItem" | "invoiceStatusHistory" | "invoiceVersion" | "invoice" | "numberSequence" | "organization" | "patientInsurance" | "patient" | "payer" | "permission" | "provider" | "referrer" | "rolePermission" | "role" | "signature" | "svbAuthorizationItem" | "svbAuthorization" | "svbProcedure" | "svbTariff" | "systemSetting" | "treatmentCase" | "userRole" | "user" | "dentalinkAccount" | "dentalinkMapping" | "dentalinkImportRun" | "dentalinkImportItem" | "dentalinkExternalIdentity"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3641,6 +3646,376 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DentalinkAccount: {
+      payload: Prisma.$DentalinkAccountPayload<ExtArgs>
+      fields: Prisma.DentalinkAccountFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DentalinkAccountFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkAccountPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DentalinkAccountFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkAccountPayload>
+        }
+        findFirst: {
+          args: Prisma.DentalinkAccountFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkAccountPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DentalinkAccountFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkAccountPayload>
+        }
+        findMany: {
+          args: Prisma.DentalinkAccountFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkAccountPayload>[]
+        }
+        create: {
+          args: Prisma.DentalinkAccountCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkAccountPayload>
+        }
+        createMany: {
+          args: Prisma.DentalinkAccountCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DentalinkAccountCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkAccountPayload>[]
+        }
+        delete: {
+          args: Prisma.DentalinkAccountDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkAccountPayload>
+        }
+        update: {
+          args: Prisma.DentalinkAccountUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkAccountPayload>
+        }
+        deleteMany: {
+          args: Prisma.DentalinkAccountDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DentalinkAccountUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DentalinkAccountUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkAccountPayload>[]
+        }
+        upsert: {
+          args: Prisma.DentalinkAccountUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkAccountPayload>
+        }
+        aggregate: {
+          args: Prisma.DentalinkAccountAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDentalinkAccount>
+        }
+        groupBy: {
+          args: Prisma.DentalinkAccountGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalinkAccountGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DentalinkAccountCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalinkAccountCountAggregateOutputType> | number
+        }
+      }
+    }
+    DentalinkMapping: {
+      payload: Prisma.$DentalinkMappingPayload<ExtArgs>
+      fields: Prisma.DentalinkMappingFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DentalinkMappingFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkMappingPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DentalinkMappingFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkMappingPayload>
+        }
+        findFirst: {
+          args: Prisma.DentalinkMappingFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkMappingPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DentalinkMappingFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkMappingPayload>
+        }
+        findMany: {
+          args: Prisma.DentalinkMappingFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkMappingPayload>[]
+        }
+        create: {
+          args: Prisma.DentalinkMappingCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkMappingPayload>
+        }
+        createMany: {
+          args: Prisma.DentalinkMappingCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DentalinkMappingCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkMappingPayload>[]
+        }
+        delete: {
+          args: Prisma.DentalinkMappingDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkMappingPayload>
+        }
+        update: {
+          args: Prisma.DentalinkMappingUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkMappingPayload>
+        }
+        deleteMany: {
+          args: Prisma.DentalinkMappingDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DentalinkMappingUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DentalinkMappingUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkMappingPayload>[]
+        }
+        upsert: {
+          args: Prisma.DentalinkMappingUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkMappingPayload>
+        }
+        aggregate: {
+          args: Prisma.DentalinkMappingAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDentalinkMapping>
+        }
+        groupBy: {
+          args: Prisma.DentalinkMappingGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalinkMappingGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DentalinkMappingCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalinkMappingCountAggregateOutputType> | number
+        }
+      }
+    }
+    DentalinkImportRun: {
+      payload: Prisma.$DentalinkImportRunPayload<ExtArgs>
+      fields: Prisma.DentalinkImportRunFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DentalinkImportRunFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkImportRunPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DentalinkImportRunFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkImportRunPayload>
+        }
+        findFirst: {
+          args: Prisma.DentalinkImportRunFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkImportRunPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DentalinkImportRunFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkImportRunPayload>
+        }
+        findMany: {
+          args: Prisma.DentalinkImportRunFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkImportRunPayload>[]
+        }
+        create: {
+          args: Prisma.DentalinkImportRunCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkImportRunPayload>
+        }
+        createMany: {
+          args: Prisma.DentalinkImportRunCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DentalinkImportRunCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkImportRunPayload>[]
+        }
+        delete: {
+          args: Prisma.DentalinkImportRunDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkImportRunPayload>
+        }
+        update: {
+          args: Prisma.DentalinkImportRunUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkImportRunPayload>
+        }
+        deleteMany: {
+          args: Prisma.DentalinkImportRunDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DentalinkImportRunUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DentalinkImportRunUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkImportRunPayload>[]
+        }
+        upsert: {
+          args: Prisma.DentalinkImportRunUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkImportRunPayload>
+        }
+        aggregate: {
+          args: Prisma.DentalinkImportRunAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDentalinkImportRun>
+        }
+        groupBy: {
+          args: Prisma.DentalinkImportRunGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalinkImportRunGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DentalinkImportRunCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalinkImportRunCountAggregateOutputType> | number
+        }
+      }
+    }
+    DentalinkImportItem: {
+      payload: Prisma.$DentalinkImportItemPayload<ExtArgs>
+      fields: Prisma.DentalinkImportItemFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DentalinkImportItemFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkImportItemPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DentalinkImportItemFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkImportItemPayload>
+        }
+        findFirst: {
+          args: Prisma.DentalinkImportItemFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkImportItemPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DentalinkImportItemFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkImportItemPayload>
+        }
+        findMany: {
+          args: Prisma.DentalinkImportItemFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkImportItemPayload>[]
+        }
+        create: {
+          args: Prisma.DentalinkImportItemCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkImportItemPayload>
+        }
+        createMany: {
+          args: Prisma.DentalinkImportItemCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DentalinkImportItemCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkImportItemPayload>[]
+        }
+        delete: {
+          args: Prisma.DentalinkImportItemDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkImportItemPayload>
+        }
+        update: {
+          args: Prisma.DentalinkImportItemUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkImportItemPayload>
+        }
+        deleteMany: {
+          args: Prisma.DentalinkImportItemDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DentalinkImportItemUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DentalinkImportItemUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkImportItemPayload>[]
+        }
+        upsert: {
+          args: Prisma.DentalinkImportItemUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkImportItemPayload>
+        }
+        aggregate: {
+          args: Prisma.DentalinkImportItemAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDentalinkImportItem>
+        }
+        groupBy: {
+          args: Prisma.DentalinkImportItemGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalinkImportItemGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DentalinkImportItemCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalinkImportItemCountAggregateOutputType> | number
+        }
+      }
+    }
+    DentalinkExternalIdentity: {
+      payload: Prisma.$DentalinkExternalIdentityPayload<ExtArgs>
+      fields: Prisma.DentalinkExternalIdentityFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DentalinkExternalIdentityFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkExternalIdentityPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DentalinkExternalIdentityFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkExternalIdentityPayload>
+        }
+        findFirst: {
+          args: Prisma.DentalinkExternalIdentityFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkExternalIdentityPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DentalinkExternalIdentityFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkExternalIdentityPayload>
+        }
+        findMany: {
+          args: Prisma.DentalinkExternalIdentityFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkExternalIdentityPayload>[]
+        }
+        create: {
+          args: Prisma.DentalinkExternalIdentityCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkExternalIdentityPayload>
+        }
+        createMany: {
+          args: Prisma.DentalinkExternalIdentityCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DentalinkExternalIdentityCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkExternalIdentityPayload>[]
+        }
+        delete: {
+          args: Prisma.DentalinkExternalIdentityDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkExternalIdentityPayload>
+        }
+        update: {
+          args: Prisma.DentalinkExternalIdentityUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkExternalIdentityPayload>
+        }
+        deleteMany: {
+          args: Prisma.DentalinkExternalIdentityDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DentalinkExternalIdentityUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DentalinkExternalIdentityUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkExternalIdentityPayload>[]
+        }
+        upsert: {
+          args: Prisma.DentalinkExternalIdentityUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalinkExternalIdentityPayload>
+        }
+        aggregate: {
+          args: Prisma.DentalinkExternalIdentityAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDentalinkExternalIdentity>
+        }
+        groupBy: {
+          args: Prisma.DentalinkExternalIdentityGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalinkExternalIdentityGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DentalinkExternalIdentityCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalinkExternalIdentityCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -4540,6 +4915,90 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+export const DentalinkAccountScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  externalAccountId: 'externalAccountId',
+  label: 'label',
+  enabled: 'enabled'
+} as const
+
+export type DentalinkAccountScalarFieldEnum = (typeof DentalinkAccountScalarFieldEnum)[keyof typeof DentalinkAccountScalarFieldEnum]
+
+
+export const DentalinkMappingScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  accountId: 'accountId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  kind: 'kind',
+  externalId: 'externalId',
+  providerId: 'providerId',
+  clinicLocationId: 'clinicLocationId'
+} as const
+
+export type DentalinkMappingScalarFieldEnum = (typeof DentalinkMappingScalarFieldEnum)[keyof typeof DentalinkMappingScalarFieldEnum]
+
+
+export const DentalinkImportRunScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  accountId: 'accountId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  requestKey: 'requestKey',
+  fromAt: 'fromAt',
+  toAt: 'toAt',
+  cursor: 'cursor',
+  state: 'state',
+  previewHash: 'previewHash',
+  confirmKey: 'confirmKey',
+  confirmHash: 'confirmHash',
+  counts: 'counts',
+  createdByUserId: 'createdByUserId',
+  confirmedAt: 'confirmedAt'
+} as const
+
+export type DentalinkImportRunScalarFieldEnum = (typeof DentalinkImportRunScalarFieldEnum)[keyof typeof DentalinkImportRunScalarFieldEnum]
+
+
+export const DentalinkImportItemScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  accountId: 'accountId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  patientId: 'patientId',
+  appointmentId: 'appointmentId',
+  runId: 'runId',
+  entityType: 'entityType',
+  externalId: 'externalId',
+  payloadJson: 'payloadJson',
+  payloadHash: 'payloadHash',
+  disposition: 'disposition',
+  issueCodes: 'issueCodes'
+} as const
+
+export type DentalinkImportItemScalarFieldEnum = (typeof DentalinkImportItemScalarFieldEnum)[keyof typeof DentalinkImportItemScalarFieldEnum]
+
+
+export const DentalinkExternalIdentityScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  accountId: 'accountId',
+  patientId: 'patientId',
+  appointmentId: 'appointmentId',
+  entityType: 'entityType',
+  externalId: 'externalId',
+  createdAt: 'createdAt'
+} as const
+
+export type DentalinkExternalIdentityScalarFieldEnum = (typeof DentalinkExternalIdentityScalarFieldEnum)[keyof typeof DentalinkExternalIdentityScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -5148,6 +5607,62 @@ export type ListEnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$P
 
 
 /**
+ * Reference to a field of type 'DentalinkMappingKind'
+ */
+export type EnumDentalinkMappingKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DentalinkMappingKind'>
+
+
+
+/**
+ * Reference to a field of type 'DentalinkMappingKind[]'
+ */
+export type ListEnumDentalinkMappingKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DentalinkMappingKind[]'>
+
+
+
+/**
+ * Reference to a field of type 'DentalinkImportRunState'
+ */
+export type EnumDentalinkImportRunStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DentalinkImportRunState'>
+
+
+
+/**
+ * Reference to a field of type 'DentalinkImportRunState[]'
+ */
+export type ListEnumDentalinkImportRunStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DentalinkImportRunState[]'>
+
+
+
+/**
+ * Reference to a field of type 'DentalinkEntityType'
+ */
+export type EnumDentalinkEntityTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DentalinkEntityType'>
+
+
+
+/**
+ * Reference to a field of type 'DentalinkEntityType[]'
+ */
+export type ListEnumDentalinkEntityTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DentalinkEntityType[]'>
+
+
+
+/**
+ * Reference to a field of type 'DentalinkImportDisposition'
+ */
+export type EnumDentalinkImportDispositionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DentalinkImportDisposition'>
+
+
+
+/**
+ * Reference to a field of type 'DentalinkImportDisposition[]'
+ */
+export type ListEnumDentalinkImportDispositionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DentalinkImportDisposition[]'>
+
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -5354,6 +5869,11 @@ export type GlobalOmitConfig = {
   treatmentCase?: Prisma.TreatmentCaseOmit
   userRole?: Prisma.UserRoleOmit
   user?: Prisma.UserOmit
+  dentalinkAccount?: Prisma.DentalinkAccountOmit
+  dentalinkMapping?: Prisma.DentalinkMappingOmit
+  dentalinkImportRun?: Prisma.DentalinkImportRunOmit
+  dentalinkImportItem?: Prisma.DentalinkImportItemOmit
+  dentalinkExternalIdentity?: Prisma.DentalinkExternalIdentityOmit
 }
 
 /* Types for Logging */

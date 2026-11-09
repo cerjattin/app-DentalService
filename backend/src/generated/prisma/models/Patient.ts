@@ -420,6 +420,8 @@ export type PatientWhereInput = {
   documentNumberSearch?: Prisma.StringNullableFilter<"Patient"> | string | null
   phoneSearch?: Prisma.StringNullableFilter<"Patient"> | string | null
   mobilePhoneSearch?: Prisma.StringNullableFilter<"Patient"> | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemListRelationFilter
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityListRelationFilter
   accidentCases?: Prisma.AccidentCaseListRelationFilter
   appointments?: Prisma.AppointmentListRelationFilter
   invoices?: Prisma.InvoiceListRelationFilter
@@ -461,6 +463,8 @@ export type PatientOrderByWithRelationInput = {
   documentNumberSearch?: Prisma.SortOrderInput | Prisma.SortOrder
   phoneSearch?: Prisma.SortOrderInput | Prisma.SortOrder
   mobilePhoneSearch?: Prisma.SortOrderInput | Prisma.SortOrder
+  dentalinkItems?: Prisma.DentalinkImportItemOrderByRelationAggregateInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityOrderByRelationAggregateInput
   accidentCases?: Prisma.AccidentCaseOrderByRelationAggregateInput
   appointments?: Prisma.AppointmentOrderByRelationAggregateInput
   invoices?: Prisma.InvoiceOrderByRelationAggregateInput
@@ -475,6 +479,7 @@ export type PatientWhereUniqueInput = Prisma.AtLeast<{
   id?: bigint | number
   organizationId_documentType_documentNumber?: Prisma.PatientOrganizationIdDocumentTypeDocumentNumberCompoundUniqueInput
   organizationId_patientNumber?: Prisma.PatientOrganizationIdPatientNumberCompoundUniqueInput
+  organizationId_id?: Prisma.PatientOrganizationIdIdCompoundUniqueInput
   AND?: Prisma.PatientWhereInput | Prisma.PatientWhereInput[]
   OR?: Prisma.PatientWhereInput[]
   NOT?: Prisma.PatientWhereInput | Prisma.PatientWhereInput[]
@@ -507,6 +512,8 @@ export type PatientWhereUniqueInput = Prisma.AtLeast<{
   documentNumberSearch?: Prisma.StringNullableFilter<"Patient"> | string | null
   phoneSearch?: Prisma.StringNullableFilter<"Patient"> | string | null
   mobilePhoneSearch?: Prisma.StringNullableFilter<"Patient"> | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemListRelationFilter
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityListRelationFilter
   accidentCases?: Prisma.AccidentCaseListRelationFilter
   appointments?: Prisma.AppointmentListRelationFilter
   invoices?: Prisma.InvoiceListRelationFilter
@@ -515,7 +522,7 @@ export type PatientWhereUniqueInput = Prisma.AtLeast<{
   signatures?: Prisma.SignatureListRelationFilter
   svbAuthorizations?: Prisma.SvbAuthorizationListRelationFilter
   treatmentCases?: Prisma.TreatmentCaseListRelationFilter
-}, "id" | "organizationId_documentType_documentNumber" | "organizationId_patientNumber">
+}, "id" | "organizationId_documentType_documentNumber" | "organizationId_patientNumber" | "organizationId_id">
 
 export type PatientOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -621,6 +628,8 @@ export type PatientCreateInput = {
   documentNumberSearch?: string | null
   phoneSearch?: string | null
   mobilePhoneSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemCreateNestedManyWithoutPatientInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityCreateNestedManyWithoutPatientInput
   accidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutPatientInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutPatientInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutPatientInput
@@ -662,6 +671,8 @@ export type PatientUncheckedCreateInput = {
   documentNumberSearch?: string | null
   phoneSearch?: string | null
   mobilePhoneSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedCreateNestedManyWithoutPatientInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedCreateNestedManyWithoutPatientInput
   accidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutPatientInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutPatientInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPatientInput
@@ -701,6 +712,8 @@ export type PatientUpdateInput = {
   documentNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobilePhoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUpdateManyWithoutPatientNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUpdateManyWithoutPatientNestedInput
   accidentCases?: Prisma.AccidentCaseUpdateManyWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutPatientNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutPatientNestedInput
@@ -742,6 +755,8 @@ export type PatientUncheckedUpdateInput = {
   documentNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobilePhoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedUpdateManyWithoutPatientNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedUpdateManyWithoutPatientNestedInput
   accidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutPatientNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPatientNestedInput
@@ -875,6 +890,11 @@ export type PatientOrganizationIdPatientNumberCompoundUniqueInput = {
   patientNumber: string
 }
 
+export type PatientOrganizationIdIdCompoundUniqueInput = {
+  organizationId: bigint | number
+  id: bigint | number
+}
+
 export type PatientCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
@@ -982,6 +1002,11 @@ export type PatientMinOrderByAggregateInput = {
 export type PatientSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
+}
+
+export type PatientNullableScalarRelationFilter = {
+  is?: Prisma.PatientWhereInput | null
+  isNot?: Prisma.PatientWhereInput | null
 }
 
 export type PatientCreateNestedOneWithoutAccidentCasesInput = {
@@ -1132,6 +1157,38 @@ export type PatientUpdateOneRequiredWithoutTreatmentCasesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PatientUpdateToOneWithWhereWithoutTreatmentCasesInput, Prisma.PatientUpdateWithoutTreatmentCasesInput>, Prisma.PatientUncheckedUpdateWithoutTreatmentCasesInput>
 }
 
+export type PatientCreateNestedOneWithoutDentalinkItemsInput = {
+  create?: Prisma.XOR<Prisma.PatientCreateWithoutDentalinkItemsInput, Prisma.PatientUncheckedCreateWithoutDentalinkItemsInput>
+  connectOrCreate?: Prisma.PatientCreateOrConnectWithoutDentalinkItemsInput
+  connect?: Prisma.PatientWhereUniqueInput
+}
+
+export type PatientUpdateOneWithoutDentalinkItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.PatientCreateWithoutDentalinkItemsInput, Prisma.PatientUncheckedCreateWithoutDentalinkItemsInput>
+  connectOrCreate?: Prisma.PatientCreateOrConnectWithoutDentalinkItemsInput
+  upsert?: Prisma.PatientUpsertWithoutDentalinkItemsInput
+  disconnect?: Prisma.PatientWhereInput | boolean
+  delete?: Prisma.PatientWhereInput | boolean
+  connect?: Prisma.PatientWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PatientUpdateToOneWithWhereWithoutDentalinkItemsInput, Prisma.PatientUpdateWithoutDentalinkItemsInput>, Prisma.PatientUncheckedUpdateWithoutDentalinkItemsInput>
+}
+
+export type PatientCreateNestedOneWithoutDentalinkIdentitiesInput = {
+  create?: Prisma.XOR<Prisma.PatientCreateWithoutDentalinkIdentitiesInput, Prisma.PatientUncheckedCreateWithoutDentalinkIdentitiesInput>
+  connectOrCreate?: Prisma.PatientCreateOrConnectWithoutDentalinkIdentitiesInput
+  connect?: Prisma.PatientWhereUniqueInput
+}
+
+export type PatientUpdateOneWithoutDentalinkIdentitiesNestedInput = {
+  create?: Prisma.XOR<Prisma.PatientCreateWithoutDentalinkIdentitiesInput, Prisma.PatientUncheckedCreateWithoutDentalinkIdentitiesInput>
+  connectOrCreate?: Prisma.PatientCreateOrConnectWithoutDentalinkIdentitiesInput
+  upsert?: Prisma.PatientUpsertWithoutDentalinkIdentitiesInput
+  disconnect?: Prisma.PatientWhereInput | boolean
+  delete?: Prisma.PatientWhereInput | boolean
+  connect?: Prisma.PatientWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PatientUpdateToOneWithWhereWithoutDentalinkIdentitiesInput, Prisma.PatientUpdateWithoutDentalinkIdentitiesInput>, Prisma.PatientUncheckedUpdateWithoutDentalinkIdentitiesInput>
+}
+
 export type PatientCreateWithoutAccidentCasesInput = {
   id?: bigint | number
   patientNumber: string
@@ -1162,6 +1219,8 @@ export type PatientCreateWithoutAccidentCasesInput = {
   documentNumberSearch?: string | null
   phoneSearch?: string | null
   mobilePhoneSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemCreateNestedManyWithoutPatientInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityCreateNestedManyWithoutPatientInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutPatientInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutPatientInput
   insuranceCoverages?: Prisma.PatientInsuranceCreateNestedManyWithoutPatientInput
@@ -1202,6 +1261,8 @@ export type PatientUncheckedCreateWithoutAccidentCasesInput = {
   documentNumberSearch?: string | null
   phoneSearch?: string | null
   mobilePhoneSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedCreateNestedManyWithoutPatientInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedCreateNestedManyWithoutPatientInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutPatientInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPatientInput
   insuranceCoverages?: Prisma.PatientInsuranceUncheckedCreateNestedManyWithoutPatientInput
@@ -1256,6 +1317,8 @@ export type PatientUpdateWithoutAccidentCasesInput = {
   documentNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobilePhoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUpdateManyWithoutPatientNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUpdateManyWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutPatientNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutPatientNestedInput
   insuranceCoverages?: Prisma.PatientInsuranceUpdateManyWithoutPatientNestedInput
@@ -1296,6 +1359,8 @@ export type PatientUncheckedUpdateWithoutAccidentCasesInput = {
   documentNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobilePhoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedUpdateManyWithoutPatientNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedUpdateManyWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutPatientNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPatientNestedInput
   insuranceCoverages?: Prisma.PatientInsuranceUncheckedUpdateManyWithoutPatientNestedInput
@@ -1334,6 +1399,8 @@ export type PatientCreateWithoutAppointmentsInput = {
   documentNumberSearch?: string | null
   phoneSearch?: string | null
   mobilePhoneSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemCreateNestedManyWithoutPatientInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityCreateNestedManyWithoutPatientInput
   accidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutPatientInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutPatientInput
   insuranceCoverages?: Prisma.PatientInsuranceCreateNestedManyWithoutPatientInput
@@ -1374,6 +1441,8 @@ export type PatientUncheckedCreateWithoutAppointmentsInput = {
   documentNumberSearch?: string | null
   phoneSearch?: string | null
   mobilePhoneSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedCreateNestedManyWithoutPatientInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedCreateNestedManyWithoutPatientInput
   accidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutPatientInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPatientInput
   insuranceCoverages?: Prisma.PatientInsuranceUncheckedCreateNestedManyWithoutPatientInput
@@ -1428,6 +1497,8 @@ export type PatientUpdateWithoutAppointmentsInput = {
   documentNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobilePhoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUpdateManyWithoutPatientNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUpdateManyWithoutPatientNestedInput
   accidentCases?: Prisma.AccidentCaseUpdateManyWithoutPatientNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutPatientNestedInput
   insuranceCoverages?: Prisma.PatientInsuranceUpdateManyWithoutPatientNestedInput
@@ -1468,6 +1539,8 @@ export type PatientUncheckedUpdateWithoutAppointmentsInput = {
   documentNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobilePhoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedUpdateManyWithoutPatientNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedUpdateManyWithoutPatientNestedInput
   accidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutPatientNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPatientNestedInput
   insuranceCoverages?: Prisma.PatientInsuranceUncheckedUpdateManyWithoutPatientNestedInput
@@ -1506,6 +1579,8 @@ export type PatientCreateWithoutInvoicesInput = {
   documentNumberSearch?: string | null
   phoneSearch?: string | null
   mobilePhoneSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemCreateNestedManyWithoutPatientInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityCreateNestedManyWithoutPatientInput
   accidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutPatientInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutPatientInput
   insuranceCoverages?: Prisma.PatientInsuranceCreateNestedManyWithoutPatientInput
@@ -1546,6 +1621,8 @@ export type PatientUncheckedCreateWithoutInvoicesInput = {
   documentNumberSearch?: string | null
   phoneSearch?: string | null
   mobilePhoneSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedCreateNestedManyWithoutPatientInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedCreateNestedManyWithoutPatientInput
   accidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutPatientInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutPatientInput
   insuranceCoverages?: Prisma.PatientInsuranceUncheckedCreateNestedManyWithoutPatientInput
@@ -1600,6 +1677,8 @@ export type PatientUpdateWithoutInvoicesInput = {
   documentNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobilePhoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUpdateManyWithoutPatientNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUpdateManyWithoutPatientNestedInput
   accidentCases?: Prisma.AccidentCaseUpdateManyWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutPatientNestedInput
   insuranceCoverages?: Prisma.PatientInsuranceUpdateManyWithoutPatientNestedInput
@@ -1640,6 +1719,8 @@ export type PatientUncheckedUpdateWithoutInvoicesInput = {
   documentNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobilePhoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedUpdateManyWithoutPatientNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedUpdateManyWithoutPatientNestedInput
   accidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutPatientNestedInput
   insuranceCoverages?: Prisma.PatientInsuranceUncheckedUpdateManyWithoutPatientNestedInput
@@ -1678,6 +1759,8 @@ export type PatientCreateWithoutOrganizationInput = {
   documentNumberSearch?: string | null
   phoneSearch?: string | null
   mobilePhoneSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemCreateNestedManyWithoutPatientInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityCreateNestedManyWithoutPatientInput
   accidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutPatientInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutPatientInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutPatientInput
@@ -1717,6 +1800,8 @@ export type PatientUncheckedCreateWithoutOrganizationInput = {
   documentNumberSearch?: string | null
   phoneSearch?: string | null
   mobilePhoneSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedCreateNestedManyWithoutPatientInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedCreateNestedManyWithoutPatientInput
   accidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutPatientInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutPatientInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPatientInput
@@ -1818,6 +1903,8 @@ export type PatientCreateWithoutInsuranceCoveragesInput = {
   documentNumberSearch?: string | null
   phoneSearch?: string | null
   mobilePhoneSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemCreateNestedManyWithoutPatientInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityCreateNestedManyWithoutPatientInput
   accidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutPatientInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutPatientInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutPatientInput
@@ -1858,6 +1945,8 @@ export type PatientUncheckedCreateWithoutInsuranceCoveragesInput = {
   documentNumberSearch?: string | null
   phoneSearch?: string | null
   mobilePhoneSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedCreateNestedManyWithoutPatientInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedCreateNestedManyWithoutPatientInput
   accidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutPatientInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutPatientInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPatientInput
@@ -1912,6 +2001,8 @@ export type PatientUpdateWithoutInsuranceCoveragesInput = {
   documentNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobilePhoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUpdateManyWithoutPatientNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUpdateManyWithoutPatientNestedInput
   accidentCases?: Prisma.AccidentCaseUpdateManyWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutPatientNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutPatientNestedInput
@@ -1952,6 +2043,8 @@ export type PatientUncheckedUpdateWithoutInsuranceCoveragesInput = {
   documentNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobilePhoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedUpdateManyWithoutPatientNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedUpdateManyWithoutPatientNestedInput
   accidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutPatientNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPatientNestedInput
@@ -1990,6 +2083,8 @@ export type PatientCreateWithoutSignaturesInput = {
   documentNumberSearch?: string | null
   phoneSearch?: string | null
   mobilePhoneSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemCreateNestedManyWithoutPatientInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityCreateNestedManyWithoutPatientInput
   accidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutPatientInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutPatientInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutPatientInput
@@ -2030,6 +2125,8 @@ export type PatientUncheckedCreateWithoutSignaturesInput = {
   documentNumberSearch?: string | null
   phoneSearch?: string | null
   mobilePhoneSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedCreateNestedManyWithoutPatientInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedCreateNestedManyWithoutPatientInput
   accidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutPatientInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutPatientInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPatientInput
@@ -2084,6 +2181,8 @@ export type PatientUpdateWithoutSignaturesInput = {
   documentNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobilePhoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUpdateManyWithoutPatientNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUpdateManyWithoutPatientNestedInput
   accidentCases?: Prisma.AccidentCaseUpdateManyWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutPatientNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutPatientNestedInput
@@ -2124,6 +2223,8 @@ export type PatientUncheckedUpdateWithoutSignaturesInput = {
   documentNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobilePhoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedUpdateManyWithoutPatientNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedUpdateManyWithoutPatientNestedInput
   accidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutPatientNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPatientNestedInput
@@ -2162,6 +2263,8 @@ export type PatientCreateWithoutSvbAuthorizationsInput = {
   documentNumberSearch?: string | null
   phoneSearch?: string | null
   mobilePhoneSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemCreateNestedManyWithoutPatientInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityCreateNestedManyWithoutPatientInput
   accidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutPatientInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutPatientInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutPatientInput
@@ -2202,6 +2305,8 @@ export type PatientUncheckedCreateWithoutSvbAuthorizationsInput = {
   documentNumberSearch?: string | null
   phoneSearch?: string | null
   mobilePhoneSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedCreateNestedManyWithoutPatientInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedCreateNestedManyWithoutPatientInput
   accidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutPatientInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutPatientInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPatientInput
@@ -2256,6 +2361,8 @@ export type PatientUpdateWithoutSvbAuthorizationsInput = {
   documentNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobilePhoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUpdateManyWithoutPatientNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUpdateManyWithoutPatientNestedInput
   accidentCases?: Prisma.AccidentCaseUpdateManyWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutPatientNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutPatientNestedInput
@@ -2296,6 +2403,8 @@ export type PatientUncheckedUpdateWithoutSvbAuthorizationsInput = {
   documentNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobilePhoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedUpdateManyWithoutPatientNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedUpdateManyWithoutPatientNestedInput
   accidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutPatientNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPatientNestedInput
@@ -2334,6 +2443,8 @@ export type PatientCreateWithoutTreatmentCasesInput = {
   documentNumberSearch?: string | null
   phoneSearch?: string | null
   mobilePhoneSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemCreateNestedManyWithoutPatientInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityCreateNestedManyWithoutPatientInput
   accidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutPatientInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutPatientInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutPatientInput
@@ -2374,6 +2485,8 @@ export type PatientUncheckedCreateWithoutTreatmentCasesInput = {
   documentNumberSearch?: string | null
   phoneSearch?: string | null
   mobilePhoneSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedCreateNestedManyWithoutPatientInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedCreateNestedManyWithoutPatientInput
   accidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutPatientInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutPatientInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPatientInput
@@ -2428,6 +2541,8 @@ export type PatientUpdateWithoutTreatmentCasesInput = {
   documentNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobilePhoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUpdateManyWithoutPatientNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUpdateManyWithoutPatientNestedInput
   accidentCases?: Prisma.AccidentCaseUpdateManyWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutPatientNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutPatientNestedInput
@@ -2468,12 +2583,374 @@ export type PatientUncheckedUpdateWithoutTreatmentCasesInput = {
   documentNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobilePhoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedUpdateManyWithoutPatientNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedUpdateManyWithoutPatientNestedInput
   accidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutPatientNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPatientNestedInput
   insuranceCoverages?: Prisma.PatientInsuranceUncheckedUpdateManyWithoutPatientNestedInput
   signatures?: Prisma.SignatureUncheckedUpdateManyWithoutPatientNestedInput
   svbAuthorizations?: Prisma.SvbAuthorizationUncheckedUpdateManyWithoutPatientNestedInput
+}
+
+export type PatientCreateWithoutDentalinkItemsInput = {
+  id?: bigint | number
+  patientNumber: string
+  firstName: string
+  middleName?: string | null
+  lastName: string
+  secondLastName?: string | null
+  dateOfBirth?: Date | string | null
+  sex?: $Enums.PatientSex | null
+  documentType?: string | null
+  documentNumber?: string | null
+  email?: string | null
+  phone?: string | null
+  mobilePhone?: string | null
+  addressLine1?: string | null
+  addressLine2?: string | null
+  city?: string | null
+  countryCode?: string | null
+  status?: $Enums.PatientStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  archivedAt?: Date | string | null
+  patientNumberSearch?: string
+  firstNameSearch?: string
+  middleNameSearch?: string | null
+  lastNameSearch?: string
+  secondLastNameSearch?: string | null
+  documentNumberSearch?: string | null
+  phoneSearch?: string | null
+  mobilePhoneSearch?: string | null
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityCreateNestedManyWithoutPatientInput
+  accidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutPatientInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutPatientInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutPatientInput
+  insuranceCoverages?: Prisma.PatientInsuranceCreateNestedManyWithoutPatientInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutPatientsInput
+  signatures?: Prisma.SignatureCreateNestedManyWithoutPatientInput
+  svbAuthorizations?: Prisma.SvbAuthorizationCreateNestedManyWithoutPatientInput
+  treatmentCases?: Prisma.TreatmentCaseCreateNestedManyWithoutPatientInput
+}
+
+export type PatientUncheckedCreateWithoutDentalinkItemsInput = {
+  id?: bigint | number
+  organizationId: bigint | number
+  patientNumber: string
+  firstName: string
+  middleName?: string | null
+  lastName: string
+  secondLastName?: string | null
+  dateOfBirth?: Date | string | null
+  sex?: $Enums.PatientSex | null
+  documentType?: string | null
+  documentNumber?: string | null
+  email?: string | null
+  phone?: string | null
+  mobilePhone?: string | null
+  addressLine1?: string | null
+  addressLine2?: string | null
+  city?: string | null
+  countryCode?: string | null
+  status?: $Enums.PatientStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  archivedAt?: Date | string | null
+  patientNumberSearch?: string
+  firstNameSearch?: string
+  middleNameSearch?: string | null
+  lastNameSearch?: string
+  secondLastNameSearch?: string | null
+  documentNumberSearch?: string | null
+  phoneSearch?: string | null
+  mobilePhoneSearch?: string | null
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedCreateNestedManyWithoutPatientInput
+  accidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutPatientInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutPatientInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPatientInput
+  insuranceCoverages?: Prisma.PatientInsuranceUncheckedCreateNestedManyWithoutPatientInput
+  signatures?: Prisma.SignatureUncheckedCreateNestedManyWithoutPatientInput
+  svbAuthorizations?: Prisma.SvbAuthorizationUncheckedCreateNestedManyWithoutPatientInput
+  treatmentCases?: Prisma.TreatmentCaseUncheckedCreateNestedManyWithoutPatientInput
+}
+
+export type PatientCreateOrConnectWithoutDentalinkItemsInput = {
+  where: Prisma.PatientWhereUniqueInput
+  create: Prisma.XOR<Prisma.PatientCreateWithoutDentalinkItemsInput, Prisma.PatientUncheckedCreateWithoutDentalinkItemsInput>
+}
+
+export type PatientUpsertWithoutDentalinkItemsInput = {
+  update: Prisma.XOR<Prisma.PatientUpdateWithoutDentalinkItemsInput, Prisma.PatientUncheckedUpdateWithoutDentalinkItemsInput>
+  create: Prisma.XOR<Prisma.PatientCreateWithoutDentalinkItemsInput, Prisma.PatientUncheckedCreateWithoutDentalinkItemsInput>
+  where?: Prisma.PatientWhereInput
+}
+
+export type PatientUpdateToOneWithWhereWithoutDentalinkItemsInput = {
+  where?: Prisma.PatientWhereInput
+  data: Prisma.XOR<Prisma.PatientUpdateWithoutDentalinkItemsInput, Prisma.PatientUncheckedUpdateWithoutDentalinkItemsInput>
+}
+
+export type PatientUpdateWithoutDentalinkItemsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  patientNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sex?: Prisma.NullableEnumPatientSexFieldUpdateOperationsInput | $Enums.PatientSex | null
+  documentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mobilePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  countryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPatientStatusFieldUpdateOperationsInput | $Enums.PatientStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  patientNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  middleNameSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  secondLastNameSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mobilePhoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUpdateManyWithoutPatientNestedInput
+  accidentCases?: Prisma.AccidentCaseUpdateManyWithoutPatientNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutPatientNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutPatientNestedInput
+  insuranceCoverages?: Prisma.PatientInsuranceUpdateManyWithoutPatientNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutPatientsNestedInput
+  signatures?: Prisma.SignatureUpdateManyWithoutPatientNestedInput
+  svbAuthorizations?: Prisma.SvbAuthorizationUpdateManyWithoutPatientNestedInput
+  treatmentCases?: Prisma.TreatmentCaseUpdateManyWithoutPatientNestedInput
+}
+
+export type PatientUncheckedUpdateWithoutDentalinkItemsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  organizationId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  patientNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sex?: Prisma.NullableEnumPatientSexFieldUpdateOperationsInput | $Enums.PatientSex | null
+  documentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mobilePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  countryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPatientStatusFieldUpdateOperationsInput | $Enums.PatientStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  patientNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  middleNameSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  secondLastNameSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mobilePhoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedUpdateManyWithoutPatientNestedInput
+  accidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutPatientNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutPatientNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPatientNestedInput
+  insuranceCoverages?: Prisma.PatientInsuranceUncheckedUpdateManyWithoutPatientNestedInput
+  signatures?: Prisma.SignatureUncheckedUpdateManyWithoutPatientNestedInput
+  svbAuthorizations?: Prisma.SvbAuthorizationUncheckedUpdateManyWithoutPatientNestedInput
+  treatmentCases?: Prisma.TreatmentCaseUncheckedUpdateManyWithoutPatientNestedInput
+}
+
+export type PatientCreateWithoutDentalinkIdentitiesInput = {
+  id?: bigint | number
+  patientNumber: string
+  firstName: string
+  middleName?: string | null
+  lastName: string
+  secondLastName?: string | null
+  dateOfBirth?: Date | string | null
+  sex?: $Enums.PatientSex | null
+  documentType?: string | null
+  documentNumber?: string | null
+  email?: string | null
+  phone?: string | null
+  mobilePhone?: string | null
+  addressLine1?: string | null
+  addressLine2?: string | null
+  city?: string | null
+  countryCode?: string | null
+  status?: $Enums.PatientStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  archivedAt?: Date | string | null
+  patientNumberSearch?: string
+  firstNameSearch?: string
+  middleNameSearch?: string | null
+  lastNameSearch?: string
+  secondLastNameSearch?: string | null
+  documentNumberSearch?: string | null
+  phoneSearch?: string | null
+  mobilePhoneSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemCreateNestedManyWithoutPatientInput
+  accidentCases?: Prisma.AccidentCaseCreateNestedManyWithoutPatientInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutPatientInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutPatientInput
+  insuranceCoverages?: Prisma.PatientInsuranceCreateNestedManyWithoutPatientInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutPatientsInput
+  signatures?: Prisma.SignatureCreateNestedManyWithoutPatientInput
+  svbAuthorizations?: Prisma.SvbAuthorizationCreateNestedManyWithoutPatientInput
+  treatmentCases?: Prisma.TreatmentCaseCreateNestedManyWithoutPatientInput
+}
+
+export type PatientUncheckedCreateWithoutDentalinkIdentitiesInput = {
+  id?: bigint | number
+  organizationId: bigint | number
+  patientNumber: string
+  firstName: string
+  middleName?: string | null
+  lastName: string
+  secondLastName?: string | null
+  dateOfBirth?: Date | string | null
+  sex?: $Enums.PatientSex | null
+  documentType?: string | null
+  documentNumber?: string | null
+  email?: string | null
+  phone?: string | null
+  mobilePhone?: string | null
+  addressLine1?: string | null
+  addressLine2?: string | null
+  city?: string | null
+  countryCode?: string | null
+  status?: $Enums.PatientStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  archivedAt?: Date | string | null
+  patientNumberSearch?: string
+  firstNameSearch?: string
+  middleNameSearch?: string | null
+  lastNameSearch?: string
+  secondLastNameSearch?: string | null
+  documentNumberSearch?: string | null
+  phoneSearch?: string | null
+  mobilePhoneSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedCreateNestedManyWithoutPatientInput
+  accidentCases?: Prisma.AccidentCaseUncheckedCreateNestedManyWithoutPatientInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutPatientInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPatientInput
+  insuranceCoverages?: Prisma.PatientInsuranceUncheckedCreateNestedManyWithoutPatientInput
+  signatures?: Prisma.SignatureUncheckedCreateNestedManyWithoutPatientInput
+  svbAuthorizations?: Prisma.SvbAuthorizationUncheckedCreateNestedManyWithoutPatientInput
+  treatmentCases?: Prisma.TreatmentCaseUncheckedCreateNestedManyWithoutPatientInput
+}
+
+export type PatientCreateOrConnectWithoutDentalinkIdentitiesInput = {
+  where: Prisma.PatientWhereUniqueInput
+  create: Prisma.XOR<Prisma.PatientCreateWithoutDentalinkIdentitiesInput, Prisma.PatientUncheckedCreateWithoutDentalinkIdentitiesInput>
+}
+
+export type PatientUpsertWithoutDentalinkIdentitiesInput = {
+  update: Prisma.XOR<Prisma.PatientUpdateWithoutDentalinkIdentitiesInput, Prisma.PatientUncheckedUpdateWithoutDentalinkIdentitiesInput>
+  create: Prisma.XOR<Prisma.PatientCreateWithoutDentalinkIdentitiesInput, Prisma.PatientUncheckedCreateWithoutDentalinkIdentitiesInput>
+  where?: Prisma.PatientWhereInput
+}
+
+export type PatientUpdateToOneWithWhereWithoutDentalinkIdentitiesInput = {
+  where?: Prisma.PatientWhereInput
+  data: Prisma.XOR<Prisma.PatientUpdateWithoutDentalinkIdentitiesInput, Prisma.PatientUncheckedUpdateWithoutDentalinkIdentitiesInput>
+}
+
+export type PatientUpdateWithoutDentalinkIdentitiesInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  patientNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sex?: Prisma.NullableEnumPatientSexFieldUpdateOperationsInput | $Enums.PatientSex | null
+  documentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mobilePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  countryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPatientStatusFieldUpdateOperationsInput | $Enums.PatientStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  patientNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  middleNameSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  secondLastNameSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mobilePhoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUpdateManyWithoutPatientNestedInput
+  accidentCases?: Prisma.AccidentCaseUpdateManyWithoutPatientNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutPatientNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutPatientNestedInput
+  insuranceCoverages?: Prisma.PatientInsuranceUpdateManyWithoutPatientNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutPatientsNestedInput
+  signatures?: Prisma.SignatureUpdateManyWithoutPatientNestedInput
+  svbAuthorizations?: Prisma.SvbAuthorizationUpdateManyWithoutPatientNestedInput
+  treatmentCases?: Prisma.TreatmentCaseUpdateManyWithoutPatientNestedInput
+}
+
+export type PatientUncheckedUpdateWithoutDentalinkIdentitiesInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  organizationId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  patientNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sex?: Prisma.NullableEnumPatientSexFieldUpdateOperationsInput | $Enums.PatientSex | null
+  documentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mobilePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  countryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPatientStatusFieldUpdateOperationsInput | $Enums.PatientStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  patientNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  middleNameSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  secondLastNameSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mobilePhoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedUpdateManyWithoutPatientNestedInput
+  accidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutPatientNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutPatientNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPatientNestedInput
+  insuranceCoverages?: Prisma.PatientInsuranceUncheckedUpdateManyWithoutPatientNestedInput
+  signatures?: Prisma.SignatureUncheckedUpdateManyWithoutPatientNestedInput
+  svbAuthorizations?: Prisma.SvbAuthorizationUncheckedUpdateManyWithoutPatientNestedInput
+  treatmentCases?: Prisma.TreatmentCaseUncheckedUpdateManyWithoutPatientNestedInput
 }
 
 export type PatientCreateManyOrganizationInput = {
@@ -2538,6 +3015,8 @@ export type PatientUpdateWithoutOrganizationInput = {
   documentNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobilePhoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUpdateManyWithoutPatientNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUpdateManyWithoutPatientNestedInput
   accidentCases?: Prisma.AccidentCaseUpdateManyWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutPatientNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutPatientNestedInput
@@ -2577,6 +3056,8 @@ export type PatientUncheckedUpdateWithoutOrganizationInput = {
   documentNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mobilePhoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedUpdateManyWithoutPatientNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedUpdateManyWithoutPatientNestedInput
   accidentCases?: Prisma.AccidentCaseUncheckedUpdateManyWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutPatientNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPatientNestedInput
@@ -2624,6 +3105,8 @@ export type PatientUncheckedUpdateManyWithoutOrganizationInput = {
  */
 
 export type PatientCountOutputType = {
+  dentalinkItems: number
+  dentalinkIdentities: number
   accidentCases: number
   appointments: number
   invoices: number
@@ -2634,6 +3117,8 @@ export type PatientCountOutputType = {
 }
 
 export type PatientCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  dentalinkItems?: boolean | PatientCountOutputTypeCountDentalinkItemsArgs
+  dentalinkIdentities?: boolean | PatientCountOutputTypeCountDentalinkIdentitiesArgs
   accidentCases?: boolean | PatientCountOutputTypeCountAccidentCasesArgs
   appointments?: boolean | PatientCountOutputTypeCountAppointmentsArgs
   invoices?: boolean | PatientCountOutputTypeCountInvoicesArgs
@@ -2651,6 +3136,20 @@ export type PatientCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
    * Select specific fields to fetch from the PatientCountOutputType
    */
   select?: Prisma.PatientCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * PatientCountOutputType without action
+ */
+export type PatientCountOutputTypeCountDentalinkItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DentalinkImportItemWhereInput
+}
+
+/**
+ * PatientCountOutputType without action
+ */
+export type PatientCountOutputTypeCountDentalinkIdentitiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DentalinkExternalIdentityWhereInput
 }
 
 /**
@@ -2734,6 +3233,8 @@ export type PatientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   documentNumberSearch?: boolean
   phoneSearch?: boolean
   mobilePhoneSearch?: boolean
+  dentalinkItems?: boolean | Prisma.Patient$dentalinkItemsArgs<ExtArgs>
+  dentalinkIdentities?: boolean | Prisma.Patient$dentalinkIdentitiesArgs<ExtArgs>
   accidentCases?: boolean | Prisma.Patient$accidentCasesArgs<ExtArgs>
   appointments?: boolean | Prisma.Patient$appointmentsArgs<ExtArgs>
   invoices?: boolean | Prisma.Patient$invoicesArgs<ExtArgs>
@@ -2848,6 +3349,8 @@ export type PatientSelectScalar = {
 
 export type PatientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "patientNumber" | "firstName" | "middleName" | "lastName" | "secondLastName" | "dateOfBirth" | "sex" | "documentType" | "documentNumber" | "email" | "phone" | "mobilePhone" | "addressLine1" | "addressLine2" | "city" | "countryCode" | "status" | "createdAt" | "updatedAt" | "archivedAt" | "patientNumberSearch" | "firstNameSearch" | "middleNameSearch" | "lastNameSearch" | "secondLastNameSearch" | "documentNumberSearch" | "phoneSearch" | "mobilePhoneSearch", ExtArgs["result"]["patient"]>
 export type PatientInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  dentalinkItems?: boolean | Prisma.Patient$dentalinkItemsArgs<ExtArgs>
+  dentalinkIdentities?: boolean | Prisma.Patient$dentalinkIdentitiesArgs<ExtArgs>
   accidentCases?: boolean | Prisma.Patient$accidentCasesArgs<ExtArgs>
   appointments?: boolean | Prisma.Patient$appointmentsArgs<ExtArgs>
   invoices?: boolean | Prisma.Patient$invoicesArgs<ExtArgs>
@@ -2868,6 +3371,8 @@ export type PatientIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
 export type $PatientPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Patient"
   objects: {
+    dentalinkItems: Prisma.$DentalinkImportItemPayload<ExtArgs>[]
+    dentalinkIdentities: Prisma.$DentalinkExternalIdentityPayload<ExtArgs>[]
     accidentCases: Prisma.$AccidentCasePayload<ExtArgs>[]
     appointments: Prisma.$AppointmentPayload<ExtArgs>[]
     invoices: Prisma.$InvoicePayload<ExtArgs>[]
@@ -3302,6 +3807,8 @@ readonly fields: PatientFieldRefs;
  */
 export interface Prisma__PatientClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  dentalinkItems<T extends Prisma.Patient$dentalinkItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Patient$dentalinkItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DentalinkImportItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  dentalinkIdentities<T extends Prisma.Patient$dentalinkIdentitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Patient$dentalinkIdentitiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DentalinkExternalIdentityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   accidentCases<T extends Prisma.Patient$accidentCasesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Patient$accidentCasesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccidentCasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   appointments<T extends Prisma.Patient$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Patient$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   invoices<T extends Prisma.Patient$invoicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Patient$invoicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3767,6 +4274,54 @@ export type PatientDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Patients to delete.
    */
   limit?: number
+}
+
+/**
+ * Patient.dentalinkItems
+ */
+export type Patient$dentalinkItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DentalinkImportItem
+   */
+  select?: Prisma.DentalinkImportItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DentalinkImportItem
+   */
+  omit?: Prisma.DentalinkImportItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DentalinkImportItemInclude<ExtArgs> | null
+  where?: Prisma.DentalinkImportItemWhereInput
+  orderBy?: Prisma.DentalinkImportItemOrderByWithRelationInput | Prisma.DentalinkImportItemOrderByWithRelationInput[]
+  cursor?: Prisma.DentalinkImportItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DentalinkImportItemScalarFieldEnum | Prisma.DentalinkImportItemScalarFieldEnum[]
+}
+
+/**
+ * Patient.dentalinkIdentities
+ */
+export type Patient$dentalinkIdentitiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DentalinkExternalIdentity
+   */
+  select?: Prisma.DentalinkExternalIdentitySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DentalinkExternalIdentity
+   */
+  omit?: Prisma.DentalinkExternalIdentityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DentalinkExternalIdentityInclude<ExtArgs> | null
+  where?: Prisma.DentalinkExternalIdentityWhereInput
+  orderBy?: Prisma.DentalinkExternalIdentityOrderByWithRelationInput | Prisma.DentalinkExternalIdentityOrderByWithRelationInput[]
+  cursor?: Prisma.DentalinkExternalIdentityWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DentalinkExternalIdentityScalarFieldEnum | Prisma.DentalinkExternalIdentityScalarFieldEnum[]
 }
 
 /**

@@ -1,5 +1,30 @@
 # Plan del MVP y primer despliegue clínico
 
+## Plan vigente — OPS, 7 de noviembre de 2026
+
+El objetivo es actualizar el flujo operativo en local y preparar una actualización del despliegue **informado por el usuario**. [Contratos comunes](negocio/CONTRATOS_OPERACION_20261107.md), [funcional](negocio/CONTRATO_ATENCION_FACTURACION_DENTALINK_20261106.md), [entrega Arquitectura](arquitectura/OPS_05_ENTREGA.md). La ronda no aplica cambios a clínica, conecta Dentalink real ni publica. No se interpreta el plan histórico de debajo como estado del destino actual.
+
+| Orden | Resultado / responsable | Estado de partida |
+| --- | --- | --- |
+| 1, paralelo | Completar servicios y facturación OPS-01/02; inspección OPS-04 | Flujo local ya implementado sobre HEAD1828797be; revisar defectos, no duplicarlo |
+| 2, DB → Backend | Modelo/migración/cliente Dentalink y revisión de service_attention, OPS-03 | Acuerdo propuesto de persistencia publicado; cliente/schema y evidencia por DB |
+| 3, Backend → Frontend | Rutas/DTO/permisos/preview/confirmación/idempotencia sin conector HTTP real | Frontend integra solo contrato publicado; puede cerrar atención/factura de inmediato |
+| 4, QA por área | HTTP/Decimal/concurrencia/corrección, cachés/roles/navegador, volumen y dinero | Entregas OPS nuevas necesarias; pruebas del 6–7 no acreditan ediciones posteriores |
+| 5, DB | Diagnosticar y resolver restauración aislada/objetos, sin elevar timeout a ciegas | 2 PASS y 1 timeout120s previo; recuperación no aceptada |
+| 6, Arquitectura | Manifiesto/hash/migraciones y vínculo a entregas OPS-01–04 | Candidato previo 092a histórico; nueva captura provisional hasta recibir evidencias |
+| 7, operación posterior | Inventario autorizado del destino, backup/restore, aplicación revisada y actualización API/UI | Despliegue informado, no inspeccionado. Sin autorización de aplicar/publicar en esta ronda |
+| 8, dependencias externas | Dentalink documentación/acceso/mapeos/primera conexión; SVB estructura/radicación | PENDIENTE EXTERNO, no PASS por un adaptador sintético o endpoint de estado |
+
+Nuevo recorrido: agenda → confirmación → servicios/cantidades → cierre conjunto → factura/firma en Recepción; Admin mediante permisos. No exigir historia médica/notas/seguro/precio/autorización/remisión al profesional para la captura mínima. Seguro y tarifa se resuelven al facturar; errores conservan servicios. El contrato anterior con seguro y la historia firmada permanecen compatibles. Volumen sin precio no equivale a ingresos cobrados.
+
+**Orden de cambio del destino:** [runbook OPS](arquitectura/OPS_05_ACTUALIZACION_DESTINO.md), schema/constraints/permisos primero en ventana controlada, API compatible después y UI nueva al final; sin escritores viejos frente a líneas sin valorar. Migraciones nunca en build/start/request. Una reversión de código no deshace datos, firmas ni identidades importadas; verificar compatibilidad y retorno antes de actualizar.
+
+**Coordinación:** [matriz Dentalink/recuperación](arquitectura/OPS_05_COORDINACION_DENTALINK.md). DB único escritor Prisma/SQL/generado; Backend publica API; Frontend único escritor inicial de componentes; Diseño evidencia independiente. Pruebas `_test`, puerto/cluster/root documental exclusivos; Negocio55467 está detenido y no se reutiliza.
+
+El candidato se prepara con fuentes y migraciones efectivas, sin CRT/captura Supabase ni secretos/documentos. Se identifica versión y checks por área; evidencia ausente = pendiente. No repetir suites aprobadas por documentación. QA local, navegador, recuperación, destino live y cliente aceptó son estados distintos. Ningún GO se deriva de la presencia de un YAML, una migración local o la elección histórica de Render.
+
+## Plan registrado el 3 de noviembre — histórico
+
 Actualizado por Arquitectura el 3 de noviembre de 2026, NEG-DEP-12. [Alcance vigente](negocio/CIERRE_PRIMER_DESPLIEGUE_20261103.md). El usuario solicita iniciar correcciones/preparación/QA ahora; SVB se aplaza, no se espera su archivo para avanzar clínica. Este plan no ordena publicar, contratar, hacer commit/push ni escribir en la base clínica.
 
 **Cierre de ronda local:** cuenta Render confirmada y solo Supabase clínico; usuario mantiene **QA solo local**. 092a se conserva con fuentes idénticas a entregas finales Frontend/Diseño y build existente. [Vinculación](arquitectura/NEG_DEP_12_ENTREGA.md#vinculación-de-cierre-local-sin-nuevas-suites) y [lista manual pendiente](arquitectura/NEG_DEP_11_CHECKLIST_CIERRE_LOCAL.md). DEP11 PARCIAL; Linux/Storage/host remotos PENDIENTES POR ALCANCE/ACCESO. No pedir/crear cloud ni usar clínica.

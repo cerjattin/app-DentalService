@@ -547,14 +547,6 @@ export type SvbAuthorizationItemUpdateOneWithoutEncounterProceduresNestedInput =
   update?: Prisma.XOR<Prisma.XOR<Prisma.SvbAuthorizationItemUpdateToOneWithWhereWithoutEncounterProceduresInput, Prisma.SvbAuthorizationItemUpdateWithoutEncounterProceduresInput>, Prisma.SvbAuthorizationItemUncheckedUpdateWithoutEncounterProceduresInput>
 }
 
-export type NullableDecimalFieldUpdateOperationsInput = {
-  set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
-}
-
 export type SvbAuthorizationItemCreateNestedManyWithoutAuthorizationInput = {
   create?: Prisma.XOR<Prisma.SvbAuthorizationItemCreateWithoutAuthorizationInput, Prisma.SvbAuthorizationItemUncheckedCreateWithoutAuthorizationInput> | Prisma.SvbAuthorizationItemCreateWithoutAuthorizationInput[] | Prisma.SvbAuthorizationItemUncheckedCreateWithoutAuthorizationInput[]
   connectOrCreate?: Prisma.SvbAuthorizationItemCreateOrConnectWithoutAuthorizationInput | Prisma.SvbAuthorizationItemCreateOrConnectWithoutAuthorizationInput[]

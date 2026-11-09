@@ -12,7 +12,9 @@ import "../modules/organization/organization.openapi.js";
 import "../modules/declarations/declaration-candidates.openapi.js";
 import "../modules/treatment-cases/treatment-case.openapi.js";
 import "../modules/svb-readiness/svb-readiness.openapi.js";
+import "../modules/clinical-encounters/service-attention.openapi.js";
 import "../modules/declarations/manual-entry.openapi.js";
+import "../modules/dentalink/dentalink.openapi.js";
 
 import { openApiRegistry } from "./openapi.registry.js";
 

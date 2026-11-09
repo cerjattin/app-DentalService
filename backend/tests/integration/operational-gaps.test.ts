@@ -152,7 +152,7 @@ describe("Operational gap corrections", () => {
   });
   it("returns zero counts and empty money groups for an empty period", async () => {
     const r = (await get("?from=2025-01-01&to=2025-01-01")).body.data;
-    expect(r.kpis).toEqual({ production: [], svbBilled: [], patientsSeen: 0, appointments: 0, pendingSignatures: 0, closedInvoices: 0, toDeclare: 0 });
+    expect(r.kpis).toEqual({ production: [], svbBilled: [], patientsSeen: 0, appointments: 0, completedAttentions: 0, pendingSignatures: 0, closedInvoices: 0, toDeclare: 0 });
   });
   it("rejects malformed, inverted and excessive periods", async () => {
     for (const q of ["?from=2026-02-30&to=2026-03-01", "?from=2026-03-01&to=2026-02-01", "?from=2025-01-01&to=2026-10-28"]) await request(app).get("/api/v1/reports/dashboard" + q).set("Authorization", "Bearer " + token).expect(400);

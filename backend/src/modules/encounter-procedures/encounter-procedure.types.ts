@@ -25,9 +25,9 @@ export function toEncounterProcedureResponse(
   return {
     id: procedure.id.toString(),
     encounterId: procedure.encounterId.toString(),
-    patientInsuranceId: procedure.patientInsuranceId.toString(),
+    patientInsuranceId: procedure.patientInsuranceId?.toString() ?? null,
     svbProcedureId: procedure.svbProcedureId.toString(),
-    svbTariffId: procedure.svbTariffId.toString(),
+    svbTariffId: procedure.svbTariffId?.toString() ?? null,
     authorizationItemId: procedure.authorizationItemId?.toString() ?? null,
     diagnosisId: procedure.diagnosisId?.toString() ?? null,
     referrerId: procedure.referrerId?.toString() ?? null,
@@ -36,10 +36,10 @@ export function toEncounterProcedureResponse(
     procedureDescriptionSnapshot: procedure.procedureDescriptionSnapshot,
     providerIdSnapshot: procedure.providerIdSnapshot,
     insuredIdSnapshot: procedure.insuredIdSnapshot,
-    unitTariffSnapshot: decimalString(procedure.unitTariffSnapshot),
+    unitTariffSnapshot: procedure.unitTariffSnapshot?.toFixed(2) ?? null,
     currencyCodeSnapshot: procedure.currencyCodeSnapshot,
     quantity: decimalString(procedure.quantity),
-    amount: decimalString(procedure.amount),
+    amount: procedure.amount?.toFixed(2) ?? null,
     authorizationIdSnapshot: procedure.authorizationIdSnapshot,
     diagnosticCodeSnapshot: procedure.diagnosticCodeSnapshot,
     treatmentIdSnapshot: procedure.treatmentIdSnapshot,
@@ -61,14 +61,14 @@ export function toEncounterProcedureResponse(
       requiresAuthorization: procedure.svbProcedure.requiresAuthorization,
       requiresReferral: procedure.svbProcedure.requiresReferral,
     },
-    svbTariff: {
+    svbTariff: procedure.svbTariff && {
       id: procedure.svbTariff.id.toString(),
       amount: decimalString(procedure.svbTariff.amount),
       currencyCode: procedure.svbTariff.currencyCode,
       validFrom: dateOnly(procedure.svbTariff.validFrom),
       validTo: dateOnly(procedure.svbTariff.validTo),
     },
-    patientInsurance: {
+    patientInsurance: procedure.patientInsurance && {
       id: procedure.patientInsurance.id.toString(),
       patientId: procedure.patientInsurance.patientId.toString(),
       insuredId: procedure.patientInsurance.insuredId,

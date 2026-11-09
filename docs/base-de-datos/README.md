@@ -1,5 +1,15 @@
 # Base de datos y Supabase
 
+## Operación por servicios y Dentalink — OPS-03
+
+La [entrega OPS-03 del 8 de noviembre de 2026](OPS_03_ENTREGA.md) revisa la valoración pendiente, incorpora el [modelo Dentalink acordado con Backend](OPS_03_MODELO_DENTALINK.md) y verifica creación desde cero y actualización con historia en PostgreSQL sintético propio. Cliente Prisma generado, FKs por organización, cinco tablas privadas con RLS y permisos acotados. La recuperación final comprueba filas, secuencias, estructura y cuatro documentos; el timeout histórico de Negocio no se reprodujo y su causa exacta permanece indeterminada. El helper ahora registra fases y limita esperas.
+
+Evidencia nueva de esta entrega: integridad/actualización 8/8, recuperación/bloqueo 4/4, unitarias Backend 174/174, typecheck/build aprobados. La migración de atención y la nueva migración Dentalink se probaron solo en QA local. El [diagnóstico SQL](../../database/postgresql/ops03-preflight.sql) es de solo lectura. El plan remoto y sus límites están en la entrega.
+
+Las operaciones autorizadas del 5 de noviembre importaron 2.022 servicios/tarifas XCG y 11.451 pacientes con números históricos, con 223 filas retenidas para revisión. Los servicios se activaron por encargo posterior; las tarifas conservaron su estado inactivo en aquella operación. Son evidencias de esa sesión, no una inspección actual. Sus archivos privados y decisiones quedan separados de las fixtures OPS-03.
+
+Las secciones siguientes conservan los hitos y límites de sus fechas originales. El usuario comunicó que la aplicación está desplegada; esta ronda no verifica su estado ni publica una actualización.
+
 ## Responsabilidad y ubicación
 
 Modelo, integridad, índices, migraciones, seeds, verificación y conexión con Supabase PostgreSQL. Archivos actuales: `backend/prisma/`, `database/` y contratos originales en `Recursos/`.

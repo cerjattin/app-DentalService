@@ -7,6 +7,7 @@ import {
 import { prisma } from "../../infrastructure/database/prisma.js";
 
 import { AppError } from "../../shared/errors/app-error.js";
+import { isTransactionConflict } from "../../infrastructure/database/transaction-conflict.js";
 import { parseDateOnly } from "../../shared/utils/date-only.js";
 
 import { auditService, auditTechnicalFields } from "../audit/audit.service.js";
@@ -95,6 +96,50 @@ function assertEncounterEditable(status: ClinicalEncounterStatus) {
       "Clinical encounter is not editable",
     );
   }
+}
+
+async function advanceAttentionAppointment(
+  tx: Prisma.TransactionClient,
+  appointment: {
+    id: bigint;
+    appointmentNumber: string;
+    status: "CONFIRMED" | "CHECKED_IN" | "IN_PROGRESS";
+  },
+  status: "IN_PROGRESS" | "COMPLETED",
+  now: Date,
+  actor: AuthenticatedRequestContext,
+  metadata: RequestSecurityMetadata,
+) {
+  await tx.appointment.update({
+    where: { id: appointment.id },
+    data: {
+      status,
+      ...(status === "IN_PROGRESS" ? { startedAt: now } : { completedAt: now }),
+    },
+  });
+  await tx.appointmentStatusHistory.create({
+    data: {
+      appointmentId: appointment.id,
+      oldStatus: appointment.status,
+      newStatus: status,
+      changedByUserId: actor.userId,
+      metadata: {
+        source: "service_attention",
+        ...auditTechnicalFields(metadata),
+      },
+    },
+  });
+  await auditService.writeWithinTransaction(tx, {
+    organizationId: actor.organizationId,
+    actorUserId: actor.userId,
+    action: "APPOINTMENT_STATUS_CHANGE",
+    entityType: "APPOINTMENT",
+    entityId: appointment.id,
+    entityKey: appointment.appointmentNumber,
+    oldValues: { status: appointment.status },
+    newValues: { status },
+    ...auditTechnicalFields(metadata),
+  });
 }
 
 function assertEncounterCompletable(status: ClinicalEncounterStatus) {
@@ -282,11 +327,7 @@ export class ClinicalEncounterService {
     });
 
     if (!appointment) {
-      throw new AppError(
-        404,
-        "APPOINTMENT_NOT_FOUND",
-        "Appointment not found",
-      );
+      throw new AppError(404, "APPOINTMENT_NOT_FOUND", "Appointment not found");
     }
 
     const encounter = await clinicalEncounterRepository.findByAppointmentId(
@@ -310,83 +351,147 @@ export class ClinicalEncounterService {
     input: CreateClinicalEncounterInput,
     actor: AuthenticatedRequestContext,
     metadata: RequestSecurityMetadata,
+    serviceFlow = false,
   ) {
-    try {
-      const created = await prisma.$transaction(
-        async (tx) => {
-          const appointment = await tx.appointment.findFirst({
-            where: {
-              id: appointmentId,
-              organizationId: actor.organizationId,
-            },
-            select: {
-              id: true,
-              appointmentNumber: true,
-              providerId: true,
-              status: true,
-              clinicalEncounter: {
-                select: {
-                  id: true,
+    for (let attempt = 0; ; attempt++) {
+      try {
+        const created = await prisma.$transaction(
+          async (tx) => {
+            if (serviceFlow)
+              await clinicalEncounterRepository.lockForAppointment(
+                tx,
+                appointmentId,
+                actor.organizationId,
+              );
+            const appointment = await tx.appointment.findFirst({
+              where: {
+                id: appointmentId,
+                organizationId: actor.organizationId,
+              },
+              select: {
+                id: true,
+                appointmentNumber: true,
+                providerId: true,
+                status: true,
+                clinicalEncounter: {
+                  select: {
+                    id: true,
+                  },
                 },
               },
-            },
-          });
+            });
 
-          if (!appointment) {
-            throw new AppError(
-              404,
-              "APPOINTMENT_NOT_FOUND",
-              "Appointment not found",
-            );
-          }
+            if (!appointment) {
+              throw new AppError(
+                404,
+                "APPOINTMENT_NOT_FOUND",
+                "Appointment not found",
+              );
+            }
 
-          assertAppointmentCanOpenEncounter(appointment);
+            if (appointment.clinicalEncounter !== null) {
+              if (
+                serviceFlow &&
+                [
+                  "IN_PROGRESS",
+                  "CHECKED_IN",
+                  "CONFIRMED",
+                  "COMPLETED",
+                ].includes(appointment.status)
+              ) {
+                const existing =
+                  await clinicalEncounterRepository.findByAppointmentId(
+                    appointmentId,
+                    actor.organizationId,
+                    tx,
+                  );
+                if (existing?.status === "OPEN") {
+                  if (
+                    appointment.status === "CONFIRMED" ||
+                    appointment.status === "CHECKED_IN"
+                  ) {
+                    await advanceAttentionAppointment(
+                      tx,
+                      { ...appointment, status: appointment.status },
+                      "IN_PROGRESS",
+                      existing.startedAt,
+                      actor,
+                      metadata,
+                    );
+                    return (await clinicalEncounterRepository.findByAppointmentId(
+                      appointmentId,
+                      actor.organizationId,
+                      tx,
+                    ))!;
+                  }
+                  return existing;
+                }
+              }
+              throw new AppError(
+                409,
+                "CLINICAL_ENCOUNTER_ALREADY_EXISTS",
+                "Clinical encounter already exists for this appointment",
+              );
+            }
 
-          if (appointment.clinicalEncounter !== null) {
-            throw new AppError(
-              409,
-              "CLINICAL_ENCOUNTER_ALREADY_EXISTS",
-              "Clinical encounter already exists for this appointment",
-            );
-          }
+            const now = new Date();
+            if (
+              serviceFlow &&
+              (appointment.status === "CONFIRMED" ||
+                appointment.status === "CHECKED_IN")
+            ) {
+              await advanceAttentionAppointment(
+                tx,
+                { ...appointment, status: appointment.status },
+                "IN_PROGRESS",
+                now,
+                actor,
+                metadata,
+              );
+            } else {
+              assertAppointmentCanOpenEncounter(appointment);
+            }
 
-          const encounter = await tx.clinicalEncounter.create({
-            data: {
-              appointmentId: appointment.id,
-              providerId: appointment.providerId,
-              status: "OPEN",
-              startedAt: new Date(),
-              completedAt: null,
-              chiefComplaint: input.chiefComplaint ?? null,
-              clinicalNotes: input.clinicalNotes ?? null,
-              createdByUserId: actor.userId,
-            },
-            select: clinicalEncounterDetailSelect,
-          });
+            const encounter = await tx.clinicalEncounter.create({
+              data: {
+                appointmentId: appointment.id,
+                providerId: appointment.providerId,
+                status: "OPEN",
+                startedAt: now,
+                completedAt: null,
+                chiefComplaint: input.chiefComplaint ?? null,
+                clinicalNotes: input.clinicalNotes ?? null,
+                createdByUserId: actor.userId,
+              },
+              select: clinicalEncounterDetailSelect,
+            });
 
-          await auditService.writeWithinTransaction(tx, {
-            organizationId: actor.organizationId,
-            actorUserId: actor.userId,
-            action: "CLINICAL_ENCOUNTER_CREATE",
-            entityType: "CLINICAL_ENCOUNTER",
-            entityId: encounter.id,
-            entityKey: appointment.appointmentNumber,
-            newValues: toAuditValues(encounter),
-            ...auditTechnicalFields(metadata),
-          });
+            await auditService.writeWithinTransaction(tx, {
+              organizationId: actor.organizationId,
+              actorUserId: actor.userId,
+              action: "CLINICAL_ENCOUNTER_CREATE",
+              entityType: "CLINICAL_ENCOUNTER",
+              entityId: encounter.id,
+              entityKey: appointment.appointmentNumber,
+              newValues: toAuditValues(encounter),
+              ...auditTechnicalFields(metadata),
+            });
 
-          return encounter;
-        },
-        {
-          isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
-          maxWait: 10_000,
-          timeout: 10_000,
-        },
-      );
+            return encounter;
+          },
+          {
+            isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+            maxWait: 10_000,
+            timeout: 10_000,
+          },
+        );
 
-      return toClinicalEncounterResponse(created);
-    } catch (error) {
-      mapDuplicateEncounterError(error);
+        return toClinicalEncounterResponse(created);
+      } catch (error) {
+        if (serviceFlow && isTransactionConflict(error) && attempt < 2)
+          continue;
+        mapDuplicateEncounterError(error);
+      }
     }
   }
 
@@ -455,60 +560,139 @@ export class ClinicalEncounterService {
     encounterId: bigint,
     actor: AuthenticatedRequestContext,
     metadata: RequestSecurityMetadata,
+    serviceFlow = false,
   ) {
-    const completed: ClinicalEncounterDetailRecord =
-      await prisma.$transaction(async (tx) => {
-        const current = await clinicalEncounterRepository.findById(
+    const completeWithin = async (
+      tx: Prisma.TransactionClient,
+    ): Promise<ClinicalEncounterDetailRecord> => {
+      if (serviceFlow)
+        await clinicalEncounterRepository.lockForEncounter(
+          tx,
           encounterId,
           actor.organizationId,
-          tx,
         );
+      const current = await clinicalEncounterRepository.findById(
+        encounterId,
+        actor.organizationId,
+        tx,
+      );
 
-        if (!current) {
+      if (!current) {
+        throw new AppError(
+          404,
+          "CLINICAL_ENCOUNTER_NOT_FOUND",
+          "Clinical encounter not found",
+        );
+      }
+
+      const completedAt = new Date();
+      if (serviceFlow) {
+        let status = current.appointment.status;
+        if (current.status === "COMPLETED" && status === "COMPLETED")
+          return current;
+        if (status === "CHECKED_IN") {
+          await advanceAttentionAppointment(
+            tx,
+            { ...current.appointment, status },
+            "IN_PROGRESS",
+            current.startedAt,
+            actor,
+            metadata,
+          );
+          status = "IN_PROGRESS";
+        }
+        if (status !== "IN_PROGRESS" && status !== "COMPLETED") {
           throw new AppError(
-            404,
-            "CLINICAL_ENCOUNTER_NOT_FOUND",
-            "Clinical encounter not found",
+            409,
+            "INVALID_APPOINTMENT_STATUS",
+            "The appointment cannot be sent to billing",
           );
         }
-
-        assertEncounterCompletable(current.status);
-
-        const completedAt = new Date();
-
-        const encounter = await tx.clinicalEncounter.update({
-          where: {
-            id: encounterId,
-          },
-          data: {
-            status: "COMPLETED",
+        if (current.status !== "COMPLETED")
+          assertEncounterCompletable(current.status);
+        const service = await tx.encounterProcedure.findFirst({
+          where: { encounterId, status: "PERFORMED" },
+          select: { id: true },
+        });
+        if (!service)
+          throw new AppError(
+            409,
+            "ATTENTION_SERVICES_REQUIRED",
+            "Record at least one service before completing attention",
+          );
+        if (status === "IN_PROGRESS") {
+          await advanceAttentionAppointment(
+            tx,
+            { ...current.appointment, status },
+            "COMPLETED",
             completedAt,
-          },
-          select: clinicalEncounterDetailSelect,
-        });
+            actor,
+            metadata,
+          );
+        }
+        if (current.status === "COMPLETED") {
+          return {
+            ...current,
+            appointment: { ...current.appointment, status: "COMPLETED" },
+          };
+        }
+      } else {
+        assertEncounterCompletable(current.status);
+      }
 
-        await auditService.writeWithinTransaction(tx, {
-          organizationId: actor.organizationId,
-          actorUserId: actor.userId,
-          action: "CLINICAL_ENCOUNTER_COMPLETE",
-          entityType: "CLINICAL_ENCOUNTER",
-          entityId: encounter.id,
-          entityKey: encounter.appointment.appointmentNumber,
-          oldValues: {
-            status: current.status,
-            completedAt: current.completedAt?.toISOString() ?? null,
-          },
-          newValues: {
-            status: encounter.status,
-            completedAt: encounter.completedAt?.toISOString() ?? null,
-          },
-          ...auditTechnicalFields(metadata),
-        });
-
-        return encounter;
+      const encounter = await tx.clinicalEncounter.update({
+        where: {
+          id: encounterId,
+        },
+        data: {
+          status: "COMPLETED",
+          completedAt,
+        },
+        select: clinicalEncounterDetailSelect,
       });
 
-    return toClinicalEncounterResponse(completed);
+      await auditService.writeWithinTransaction(tx, {
+        organizationId: actor.organizationId,
+        actorUserId: actor.userId,
+        action: "CLINICAL_ENCOUNTER_COMPLETE",
+        entityType: "CLINICAL_ENCOUNTER",
+        entityId: encounter.id,
+        entityKey: encounter.appointment.appointmentNumber,
+        oldValues: {
+          status: current.status,
+          completedAt: current.completedAt?.toISOString() ?? null,
+        },
+        newValues: {
+          status: encounter.status,
+          completedAt: encounter.completedAt?.toISOString() ?? null,
+        },
+        ...auditTechnicalFields(metadata),
+      });
+
+      return encounter;
+    };
+
+    try {
+      const completed = await prisma.$transaction(
+        completeWithin,
+        serviceFlow
+          ? {
+              isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+              timeout: 10_000,
+            }
+          : {},
+      );
+      return toClinicalEncounterResponse(completed);
+    } catch (error) {
+      if (serviceFlow && isTransactionConflict(error)) {
+        throw new AppError(
+          409,
+          "ATTENTION_CHANGED",
+          "Service attention changed. Reload before completing it",
+        );
+      }
+      throw error;
+    }
   }
 }
 

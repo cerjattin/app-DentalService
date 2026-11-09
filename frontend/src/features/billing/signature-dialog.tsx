@@ -140,6 +140,12 @@ export function SignatureDialog({
     <><UnsavedChanges active={dirty && !save.isPending} /><Dialog
       open
       size="wide"
+      onEscapeKeyDown={(event) => {
+        if (document.activeElement === canvas.current) {
+          event.preventDefault()
+          setKeyboardPen(false)
+        }
+      }}
       title={`Signature - version ${version.versionNumber}`}
       description="Review the invoice and signer details before saving permanent signature evidence."
       onOpenChange={(open) => {

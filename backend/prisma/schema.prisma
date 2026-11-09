@@ -49,6 +49,8 @@ model AppointmentStatusHistory {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model Appointment {
+  dentalinkItems DentalinkImportItem[]
+  dentalinkIdentities DentalinkExternalIdentity[]
   id                 BigInt                     @id @default(autoincrement()) @db.BigInt
   organizationId     BigInt                     @map("organization_id") @db.BigInt
   appointmentNumber  String                     @map("appointment_number") @db.VarChar(50)
@@ -89,6 +91,7 @@ model Appointment {
   @@index([patientId, scheduledStartAt], map: "idx_appointments_patient_time")
   @@index([providerId, scheduledStartAt, scheduledEndAt], map: "idx_appointments_provider_time")
   @@index([status, scheduledStartAt], map: "idx_appointments_status_time")
+  @@unique([organizationId, id], map: "uq_appointments_org_id")
   @@map("appointments")
 
   // Database-maintained search text; never serialized in API DTOs.
@@ -126,6 +129,7 @@ model AuditLog {
 }
 
 model ClinicLocation {
+  dentalinkMappings DentalinkMapping[]
   id             BigInt        @id @default(autoincrement()) @db.BigInt
   organizationId BigInt        @map("organization_id") @db.BigInt
   code           String        @db.VarChar(50)
@@ -146,6 +150,7 @@ model ClinicLocation {
   @@unique([organizationId, code], map: "uq_locations_org_code")
   @@unique([organizationId, policlinicCode], map: "uq_locations_org_policlinic")
   @@index([organizationId, isActive], map: "idx_locations_org_active")
+  @@unique([organizationId, id], map: "uq_clinic_locations_org_id")
   @@map("clinic_locations")
 
   // Database-maintained search text; never serialized in API DTOs.
@@ -483,9 +488,9 @@ model EncounterDiagnosis {
 model EncounterProcedure {
   id                           BigInt                   @id @default(autoincrement()) @db.BigInt
   encounterId                  BigInt                   @map("encounter_id") @db.BigInt
-  patientInsuranceId           BigInt                   @map("patient_insurance_id") @db.BigInt
+  patientInsuranceId           BigInt?                  @map("patient_insurance_id") @db.BigInt
   svbProcedureId               BigInt                   @map("svb_procedure_id") @db.BigInt
-  svbTariffId                  BigInt                   @map("svb_tariff_id") @db.BigInt
+  svbTariffId                  BigInt?                  @map("svb_tariff_id") @db.BigInt
   authorizationItemId          BigInt?                  @map("authorization_item_id") @db.BigInt
   diagnosisId                  BigInt?                  @map("diagnosis_id") @db.BigInt
   referrerId                   BigInt?                  @map("referrer_id") @db.BigInt
@@ -493,11 +498,11 @@ model EncounterProcedure {
   procedureCodeSnapshot        String                   @map("procedure_code_snapshot") @db.VarChar(50)
   procedureDescriptionSnapshot String                   @map("procedure_description_snapshot") @db.VarChar(500)
   providerIdSnapshot           String?                  @map("provider_id_snapshot") @db.VarChar(64)
-  insuredIdSnapshot            String                   @map("insured_id_snapshot") @db.VarChar(80)
-  unitTariffSnapshot           Decimal                  @map("unit_tariff_snapshot") @db.Decimal(15, 2)
-  currencyCodeSnapshot         String                   @map("currency_code_snapshot") @db.Char(3)
+  insuredIdSnapshot            String?                  @map("insured_id_snapshot") @db.VarChar(80)
+  unitTariffSnapshot           Decimal?                 @map("unit_tariff_snapshot") @db.Decimal(15, 2)
+  currencyCodeSnapshot         String?                  @map("currency_code_snapshot") @db.Char(3)
   quantity                     Decimal                  @default(1.00) @db.Decimal(10, 2)
-  amount                       Decimal                  @db.Decimal(15, 2)
+  amount                       Decimal?                 @db.Decimal(15, 2)
   authorizationIdSnapshot      String?                  @map("authorization_id_snapshot") @db.VarChar(80)
   diagnosticCodeSnapshot       String?                  @map("diagnostic_code_snapshot") @db.VarChar(50)
   treatmentIdSnapshot          String?                  @map("treatment_id_snapshot") @db.VarChar(80)
@@ -516,11 +521,11 @@ model EncounterProcedure {
   createdByUser                User                     @relation(fields: [createdByUserId], references: [id], onUpdate: Restrict, map: "fk_encounter_procedures_created_by")
   diagnosis                    EncounterDiagnosis?      @relation(fields: [diagnosisId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_encounter_procedures_diagnosis")
   encounter                    ClinicalEncounter        @relation(fields: [encounterId], references: [id], onUpdate: Restrict, map: "fk_encounter_procedures_encounter")
-  patientInsurance             PatientInsurance         @relation(fields: [patientInsuranceId], references: [id], onUpdate: Restrict, map: "fk_encounter_procedures_insurance")
+  patientInsurance             PatientInsurance?        @relation(fields: [patientInsuranceId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_encounter_procedures_insurance")
   performedByProvider          Provider                 @relation(fields: [performedByProviderId], references: [id], onUpdate: Restrict, map: "fk_encounter_procedures_provider")
   referrer                     Referrer?                @relation(fields: [referrerId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_encounter_procedures_referrer")
   svbProcedure                 SvbProcedure             @relation(fields: [svbProcedureId], references: [id], onUpdate: Restrict, map: "fk_encounter_procedures_svb_procedure")
-  svbTariff                    SvbTariff                @relation(fields: [svbTariffId], references: [id], onUpdate: Restrict, map: "fk_encounter_procedures_tariff")
+  svbTariff                    SvbTariff?               @relation(fields: [svbTariffId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_encounter_procedures_tariff")
   invoiceItems                 InvoiceItem[]
 
   @@index([createdByUserId], map: "ix_encounter_procedures_created_by")
@@ -754,6 +759,7 @@ model NumberSequence {
 }
 
 model Organization {
+  dentalinkAccounts DentalinkAccount[]
   manualEntries DeclarationManualEntry[]
   manualResults DeclarationManualResult[]
   id                 BigInt             @id @default(autoincrement()) @db.BigInt
@@ -829,6 +835,8 @@ model PatientInsurance {
 }
 
 model Patient {
+  dentalinkItems DentalinkImportItem[]
+  dentalinkIdentities DentalinkExternalIdentity[]
   id                 BigInt             @id @default(autoincrement()) @db.BigInt
   organizationId     BigInt             @map("organization_id") @db.BigInt
   patientNumber      String             @map("patient_number") @db.VarChar(50)
@@ -864,6 +872,7 @@ model Patient {
   @@unique([organizationId, patientNumber], map: "uq_patients_org_number")
   @@index([organizationId, lastName, firstName], map: "idx_patients_org_name")
   @@index([organizationId, status], map: "idx_patients_status")
+  @@unique([organizationId, id], map: "uq_patients_org_id")
   @@map("patients")
 
   // Database-maintained search text; never serialized in API DTOs.
@@ -908,6 +917,7 @@ model Permission {
 }
 
 model Provider {
+  dentalinkMappings DentalinkMapping[]
   id                  BigInt               @id @default(autoincrement()) @db.BigInt
   organizationId      BigInt               @map("organization_id") @db.BigInt
   userId              BigInt?              @unique(map: "uq_providers_user") @map("user_id") @db.BigInt
@@ -930,6 +940,7 @@ model Provider {
 
   @@unique([organizationId, svbProviderId], map: "uq_providers_org_svb")
   @@index([organizationId, isActive], map: "idx_providers_org_active")
+  @@unique([organizationId, id], map: "uq_providers_org_id")
   @@map("providers")
 
   // Database-maintained search text; never serialized in API DTOs.
@@ -1184,6 +1195,7 @@ model UserRole {
 }
 
 model User {
+  dentalinkRuns DentalinkImportRun[]
   manualEntries DeclarationManualEntry[]
   manualResults DeclarationManualResult[]
   id                            BigInt                          @id @default(autoincrement()) @db.BigInt
@@ -1231,6 +1243,7 @@ model User {
   organization                  Organization                    @relation(fields: [organizationId], references: [id], onUpdate: Restrict, map: "fk_users_organization")
 
   @@index([organizationId, status], map: "idx_users_org_status")
+  @@unique([organizationId, id], map: "uq_users_org_id")
   @@map("users")
 
   // Database-maintained search text; never serialized in API DTOs.
@@ -1500,4 +1513,138 @@ enum EncounterProcedureStatus {
   PLANNED
   PERFORMED
   VOID
+}
+
+model DentalinkAccount {
+  id BigInt @id @default(autoincrement()) @db.BigInt
+  organizationId BigInt @map("organization_id") @db.BigInt
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(3)
+  externalAccountId String @map("external_account_id") @db.VarChar(255)
+  label String @db.VarChar(200)
+  enabled Boolean @default(false)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  mappings DentalinkMapping[]
+  runs DentalinkImportRun[]
+  items DentalinkImportItem[]
+  identities DentalinkExternalIdentity[]
+  @@unique([organizationId, externalAccountId], map: "uq_dentalink_account_external")
+  @@unique([organizationId, id], map: "uq_dentalink_accounts_org_id")
+  @@map("dentalink_accounts")
+}
+
+model DentalinkMapping {
+  id BigInt @id @default(autoincrement()) @db.BigInt
+  organizationId BigInt @map("organization_id") @db.BigInt
+  accountId BigInt @map("account_id") @db.BigInt
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(3)
+  account DentalinkAccount @relation(fields: [organizationId, accountId], references: [organizationId, id], onDelete: Restrict, onUpdate: Restrict)
+  kind DentalinkMappingKind
+  externalId String @map("external_id") @db.VarChar(255)
+  providerId BigInt? @map("provider_id") @db.BigInt
+  clinicLocationId BigInt? @map("clinic_location_id") @db.BigInt
+  provider Provider? @relation(fields: [organizationId, providerId], references: [organizationId, id], onDelete: Restrict, onUpdate: Restrict)
+  clinicLocation ClinicLocation? @relation(fields: [organizationId, clinicLocationId], references: [organizationId, id], onDelete: Restrict, onUpdate: Restrict)
+  @@unique([accountId, kind, externalId], map: "uq_dentalink_mapping_external")
+  @@index([organizationId, providerId], map: "idx_dentalink_mapping_provider")
+  @@index([organizationId, clinicLocationId], map: "idx_dentalink_mapping_location")
+  @@map("dentalink_mappings")
+}
+
+model DentalinkImportRun {
+  id BigInt @id @default(autoincrement()) @db.BigInt
+  organizationId BigInt @map("organization_id") @db.BigInt
+  accountId BigInt @map("account_id") @db.BigInt
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(3)
+  account DentalinkAccount @relation(fields: [organizationId, accountId], references: [organizationId, id], onDelete: Restrict, onUpdate: Restrict)
+  requestKey String @map("request_key") @db.VarChar(120)
+  fromAt DateTime? @map("from_at") @db.Timestamptz(3)
+  toAt DateTime? @map("to_at") @db.Timestamptz(3)
+  cursor String? @db.VarChar(2000)
+  state DentalinkImportRunState @default(READING)
+  previewHash String? @map("preview_hash") @db.Char(64)
+  confirmKey String? @map("confirm_key") @db.VarChar(120)
+  confirmHash String? @map("confirm_hash") @db.Char(64)
+  counts Json @default("{}") @db.JsonB
+  createdByUserId BigInt @map("created_by_user_id") @db.BigInt
+  confirmedAt DateTime? @map("confirmed_at") @db.Timestamptz(3)
+  createdByUser User @relation(fields: [organizationId, createdByUserId], references: [organizationId, id], onDelete: Restrict, onUpdate: Restrict)
+  items DentalinkImportItem[]
+  @@unique([accountId, requestKey], map: "uq_dentalink_run_request")
+  @@unique([accountId, confirmKey], map: "uq_dentalink_run_confirm")
+  @@unique([organizationId, accountId, id], map: "uq_dentalink_run_scope")
+  @@index([organizationId, accountId, createdAt], map: "idx_dentalink_run_account")
+  @@index([organizationId, createdByUserId], map: "idx_dentalink_run_creator")
+  @@map("dentalink_import_runs")
+}
+
+model DentalinkImportItem {
+  id BigInt @id @default(autoincrement()) @db.BigInt
+  organizationId BigInt @map("organization_id") @db.BigInt
+  accountId BigInt @map("account_id") @db.BigInt
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(3)
+  account DentalinkAccount @relation(fields: [organizationId, accountId], references: [organizationId, id], onDelete: Restrict, onUpdate: Restrict)
+  patientId BigInt? @map("patient_id") @db.BigInt
+  appointmentId BigInt? @map("appointment_id") @db.BigInt
+  patient Patient? @relation(fields: [organizationId, patientId], references: [organizationId, id], onDelete: Restrict, onUpdate: Restrict)
+  appointment Appointment? @relation(fields: [organizationId, appointmentId], references: [organizationId, id], onDelete: Restrict, onUpdate: Restrict)
+  runId BigInt @map("run_id") @db.BigInt
+  entityType DentalinkEntityType @map("entity_type")
+  externalId String @map("external_id") @db.VarChar(255)
+  payloadJson Json @map("payload_json") @db.JsonB
+  payloadHash String @map("payload_hash") @db.Char(64)
+  disposition DentalinkImportDisposition @default(READY)
+  issueCodes Json @default("[]") @map("issue_codes") @db.JsonB
+  run DentalinkImportRun @relation(fields: [organizationId, accountId, runId], references: [organizationId, accountId, id], onDelete: Restrict, onUpdate: Restrict)
+  @@unique([runId, entityType, externalId], map: "uq_dentalink_item_external")
+  @@index([organizationId, accountId, runId, disposition], map: "idx_dentalink_item_review")
+  @@index([organizationId, patientId], map: "idx_dentalink_item_patient")
+  @@index([organizationId, appointmentId], map: "idx_dentalink_item_appointment")
+  @@map("dentalink_import_items")
+}
+
+model DentalinkExternalIdentity {
+  id BigInt @id @default(autoincrement()) @db.BigInt
+  organizationId BigInt @map("organization_id") @db.BigInt
+  accountId BigInt @map("account_id") @db.BigInt
+  account DentalinkAccount @relation(fields: [organizationId, accountId], references: [organizationId, id], onDelete: Restrict, onUpdate: Restrict)
+  patientId BigInt? @map("patient_id") @db.BigInt
+  appointmentId BigInt? @map("appointment_id") @db.BigInt
+  patient Patient? @relation(fields: [organizationId, patientId], references: [organizationId, id], onDelete: Restrict, onUpdate: Restrict)
+  appointment Appointment? @relation(fields: [organizationId, appointmentId], references: [organizationId, id], onDelete: Restrict, onUpdate: Restrict)
+  entityType DentalinkEntityType @map("entity_type")
+  externalId String @map("external_id") @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  @@unique([accountId, entityType, externalId], map: "uq_dentalink_identity_external")
+  @@unique([accountId, patientId], map: "uq_dentalink_identity_patient")
+  @@unique([accountId, appointmentId], map: "uq_dentalink_identity_appointment")
+  @@index([organizationId, patientId], map: "idx_dentalink_identity_patient")
+  @@index([organizationId, appointmentId], map: "idx_dentalink_identity_appointment")
+  @@map("dentalink_external_identities")
+}
+
+enum DentalinkMappingKind {
+  PROVIDER
+  LOCATION
+}
+
+enum DentalinkEntityType {
+  PATIENT
+  APPOINTMENT
+}
+
+enum DentalinkImportRunState {
+  READING
+  PREVIEW_READY
+  CONFIRMED
+}
+
+enum DentalinkImportDisposition {
+  READY
+  ISSUE
+  IMPORTED
+  SKIPPED
 }

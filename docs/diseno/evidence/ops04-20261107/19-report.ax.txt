@@ -1,0 +1,89 @@
+Browser tab: 1209241488, Title: "frontend", URL: "http://127.0.0.1:5187/dashboard".
+1 AXWebArea frontend, URL: 127.0.0.1:5187/dashboard
+	2 container root
+		3 container Application environment
+			4 container
+				5 text QA  ·  design-ops04-20261108
+			6 text SVB submission pending · No automatic submission
+		7 container
+			8 button Open navigation
+			9 heading Dashboard, Value: 1
+				10 text Dashboard
+			11 text Operational overview QA ADMIN ADMIN QA
+			12 button Sign out
+		13 container
+			14 heading Dashboard, Value: 2
+				15 text Dashboard
+			16 text Operational reports and workspace access.
+			17 container Dashboard reporting
+				18 container
+					19 text From
+					20 date field (settable) From, Value: 2026-11-07, ID: dashboard-from
+						21 container
+							22 stepper
+							23 stepper
+							24 stepper
+						25 pop up button Mostrar selector de fecha Mostrar selector de fecha
+					26 text To
+					27 date field (settable) To, Value: 2026-11-08, ID: dashboard-to
+						28 container
+							29 stepper
+							30 stepper
+							31 stepper
+						32 pop up button Mostrar selector de fecha Mostrar selector de fecha
+					33 text Find provider
+					34 text field (settable) Find provider
+					35 text Provider
+					36 pop up button (collapsed, settable) Provider, Value: QA Professional, ID: dashboard-provider, Secondary Actions: Expand
+						37 menu
+							38 All providers
+							39 (selected) QA Professional
+					40 button Apply filters
+				51 container
+					52 text 2026-11-07  →  2026-11-08  ·  America/Curacao
+				53 text Production
+				54 container
+					55 text ANG 15.38
+				56 text SVB Billed
+				57 text No amounts recorded
+				58 text Patients Seen
+				59 text 1
+				60 text Appointments
+				61 text 1
+				62 text Completed Attentions
+				63 text 1
+				64 text Pending Signatures
+				65 text 0
+				66 text Closed Invoices
+				67 text 1
+				68 text To Declare
+				69 text 0
+				41 heading Production timeline, Value: 3
+					70 text Production timeline
+				71 content list
+					72 container
+						73 text 2026-11-08 ANG 15.38
+						74 level indicator Description: 2026-11-08 ANG, Value: 100
+				42 heading Production by Provider, Value: 3
+					75 text Production by Provider
+				76 content list
+					77 container
+						78 text QA Professional ANG 15.38
+						79 level indicator Description: QA Professional ANG, Value: 100
+				43 heading Service Activity by Provider, Value: 3
+					80 text Service Activity by Provider
+				81 content list
+					82 container
+						83 text QA Professional 1  completed ·  1.25  service units
+				84 text Completed Attentions and Service Activity use the attention start date in Curaçao and count completed attention and appointments with performed services, including services awaiting pricing. Service units retain their recorded decimal quantities.
+				85 text Production shows valued performed services by performance date; unpriced services have no monetary amount. SVB Billed shows closed SVB invoice snapshots by service date, not submission, acceptance or payment. Invoice counts also use service dates.
+				86 text Patients Seen counts each patient once per day. Amounts are shown separately by currency. To Declare counts closed invoices with unassigned SVB items. Declaration validation determines readiness.
+			44 text QA ADMIN design-ops04-admin@local.invalid  · Organization  2 ADMIN 6 areas available
+			45 link Description: Reception Queue Open Open the reception workspace prepared for intake and check-in., Value: 127.0.0.1:5187/reception
+			46 link Description: Patients Open Open the patient records area., Value: 127.0.0.1:5187/patients
+			47 link Description: Clinical Work Open Open appointment-driven clinical workspaces., Value: 127.0.0.1:5187/appointments
+			48 link Description: SVB Billing Open Invoices, signatures and closed documents., Value: 127.0.0.1:5187/invoices
+			49 link Description: Declarations Open Manage SVB batches, exports and submission history., Value: 127.0.0.1:5187/declarations
+			50 link Description: Administration Open Open user and provider administration., Value: 127.0.0.1:5187/admin
+
+The focused UI element is 40 button Apply filters

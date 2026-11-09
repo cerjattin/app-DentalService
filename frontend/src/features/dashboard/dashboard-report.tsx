@@ -75,6 +75,7 @@ export function DashboardReport() {
         <Kpi label="SVB Billed"><Money rows={report.data.kpis.svbBilled} /></Kpi>
         <Kpi label="Patients Seen">{report.data.kpis.patientsSeen}</Kpi>
         <Kpi label="Appointments">{report.data.kpis.appointments}</Kpi>
+        {report.data.kpis.completedAttentions !== undefined ? <Kpi label="Completed Attentions">{report.data.kpis.completedAttentions}</Kpi> : null}
         <Kpi label="Pending Signatures">{report.data.kpis.pendingSignatures}</Kpi>
         <Kpi label="Closed Invoices">{report.data.kpis.closedInvoices}</Kpi>
         <Kpi label="To Declare">{report.data.kpis.toDeclare}</Kpi>
@@ -83,7 +84,24 @@ export function DashboardReport() {
         <Card className="min-w-0 p-4"><h3 className="mb-3 font-semibold">Production timeline</h3>{report.data.productionTimeline.length ? <ul className="space-y-3">{report.data.productionTimeline.map((r) => <li key={r.date + r.currencyCode}><div className="flex flex-wrap justify-between gap-2 text-sm"><span>{r.date}</span><span className="font-mono">{r.currencyCode} {r.amount}</span></div><meter aria-label={r.date + ' ' + r.currencyCode} className="h-3 w-full" min={0} max={100} value={r.chartPercent} /></li>)}</ul> : <p className="text-sm text-slate-500">No production in this period.</p>}</Card>
         <Card className="min-w-0 p-4"><h3 className="mb-3 font-semibold">Production by Provider</h3>{report.data.productionByProvider.length ? <ul className="space-y-3">{report.data.productionByProvider.map((r) => <li key={r.providerId + r.currencyCode}><div className="flex flex-wrap justify-between gap-2 text-sm"><span>{r.providerName}</span><span className="font-mono">{r.currencyCode} {r.amount}</span></div><meter aria-label={r.providerName + ' ' + r.currencyCode} className="h-3 w-full" min={0} max={100} value={r.chartPercent} /></li>)}</ul> : <p className="text-sm text-slate-500">No provider production in this period.</p>}</Card>
       </div>
-      <p className="text-xs text-slate-500">Patients Seen counts each patient once per day. Amounts are shown separately by currency. To Declare counts closed invoices with unassigned SVB items; declaration validation determines readiness.</p>
+      {report.data.serviceVolumeByProvider ? (
+        <Card className="p-4">
+          <h3 className="mb-3 font-semibold">Service Activity by Provider</h3>
+          {report.data.serviceVolumeByProvider.length ? (
+            <ul className="divide-y divide-clinic-border text-sm">
+              {report.data.serviceVolumeByProvider.map((row) => (
+                <li key={row.providerId} className="flex flex-wrap justify-between gap-2 py-2">
+                  <span>{row.providerName}</span>
+                  <span>{row.attentions} completed · {row.units} service units</span>
+                </li>
+              ))}
+            </ul>
+          ) : <p className="text-sm text-slate-500">No completed service attention in this period.</p>}
+        </Card>
+      ) : null}
+      <p className="text-xs text-slate-500">Completed Attentions and Service Activity use the attention start date in Curaçao and count completed attention and appointments with performed services, including services awaiting pricing. Service units retain their recorded decimal quantities.</p>
+      <p className="text-xs text-slate-500">Production shows valued performed services by performance date; unpriced services have no monetary amount. SVB Billed shows closed SVB invoice snapshots by service date, not submission, acceptance or payment. Invoice counts also use service dates.</p>
+      <p className="text-xs text-slate-500">Patients Seen counts each patient once per day. Amounts are shown separately by currency. To Declare counts closed invoices with unassigned SVB items. Declaration validation determines readiness.</p>
     </div>}
   </section>
 }

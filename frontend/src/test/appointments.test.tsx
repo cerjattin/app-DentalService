@@ -180,10 +180,10 @@ describe('appointment detail and updates', () => {
     vi.stubGlobal('fetch', vi.fn().mockImplementation(() => Promise.resolve(json({ success: true, data: appointment }))))
     const view = renderDetail()
     await screen.findByText('Appointment information')
-    expect(screen.queryByRole('button', { name: 'Edit appointment' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Reschedule appointment' })).not.toBeInTheDocument()
     view.unmount()
     renderDetail(['appointment.read', 'appointment.update'])
-    expect(await screen.findByRole('button', { name: 'Edit appointment' })).toBeInTheDocument()
+    expect(await screen.findByRole('button', { name: 'Reschedule appointment' })).toBeInTheDocument()
   })
 
   it('updates accepted appointment fields without changing opaque relationship IDs', async () => {
@@ -198,7 +198,7 @@ describe('appointment detail and updates', () => {
     })
     vi.stubGlobal('fetch', fetchMock)
     renderDetail(['appointment.read', 'appointment.update', 'provider.read'])
-    await userEvent.click(await screen.findByRole('button', { name: 'Edit appointment' }))
+    await userEvent.click(await screen.findByRole('button', { name: 'Reschedule appointment' }))
     await userEvent.clear(screen.getByLabelText('Reason'))
     await userEvent.type(screen.getByLabelText('Reason'), 'Updated reason')
     await userEvent.click(screen.getByRole('button', { name: 'Save changes' }))
@@ -212,17 +212,19 @@ describe('appointment detail and updates', () => {
   })
 
   it('shows the clinical handoff only in an eligible state with clinical permission', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockImplementation(() => Promise.resolve(json({ success: true, data: withStatus('CHECKED_IN') }))))
-    renderDetail(['appointment.read', 'encounter.read'], withStatus('CHECKED_IN'))
-    expect(await screen.findByRole('link', { name: 'Open clinical workspace' })).toHaveAttribute('href', `/clinical/${appointment.id}`)
+    vi.stubGlobal('fetch', vi.fn().mockImplementation(() => Promise.resolve(json({ success: true, data: withStatus('CONFIRMED') }))))
+    renderDetail(['appointment.read', 'encounter.read'], withStatus('CONFIRMED'))
+    expect(await screen.findByRole('link', { name: 'Open service attention' })).toHaveAttribute('href', `/clinical/${appointment.id}`)
   })
 })
 
 describe('appointment status transitions', () => {
   it('confirms through the status endpoint with appointment.update', async () => {
-    const fetchMock = vi.fn().mockImplementation((_url: string, init?: RequestInit) =>
-      Promise.resolve(json({ success: true, data: init?.method === 'PATCH' ? withStatus('CONFIRMED') : appointment })),
-    )
+    let current = appointment
+    const fetchMock = vi.fn().mockImplementation((_url: string, init?: RequestInit) => {
+      if (init?.method === 'PATCH') current = withStatus('CONFIRMED')
+      return Promise.resolve(json({ success: true, data: current }))
+    })
     vi.stubGlobal('fetch', fetchMock)
     renderDetail(['appointment.read', 'appointment.update'])
     await userEvent.click(await screen.findByRole('button', { name: 'Confirm' }))
@@ -232,16 +234,13 @@ describe('appointment status transitions', () => {
     expect(await screen.findByText('Confirmed')).toBeInTheDocument()
   })
 
-  it('checks in through the status endpoint with appointment.check_in', async () => {
-    const fetchMock = vi.fn().mockImplementation((_url: string, init?: RequestInit) =>
-      Promise.resolve(json({ success: true, data: init?.method === 'PATCH' ? withStatus('CHECKED_IN') : appointment })),
-    )
-    vi.stubGlobal('fetch', fetchMock)
-    renderDetail(['appointment.read', 'appointment.check_in'])
-    await userEvent.click(await screen.findByRole('button', { name: 'Check in' }))
-    await waitFor(() => expect(fetchMock.mock.calls.some(([url]) => String(url).endsWith('/status'))).toBe(true))
-    const call = fetchMock.mock.calls.find(([url]) => String(url).endsWith('/status'))
-    expect(JSON.parse(String(call?.[1]?.body))).toEqual({ status: 'CHECKED_IN' })
+  it('keeps the appointment actions to confirmation, cancellation and rescheduling', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(json({ success: true, data: appointment })))
+    renderDetail(['appointment.read', 'appointment.update', 'appointment.cancel', 'appointment.check_in'])
+    expect(await screen.findByRole('button', { name: 'Confirm' })).toBeEnabled()
+    expect(screen.getByRole('button', { name: 'Cancel' })).toBeEnabled()
+    expect(screen.getByRole('button', { name: 'Reschedule appointment' })).toBeEnabled()
+    expect(screen.queryByRole('button', { name: 'Check in' })).not.toBeInTheDocument()
   })
 
   it('records cancellation using the documented reason field', async () => {
@@ -256,19 +255,6 @@ describe('appointment status transitions', () => {
     await waitFor(() => expect(fetchMock.mock.calls.some(([url]) => String(url).endsWith('/status'))).toBe(true))
     const call = fetchMock.mock.calls.find(([url]) => String(url).endsWith('/status'))
     expect(JSON.parse(String(call?.[1]?.body))).toEqual({ status: 'CANCELLED', reason: 'Patient called' })
-  })
-
-  it('records no-show as its own transition', async () => {
-    const fetchMock = vi.fn().mockImplementation((_url: string, init?: RequestInit) =>
-      Promise.resolve(json({ success: true, data: init?.method === 'PATCH' ? withStatus('NO_SHOW') : appointment })),
-    )
-    vi.stubGlobal('fetch', fetchMock)
-    renderDetail(['appointment.read', 'appointment.cancel'])
-    await userEvent.click(await screen.findByRole('button', { name: 'Mark no-show' }))
-    await userEvent.click(screen.getByRole('button', { name: 'Mark no-show' }))
-    await waitFor(() => expect(fetchMock.mock.calls.some(([url]) => String(url).endsWith('/status'))).toBe(true))
-    const call = fetchMock.mock.calls.find(([url]) => String(url).endsWith('/status'))
-    expect(JSON.parse(String(call?.[1]?.body))).toEqual({ status: 'NO_SHOW' })
   })
 
   it('maps an invalid transition without clearing the authenticated session', async () => {
@@ -288,10 +274,10 @@ describe('reception workspace', () => {
   it('loads the bounded today worklist and renders reception actions', async () => {
     const fetchMock = vi.fn().mockResolvedValue(listResponse([appointment]))
     vi.stubGlobal('fetch', fetchMock)
-    authStore.setSession('token', { ...user, permissions: ['appointment.read', 'appointment.check_in'] })
+    authStore.setSession('token', { ...user, permissions: ['appointment.read', 'appointment.update'] })
     renderWithProviders(<MemoryRouter><ReceptionPage /></MemoryRouter>)
     expect(await screen.findByText('Today')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Check in' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Confirm' })).toBeInTheDocument()
     const expectedDate = `date=${formatBusinessDate(new Date())}`
     expect(fetchMock.mock.calls.some(([url]) => String(url).includes(expectedDate) && String(url).includes('pageSize=100'))).toBe(true)
   })

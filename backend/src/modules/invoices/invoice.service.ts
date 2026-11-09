@@ -1,4 +1,5 @@
 import { normalizeSearch } from "../../infrastructure/database/text-search.js";
+import { clinicalEncounterRepository } from "../clinical-encounters/clinical-encounter.repository.js";
 import { assertNoManualInvoicePresentation } from "../declarations/manual-entry.repository.js";
 import { Prisma } from "../../generated/prisma/client.js";
 
@@ -33,6 +34,7 @@ import {
 } from "./invoice.repository.js";
 import type {
   CancelInvoiceInput,
+  CreateAppointmentInvoiceInput,
   ListInvoicesQuery,
   RequestInvoiceCorrectionInput,
   ResolveInvoiceCorrectionInput,
@@ -53,6 +55,118 @@ import {
 const BILLABLE_PROCEDURE_STATUS = "PERFORMED";
 const SHA_256_HEX = /^[a-f0-9]{64}$/;
 const ACTIVE_CORRECTION_STATUSES = ["REQUESTED", "APPROVED"] as const;
+
+type RecordedBillingContext = {
+  patientInsuranceId: bigint | null;
+  svbTariffId: bigint | null;
+  insuredIdSnapshot: string | null;
+  unitTariffSnapshot: Prisma.Decimal | null;
+  currencyCodeSnapshot: string | null;
+  amount: Prisma.Decimal | null;
+  svbTariff: { svbProcedureId: bigint } | null;
+  providerIdSnapshot: string | null;
+  performedByProvider: { svbProviderId: string | null };
+};
+
+function pricedService<T extends RecordedBillingContext>(row: T) {
+  const { patientInsuranceId, svbTariffId, insuredIdSnapshot, unitTariffSnapshot, currencyCodeSnapshot, amount, svbTariff } = row;
+  if (patientInsuranceId === null || svbTariffId === null || insuredIdSnapshot === null ||
+      unitTariffSnapshot === null || currencyCodeSnapshot === null || amount === null || svbTariff === null) {
+    throw new AppError(409, "INVOICE_SERVICE_PRICING_INCOMPLETE", "Service billing information is incomplete");
+  }
+  return { ...row, patientInsuranceId, svbTariffId, insuredIdSnapshot, unitTariffSnapshot, currencyCodeSnapshot, amount, svbTariff };
+}
+
+async function priceRecordedServices<T extends RecordedBillingContext & { id: bigint; svbProcedureId: bigint; quantity: Prisma.Decimal }>(
+  tx: Prisma.TransactionClient,
+  rows: T[],
+  patientId: bigint,
+  serviceDate: Date,
+  input: CreateAppointmentInvoiceInput,
+  fixed: { patientInsuranceId?: bigint; currencyCode?: string },
+) {
+  const pending = rows.filter((row) => row.svbTariffId === null);
+  if (fixed.patientInsuranceId !== undefined && rows.some(row=>row.patientInsuranceId!==null&&row.patientInsuranceId!==fixed.patientInsuranceId)) {
+    throw new AppError(409,"INVOICE_INSURANCE_PATIENT_MISMATCH","Rebilling must preserve the original invoice insurance");
+  }
+  if (fixed.currencyCode !== undefined && rows.some(row=>row.currencyCodeSnapshot!==null&&row.currencyCodeSnapshot!==fixed.currencyCode)) {
+    throw new AppError(409,"INVOICE_MIXED_CURRENCIES","Rebilling must preserve the original invoice currency");
+  }
+  if (pending.length === 0) {
+    if (input.patientInsuranceId && rows.some((row) => row.patientInsuranceId?.toString() !== input.patientInsuranceId)) {
+      throw new AppError(409, "INVOICE_INSURANCE_PATIENT_MISMATCH", "Use the insurance recorded for the services");
+    }
+    if (input.currencyCode && rows.some((row) => row.currencyCodeSnapshot !== input.currencyCode)) {
+      throw new AppError(409, "INVOICE_MIXED_CURRENCIES", "Use the currency recorded for the services");
+    }
+    return rows.map(pricedService);
+  }
+
+  const recordedInsurance = fixed.patientInsuranceId ?? rows.find((row) => row.patientInsuranceId !== null)?.patientInsuranceId;
+  const requestedInsurance = input.patientInsuranceId === undefined ? undefined : BigInt(input.patientInsuranceId);
+  if (recordedInsurance != null && requestedInsurance !== undefined && requestedInsurance !== recordedInsurance) {
+    throw new AppError(409, "INVOICE_INSURANCE_PATIENT_MISMATCH", "Use the insurance already recorded for this invoice");
+  }
+  const insuranceId = recordedInsurance ?? requestedInsurance;
+  const eligible = await tx.patientInsurance.findMany({
+    where: { patientId, status: "ACTIVE", ...(insuranceId !== undefined ? { id: insuranceId } : {}),
+      AND: [
+        { OR: [{ validFrom: null }, { validFrom: { lte: serviceDate } }] },
+        { OR: [{ validTo: null }, { validTo: { gte: serviceDate } }] },
+      ],
+    },
+    select: { id: true, insuredId: true },
+    take: 2,
+  });
+  if (eligible.length !== 1) {
+    throw new AppError(409, eligible.length === 0 ? "INSURANCE_NOT_VALID" : "INVOICE_INSURANCE_SELECTION_REQUIRED",
+      eligible.length === 0 ? "A valid insurance coverage is required for billing" : "Select the insurance coverage for this invoice");
+  }
+  const insurance = eligible[0]!;
+  const procedureIds = [...new Set(pending.map((row) => row.svbProcedureId))];
+  const tariffs = await tx.svbTariff.findMany({
+    where: { svbProcedureId: { in: procedureIds }, isActive: true, validFrom: { lte: serviceDate },
+      OR: [{ validTo: null }, { validTo: { gte: serviceDate } }] },
+    select: { id: true, svbProcedureId: true, amount: true, currencyCode: true },
+  });
+  const existingCurrency = fixed.currencyCode ?? rows.find((row) => row.currencyCodeSnapshot !== null)?.currencyCodeSnapshot;
+  if (existingCurrency && input.currencyCode && existingCurrency !== input.currencyCode) {
+    throw new AppError(409, "INVOICE_MIXED_CURRENCIES", "Use the currency already recorded for this invoice");
+  }
+  const commonCurrencies = [...new Set(tariffs.map((tariff) => tariff.currencyCode))].filter((code) =>
+    procedureIds.every((id) => tariffs.some((tariff) => tariff.svbProcedureId === id && tariff.currencyCode === code)),
+  );
+  const currencyCode = existingCurrency ?? input.currencyCode ?? commonCurrencies[0];
+  if (!existingCurrency && !input.currencyCode && commonCurrencies.length > 1) {
+    throw new AppError(409, "INVOICE_CURRENCY_SELECTION_REQUIRED", "Select the currency for this invoice");
+  }
+  if (!currencyCode || !commonCurrencies.includes(currencyCode)) {
+    throw new AppError(409, "SVB_TARIFF_NOT_FOUND", "A valid tariff in the invoice currency is required for every service");
+  }
+
+  const priced = [];
+  for (const row of rows) {
+    if (row.svbTariffId !== null) {
+      priced.push(pricedService(row));
+      continue;
+    }
+    const matches = tariffs.filter((tariff) => tariff.svbProcedureId === row.svbProcedureId && tariff.currencyCode === currencyCode);
+    if (matches.length !== 1) throw new AppError(409, "SVB_TARIFF_AMBIGUOUS", "More than one tariff applies to the service");
+    const tariff = matches[0]!;
+    const billing = {
+      patientInsuranceId: insurance.id,
+      svbTariffId: tariff.id,
+      insuredIdSnapshot: insurance.insuredId,
+      unitTariffSnapshot: tariff.amount,
+      currencyCodeSnapshot: currencyCode,
+      amount: tariff.amount.mul(row.quantity).toDecimalPlaces(2, Prisma.Decimal.ROUND_HALF_UP),
+      providerIdSnapshot: row.providerIdSnapshot ?? row.performedByProvider.svbProviderId,
+    };
+    await tx.encounterProcedure.update({ where: { id: row.id }, data: billing });
+    priced.push(pricedService({ ...row, ...billing, svbTariff: tariff }));
+  }
+  return priced;
+}
 
 function serviceDateInCuracao(date: Date) {
   const parts = new Intl.DateTimeFormat("en-US", {
@@ -563,7 +677,7 @@ function assertInvoiceVersionReadyForClose(
     }
 
     assertDecimalEquals(
-      item.unitTariffSnapshot.mul(item.quantity),
+      item.unitTariffSnapshot.mul(item.quantity).toDecimalPlaces(2, Prisma.Decimal.ROUND_HALF_UP),
       item.amount,
       "INVOICE_ITEM_AMOUNT_MISMATCH",
       "Invoice item amount does not match unit tariff and quantity",
@@ -1486,7 +1600,7 @@ export class InvoiceService {
         input.quantity !== undefined
           ? new Prisma.Decimal(input.quantity)
           : existing.quantity;
-      const amount = unitTariff.mul(quantity);
+      const amount = unitTariff.mul(quantity).toDecimalPlaces(2, Prisma.Decimal.ROUND_HALF_UP);
 
       const data: Prisma.InvoiceItemUpdateInput = { amount };
 
@@ -1773,9 +1887,11 @@ export class InvoiceService {
     appointmentId: bigint,
     actor: AuthenticatedRequestContext,
     metadata: RequestSecurityMetadata,
+    input: CreateAppointmentInvoiceInput = {},
   ) {
     try {
       const invoice = await serializableTransaction(async (tx) => {
+        await clinicalEncounterRepository.lockForAppointment(tx,appointmentId,actor.organizationId);
         const appointment = await tx.appointment.findFirst({
           where: {
             id: appointmentId,
@@ -1825,6 +1941,7 @@ export class InvoiceService {
                     procedureCodeSnapshot: true,
                     procedureDescriptionSnapshot: true,
                     providerIdSnapshot: true,
+                    performedByProvider: { select: { svbProviderId: true } },
                     insuredIdSnapshot: true,
                     unitTariffSnapshot: true,
                     currencyCodeSnapshot: true,
@@ -1924,7 +2041,11 @@ export class InvoiceService {
           );
         }
 
-        const procedures = appointment.clinicalEncounter.procedures;
+        const procedures = await priceRecordedServices(tx, appointment.clinicalEncounter.procedures,
+          appointment.patientId, serviceDateInCuracao(appointment.scheduledStartAt), input, {
+            ...(existingInvoice ? { patientInsuranceId: existingInvoice.patientInsuranceId } : {}),
+            ...(rebuildVersion ? { currencyCode: rebuildVersion.currencyCode } : {}),
+          });
 
         if (procedures.length === 0) {
           throw new AppError(
@@ -2047,7 +2168,7 @@ export class InvoiceService {
           }
 
           assertDecimalEquals(
-            procedure.unitTariffSnapshot.mul(procedure.quantity),
+            procedure.unitTariffSnapshot.mul(procedure.quantity).toDecimalPlaces(2, Prisma.Decimal.ROUND_HALF_UP),
             procedure.amount,
             "INVOICE_ITEM_AMOUNT_MISMATCH",
             "Encounter procedure amount does not match unit tariff and quantity",

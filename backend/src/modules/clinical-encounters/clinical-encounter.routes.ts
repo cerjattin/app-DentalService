@@ -10,6 +10,8 @@ import {
   getClinicalEncounterByAppointment,
   listClinicalEncounters,
   updateClinicalEncounter,
+  startServiceAttention,
+  finishServiceAttention,
 } from "./clinical-encounter.controller.js";
 
 export const clinicalEncounterRouter = Router();
@@ -44,7 +46,12 @@ export const appointmentClinicalEncounterRouter = Router({
   mergeParams: true,
 });
 
+clinicalEncounterRouter.post("/:id/finish-services", requirePermission("encounter.complete"),
+  requirePermission("appointment.complete"), finishServiceAttention);
+
 appointmentClinicalEncounterRouter.use(authenticate);
+appointmentClinicalEncounterRouter.post("/start", requirePermission("appointment.start"),
+  requirePermission("encounter.create"), startServiceAttention);
 
 appointmentClinicalEncounterRouter.get(
   "/",

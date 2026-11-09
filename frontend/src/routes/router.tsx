@@ -32,6 +32,7 @@ const AdminPage = lazyPage(() => import('../features/administration/admin-page')
 const AdminUsersPage = lazyPage(() => import('../features/administration/admin-users-page'), 'AdminUsersPage')
 const AdminProvidersPage = lazyPage(() => import('../features/administration/admin-providers-page'), 'AdminProvidersPage')
 const AdminSettingsPage = lazyPage(() => import('../features/administration/admin-settings-page'), 'AdminSettingsPage')
+const DentalinkPage = lazyPage(() => import('../features/dentalink/dentalink-page'), 'DentalinkPage')
 
 const ServicesPage = lazyPage(() => import('../features/administration/services/services-page'), 'ServicesPage')
 const ServiceDetailPage = lazyPage(() => import('../features/administration/services/service-detail-page'), 'ServiceDetailPage')
@@ -96,6 +97,7 @@ export const routes: RouteObject[] = [
             ],
           },
           { element: <PermissionRoute anyOf={routePermissions.settings} />, children: [{ path: '/admin/settings', element: load(AdminSettingsPage) }] },
+          { element: <PermissionRoute anyOf={routePermissions.dentalink} />, children: [{ path: '/integrations/dentalink', element: load(DentalinkPage) }] },
           { element: <PermissionRoute anyOf={routePermissions.services} />, children: [
             { path: '/admin/services', element: load(ServicesPage) },
             { path: '/admin/services/:serviceId', element: load(ServiceDetailPage) },

@@ -1,0 +1,110 @@
+[
+  {
+    "path": "frontend/src/components/app-shell/app-shell.tsx",
+    "sha256": "B8C5C4B31F72D81CF09280CC1B4E80BC9D831DD7E02919562F85145E84FF2880"
+  },
+  {
+    "path": "frontend/src/index.css",
+    "sha256": "F2A5D180CF4D3EE8EDD9634E7C252B4BF53F0B0A752A5BAEFF62689A4C3FE917"
+  },
+  {
+    "path": "frontend/src/features/appointments/appointments-page.tsx",
+    "sha256": "7E7B4B6000D64FC31FBD3B84021AB64FFD22F59D8CC2EAD532785B96A653A049"
+  },
+  {
+    "path": "frontend/src/features/appointments/appointment-actions.tsx",
+    "sha256": "78A2474BD22EC0E9F6BB8A36FEB53057A91FA333974DC391478CA705530F8453"
+  },
+  {
+    "path": "frontend/src/features/appointments/appointment-create-dialog.tsx",
+    "sha256": "FDBFCE2B74C4C8E2AC8E3F395C9371FA29BA5D32ABF8A518D89B265411072334"
+  },
+  {
+    "path": "frontend/src/features/clinical/clinical-appointment-page.tsx",
+    "sha256": "056C8A6D5ABDAB6EC1D859649DFDBD4AF26FAAF1F44EB790432335265F61FE5F"
+  },
+  {
+    "path": "frontend/src/features/clinical/procedure-section.tsx",
+    "sha256": "9942338F7F029E90AF951455FE3E4306CCFF125A7BA438AFD1D9153959D3816D"
+  },
+  {
+    "path": "frontend/src/features/clinical/catalogue-search.tsx",
+    "sha256": "F50F88F97E2C5B73568BC9D4181A6D03E7DDA845B336777B18D1CDB055A35ABC"
+  },
+  {
+    "path": "frontend/src/features/billing/appointment-billing.tsx",
+    "sha256": "0BB6EE370C019E67D96EC0ED79F8367E8CE45B6B04D5F3122F89A239E952FBC9"
+  },
+  {
+    "path": "frontend/src/features/billing/return-to-care.tsx",
+    "sha256": "D84FFB330879BAA44B58E33A3163D850BD30E1FC531AC46788AD10C6E3E1B977"
+  },
+  {
+    "path": "frontend/src/features/dashboard/dashboard-report.tsx",
+    "sha256": "DBC46F52103A97FCCC11B2691CEA5683F330614616E7113A4E9C4622DE3059DB"
+  },
+  {
+    "path": "backend/src/modules/clinical-encounters/clinical-encounter.service.ts",
+    "sha256": "122922290E24C239533861E3D981F24796CF8D7C11BA5C892D538095E8177D63"
+  },
+  {
+    "path": "backend/src/modules/invoices/invoice.service.ts",
+    "sha256": "50933C74707A8C79084998E7772985AADC8D3189010EA3033239A3A9A628E9A7"
+  },
+  {
+    "path": "frontend/src/features/reception/billing-review-queue.tsx",
+    "sha256": "F6AFA24046648C490AEA4C192D34715F375101A3CB518D50013E4B429DE2BF3B"
+  },
+  {
+    "path": "frontend/src/components/ui/dialog.tsx",
+    "sha256": "0FACF1792DEE42D968D3754332732C4E7789C19D2C79FCD7C91ED5985855273D"
+  },
+  {
+    "path": "frontend/src/features/billing/signature-dialog.tsx",
+    "sha256": "22BD62B96C856D8FF343028D015F73EE2542C291BED3425BE077CA57E13D4EBC"
+  },
+  {
+    "path": "frontend/src/features/billing/invoice-detail-page.tsx",
+    "sha256": "DBEC0A8C4C3D6D8783A24681DF6956C7E619685D97B7D81437526EC5AF2FA5B4"
+  },
+  {
+    "path": "frontend/src/features/billing/billing-api.ts",
+    "sha256": "457D7A82A14681E5F06FC02F443CF9041B21F559282612BD7E817BB7969E5450"
+  },
+  {
+    "path": "frontend/src/api/error-messages.ts",
+    "sha256": "480244F0D6F4ABDE9A61DEDF3F1471C05A040951EFAD3D637BB1D5322969AAF0"
+  },
+  {
+    "path": "frontend/src/features/appointments/appointment-workflow-cache.ts",
+    "sha256": "5AB66EBEA8C035519648A0B5FCE76E79C9346EE3918B52FC34EE0EB07E3AC37B"
+  },
+  {
+    "path": "frontend/package.json",
+    "sha256": "EE37AD947744BB9FF94755B1574C6F5649B1485EFE488E36581DEE3387523922"
+  },
+  {
+    "path": "frontend/package-lock.json",
+    "sha256": "459153C87F1FDE6A9F92465D7C8F3DEE4D39AE4604BAA091D1C90732BB49FB81"
+  },
+  {
+    "path": "backend/package.json",
+    "sha256": "CC6107D66A7A4CBA3F160E329B24B2941CC3BCBAC5F9EE274D1AA9F4CE87B0AA"
+  },
+  {
+    "path": "backend/package-lock.json",
+    "sha256": "758564E227FF0AB90678D5864C7C8DF02CE1B27BB990E022E3533CC7CB329E71"
+  },
+  {
+    "path": "backend/docs/API_FREEZE_BACKEND.md",
+    "sha256": "9D9F18342B7B8C52D20F3957D42754591B45A1711B117E754ABD2175ACD776EB"
+  },
+  {
+    "path": "backend/docs/FRONTEND_HANDOFF.md",
+    "sha256": "1F4604ED9B5B5ED67329B13B0D7A949D3E4799CE9107DEC43ECAC7B2C3C2E122"
+  },
+  {
+    "path": "docs/negocio/CONTRATO_OPS_04_DISENO.md",
+    "sha256": "697B718F65842159D10E4332835D0F2E6D1155A9290CF86E5777EAA2548F25C8"
+  }
+]

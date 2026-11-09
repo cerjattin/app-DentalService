@@ -485,7 +485,7 @@ async function createAppointmentAggregate(input: {
   };
 }
 
-function createInvoice(appointmentId: bigint, token = providerToken) {
+function createInvoice(appointmentId: bigint, token = receptionToken) {
   return request(app)
     .post(`/api/v1/appointments/${appointmentId.toString()}/invoice`)
     .set("Authorization", `Bearer ${token}`)
@@ -510,7 +510,7 @@ async function createInvoiceFixture(suffix: string, procedureCount = 1) {
   };
 }
 
-function prepareInvoice(invoiceId: string, versionId: string, token = providerToken) {
+function prepareInvoice(invoiceId: string, versionId: string, token = receptionToken) {
   return request(app)
     .post(
       `/api/v1/invoices/${invoiceId}/versions/${versionId}/prepare-signature`,
@@ -582,7 +582,7 @@ async function createSignedInvoiceFixture(suffix: string) {
     .post(
       `/api/v1/invoices/${fixture.invoiceId}/versions/${fixture.versionId}/signatures`,
     )
-    .set("Authorization", `Bearer ${providerToken}`)
+    .set("Authorization", `Bearer ${receptionToken}`)
     .send({
       signatureDocumentId: document.id.toString(),
       signatureType: "PATIENT",
@@ -592,7 +592,7 @@ async function createSignedInvoiceFixture(suffix: string) {
     .expect(201);
   const signed = await request(app)
     .post(`/api/v1/invoices/${fixture.invoiceId}/versions/${fixture.versionId}/sign`)
-    .set("Authorization", `Bearer ${providerToken}`)
+    .set("Authorization", `Bearer ${receptionToken}`)
     .send({})
     .expect(200);
 
@@ -616,7 +616,7 @@ async function createSignedInvoiceFixtureWithUploadedSignature(suffix: string) {
     .post(
       `/api/v1/invoices/${fixture.invoiceId}/versions/${fixture.versionId}/signatures`,
     )
-    .set("Authorization", `Bearer ${providerToken}`)
+    .set("Authorization", `Bearer ${receptionToken}`)
     .send({
       signatureDocumentId: document.idString,
       signatureType: "PATIENT",
@@ -626,7 +626,7 @@ async function createSignedInvoiceFixtureWithUploadedSignature(suffix: string) {
     .expect(201);
   const signed = await request(app)
     .post(`/api/v1/invoices/${fixture.invoiceId}/versions/${fixture.versionId}/sign`)
-    .set("Authorization", `Bearer ${providerToken}`)
+    .set("Authorization", `Bearer ${receptionToken}`)
     .send({})
     .expect(200);
 
@@ -699,7 +699,7 @@ async function signInvoiceVersion(input: {
     .post(
       `/api/v1/invoices/${input.invoiceId}/versions/${input.versionId}/signatures`,
     )
-    .set("Authorization", `Bearer ${providerToken}`)
+    .set("Authorization", `Bearer ${receptionToken}`)
     .send({
       signatureDocumentId: document.id.toString(),
       signatureType: "PATIENT",
@@ -710,7 +710,7 @@ async function signInvoiceVersion(input: {
 
   return request(app)
     .post(`/api/v1/invoices/${input.invoiceId}/versions/${input.versionId}/sign`)
-    .set("Authorization", `Bearer ${providerToken}`)
+    .set("Authorization", `Bearer ${receptionToken}`)
     .send({})
     .expect(200);
 }
@@ -919,7 +919,8 @@ describe("Invoice API", () => {
       .expect(200);
 
     await createInvoice(aggregate.appointmentId, noRoleToken).expect(403);
-    await createInvoice(aggregate.appointmentId, providerToken).expect(201);
+    await createInvoice(aggregate.appointmentId, providerToken).expect(403);
+    await createInvoice(aggregate.appointmentId, receptionToken).expect(201);
 
     await request(app)
       .post(`/api/v1/invoices/999999999999/cancel`)
@@ -1576,7 +1577,7 @@ describe("Invoice API", () => {
       .post(
         `/api/v1/invoices/${fixture.invoiceId}/versions/${fixture.versionId}/signatures`,
       )
-      .set("Authorization", `Bearer ${providerToken}`)
+      .set("Authorization", `Bearer ${receptionToken}`)
       .send({
         signatureDocumentId: document.id.toString(),
         signatureType: "PATIENT",
@@ -1615,7 +1616,7 @@ describe("Invoice API", () => {
       .post(
         `/api/v1/invoices/${fixture.invoiceId}/versions/${fixture.versionId}/signatures`,
       )
-      .set("Authorization", `Bearer ${providerToken}`)
+      .set("Authorization", `Bearer ${receptionToken}`)
       .send({
         signatureDocumentId: document.id.toString(),
         signatureType: "PATIENT",
@@ -1657,7 +1658,7 @@ describe("Invoice API", () => {
         .post(
           `/api/v1/invoices/${fixture.invoiceId}/versions/${fixture.versionId}/signatures`,
         )
-        .set("Authorization", `Bearer ${providerToken}`)
+        .set("Authorization", `Bearer ${receptionToken}`)
         .send({
           signatureDocumentId: documentId.toString(),
           signatureType: "PATIENT",
@@ -1675,7 +1676,7 @@ describe("Invoice API", () => {
       .post(
         `/api/v1/invoices/${fixture.invoiceId}/versions/${fixture.versionId}/signatures`,
       )
-      .set("Authorization", `Bearer ${providerToken}`)
+      .set("Authorization", `Bearer ${receptionToken}`)
       .send({
         signatureDocumentId: validDocument.id.toString(),
         signatureType: "PATIENT",
@@ -1693,7 +1694,7 @@ describe("Invoice API", () => {
     await prepareInvoice(unsigned.invoiceId, unsigned.versionId).expect(200);
     await request(app)
       .post(`/api/v1/invoices/${unsigned.invoiceId}/versions/${unsigned.versionId}/sign`)
-      .set("Authorization", `Bearer ${providerToken}`)
+      .set("Authorization", `Bearer ${receptionToken}`)
       .send({})
       .expect(409)
       .expect((response) => {
@@ -1726,7 +1727,7 @@ describe("Invoice API", () => {
       .post(
         `/api/v1/invoices/${signable.invoiceId}/versions/${signable.versionId}/signatures`,
       )
-      .set("Authorization", `Bearer ${providerToken}`)
+      .set("Authorization", `Bearer ${receptionToken}`)
       .send({
         signatureDocumentId: document.id.toString(),
         signatureType: "LEGAL_REPRESENTATIVE",
@@ -1739,7 +1740,7 @@ describe("Invoice API", () => {
 
     await request(app)
       .post(`/api/v1/invoices/${signable.invoiceId}/versions/${signable.versionId}/sign`)
-      .set("Authorization", `Bearer ${providerToken}`)
+      .set("Authorization", `Bearer ${receptionToken}`)
       .send({})
       .expect(200)
       .expect((response) => {
@@ -1750,7 +1751,7 @@ describe("Invoice API", () => {
 
     await request(app)
       .post(`/api/v1/invoices/${signable.invoiceId}/versions/${signable.versionId}/sign`)
-      .set("Authorization", `Bearer ${providerToken}`)
+      .set("Authorization", `Bearer ${receptionToken}`)
       .send({})
       .expect(409)
       .expect((response) => {
@@ -1773,7 +1774,7 @@ describe("Invoice API", () => {
       .post(
         `/api/v1/invoices/${fixture.invoiceId}/versions/${fixture.versionId}/signatures`,
       )
-      .set("Authorization", `Bearer ${providerToken}`)
+      .set("Authorization", `Bearer ${receptionToken}`)
       .send({
         signatureDocumentId: document.id.toString(),
         signatureType: "PATIENT",
@@ -1789,7 +1790,7 @@ describe("Invoice API", () => {
 
     await request(app)
       .post(`/api/v1/invoices/${fixture.invoiceId}/versions/${fixture.versionId}/sign`)
-      .set("Authorization", `Bearer ${providerToken}`)
+      .set("Authorization", `Bearer ${receptionToken}`)
       .send({})
       .expect(409)
       .expect((response) => {
@@ -1806,7 +1807,7 @@ describe("Invoice API", () => {
 
     await request(app)
       .post(`/api/v1/invoices/${fixture.invoiceId}/versions/${fixture.versionId}/sign`)
-      .set("Authorization", `Bearer ${providerToken}`)
+      .set("Authorization", `Bearer ${receptionToken}`)
       .send({})
       .expect(409)
       .expect((response) => {
@@ -1823,7 +1824,7 @@ describe("Invoice API", () => {
       .post(
         `/api/v1/invoices/${fixture.invoiceId}/versions/${fixture.versionId}/signatures`,
       )
-      .set("Authorization", `Bearer ${providerToken}`)
+      .set("Authorization", `Bearer ${receptionToken}`)
       .send({
         signatureDocumentId: document.id.toString(),
         signatureType: "PATIENT",
@@ -1847,7 +1848,7 @@ describe("Invoice API", () => {
 
     await request(app)
       .post(`/api/v1/invoices/${fixture.invoiceId}/versions/${fixture.versionId}/sign`)
-      .set("Authorization", `Bearer ${providerToken}`)
+      .set("Authorization", `Bearer ${receptionToken}`)
       .send({})
       .expect(409)
       .expect((response) => {
@@ -1862,7 +1863,7 @@ describe("Invoice API", () => {
       .post(
         `/api/v1/invoices/${signed.invoiceId}/versions/${signed.versionId}/signatures`,
       )
-      .set("Authorization", `Bearer ${providerToken}`)
+      .set("Authorization", `Bearer ${receptionToken}`)
       .send({
         signatureDocumentId: signedDocument.id.toString(),
         signatureType: "PATIENT",
@@ -1872,7 +1873,7 @@ describe("Invoice API", () => {
       .expect(201);
     await request(app)
       .post(`/api/v1/invoices/${signed.invoiceId}/versions/${signed.versionId}/sign`)
-      .set("Authorization", `Bearer ${providerToken}`)
+      .set("Authorization", `Bearer ${receptionToken}`)
       .send({})
       .expect(200);
     await request(app)
@@ -1925,7 +1926,7 @@ describe("Invoice API", () => {
       .post(
         `/api/v1/invoices/${signable.invoiceId}/versions/${signable.versionId}/signatures`,
       )
-      .set("Authorization", `Bearer ${providerToken}`)
+      .set("Authorization", `Bearer ${receptionToken}`)
       .send({
         signatureDocumentId: document.id.toString(),
         signatureType: "PATIENT",
@@ -1937,11 +1938,11 @@ describe("Invoice API", () => {
     const [firstSign, secondSign] = await Promise.all([
       request(app)
         .post(`/api/v1/invoices/${signable.invoiceId}/versions/${signable.versionId}/sign`)
-        .set("Authorization", `Bearer ${providerToken}`)
+        .set("Authorization", `Bearer ${receptionToken}`)
         .send({}),
       request(app)
         .post(`/api/v1/invoices/${signable.invoiceId}/versions/${signable.versionId}/sign`)
-        .set("Authorization", `Bearer ${providerToken}`)
+        .set("Authorization", `Bearer ${receptionToken}`)
         .send({}),
     ]);
     expect([200, 409]).toContain(firstSign.status);
@@ -2412,7 +2413,7 @@ describe("Invoice API", () => {
 
     await request(app)
       .post(`/api/v1/invoices/${closed.invoiceId}/versions/${replacementVersionId}/sign`)
-      .set("Authorization", `Bearer ${providerToken}`)
+      .set("Authorization", `Bearer ${receptionToken}`)
       .send({})
       .expect(409)
       .expect((response) => {
@@ -2422,7 +2423,7 @@ describe("Invoice API", () => {
     const prepared = await prepareInvoice(
       closed.invoiceId,
       replacementVersionId,
-      providerToken,
+      receptionToken,
     )
       .expect(200)
       .expect((response) => {
@@ -2888,8 +2889,8 @@ describe("Invoice API", () => {
     expect(removed.body.data.status).toBe("VOID");
     await request(app).delete(`${servicesPath}/${oldProcedure.id}`).set("Authorization", `Bearer ${providerToken}`).expect(409);
     await request(app).post(servicesPath).set("Authorization", `Bearer ${providerToken}`)
-      .send({ patientInsuranceId: oldProcedure.patientInsuranceId.toString(), svbProcedureId: procedureBId.toString(), quantity: "3.00" }).expect(201);
-    await request(app).post(`/api/v1/clinical-encounters/${oldProcedure.encounterId}/complete`).set("Authorization", `Bearer ${providerToken}`).send({}).expect(200);
+      .send({ svbProcedureId: procedureBId.toString(), quantity: "3.00" }).expect(201);
+    await request(app).post(`/api/v1/clinical-encounters/${oldProcedure.encounterId}/finish-services`).set("Authorization", `Bearer ${providerToken}`).expect(200);
     const rebuilt = await createInvoice(BigInt(returned.body.data.appointmentId as string)).expect(201);
     expect(rebuilt.body.data.id).toBe(closed.invoiceId);
     expect(rebuilt.body.data.invoiceNumber).toBe(closed.invoiceNumber);

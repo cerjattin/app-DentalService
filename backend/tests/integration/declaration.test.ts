@@ -61,12 +61,12 @@ async function cleanupDeclarationFixture() {
       OR: [
         {
           declarationNumberSearch: {
-            startsWith: ("TEST-DECL").toLowerCase(),
+            startsWith: "TEST-DECL".toLowerCase(),
           },
         },
         {
           notesSearch: {
-            contains: ("TEST-DECL").toLowerCase(),
+            contains: "TEST-DECL".toLowerCase(),
           },
         },
       ],
@@ -89,7 +89,7 @@ async function cleanupDeclarationFixture() {
     where: {
       OR: [
         { actorUserId: { in: userIds } },
-        { entityTypeSearch: { startsWith: ("DECLARATION").toLowerCase() } },
+        { entityTypeSearch: { startsWith: "DECLARATION".toLowerCase() } },
       ],
     },
   });
@@ -111,7 +111,7 @@ async function cleanupDeclarationFixture() {
     where: {
       OR: [
         { id: { in: documentIds } },
-        { originalFilenameSearch: { startsWith: ("TEST-DECL").toLowerCase() } },
+        { originalFilenameSearch: { startsWith: "TEST-DECL".toLowerCase() } },
       ],
     },
   });
@@ -140,7 +140,7 @@ async function cleanupDeclarationFixture() {
   const invoices = await prisma.invoice.findMany({
     where: {
       OR: [
-        { invoiceNumberSearch: { startsWith: ("TEST-DECL-INV").toLowerCase() } },
+        { invoiceNumberSearch: { startsWith: "TEST-DECL-INV".toLowerCase() } },
         { organization: { legalName: OTHER_ORG_LEGAL_NAME } },
       ],
     },
@@ -193,7 +193,11 @@ async function cleanupDeclarationFixture() {
   const appointments = await prisma.appointment.findMany({
     where: {
       OR: [
-        { appointmentNumberSearch: { startsWith: ("TEST-DECL-APT").toLowerCase() } },
+        {
+          appointmentNumberSearch: {
+            startsWith: "TEST-DECL-APT".toLowerCase(),
+          },
+        },
         { organization: { legalName: OTHER_ORG_LEGAL_NAME } },
       ],
     },
@@ -235,16 +239,14 @@ async function cleanupDeclarationFixture() {
   });
   await prisma.patientInsurance.deleteMany({
     where: {
-      insuredIdSearch: {
-        startsWith: ("00000").toLowerCase(),
-      },
+      patient: { patientNumberSearch: { startsWith: "test-decl-pat" } },
     },
   });
   await prisma.svbTariff.deleteMany({
     where: {
       svbProcedure: {
         codeSearch: {
-          startsWith: ("TEST-DECL-PROC").toLowerCase(),
+          startsWith: "TEST-DECL-PROC".toLowerCase(),
         },
       },
     },
@@ -252,35 +254,35 @@ async function cleanupDeclarationFixture() {
   await prisma.svbProcedure.deleteMany({
     where: {
       codeSearch: {
-        startsWith: ("TEST-DECL-PROC").toLowerCase(),
+        startsWith: "TEST-DECL-PROC".toLowerCase(),
       },
     },
   });
   await prisma.provider.deleteMany({
     where: {
       lastNameSearch: {
-        startsWith: ("Provider ").toLowerCase(),
+        startsWith: "Provider ".toLowerCase(),
       },
     },
   });
   await prisma.clinicLocation.deleteMany({
     where: {
       codeSearch: {
-        startsWith: ("TEST-DECL-LOC").toLowerCase(),
+        startsWith: "TEST-DECL-LOC".toLowerCase(),
       },
     },
   });
   await prisma.patient.deleteMany({
     where: {
       patientNumberSearch: {
-        startsWith: ("TEST-DECL-PAT").toLowerCase(),
+        startsWith: "TEST-DECL-PAT".toLowerCase(),
       },
     },
   });
   await prisma.payer.deleteMany({
     where: {
       codeSearch: {
-        startsWith: ("TEST-DECL-PAYER").toLowerCase(),
+        startsWith: "TEST-DECL-PAYER".toLowerCase(),
       },
     },
   });
@@ -392,8 +394,7 @@ async function createInvoiceFixture(input: {
   const provider = await prisma.provider.create({
     data: {
       organizationId: input.orgId,
-      svbProviderId:
-        input.suffix === "0001" ? "12345" : `1${input.suffix}`,
+      svbProviderId: input.suffix === "0001" ? "12345" : `1${input.suffix}`,
       firstName: "Test",
       lastName: `Provider ${input.suffix}`,
       isActive: true,
@@ -969,7 +970,11 @@ describe("Declaration API", () => {
         invoiceItemId: incompleteItemId.toString(),
       })
       .expect(409)
-      .expect((response) => { expect(response.body.error.code).toBe("DECLARATION_SVB_DATA_INCOMPLETE"); });
+      .expect((response) => {
+        expect(response.body.error.code).toBe(
+          "DECLARATION_SVB_DATA_INCOMPLETE",
+        );
+      });
     await request(app)
       .post(`/api/v1/declarations/${incompleteDeclarationId}/ready`)
       .set("Authorization", `Bearer ${adminToken}`)
@@ -1073,16 +1078,12 @@ describe("Declaration API", () => {
       .expect(201);
 
     expect(submitted.body.data.id).toEqual(expect.any(String));
-    expect(submitted.body.data.declarationBatchId).toBe(
-      exported.declarationId,
-    );
+    expect(submitted.body.data.declarationBatchId).toBe(exported.declarationId);
     expect(submitted.body.data.declarationExportId).toBe(exported.exportId);
     expect(submitted.body.data.status).toBe("SUBMITTED");
     expect(submitted.body.data.channel).toBe("MANUAL");
     expect(submitted.body.data.externalReference).toBe("TEST-SUBMISSION-0007");
-    expect(submitted.body.data.submittedByUserId).toBe(
-      adminUserId.toString(),
-    );
+    expect(submitted.body.data.submittedByUserId).toBe(adminUserId.toString());
 
     const list = await request(app)
       .get(`/api/v1/declarations/${exported.declarationId}/submissions`)
@@ -1173,9 +1174,7 @@ describe("Declaration API", () => {
       .expect(200);
 
     expect(result.body.data.status).toBe("ACCEPTED");
-    expect(result.body.data.externalReference).toBe(
-      "TEST-SVB-ACCEPTED-0008",
-    );
+    expect(result.body.data.externalReference).toBe("TEST-SVB-ACCEPTED-0008");
     expect(result.body.data.respondedAt).toEqual(expect.any(String));
 
     const batch = await prisma.declarationBatch.findUniqueOrThrow({
@@ -1352,12 +1351,12 @@ describe("Declaration API", () => {
       .map((result) => result.value);
 
     expect(responses).toHaveLength(2);
-    expect(responses.filter((response) => response.status === 201)).toHaveLength(
-      1,
-    );
-    expect(responses.filter((response) => response.status === 409)).toHaveLength(
-      1,
-    );
+    expect(
+      responses.filter((response) => response.status === 201),
+    ).toHaveLength(1);
+    expect(
+      responses.filter((response) => response.status === 409),
+    ).toHaveLength(1);
 
     const count = await prisma.declarationSubmission.count({
       where: {

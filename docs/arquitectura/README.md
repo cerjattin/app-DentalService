@@ -1,5 +1,17 @@
 # Arquitectura y coordinación
 
+## Vigencia OPS-05 — 2026-11-07
+
+Coordinar [OPS-01–05](../negocio/CONTRATOS_OPERACION_20261107.md) y el nuevo flujo [atención/facturación/Dentalink](../negocio/CONTRATO_ATENCION_FACTURACION_DENTALINK_20261106.md). **Agenda/confirmación → servicios por profesional → cierre conjunto → factura/firma por Recepción**, Admin por permisos. Requisitos médicos/diagnósticos/notas y datos de cobro salen de la captura mínima, sin borrar historia ni romper cuerpo legado. Reportes y SVB se conservan; radicación aplazada.
+
+Usuario informó despliegue existente; no se ha observado destino desde Arquitectura. No describir las propuestas de plataforma/precios del 3 de noviembre como contratación o estado live. Autorización actual local: sin escrituras/importaciones clínicas, cambios de credenciales, migraciones remotas, commit/push/deploy.
+
+Entregas propias: [OPS_05_ENTREGA](OPS_05_ENTREGA.md), [dependencias Dentalink](OPS_05_COORDINACION_DENTALINK.md), [actualización revisable](OPS_05_ACTUALIZACION_DESTINO.md) y `ops-candidate.mjs`. Se mantienen contexto/plan. No se editan módulos, componentes ni schema de otras áreas; DB controla Prisma/migraciones/generado y recuperación asignada. Preservar CRT/captura de deployment, excluidos del código empaquetado.
+
+Candidato local previo 092a = histórico. Preparar uno desde HEAD1828797be + cambios OPS, y vincular pruebas a esos bytes después de las entregas. Dentalink solo preparación/adaptador sustituible sintético hasta tener referencia y acceso oficiales; recuperación timeout120s sigue puerta de DB. Estado de aceptación y versión destino quedan separados.
+
+## Registro de Arquitectura al 3 de noviembre — histórico
+
 ## Responsabilidad
 
 Definir límites entre áreas, contratos transversales, infraestructura, orden del MVP y primer despliegue clínico. Mantener [contexto compartido](../CONTEXTO_PROYECTO.md) y [plan](../PLAN_MVP.md). Tarea vigente: [NEG-DEP-12](../negocio/CONTRATO_DESPLIEGUE_12_ENTORNO_OPERACION.md), con SVB aplazado.

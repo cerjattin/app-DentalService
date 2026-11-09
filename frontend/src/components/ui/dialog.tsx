@@ -10,6 +10,7 @@ interface DialogProps {
   description?: string
   children: ReactNode
   size?: 'default' | 'wide'
+  onEscapeKeyDown?: (event: KeyboardEvent) => void
 }
 
 export function Dialog({
@@ -19,6 +20,7 @@ export function Dialog({
   description,
   children,
   size = 'default',
+  onEscapeKeyDown,
 }: DialogProps) {
   const opener = useRef<HTMLElement | null>(null)
   return (
@@ -26,6 +28,7 @@ export function Dialog({
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="fixed inset-0 z-40 bg-slate-950/40" />
         <DialogPrimitive.Content
+          onEscapeKeyDown={onEscapeKeyDown}
           onOpenAutoFocus={() => {
             opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
           }}

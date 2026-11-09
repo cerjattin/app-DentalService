@@ -2,6 +2,12 @@ import { z } from "zod";
 
 const bigintId = z.string().trim().regex(/^[1-9]\d*$/);
 
+export const createAppointmentInvoiceSchema = z.strictObject({
+  patientInsuranceId: bigintId.optional(),
+  currencyCode: z.string().trim().regex(/^[A-Za-z]{3}$/).toUpperCase().optional(),
+});
+export type CreateAppointmentInvoiceInput = z.infer<typeof createAppointmentInvoiceSchema>;
+
 export const listInvoicesQuerySchema = z.object({
   q: z.string().trim().max(120).optional(),
   status: z

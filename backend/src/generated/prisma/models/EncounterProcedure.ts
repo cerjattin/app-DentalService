@@ -396,9 +396,9 @@ export type EncounterProcedureGroupByArgs<ExtArgs extends runtime.Types.Extensio
 export type EncounterProcedureGroupByOutputType = {
   id: bigint
   encounterId: bigint
-  patientInsuranceId: bigint
+  patientInsuranceId: bigint | null
   svbProcedureId: bigint
-  svbTariffId: bigint
+  svbTariffId: bigint | null
   authorizationItemId: bigint | null
   diagnosisId: bigint | null
   referrerId: bigint | null
@@ -406,11 +406,11 @@ export type EncounterProcedureGroupByOutputType = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal
-  currencyCodeSnapshot: string
+  insuredIdSnapshot: string | null
+  unitTariffSnapshot: runtime.Decimal | null
+  currencyCodeSnapshot: string | null
   quantity: runtime.Decimal
-  amount: runtime.Decimal
+  amount: runtime.Decimal | null
   authorizationIdSnapshot: string | null
   diagnosticCodeSnapshot: string | null
   treatmentIdSnapshot: string | null
@@ -454,9 +454,9 @@ export type EncounterProcedureWhereInput = {
   NOT?: Prisma.EncounterProcedureWhereInput | Prisma.EncounterProcedureWhereInput[]
   id?: Prisma.BigIntFilter<"EncounterProcedure"> | bigint | number
   encounterId?: Prisma.BigIntFilter<"EncounterProcedure"> | bigint | number
-  patientInsuranceId?: Prisma.BigIntFilter<"EncounterProcedure"> | bigint | number
+  patientInsuranceId?: Prisma.BigIntNullableFilter<"EncounterProcedure"> | bigint | number | null
   svbProcedureId?: Prisma.BigIntFilter<"EncounterProcedure"> | bigint | number
-  svbTariffId?: Prisma.BigIntFilter<"EncounterProcedure"> | bigint | number
+  svbTariffId?: Prisma.BigIntNullableFilter<"EncounterProcedure"> | bigint | number | null
   authorizationItemId?: Prisma.BigIntNullableFilter<"EncounterProcedure"> | bigint | number | null
   diagnosisId?: Prisma.BigIntNullableFilter<"EncounterProcedure"> | bigint | number | null
   referrerId?: Prisma.BigIntNullableFilter<"EncounterProcedure"> | bigint | number | null
@@ -464,11 +464,11 @@ export type EncounterProcedureWhereInput = {
   procedureCodeSnapshot?: Prisma.StringFilter<"EncounterProcedure"> | string
   procedureDescriptionSnapshot?: Prisma.StringFilter<"EncounterProcedure"> | string
   providerIdSnapshot?: Prisma.StringNullableFilter<"EncounterProcedure"> | string | null
-  insuredIdSnapshot?: Prisma.StringFilter<"EncounterProcedure"> | string
-  unitTariffSnapshot?: Prisma.DecimalFilter<"EncounterProcedure"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFilter<"EncounterProcedure"> | string
+  insuredIdSnapshot?: Prisma.StringNullableFilter<"EncounterProcedure"> | string | null
+  unitTariffSnapshot?: Prisma.DecimalNullableFilter<"EncounterProcedure"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.StringNullableFilter<"EncounterProcedure"> | string | null
   quantity?: Prisma.DecimalFilter<"EncounterProcedure"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFilter<"EncounterProcedure"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.DecimalNullableFilter<"EncounterProcedure"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.StringNullableFilter<"EncounterProcedure"> | string | null
   diagnosticCodeSnapshot?: Prisma.StringNullableFilter<"EncounterProcedure"> | string | null
   treatmentIdSnapshot?: Prisma.StringNullableFilter<"EncounterProcedure"> | string | null
@@ -488,20 +488,20 @@ export type EncounterProcedureWhereInput = {
   createdByUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   diagnosis?: Prisma.XOR<Prisma.EncounterDiagnosisNullableScalarRelationFilter, Prisma.EncounterDiagnosisWhereInput> | null
   encounter?: Prisma.XOR<Prisma.ClinicalEncounterScalarRelationFilter, Prisma.ClinicalEncounterWhereInput>
-  patientInsurance?: Prisma.XOR<Prisma.PatientInsuranceScalarRelationFilter, Prisma.PatientInsuranceWhereInput>
+  patientInsurance?: Prisma.XOR<Prisma.PatientInsuranceNullableScalarRelationFilter, Prisma.PatientInsuranceWhereInput> | null
   performedByProvider?: Prisma.XOR<Prisma.ProviderScalarRelationFilter, Prisma.ProviderWhereInput>
   referrer?: Prisma.XOR<Prisma.ReferrerNullableScalarRelationFilter, Prisma.ReferrerWhereInput> | null
   svbProcedure?: Prisma.XOR<Prisma.SvbProcedureScalarRelationFilter, Prisma.SvbProcedureWhereInput>
-  svbTariff?: Prisma.XOR<Prisma.SvbTariffScalarRelationFilter, Prisma.SvbTariffWhereInput>
+  svbTariff?: Prisma.XOR<Prisma.SvbTariffNullableScalarRelationFilter, Prisma.SvbTariffWhereInput> | null
   invoiceItems?: Prisma.InvoiceItemListRelationFilter
 }
 
 export type EncounterProcedureOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   encounterId?: Prisma.SortOrder
-  patientInsuranceId?: Prisma.SortOrder
+  patientInsuranceId?: Prisma.SortOrderInput | Prisma.SortOrder
   svbProcedureId?: Prisma.SortOrder
-  svbTariffId?: Prisma.SortOrder
+  svbTariffId?: Prisma.SortOrderInput | Prisma.SortOrder
   authorizationItemId?: Prisma.SortOrderInput | Prisma.SortOrder
   diagnosisId?: Prisma.SortOrderInput | Prisma.SortOrder
   referrerId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -509,11 +509,11 @@ export type EncounterProcedureOrderByWithRelationInput = {
   procedureCodeSnapshot?: Prisma.SortOrder
   procedureDescriptionSnapshot?: Prisma.SortOrder
   providerIdSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
-  insuredIdSnapshot?: Prisma.SortOrder
-  unitTariffSnapshot?: Prisma.SortOrder
-  currencyCodeSnapshot?: Prisma.SortOrder
+  insuredIdSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
+  unitTariffSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
+  currencyCodeSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
   quantity?: Prisma.SortOrder
-  amount?: Prisma.SortOrder
+  amount?: Prisma.SortOrderInput | Prisma.SortOrder
   authorizationIdSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
   diagnosticCodeSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
   treatmentIdSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -547,9 +547,9 @@ export type EncounterProcedureWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.EncounterProcedureWhereInput[]
   NOT?: Prisma.EncounterProcedureWhereInput | Prisma.EncounterProcedureWhereInput[]
   encounterId?: Prisma.BigIntFilter<"EncounterProcedure"> | bigint | number
-  patientInsuranceId?: Prisma.BigIntFilter<"EncounterProcedure"> | bigint | number
+  patientInsuranceId?: Prisma.BigIntNullableFilter<"EncounterProcedure"> | bigint | number | null
   svbProcedureId?: Prisma.BigIntFilter<"EncounterProcedure"> | bigint | number
-  svbTariffId?: Prisma.BigIntFilter<"EncounterProcedure"> | bigint | number
+  svbTariffId?: Prisma.BigIntNullableFilter<"EncounterProcedure"> | bigint | number | null
   authorizationItemId?: Prisma.BigIntNullableFilter<"EncounterProcedure"> | bigint | number | null
   diagnosisId?: Prisma.BigIntNullableFilter<"EncounterProcedure"> | bigint | number | null
   referrerId?: Prisma.BigIntNullableFilter<"EncounterProcedure"> | bigint | number | null
@@ -557,11 +557,11 @@ export type EncounterProcedureWhereUniqueInput = Prisma.AtLeast<{
   procedureCodeSnapshot?: Prisma.StringFilter<"EncounterProcedure"> | string
   procedureDescriptionSnapshot?: Prisma.StringFilter<"EncounterProcedure"> | string
   providerIdSnapshot?: Prisma.StringNullableFilter<"EncounterProcedure"> | string | null
-  insuredIdSnapshot?: Prisma.StringFilter<"EncounterProcedure"> | string
-  unitTariffSnapshot?: Prisma.DecimalFilter<"EncounterProcedure"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFilter<"EncounterProcedure"> | string
+  insuredIdSnapshot?: Prisma.StringNullableFilter<"EncounterProcedure"> | string | null
+  unitTariffSnapshot?: Prisma.DecimalNullableFilter<"EncounterProcedure"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.StringNullableFilter<"EncounterProcedure"> | string | null
   quantity?: Prisma.DecimalFilter<"EncounterProcedure"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFilter<"EncounterProcedure"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.DecimalNullableFilter<"EncounterProcedure"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.StringNullableFilter<"EncounterProcedure"> | string | null
   diagnosticCodeSnapshot?: Prisma.StringNullableFilter<"EncounterProcedure"> | string | null
   treatmentIdSnapshot?: Prisma.StringNullableFilter<"EncounterProcedure"> | string | null
@@ -581,20 +581,20 @@ export type EncounterProcedureWhereUniqueInput = Prisma.AtLeast<{
   createdByUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   diagnosis?: Prisma.XOR<Prisma.EncounterDiagnosisNullableScalarRelationFilter, Prisma.EncounterDiagnosisWhereInput> | null
   encounter?: Prisma.XOR<Prisma.ClinicalEncounterScalarRelationFilter, Prisma.ClinicalEncounterWhereInput>
-  patientInsurance?: Prisma.XOR<Prisma.PatientInsuranceScalarRelationFilter, Prisma.PatientInsuranceWhereInput>
+  patientInsurance?: Prisma.XOR<Prisma.PatientInsuranceNullableScalarRelationFilter, Prisma.PatientInsuranceWhereInput> | null
   performedByProvider?: Prisma.XOR<Prisma.ProviderScalarRelationFilter, Prisma.ProviderWhereInput>
   referrer?: Prisma.XOR<Prisma.ReferrerNullableScalarRelationFilter, Prisma.ReferrerWhereInput> | null
   svbProcedure?: Prisma.XOR<Prisma.SvbProcedureScalarRelationFilter, Prisma.SvbProcedureWhereInput>
-  svbTariff?: Prisma.XOR<Prisma.SvbTariffScalarRelationFilter, Prisma.SvbTariffWhereInput>
+  svbTariff?: Prisma.XOR<Prisma.SvbTariffNullableScalarRelationFilter, Prisma.SvbTariffWhereInput> | null
   invoiceItems?: Prisma.InvoiceItemListRelationFilter
 }, "id">
 
 export type EncounterProcedureOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   encounterId?: Prisma.SortOrder
-  patientInsuranceId?: Prisma.SortOrder
+  patientInsuranceId?: Prisma.SortOrderInput | Prisma.SortOrder
   svbProcedureId?: Prisma.SortOrder
-  svbTariffId?: Prisma.SortOrder
+  svbTariffId?: Prisma.SortOrderInput | Prisma.SortOrder
   authorizationItemId?: Prisma.SortOrderInput | Prisma.SortOrder
   diagnosisId?: Prisma.SortOrderInput | Prisma.SortOrder
   referrerId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -602,11 +602,11 @@ export type EncounterProcedureOrderByWithAggregationInput = {
   procedureCodeSnapshot?: Prisma.SortOrder
   procedureDescriptionSnapshot?: Prisma.SortOrder
   providerIdSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
-  insuredIdSnapshot?: Prisma.SortOrder
-  unitTariffSnapshot?: Prisma.SortOrder
-  currencyCodeSnapshot?: Prisma.SortOrder
+  insuredIdSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
+  unitTariffSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
+  currencyCodeSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
   quantity?: Prisma.SortOrder
-  amount?: Prisma.SortOrder
+  amount?: Prisma.SortOrderInput | Prisma.SortOrder
   authorizationIdSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
   diagnosticCodeSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
   treatmentIdSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -635,9 +635,9 @@ export type EncounterProcedureScalarWhereWithAggregatesInput = {
   NOT?: Prisma.EncounterProcedureScalarWhereWithAggregatesInput | Prisma.EncounterProcedureScalarWhereWithAggregatesInput[]
   id?: Prisma.BigIntWithAggregatesFilter<"EncounterProcedure"> | bigint | number
   encounterId?: Prisma.BigIntWithAggregatesFilter<"EncounterProcedure"> | bigint | number
-  patientInsuranceId?: Prisma.BigIntWithAggregatesFilter<"EncounterProcedure"> | bigint | number
+  patientInsuranceId?: Prisma.BigIntNullableWithAggregatesFilter<"EncounterProcedure"> | bigint | number | null
   svbProcedureId?: Prisma.BigIntWithAggregatesFilter<"EncounterProcedure"> | bigint | number
-  svbTariffId?: Prisma.BigIntWithAggregatesFilter<"EncounterProcedure"> | bigint | number
+  svbTariffId?: Prisma.BigIntNullableWithAggregatesFilter<"EncounterProcedure"> | bigint | number | null
   authorizationItemId?: Prisma.BigIntNullableWithAggregatesFilter<"EncounterProcedure"> | bigint | number | null
   diagnosisId?: Prisma.BigIntNullableWithAggregatesFilter<"EncounterProcedure"> | bigint | number | null
   referrerId?: Prisma.BigIntNullableWithAggregatesFilter<"EncounterProcedure"> | bigint | number | null
@@ -645,11 +645,11 @@ export type EncounterProcedureScalarWhereWithAggregatesInput = {
   procedureCodeSnapshot?: Prisma.StringWithAggregatesFilter<"EncounterProcedure"> | string
   procedureDescriptionSnapshot?: Prisma.StringWithAggregatesFilter<"EncounterProcedure"> | string
   providerIdSnapshot?: Prisma.StringNullableWithAggregatesFilter<"EncounterProcedure"> | string | null
-  insuredIdSnapshot?: Prisma.StringWithAggregatesFilter<"EncounterProcedure"> | string
-  unitTariffSnapshot?: Prisma.DecimalWithAggregatesFilter<"EncounterProcedure"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringWithAggregatesFilter<"EncounterProcedure"> | string
+  insuredIdSnapshot?: Prisma.StringNullableWithAggregatesFilter<"EncounterProcedure"> | string | null
+  unitTariffSnapshot?: Prisma.DecimalNullableWithAggregatesFilter<"EncounterProcedure"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.StringNullableWithAggregatesFilter<"EncounterProcedure"> | string | null
   quantity?: Prisma.DecimalWithAggregatesFilter<"EncounterProcedure"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalWithAggregatesFilter<"EncounterProcedure"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.DecimalNullableWithAggregatesFilter<"EncounterProcedure"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.StringNullableWithAggregatesFilter<"EncounterProcedure"> | string | null
   diagnosticCodeSnapshot?: Prisma.StringNullableWithAggregatesFilter<"EncounterProcedure"> | string | null
   treatmentIdSnapshot?: Prisma.StringNullableWithAggregatesFilter<"EncounterProcedure"> | string | null
@@ -672,11 +672,11 @@ export type EncounterProcedureCreateInput = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -695,20 +695,20 @@ export type EncounterProcedureCreateInput = {
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedEncounterProceduresInput
   diagnosis?: Prisma.EncounterDiagnosisCreateNestedOneWithoutProceduresInput
   encounter: Prisma.ClinicalEncounterCreateNestedOneWithoutProceduresInput
-  patientInsurance: Prisma.PatientInsuranceCreateNestedOneWithoutEncounterProceduresInput
+  patientInsurance?: Prisma.PatientInsuranceCreateNestedOneWithoutEncounterProceduresInput
   performedByProvider: Prisma.ProviderCreateNestedOneWithoutPerformedProceduresInput
   referrer?: Prisma.ReferrerCreateNestedOneWithoutEncounterProceduresInput
   svbProcedure: Prisma.SvbProcedureCreateNestedOneWithoutEncounterProceduresInput
-  svbTariff: Prisma.SvbTariffCreateNestedOneWithoutEncounterProceduresInput
+  svbTariff?: Prisma.SvbTariffCreateNestedOneWithoutEncounterProceduresInput
   invoiceItems?: Prisma.InvoiceItemCreateNestedManyWithoutEncounterProcedureInput
 }
 
 export type EncounterProcedureUncheckedCreateInput = {
   id?: bigint | number
   encounterId: bigint | number
-  patientInsuranceId: bigint | number
+  patientInsuranceId?: bigint | number | null
   svbProcedureId: bigint | number
-  svbTariffId: bigint | number
+  svbTariffId?: bigint | number | null
   authorizationItemId?: bigint | number | null
   diagnosisId?: bigint | number | null
   referrerId?: bigint | number | null
@@ -716,11 +716,11 @@ export type EncounterProcedureUncheckedCreateInput = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -744,11 +744,11 @@ export type EncounterProcedureUpdateInput = {
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -767,20 +767,20 @@ export type EncounterProcedureUpdateInput = {
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedEncounterProceduresNestedInput
   diagnosis?: Prisma.EncounterDiagnosisUpdateOneWithoutProceduresNestedInput
   encounter?: Prisma.ClinicalEncounterUpdateOneRequiredWithoutProceduresNestedInput
-  patientInsurance?: Prisma.PatientInsuranceUpdateOneRequiredWithoutEncounterProceduresNestedInput
+  patientInsurance?: Prisma.PatientInsuranceUpdateOneWithoutEncounterProceduresNestedInput
   performedByProvider?: Prisma.ProviderUpdateOneRequiredWithoutPerformedProceduresNestedInput
   referrer?: Prisma.ReferrerUpdateOneWithoutEncounterProceduresNestedInput
   svbProcedure?: Prisma.SvbProcedureUpdateOneRequiredWithoutEncounterProceduresNestedInput
-  svbTariff?: Prisma.SvbTariffUpdateOneRequiredWithoutEncounterProceduresNestedInput
+  svbTariff?: Prisma.SvbTariffUpdateOneWithoutEncounterProceduresNestedInput
   invoiceItems?: Prisma.InvoiceItemUpdateManyWithoutEncounterProcedureNestedInput
 }
 
 export type EncounterProcedureUncheckedUpdateInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   encounterId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  patientInsuranceId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  patientInsuranceId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   svbProcedureId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  svbTariffId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  svbTariffId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   authorizationItemId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   diagnosisId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   referrerId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -788,11 +788,11 @@ export type EncounterProcedureUncheckedUpdateInput = {
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -814,9 +814,9 @@ export type EncounterProcedureUncheckedUpdateInput = {
 export type EncounterProcedureCreateManyInput = {
   id?: bigint | number
   encounterId: bigint | number
-  patientInsuranceId: bigint | number
+  patientInsuranceId?: bigint | number | null
   svbProcedureId: bigint | number
-  svbTariffId: bigint | number
+  svbTariffId?: bigint | number | null
   authorizationItemId?: bigint | number | null
   diagnosisId?: bigint | number | null
   referrerId?: bigint | number | null
@@ -824,11 +824,11 @@ export type EncounterProcedureCreateManyInput = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -851,11 +851,11 @@ export type EncounterProcedureUpdateManyMutationInput = {
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -875,9 +875,9 @@ export type EncounterProcedureUpdateManyMutationInput = {
 export type EncounterProcedureUncheckedUpdateManyInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   encounterId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  patientInsuranceId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  patientInsuranceId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   svbProcedureId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  svbTariffId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  svbTariffId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   authorizationItemId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   diagnosisId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   referrerId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -885,11 +885,11 @@ export type EncounterProcedureUncheckedUpdateManyInput = {
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1143,6 +1143,14 @@ export type EncounterProcedureUncheckedUpdateManyWithoutDiagnosisNestedInput = {
   update?: Prisma.EncounterProcedureUpdateWithWhereUniqueWithoutDiagnosisInput | Prisma.EncounterProcedureUpdateWithWhereUniqueWithoutDiagnosisInput[]
   updateMany?: Prisma.EncounterProcedureUpdateManyWithWhereWithoutDiagnosisInput | Prisma.EncounterProcedureUpdateManyWithWhereWithoutDiagnosisInput[]
   deleteMany?: Prisma.EncounterProcedureScalarWhereInput | Prisma.EncounterProcedureScalarWhereInput[]
+}
+
+export type NullableDecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type EnumEncounterProcedureStatusFieldUpdateOperationsInput = {
@@ -1462,11 +1470,11 @@ export type EncounterProcedureCreateWithoutEncounterInput = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -1484,19 +1492,19 @@ export type EncounterProcedureCreateWithoutEncounterInput = {
   authorizationItem?: Prisma.SvbAuthorizationItemCreateNestedOneWithoutEncounterProceduresInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedEncounterProceduresInput
   diagnosis?: Prisma.EncounterDiagnosisCreateNestedOneWithoutProceduresInput
-  patientInsurance: Prisma.PatientInsuranceCreateNestedOneWithoutEncounterProceduresInput
+  patientInsurance?: Prisma.PatientInsuranceCreateNestedOneWithoutEncounterProceduresInput
   performedByProvider: Prisma.ProviderCreateNestedOneWithoutPerformedProceduresInput
   referrer?: Prisma.ReferrerCreateNestedOneWithoutEncounterProceduresInput
   svbProcedure: Prisma.SvbProcedureCreateNestedOneWithoutEncounterProceduresInput
-  svbTariff: Prisma.SvbTariffCreateNestedOneWithoutEncounterProceduresInput
+  svbTariff?: Prisma.SvbTariffCreateNestedOneWithoutEncounterProceduresInput
   invoiceItems?: Prisma.InvoiceItemCreateNestedManyWithoutEncounterProcedureInput
 }
 
 export type EncounterProcedureUncheckedCreateWithoutEncounterInput = {
   id?: bigint | number
-  patientInsuranceId: bigint | number
+  patientInsuranceId?: bigint | number | null
   svbProcedureId: bigint | number
-  svbTariffId: bigint | number
+  svbTariffId?: bigint | number | null
   authorizationItemId?: bigint | number | null
   diagnosisId?: bigint | number | null
   referrerId?: bigint | number | null
@@ -1504,11 +1512,11 @@ export type EncounterProcedureUncheckedCreateWithoutEncounterInput = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -1559,9 +1567,9 @@ export type EncounterProcedureScalarWhereInput = {
   NOT?: Prisma.EncounterProcedureScalarWhereInput | Prisma.EncounterProcedureScalarWhereInput[]
   id?: Prisma.BigIntFilter<"EncounterProcedure"> | bigint | number
   encounterId?: Prisma.BigIntFilter<"EncounterProcedure"> | bigint | number
-  patientInsuranceId?: Prisma.BigIntFilter<"EncounterProcedure"> | bigint | number
+  patientInsuranceId?: Prisma.BigIntNullableFilter<"EncounterProcedure"> | bigint | number | null
   svbProcedureId?: Prisma.BigIntFilter<"EncounterProcedure"> | bigint | number
-  svbTariffId?: Prisma.BigIntFilter<"EncounterProcedure"> | bigint | number
+  svbTariffId?: Prisma.BigIntNullableFilter<"EncounterProcedure"> | bigint | number | null
   authorizationItemId?: Prisma.BigIntNullableFilter<"EncounterProcedure"> | bigint | number | null
   diagnosisId?: Prisma.BigIntNullableFilter<"EncounterProcedure"> | bigint | number | null
   referrerId?: Prisma.BigIntNullableFilter<"EncounterProcedure"> | bigint | number | null
@@ -1569,11 +1577,11 @@ export type EncounterProcedureScalarWhereInput = {
   procedureCodeSnapshot?: Prisma.StringFilter<"EncounterProcedure"> | string
   procedureDescriptionSnapshot?: Prisma.StringFilter<"EncounterProcedure"> | string
   providerIdSnapshot?: Prisma.StringNullableFilter<"EncounterProcedure"> | string | null
-  insuredIdSnapshot?: Prisma.StringFilter<"EncounterProcedure"> | string
-  unitTariffSnapshot?: Prisma.DecimalFilter<"EncounterProcedure"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFilter<"EncounterProcedure"> | string
+  insuredIdSnapshot?: Prisma.StringNullableFilter<"EncounterProcedure"> | string | null
+  unitTariffSnapshot?: Prisma.DecimalNullableFilter<"EncounterProcedure"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.StringNullableFilter<"EncounterProcedure"> | string | null
   quantity?: Prisma.DecimalFilter<"EncounterProcedure"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFilter<"EncounterProcedure"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.DecimalNullableFilter<"EncounterProcedure"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.StringNullableFilter<"EncounterProcedure"> | string | null
   diagnosticCodeSnapshot?: Prisma.StringNullableFilter<"EncounterProcedure"> | string | null
   treatmentIdSnapshot?: Prisma.StringNullableFilter<"EncounterProcedure"> | string | null
@@ -1596,11 +1604,11 @@ export type EncounterProcedureCreateWithoutDiagnosisInput = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -1618,31 +1626,31 @@ export type EncounterProcedureCreateWithoutDiagnosisInput = {
   authorizationItem?: Prisma.SvbAuthorizationItemCreateNestedOneWithoutEncounterProceduresInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedEncounterProceduresInput
   encounter: Prisma.ClinicalEncounterCreateNestedOneWithoutProceduresInput
-  patientInsurance: Prisma.PatientInsuranceCreateNestedOneWithoutEncounterProceduresInput
+  patientInsurance?: Prisma.PatientInsuranceCreateNestedOneWithoutEncounterProceduresInput
   performedByProvider: Prisma.ProviderCreateNestedOneWithoutPerformedProceduresInput
   referrer?: Prisma.ReferrerCreateNestedOneWithoutEncounterProceduresInput
   svbProcedure: Prisma.SvbProcedureCreateNestedOneWithoutEncounterProceduresInput
-  svbTariff: Prisma.SvbTariffCreateNestedOneWithoutEncounterProceduresInput
+  svbTariff?: Prisma.SvbTariffCreateNestedOneWithoutEncounterProceduresInput
   invoiceItems?: Prisma.InvoiceItemCreateNestedManyWithoutEncounterProcedureInput
 }
 
 export type EncounterProcedureUncheckedCreateWithoutDiagnosisInput = {
   id?: bigint | number
   encounterId: bigint | number
-  patientInsuranceId: bigint | number
+  patientInsuranceId?: bigint | number | null
   svbProcedureId: bigint | number
-  svbTariffId: bigint | number
+  svbTariffId?: bigint | number | null
   authorizationItemId?: bigint | number | null
   referrerId?: bigint | number | null
   performedByProviderId: bigint | number
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -1692,11 +1700,11 @@ export type EncounterProcedureCreateWithoutInvoiceItemsInput = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -1715,19 +1723,19 @@ export type EncounterProcedureCreateWithoutInvoiceItemsInput = {
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedEncounterProceduresInput
   diagnosis?: Prisma.EncounterDiagnosisCreateNestedOneWithoutProceduresInput
   encounter: Prisma.ClinicalEncounterCreateNestedOneWithoutProceduresInput
-  patientInsurance: Prisma.PatientInsuranceCreateNestedOneWithoutEncounterProceduresInput
+  patientInsurance?: Prisma.PatientInsuranceCreateNestedOneWithoutEncounterProceduresInput
   performedByProvider: Prisma.ProviderCreateNestedOneWithoutPerformedProceduresInput
   referrer?: Prisma.ReferrerCreateNestedOneWithoutEncounterProceduresInput
   svbProcedure: Prisma.SvbProcedureCreateNestedOneWithoutEncounterProceduresInput
-  svbTariff: Prisma.SvbTariffCreateNestedOneWithoutEncounterProceduresInput
+  svbTariff?: Prisma.SvbTariffCreateNestedOneWithoutEncounterProceduresInput
 }
 
 export type EncounterProcedureUncheckedCreateWithoutInvoiceItemsInput = {
   id?: bigint | number
   encounterId: bigint | number
-  patientInsuranceId: bigint | number
+  patientInsuranceId?: bigint | number | null
   svbProcedureId: bigint | number
-  svbTariffId: bigint | number
+  svbTariffId?: bigint | number | null
   authorizationItemId?: bigint | number | null
   diagnosisId?: bigint | number | null
   referrerId?: bigint | number | null
@@ -1735,11 +1743,11 @@ export type EncounterProcedureUncheckedCreateWithoutInvoiceItemsInput = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -1778,11 +1786,11 @@ export type EncounterProcedureUpdateWithoutInvoiceItemsInput = {
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1801,19 +1809,19 @@ export type EncounterProcedureUpdateWithoutInvoiceItemsInput = {
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedEncounterProceduresNestedInput
   diagnosis?: Prisma.EncounterDiagnosisUpdateOneWithoutProceduresNestedInput
   encounter?: Prisma.ClinicalEncounterUpdateOneRequiredWithoutProceduresNestedInput
-  patientInsurance?: Prisma.PatientInsuranceUpdateOneRequiredWithoutEncounterProceduresNestedInput
+  patientInsurance?: Prisma.PatientInsuranceUpdateOneWithoutEncounterProceduresNestedInput
   performedByProvider?: Prisma.ProviderUpdateOneRequiredWithoutPerformedProceduresNestedInput
   referrer?: Prisma.ReferrerUpdateOneWithoutEncounterProceduresNestedInput
   svbProcedure?: Prisma.SvbProcedureUpdateOneRequiredWithoutEncounterProceduresNestedInput
-  svbTariff?: Prisma.SvbTariffUpdateOneRequiredWithoutEncounterProceduresNestedInput
+  svbTariff?: Prisma.SvbTariffUpdateOneWithoutEncounterProceduresNestedInput
 }
 
 export type EncounterProcedureUncheckedUpdateWithoutInvoiceItemsInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   encounterId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  patientInsuranceId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  patientInsuranceId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   svbProcedureId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  svbTariffId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  svbTariffId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   authorizationItemId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   diagnosisId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   referrerId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -1821,11 +1829,11 @@ export type EncounterProcedureUncheckedUpdateWithoutInvoiceItemsInput = {
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1848,11 +1856,11 @@ export type EncounterProcedureCreateWithoutPatientInsuranceInput = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -1874,7 +1882,7 @@ export type EncounterProcedureCreateWithoutPatientInsuranceInput = {
   performedByProvider: Prisma.ProviderCreateNestedOneWithoutPerformedProceduresInput
   referrer?: Prisma.ReferrerCreateNestedOneWithoutEncounterProceduresInput
   svbProcedure: Prisma.SvbProcedureCreateNestedOneWithoutEncounterProceduresInput
-  svbTariff: Prisma.SvbTariffCreateNestedOneWithoutEncounterProceduresInput
+  svbTariff?: Prisma.SvbTariffCreateNestedOneWithoutEncounterProceduresInput
   invoiceItems?: Prisma.InvoiceItemCreateNestedManyWithoutEncounterProcedureInput
 }
 
@@ -1882,7 +1890,7 @@ export type EncounterProcedureUncheckedCreateWithoutPatientInsuranceInput = {
   id?: bigint | number
   encounterId: bigint | number
   svbProcedureId: bigint | number
-  svbTariffId: bigint | number
+  svbTariffId?: bigint | number | null
   authorizationItemId?: bigint | number | null
   diagnosisId?: bigint | number | null
   referrerId?: bigint | number | null
@@ -1890,11 +1898,11 @@ export type EncounterProcedureUncheckedCreateWithoutPatientInsuranceInput = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -1944,11 +1952,11 @@ export type EncounterProcedureCreateWithoutPerformedByProviderInput = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -1967,30 +1975,30 @@ export type EncounterProcedureCreateWithoutPerformedByProviderInput = {
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedEncounterProceduresInput
   diagnosis?: Prisma.EncounterDiagnosisCreateNestedOneWithoutProceduresInput
   encounter: Prisma.ClinicalEncounterCreateNestedOneWithoutProceduresInput
-  patientInsurance: Prisma.PatientInsuranceCreateNestedOneWithoutEncounterProceduresInput
+  patientInsurance?: Prisma.PatientInsuranceCreateNestedOneWithoutEncounterProceduresInput
   referrer?: Prisma.ReferrerCreateNestedOneWithoutEncounterProceduresInput
   svbProcedure: Prisma.SvbProcedureCreateNestedOneWithoutEncounterProceduresInput
-  svbTariff: Prisma.SvbTariffCreateNestedOneWithoutEncounterProceduresInput
+  svbTariff?: Prisma.SvbTariffCreateNestedOneWithoutEncounterProceduresInput
   invoiceItems?: Prisma.InvoiceItemCreateNestedManyWithoutEncounterProcedureInput
 }
 
 export type EncounterProcedureUncheckedCreateWithoutPerformedByProviderInput = {
   id?: bigint | number
   encounterId: bigint | number
-  patientInsuranceId: bigint | number
+  patientInsuranceId?: bigint | number | null
   svbProcedureId: bigint | number
-  svbTariffId: bigint | number
+  svbTariffId?: bigint | number | null
   authorizationItemId?: bigint | number | null
   diagnosisId?: bigint | number | null
   referrerId?: bigint | number | null
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -2040,11 +2048,11 @@ export type EncounterProcedureCreateWithoutReferrerInput = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -2063,30 +2071,30 @@ export type EncounterProcedureCreateWithoutReferrerInput = {
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedEncounterProceduresInput
   diagnosis?: Prisma.EncounterDiagnosisCreateNestedOneWithoutProceduresInput
   encounter: Prisma.ClinicalEncounterCreateNestedOneWithoutProceduresInput
-  patientInsurance: Prisma.PatientInsuranceCreateNestedOneWithoutEncounterProceduresInput
+  patientInsurance?: Prisma.PatientInsuranceCreateNestedOneWithoutEncounterProceduresInput
   performedByProvider: Prisma.ProviderCreateNestedOneWithoutPerformedProceduresInput
   svbProcedure: Prisma.SvbProcedureCreateNestedOneWithoutEncounterProceduresInput
-  svbTariff: Prisma.SvbTariffCreateNestedOneWithoutEncounterProceduresInput
+  svbTariff?: Prisma.SvbTariffCreateNestedOneWithoutEncounterProceduresInput
   invoiceItems?: Prisma.InvoiceItemCreateNestedManyWithoutEncounterProcedureInput
 }
 
 export type EncounterProcedureUncheckedCreateWithoutReferrerInput = {
   id?: bigint | number
   encounterId: bigint | number
-  patientInsuranceId: bigint | number
+  patientInsuranceId?: bigint | number | null
   svbProcedureId: bigint | number
-  svbTariffId: bigint | number
+  svbTariffId?: bigint | number | null
   authorizationItemId?: bigint | number | null
   diagnosisId?: bigint | number | null
   performedByProviderId: bigint | number
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -2136,11 +2144,11 @@ export type EncounterProcedureCreateWithoutAuthorizationItemInput = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -2158,31 +2166,31 @@ export type EncounterProcedureCreateWithoutAuthorizationItemInput = {
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedEncounterProceduresInput
   diagnosis?: Prisma.EncounterDiagnosisCreateNestedOneWithoutProceduresInput
   encounter: Prisma.ClinicalEncounterCreateNestedOneWithoutProceduresInput
-  patientInsurance: Prisma.PatientInsuranceCreateNestedOneWithoutEncounterProceduresInput
+  patientInsurance?: Prisma.PatientInsuranceCreateNestedOneWithoutEncounterProceduresInput
   performedByProvider: Prisma.ProviderCreateNestedOneWithoutPerformedProceduresInput
   referrer?: Prisma.ReferrerCreateNestedOneWithoutEncounterProceduresInput
   svbProcedure: Prisma.SvbProcedureCreateNestedOneWithoutEncounterProceduresInput
-  svbTariff: Prisma.SvbTariffCreateNestedOneWithoutEncounterProceduresInput
+  svbTariff?: Prisma.SvbTariffCreateNestedOneWithoutEncounterProceduresInput
   invoiceItems?: Prisma.InvoiceItemCreateNestedManyWithoutEncounterProcedureInput
 }
 
 export type EncounterProcedureUncheckedCreateWithoutAuthorizationItemInput = {
   id?: bigint | number
   encounterId: bigint | number
-  patientInsuranceId: bigint | number
+  patientInsuranceId?: bigint | number | null
   svbProcedureId: bigint | number
-  svbTariffId: bigint | number
+  svbTariffId?: bigint | number | null
   diagnosisId?: bigint | number | null
   referrerId?: bigint | number | null
   performedByProviderId: bigint | number
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -2232,11 +2240,11 @@ export type EncounterProcedureCreateWithoutSvbProcedureInput = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -2255,18 +2263,18 @@ export type EncounterProcedureCreateWithoutSvbProcedureInput = {
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedEncounterProceduresInput
   diagnosis?: Prisma.EncounterDiagnosisCreateNestedOneWithoutProceduresInput
   encounter: Prisma.ClinicalEncounterCreateNestedOneWithoutProceduresInput
-  patientInsurance: Prisma.PatientInsuranceCreateNestedOneWithoutEncounterProceduresInput
+  patientInsurance?: Prisma.PatientInsuranceCreateNestedOneWithoutEncounterProceduresInput
   performedByProvider: Prisma.ProviderCreateNestedOneWithoutPerformedProceduresInput
   referrer?: Prisma.ReferrerCreateNestedOneWithoutEncounterProceduresInput
-  svbTariff: Prisma.SvbTariffCreateNestedOneWithoutEncounterProceduresInput
+  svbTariff?: Prisma.SvbTariffCreateNestedOneWithoutEncounterProceduresInput
   invoiceItems?: Prisma.InvoiceItemCreateNestedManyWithoutEncounterProcedureInput
 }
 
 export type EncounterProcedureUncheckedCreateWithoutSvbProcedureInput = {
   id?: bigint | number
   encounterId: bigint | number
-  patientInsuranceId: bigint | number
-  svbTariffId: bigint | number
+  patientInsuranceId?: bigint | number | null
+  svbTariffId?: bigint | number | null
   authorizationItemId?: bigint | number | null
   diagnosisId?: bigint | number | null
   referrerId?: bigint | number | null
@@ -2274,11 +2282,11 @@ export type EncounterProcedureUncheckedCreateWithoutSvbProcedureInput = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -2328,11 +2336,11 @@ export type EncounterProcedureCreateWithoutSvbTariffInput = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -2351,7 +2359,7 @@ export type EncounterProcedureCreateWithoutSvbTariffInput = {
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedEncounterProceduresInput
   diagnosis?: Prisma.EncounterDiagnosisCreateNestedOneWithoutProceduresInput
   encounter: Prisma.ClinicalEncounterCreateNestedOneWithoutProceduresInput
-  patientInsurance: Prisma.PatientInsuranceCreateNestedOneWithoutEncounterProceduresInput
+  patientInsurance?: Prisma.PatientInsuranceCreateNestedOneWithoutEncounterProceduresInput
   performedByProvider: Prisma.ProviderCreateNestedOneWithoutPerformedProceduresInput
   referrer?: Prisma.ReferrerCreateNestedOneWithoutEncounterProceduresInput
   svbProcedure: Prisma.SvbProcedureCreateNestedOneWithoutEncounterProceduresInput
@@ -2361,7 +2369,7 @@ export type EncounterProcedureCreateWithoutSvbTariffInput = {
 export type EncounterProcedureUncheckedCreateWithoutSvbTariffInput = {
   id?: bigint | number
   encounterId: bigint | number
-  patientInsuranceId: bigint | number
+  patientInsuranceId?: bigint | number | null
   svbProcedureId: bigint | number
   authorizationItemId?: bigint | number | null
   diagnosisId?: bigint | number | null
@@ -2370,11 +2378,11 @@ export type EncounterProcedureUncheckedCreateWithoutSvbTariffInput = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -2424,11 +2432,11 @@ export type EncounterProcedureCreateWithoutCreatedByUserInput = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -2446,20 +2454,20 @@ export type EncounterProcedureCreateWithoutCreatedByUserInput = {
   authorizationItem?: Prisma.SvbAuthorizationItemCreateNestedOneWithoutEncounterProceduresInput
   diagnosis?: Prisma.EncounterDiagnosisCreateNestedOneWithoutProceduresInput
   encounter: Prisma.ClinicalEncounterCreateNestedOneWithoutProceduresInput
-  patientInsurance: Prisma.PatientInsuranceCreateNestedOneWithoutEncounterProceduresInput
+  patientInsurance?: Prisma.PatientInsuranceCreateNestedOneWithoutEncounterProceduresInput
   performedByProvider: Prisma.ProviderCreateNestedOneWithoutPerformedProceduresInput
   referrer?: Prisma.ReferrerCreateNestedOneWithoutEncounterProceduresInput
   svbProcedure: Prisma.SvbProcedureCreateNestedOneWithoutEncounterProceduresInput
-  svbTariff: Prisma.SvbTariffCreateNestedOneWithoutEncounterProceduresInput
+  svbTariff?: Prisma.SvbTariffCreateNestedOneWithoutEncounterProceduresInput
   invoiceItems?: Prisma.InvoiceItemCreateNestedManyWithoutEncounterProcedureInput
 }
 
 export type EncounterProcedureUncheckedCreateWithoutCreatedByUserInput = {
   id?: bigint | number
   encounterId: bigint | number
-  patientInsuranceId: bigint | number
+  patientInsuranceId?: bigint | number | null
   svbProcedureId: bigint | number
-  svbTariffId: bigint | number
+  svbTariffId?: bigint | number | null
   authorizationItemId?: bigint | number | null
   diagnosisId?: bigint | number | null
   referrerId?: bigint | number | null
@@ -2467,11 +2475,11 @@ export type EncounterProcedureUncheckedCreateWithoutCreatedByUserInput = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -2517,9 +2525,9 @@ export type EncounterProcedureUpdateManyWithWhereWithoutCreatedByUserInput = {
 
 export type EncounterProcedureCreateManyEncounterInput = {
   id?: bigint | number
-  patientInsuranceId: bigint | number
+  patientInsuranceId?: bigint | number | null
   svbProcedureId: bigint | number
-  svbTariffId: bigint | number
+  svbTariffId?: bigint | number | null
   authorizationItemId?: bigint | number | null
   diagnosisId?: bigint | number | null
   referrerId?: bigint | number | null
@@ -2527,11 +2535,11 @@ export type EncounterProcedureCreateManyEncounterInput = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -2554,11 +2562,11 @@ export type EncounterProcedureUpdateWithoutEncounterInput = {
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2576,19 +2584,19 @@ export type EncounterProcedureUpdateWithoutEncounterInput = {
   authorizationItem?: Prisma.SvbAuthorizationItemUpdateOneWithoutEncounterProceduresNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedEncounterProceduresNestedInput
   diagnosis?: Prisma.EncounterDiagnosisUpdateOneWithoutProceduresNestedInput
-  patientInsurance?: Prisma.PatientInsuranceUpdateOneRequiredWithoutEncounterProceduresNestedInput
+  patientInsurance?: Prisma.PatientInsuranceUpdateOneWithoutEncounterProceduresNestedInput
   performedByProvider?: Prisma.ProviderUpdateOneRequiredWithoutPerformedProceduresNestedInput
   referrer?: Prisma.ReferrerUpdateOneWithoutEncounterProceduresNestedInput
   svbProcedure?: Prisma.SvbProcedureUpdateOneRequiredWithoutEncounterProceduresNestedInput
-  svbTariff?: Prisma.SvbTariffUpdateOneRequiredWithoutEncounterProceduresNestedInput
+  svbTariff?: Prisma.SvbTariffUpdateOneWithoutEncounterProceduresNestedInput
   invoiceItems?: Prisma.InvoiceItemUpdateManyWithoutEncounterProcedureNestedInput
 }
 
 export type EncounterProcedureUncheckedUpdateWithoutEncounterInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  patientInsuranceId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  patientInsuranceId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   svbProcedureId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  svbTariffId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  svbTariffId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   authorizationItemId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   diagnosisId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   referrerId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -2596,11 +2604,11 @@ export type EncounterProcedureUncheckedUpdateWithoutEncounterInput = {
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2621,9 +2629,9 @@ export type EncounterProcedureUncheckedUpdateWithoutEncounterInput = {
 
 export type EncounterProcedureUncheckedUpdateManyWithoutEncounterInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  patientInsuranceId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  patientInsuranceId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   svbProcedureId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  svbTariffId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  svbTariffId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   authorizationItemId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   diagnosisId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   referrerId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -2631,11 +2639,11 @@ export type EncounterProcedureUncheckedUpdateManyWithoutEncounterInput = {
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2656,20 +2664,20 @@ export type EncounterProcedureUncheckedUpdateManyWithoutEncounterInput = {
 export type EncounterProcedureCreateManyDiagnosisInput = {
   id?: bigint | number
   encounterId: bigint | number
-  patientInsuranceId: bigint | number
+  patientInsuranceId?: bigint | number | null
   svbProcedureId: bigint | number
-  svbTariffId: bigint | number
+  svbTariffId?: bigint | number | null
   authorizationItemId?: bigint | number | null
   referrerId?: bigint | number | null
   performedByProviderId: bigint | number
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -2692,11 +2700,11 @@ export type EncounterProcedureUpdateWithoutDiagnosisInput = {
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2714,31 +2722,31 @@ export type EncounterProcedureUpdateWithoutDiagnosisInput = {
   authorizationItem?: Prisma.SvbAuthorizationItemUpdateOneWithoutEncounterProceduresNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedEncounterProceduresNestedInput
   encounter?: Prisma.ClinicalEncounterUpdateOneRequiredWithoutProceduresNestedInput
-  patientInsurance?: Prisma.PatientInsuranceUpdateOneRequiredWithoutEncounterProceduresNestedInput
+  patientInsurance?: Prisma.PatientInsuranceUpdateOneWithoutEncounterProceduresNestedInput
   performedByProvider?: Prisma.ProviderUpdateOneRequiredWithoutPerformedProceduresNestedInput
   referrer?: Prisma.ReferrerUpdateOneWithoutEncounterProceduresNestedInput
   svbProcedure?: Prisma.SvbProcedureUpdateOneRequiredWithoutEncounterProceduresNestedInput
-  svbTariff?: Prisma.SvbTariffUpdateOneRequiredWithoutEncounterProceduresNestedInput
+  svbTariff?: Prisma.SvbTariffUpdateOneWithoutEncounterProceduresNestedInput
   invoiceItems?: Prisma.InvoiceItemUpdateManyWithoutEncounterProcedureNestedInput
 }
 
 export type EncounterProcedureUncheckedUpdateWithoutDiagnosisInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   encounterId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  patientInsuranceId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  patientInsuranceId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   svbProcedureId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  svbTariffId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  svbTariffId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   authorizationItemId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   referrerId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   performedByProviderId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2760,20 +2768,20 @@ export type EncounterProcedureUncheckedUpdateWithoutDiagnosisInput = {
 export type EncounterProcedureUncheckedUpdateManyWithoutDiagnosisInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   encounterId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  patientInsuranceId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  patientInsuranceId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   svbProcedureId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  svbTariffId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  svbTariffId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   authorizationItemId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   referrerId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   performedByProviderId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2795,7 +2803,7 @@ export type EncounterProcedureCreateManyPatientInsuranceInput = {
   id?: bigint | number
   encounterId: bigint | number
   svbProcedureId: bigint | number
-  svbTariffId: bigint | number
+  svbTariffId?: bigint | number | null
   authorizationItemId?: bigint | number | null
   diagnosisId?: bigint | number | null
   referrerId?: bigint | number | null
@@ -2803,11 +2811,11 @@ export type EncounterProcedureCreateManyPatientInsuranceInput = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -2830,11 +2838,11 @@ export type EncounterProcedureUpdateWithoutPatientInsuranceInput = {
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2856,7 +2864,7 @@ export type EncounterProcedureUpdateWithoutPatientInsuranceInput = {
   performedByProvider?: Prisma.ProviderUpdateOneRequiredWithoutPerformedProceduresNestedInput
   referrer?: Prisma.ReferrerUpdateOneWithoutEncounterProceduresNestedInput
   svbProcedure?: Prisma.SvbProcedureUpdateOneRequiredWithoutEncounterProceduresNestedInput
-  svbTariff?: Prisma.SvbTariffUpdateOneRequiredWithoutEncounterProceduresNestedInput
+  svbTariff?: Prisma.SvbTariffUpdateOneWithoutEncounterProceduresNestedInput
   invoiceItems?: Prisma.InvoiceItemUpdateManyWithoutEncounterProcedureNestedInput
 }
 
@@ -2864,7 +2872,7 @@ export type EncounterProcedureUncheckedUpdateWithoutPatientInsuranceInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   encounterId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   svbProcedureId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  svbTariffId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  svbTariffId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   authorizationItemId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   diagnosisId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   referrerId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -2872,11 +2880,11 @@ export type EncounterProcedureUncheckedUpdateWithoutPatientInsuranceInput = {
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2899,7 +2907,7 @@ export type EncounterProcedureUncheckedUpdateManyWithoutPatientInsuranceInput = 
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   encounterId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   svbProcedureId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  svbTariffId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  svbTariffId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   authorizationItemId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   diagnosisId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   referrerId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -2907,11 +2915,11 @@ export type EncounterProcedureUncheckedUpdateManyWithoutPatientInsuranceInput = 
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2932,20 +2940,20 @@ export type EncounterProcedureUncheckedUpdateManyWithoutPatientInsuranceInput = 
 export type EncounterProcedureCreateManyPerformedByProviderInput = {
   id?: bigint | number
   encounterId: bigint | number
-  patientInsuranceId: bigint | number
+  patientInsuranceId?: bigint | number | null
   svbProcedureId: bigint | number
-  svbTariffId: bigint | number
+  svbTariffId?: bigint | number | null
   authorizationItemId?: bigint | number | null
   diagnosisId?: bigint | number | null
   referrerId?: bigint | number | null
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -2968,11 +2976,11 @@ export type EncounterProcedureUpdateWithoutPerformedByProviderInput = {
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2991,30 +2999,30 @@ export type EncounterProcedureUpdateWithoutPerformedByProviderInput = {
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedEncounterProceduresNestedInput
   diagnosis?: Prisma.EncounterDiagnosisUpdateOneWithoutProceduresNestedInput
   encounter?: Prisma.ClinicalEncounterUpdateOneRequiredWithoutProceduresNestedInput
-  patientInsurance?: Prisma.PatientInsuranceUpdateOneRequiredWithoutEncounterProceduresNestedInput
+  patientInsurance?: Prisma.PatientInsuranceUpdateOneWithoutEncounterProceduresNestedInput
   referrer?: Prisma.ReferrerUpdateOneWithoutEncounterProceduresNestedInput
   svbProcedure?: Prisma.SvbProcedureUpdateOneRequiredWithoutEncounterProceduresNestedInput
-  svbTariff?: Prisma.SvbTariffUpdateOneRequiredWithoutEncounterProceduresNestedInput
+  svbTariff?: Prisma.SvbTariffUpdateOneWithoutEncounterProceduresNestedInput
   invoiceItems?: Prisma.InvoiceItemUpdateManyWithoutEncounterProcedureNestedInput
 }
 
 export type EncounterProcedureUncheckedUpdateWithoutPerformedByProviderInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   encounterId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  patientInsuranceId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  patientInsuranceId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   svbProcedureId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  svbTariffId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  svbTariffId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   authorizationItemId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   diagnosisId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   referrerId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3036,20 +3044,20 @@ export type EncounterProcedureUncheckedUpdateWithoutPerformedByProviderInput = {
 export type EncounterProcedureUncheckedUpdateManyWithoutPerformedByProviderInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   encounterId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  patientInsuranceId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  patientInsuranceId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   svbProcedureId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  svbTariffId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  svbTariffId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   authorizationItemId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   diagnosisId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   referrerId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3070,20 +3078,20 @@ export type EncounterProcedureUncheckedUpdateManyWithoutPerformedByProviderInput
 export type EncounterProcedureCreateManyReferrerInput = {
   id?: bigint | number
   encounterId: bigint | number
-  patientInsuranceId: bigint | number
+  patientInsuranceId?: bigint | number | null
   svbProcedureId: bigint | number
-  svbTariffId: bigint | number
+  svbTariffId?: bigint | number | null
   authorizationItemId?: bigint | number | null
   diagnosisId?: bigint | number | null
   performedByProviderId: bigint | number
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -3106,11 +3114,11 @@ export type EncounterProcedureUpdateWithoutReferrerInput = {
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3129,30 +3137,30 @@ export type EncounterProcedureUpdateWithoutReferrerInput = {
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedEncounterProceduresNestedInput
   diagnosis?: Prisma.EncounterDiagnosisUpdateOneWithoutProceduresNestedInput
   encounter?: Prisma.ClinicalEncounterUpdateOneRequiredWithoutProceduresNestedInput
-  patientInsurance?: Prisma.PatientInsuranceUpdateOneRequiredWithoutEncounterProceduresNestedInput
+  patientInsurance?: Prisma.PatientInsuranceUpdateOneWithoutEncounterProceduresNestedInput
   performedByProvider?: Prisma.ProviderUpdateOneRequiredWithoutPerformedProceduresNestedInput
   svbProcedure?: Prisma.SvbProcedureUpdateOneRequiredWithoutEncounterProceduresNestedInput
-  svbTariff?: Prisma.SvbTariffUpdateOneRequiredWithoutEncounterProceduresNestedInput
+  svbTariff?: Prisma.SvbTariffUpdateOneWithoutEncounterProceduresNestedInput
   invoiceItems?: Prisma.InvoiceItemUpdateManyWithoutEncounterProcedureNestedInput
 }
 
 export type EncounterProcedureUncheckedUpdateWithoutReferrerInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   encounterId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  patientInsuranceId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  patientInsuranceId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   svbProcedureId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  svbTariffId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  svbTariffId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   authorizationItemId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   diagnosisId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   performedByProviderId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3174,20 +3182,20 @@ export type EncounterProcedureUncheckedUpdateWithoutReferrerInput = {
 export type EncounterProcedureUncheckedUpdateManyWithoutReferrerInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   encounterId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  patientInsuranceId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  patientInsuranceId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   svbProcedureId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  svbTariffId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  svbTariffId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   authorizationItemId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   diagnosisId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   performedByProviderId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3208,20 +3216,20 @@ export type EncounterProcedureUncheckedUpdateManyWithoutReferrerInput = {
 export type EncounterProcedureCreateManyAuthorizationItemInput = {
   id?: bigint | number
   encounterId: bigint | number
-  patientInsuranceId: bigint | number
+  patientInsuranceId?: bigint | number | null
   svbProcedureId: bigint | number
-  svbTariffId: bigint | number
+  svbTariffId?: bigint | number | null
   diagnosisId?: bigint | number | null
   referrerId?: bigint | number | null
   performedByProviderId: bigint | number
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -3244,11 +3252,11 @@ export type EncounterProcedureUpdateWithoutAuthorizationItemInput = {
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3266,31 +3274,31 @@ export type EncounterProcedureUpdateWithoutAuthorizationItemInput = {
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedEncounterProceduresNestedInput
   diagnosis?: Prisma.EncounterDiagnosisUpdateOneWithoutProceduresNestedInput
   encounter?: Prisma.ClinicalEncounterUpdateOneRequiredWithoutProceduresNestedInput
-  patientInsurance?: Prisma.PatientInsuranceUpdateOneRequiredWithoutEncounterProceduresNestedInput
+  patientInsurance?: Prisma.PatientInsuranceUpdateOneWithoutEncounterProceduresNestedInput
   performedByProvider?: Prisma.ProviderUpdateOneRequiredWithoutPerformedProceduresNestedInput
   referrer?: Prisma.ReferrerUpdateOneWithoutEncounterProceduresNestedInput
   svbProcedure?: Prisma.SvbProcedureUpdateOneRequiredWithoutEncounterProceduresNestedInput
-  svbTariff?: Prisma.SvbTariffUpdateOneRequiredWithoutEncounterProceduresNestedInput
+  svbTariff?: Prisma.SvbTariffUpdateOneWithoutEncounterProceduresNestedInput
   invoiceItems?: Prisma.InvoiceItemUpdateManyWithoutEncounterProcedureNestedInput
 }
 
 export type EncounterProcedureUncheckedUpdateWithoutAuthorizationItemInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   encounterId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  patientInsuranceId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  patientInsuranceId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   svbProcedureId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  svbTariffId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  svbTariffId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   diagnosisId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   referrerId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   performedByProviderId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3312,20 +3320,20 @@ export type EncounterProcedureUncheckedUpdateWithoutAuthorizationItemInput = {
 export type EncounterProcedureUncheckedUpdateManyWithoutAuthorizationItemInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   encounterId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  patientInsuranceId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  patientInsuranceId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   svbProcedureId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  svbTariffId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  svbTariffId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   diagnosisId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   referrerId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   performedByProviderId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3346,8 +3354,8 @@ export type EncounterProcedureUncheckedUpdateManyWithoutAuthorizationItemInput =
 export type EncounterProcedureCreateManySvbProcedureInput = {
   id?: bigint | number
   encounterId: bigint | number
-  patientInsuranceId: bigint | number
-  svbTariffId: bigint | number
+  patientInsuranceId?: bigint | number | null
+  svbTariffId?: bigint | number | null
   authorizationItemId?: bigint | number | null
   diagnosisId?: bigint | number | null
   referrerId?: bigint | number | null
@@ -3355,11 +3363,11 @@ export type EncounterProcedureCreateManySvbProcedureInput = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -3382,11 +3390,11 @@ export type EncounterProcedureUpdateWithoutSvbProcedureInput = {
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3405,18 +3413,18 @@ export type EncounterProcedureUpdateWithoutSvbProcedureInput = {
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedEncounterProceduresNestedInput
   diagnosis?: Prisma.EncounterDiagnosisUpdateOneWithoutProceduresNestedInput
   encounter?: Prisma.ClinicalEncounterUpdateOneRequiredWithoutProceduresNestedInput
-  patientInsurance?: Prisma.PatientInsuranceUpdateOneRequiredWithoutEncounterProceduresNestedInput
+  patientInsurance?: Prisma.PatientInsuranceUpdateOneWithoutEncounterProceduresNestedInput
   performedByProvider?: Prisma.ProviderUpdateOneRequiredWithoutPerformedProceduresNestedInput
   referrer?: Prisma.ReferrerUpdateOneWithoutEncounterProceduresNestedInput
-  svbTariff?: Prisma.SvbTariffUpdateOneRequiredWithoutEncounterProceduresNestedInput
+  svbTariff?: Prisma.SvbTariffUpdateOneWithoutEncounterProceduresNestedInput
   invoiceItems?: Prisma.InvoiceItemUpdateManyWithoutEncounterProcedureNestedInput
 }
 
 export type EncounterProcedureUncheckedUpdateWithoutSvbProcedureInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   encounterId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  patientInsuranceId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  svbTariffId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  patientInsuranceId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  svbTariffId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   authorizationItemId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   diagnosisId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   referrerId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -3424,11 +3432,11 @@ export type EncounterProcedureUncheckedUpdateWithoutSvbProcedureInput = {
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3450,8 +3458,8 @@ export type EncounterProcedureUncheckedUpdateWithoutSvbProcedureInput = {
 export type EncounterProcedureUncheckedUpdateManyWithoutSvbProcedureInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   encounterId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  patientInsuranceId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  svbTariffId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  patientInsuranceId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  svbTariffId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   authorizationItemId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   diagnosisId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   referrerId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -3459,11 +3467,11 @@ export type EncounterProcedureUncheckedUpdateManyWithoutSvbProcedureInput = {
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3484,7 +3492,7 @@ export type EncounterProcedureUncheckedUpdateManyWithoutSvbProcedureInput = {
 export type EncounterProcedureCreateManySvbTariffInput = {
   id?: bigint | number
   encounterId: bigint | number
-  patientInsuranceId: bigint | number
+  patientInsuranceId?: bigint | number | null
   svbProcedureId: bigint | number
   authorizationItemId?: bigint | number | null
   diagnosisId?: bigint | number | null
@@ -3493,11 +3501,11 @@ export type EncounterProcedureCreateManySvbTariffInput = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -3520,11 +3528,11 @@ export type EncounterProcedureUpdateWithoutSvbTariffInput = {
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3543,7 +3551,7 @@ export type EncounterProcedureUpdateWithoutSvbTariffInput = {
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedEncounterProceduresNestedInput
   diagnosis?: Prisma.EncounterDiagnosisUpdateOneWithoutProceduresNestedInput
   encounter?: Prisma.ClinicalEncounterUpdateOneRequiredWithoutProceduresNestedInput
-  patientInsurance?: Prisma.PatientInsuranceUpdateOneRequiredWithoutEncounterProceduresNestedInput
+  patientInsurance?: Prisma.PatientInsuranceUpdateOneWithoutEncounterProceduresNestedInput
   performedByProvider?: Prisma.ProviderUpdateOneRequiredWithoutPerformedProceduresNestedInput
   referrer?: Prisma.ReferrerUpdateOneWithoutEncounterProceduresNestedInput
   svbProcedure?: Prisma.SvbProcedureUpdateOneRequiredWithoutEncounterProceduresNestedInput
@@ -3553,7 +3561,7 @@ export type EncounterProcedureUpdateWithoutSvbTariffInput = {
 export type EncounterProcedureUncheckedUpdateWithoutSvbTariffInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   encounterId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  patientInsuranceId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  patientInsuranceId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   svbProcedureId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   authorizationItemId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   diagnosisId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -3562,11 +3570,11 @@ export type EncounterProcedureUncheckedUpdateWithoutSvbTariffInput = {
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3588,7 +3596,7 @@ export type EncounterProcedureUncheckedUpdateWithoutSvbTariffInput = {
 export type EncounterProcedureUncheckedUpdateManyWithoutSvbTariffInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   encounterId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  patientInsuranceId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  patientInsuranceId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   svbProcedureId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   authorizationItemId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   diagnosisId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -3597,11 +3605,11 @@ export type EncounterProcedureUncheckedUpdateManyWithoutSvbTariffInput = {
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3622,9 +3630,9 @@ export type EncounterProcedureUncheckedUpdateManyWithoutSvbTariffInput = {
 export type EncounterProcedureCreateManyCreatedByUserInput = {
   id?: bigint | number
   encounterId: bigint | number
-  patientInsuranceId: bigint | number
+  patientInsuranceId?: bigint | number | null
   svbProcedureId: bigint | number
-  svbTariffId: bigint | number
+  svbTariffId?: bigint | number | null
   authorizationItemId?: bigint | number | null
   diagnosisId?: bigint | number | null
   referrerId?: bigint | number | null
@@ -3632,11 +3640,11 @@ export type EncounterProcedureCreateManyCreatedByUserInput = {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot?: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot: string
+  insuredIdSnapshot?: string | null
+  unitTariffSnapshot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: string | null
   quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: string | null
   diagnosticCodeSnapshot?: string | null
   treatmentIdSnapshot?: string | null
@@ -3658,11 +3666,11 @@ export type EncounterProcedureUpdateWithoutCreatedByUserInput = {
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3680,20 +3688,20 @@ export type EncounterProcedureUpdateWithoutCreatedByUserInput = {
   authorizationItem?: Prisma.SvbAuthorizationItemUpdateOneWithoutEncounterProceduresNestedInput
   diagnosis?: Prisma.EncounterDiagnosisUpdateOneWithoutProceduresNestedInput
   encounter?: Prisma.ClinicalEncounterUpdateOneRequiredWithoutProceduresNestedInput
-  patientInsurance?: Prisma.PatientInsuranceUpdateOneRequiredWithoutEncounterProceduresNestedInput
+  patientInsurance?: Prisma.PatientInsuranceUpdateOneWithoutEncounterProceduresNestedInput
   performedByProvider?: Prisma.ProviderUpdateOneRequiredWithoutPerformedProceduresNestedInput
   referrer?: Prisma.ReferrerUpdateOneWithoutEncounterProceduresNestedInput
   svbProcedure?: Prisma.SvbProcedureUpdateOneRequiredWithoutEncounterProceduresNestedInput
-  svbTariff?: Prisma.SvbTariffUpdateOneRequiredWithoutEncounterProceduresNestedInput
+  svbTariff?: Prisma.SvbTariffUpdateOneWithoutEncounterProceduresNestedInput
   invoiceItems?: Prisma.InvoiceItemUpdateManyWithoutEncounterProcedureNestedInput
 }
 
 export type EncounterProcedureUncheckedUpdateWithoutCreatedByUserInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   encounterId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  patientInsuranceId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  patientInsuranceId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   svbProcedureId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  svbTariffId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  svbTariffId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   authorizationItemId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   diagnosisId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   referrerId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -3701,11 +3709,11 @@ export type EncounterProcedureUncheckedUpdateWithoutCreatedByUserInput = {
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3726,9 +3734,9 @@ export type EncounterProcedureUncheckedUpdateWithoutCreatedByUserInput = {
 export type EncounterProcedureUncheckedUpdateManyWithoutCreatedByUserInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   encounterId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  patientInsuranceId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  patientInsuranceId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   svbProcedureId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  svbTariffId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  svbTariffId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   authorizationItemId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   diagnosisId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   referrerId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -3736,11 +3744,11 @@ export type EncounterProcedureUncheckedUpdateManyWithoutCreatedByUserInput = {
   procedureCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   procedureDescriptionSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   providerIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuredIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
-  unitTariffSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currencyCodeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  insuredIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitTariffSnapshot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currencyCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   authorizationIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diagnosticCodeSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   treatmentIdSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3825,11 +3833,11 @@ export type EncounterProcedureSelect<ExtArgs extends runtime.Types.Extensions.In
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   diagnosis?: boolean | Prisma.EncounterProcedure$diagnosisArgs<ExtArgs>
   encounter?: boolean | Prisma.ClinicalEncounterDefaultArgs<ExtArgs>
-  patientInsurance?: boolean | Prisma.PatientInsuranceDefaultArgs<ExtArgs>
+  patientInsurance?: boolean | Prisma.EncounterProcedure$patientInsuranceArgs<ExtArgs>
   performedByProvider?: boolean | Prisma.ProviderDefaultArgs<ExtArgs>
   referrer?: boolean | Prisma.EncounterProcedure$referrerArgs<ExtArgs>
   svbProcedure?: boolean | Prisma.SvbProcedureDefaultArgs<ExtArgs>
-  svbTariff?: boolean | Prisma.SvbTariffDefaultArgs<ExtArgs>
+  svbTariff?: boolean | Prisma.EncounterProcedure$svbTariffArgs<ExtArgs>
   invoiceItems?: boolean | Prisma.EncounterProcedure$invoiceItemsArgs<ExtArgs>
   _count?: boolean | Prisma.EncounterProcedureCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["encounterProcedure"]>
@@ -3871,11 +3879,11 @@ export type EncounterProcedureSelectCreateManyAndReturn<ExtArgs extends runtime.
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   diagnosis?: boolean | Prisma.EncounterProcedure$diagnosisArgs<ExtArgs>
   encounter?: boolean | Prisma.ClinicalEncounterDefaultArgs<ExtArgs>
-  patientInsurance?: boolean | Prisma.PatientInsuranceDefaultArgs<ExtArgs>
+  patientInsurance?: boolean | Prisma.EncounterProcedure$patientInsuranceArgs<ExtArgs>
   performedByProvider?: boolean | Prisma.ProviderDefaultArgs<ExtArgs>
   referrer?: boolean | Prisma.EncounterProcedure$referrerArgs<ExtArgs>
   svbProcedure?: boolean | Prisma.SvbProcedureDefaultArgs<ExtArgs>
-  svbTariff?: boolean | Prisma.SvbTariffDefaultArgs<ExtArgs>
+  svbTariff?: boolean | Prisma.EncounterProcedure$svbTariffArgs<ExtArgs>
 }, ExtArgs["result"]["encounterProcedure"]>
 
 export type EncounterProcedureSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -3915,11 +3923,11 @@ export type EncounterProcedureSelectUpdateManyAndReturn<ExtArgs extends runtime.
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   diagnosis?: boolean | Prisma.EncounterProcedure$diagnosisArgs<ExtArgs>
   encounter?: boolean | Prisma.ClinicalEncounterDefaultArgs<ExtArgs>
-  patientInsurance?: boolean | Prisma.PatientInsuranceDefaultArgs<ExtArgs>
+  patientInsurance?: boolean | Prisma.EncounterProcedure$patientInsuranceArgs<ExtArgs>
   performedByProvider?: boolean | Prisma.ProviderDefaultArgs<ExtArgs>
   referrer?: boolean | Prisma.EncounterProcedure$referrerArgs<ExtArgs>
   svbProcedure?: boolean | Prisma.SvbProcedureDefaultArgs<ExtArgs>
-  svbTariff?: boolean | Prisma.SvbTariffDefaultArgs<ExtArgs>
+  svbTariff?: boolean | Prisma.EncounterProcedure$svbTariffArgs<ExtArgs>
 }, ExtArgs["result"]["encounterProcedure"]>
 
 export type EncounterProcedureSelectScalar = {
@@ -3963,11 +3971,11 @@ export type EncounterProcedureInclude<ExtArgs extends runtime.Types.Extensions.I
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   diagnosis?: boolean | Prisma.EncounterProcedure$diagnosisArgs<ExtArgs>
   encounter?: boolean | Prisma.ClinicalEncounterDefaultArgs<ExtArgs>
-  patientInsurance?: boolean | Prisma.PatientInsuranceDefaultArgs<ExtArgs>
+  patientInsurance?: boolean | Prisma.EncounterProcedure$patientInsuranceArgs<ExtArgs>
   performedByProvider?: boolean | Prisma.ProviderDefaultArgs<ExtArgs>
   referrer?: boolean | Prisma.EncounterProcedure$referrerArgs<ExtArgs>
   svbProcedure?: boolean | Prisma.SvbProcedureDefaultArgs<ExtArgs>
-  svbTariff?: boolean | Prisma.SvbTariffDefaultArgs<ExtArgs>
+  svbTariff?: boolean | Prisma.EncounterProcedure$svbTariffArgs<ExtArgs>
   invoiceItems?: boolean | Prisma.EncounterProcedure$invoiceItemsArgs<ExtArgs>
   _count?: boolean | Prisma.EncounterProcedureCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -3976,22 +3984,22 @@ export type EncounterProcedureIncludeCreateManyAndReturn<ExtArgs extends runtime
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   diagnosis?: boolean | Prisma.EncounterProcedure$diagnosisArgs<ExtArgs>
   encounter?: boolean | Prisma.ClinicalEncounterDefaultArgs<ExtArgs>
-  patientInsurance?: boolean | Prisma.PatientInsuranceDefaultArgs<ExtArgs>
+  patientInsurance?: boolean | Prisma.EncounterProcedure$patientInsuranceArgs<ExtArgs>
   performedByProvider?: boolean | Prisma.ProviderDefaultArgs<ExtArgs>
   referrer?: boolean | Prisma.EncounterProcedure$referrerArgs<ExtArgs>
   svbProcedure?: boolean | Prisma.SvbProcedureDefaultArgs<ExtArgs>
-  svbTariff?: boolean | Prisma.SvbTariffDefaultArgs<ExtArgs>
+  svbTariff?: boolean | Prisma.EncounterProcedure$svbTariffArgs<ExtArgs>
 }
 export type EncounterProcedureIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   authorizationItem?: boolean | Prisma.EncounterProcedure$authorizationItemArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   diagnosis?: boolean | Prisma.EncounterProcedure$diagnosisArgs<ExtArgs>
   encounter?: boolean | Prisma.ClinicalEncounterDefaultArgs<ExtArgs>
-  patientInsurance?: boolean | Prisma.PatientInsuranceDefaultArgs<ExtArgs>
+  patientInsurance?: boolean | Prisma.EncounterProcedure$patientInsuranceArgs<ExtArgs>
   performedByProvider?: boolean | Prisma.ProviderDefaultArgs<ExtArgs>
   referrer?: boolean | Prisma.EncounterProcedure$referrerArgs<ExtArgs>
   svbProcedure?: boolean | Prisma.SvbProcedureDefaultArgs<ExtArgs>
-  svbTariff?: boolean | Prisma.SvbTariffDefaultArgs<ExtArgs>
+  svbTariff?: boolean | Prisma.EncounterProcedure$svbTariffArgs<ExtArgs>
 }
 
 export type $EncounterProcedurePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4001,19 +4009,19 @@ export type $EncounterProcedurePayload<ExtArgs extends runtime.Types.Extensions.
     createdByUser: Prisma.$UserPayload<ExtArgs>
     diagnosis: Prisma.$EncounterDiagnosisPayload<ExtArgs> | null
     encounter: Prisma.$ClinicalEncounterPayload<ExtArgs>
-    patientInsurance: Prisma.$PatientInsurancePayload<ExtArgs>
+    patientInsurance: Prisma.$PatientInsurancePayload<ExtArgs> | null
     performedByProvider: Prisma.$ProviderPayload<ExtArgs>
     referrer: Prisma.$ReferrerPayload<ExtArgs> | null
     svbProcedure: Prisma.$SvbProcedurePayload<ExtArgs>
-    svbTariff: Prisma.$SvbTariffPayload<ExtArgs>
+    svbTariff: Prisma.$SvbTariffPayload<ExtArgs> | null
     invoiceItems: Prisma.$InvoiceItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: bigint
     encounterId: bigint
-    patientInsuranceId: bigint
+    patientInsuranceId: bigint | null
     svbProcedureId: bigint
-    svbTariffId: bigint
+    svbTariffId: bigint | null
     authorizationItemId: bigint | null
     diagnosisId: bigint | null
     referrerId: bigint | null
@@ -4021,11 +4029,11 @@ export type $EncounterProcedurePayload<ExtArgs extends runtime.Types.Extensions.
     procedureCodeSnapshot: string
     procedureDescriptionSnapshot: string
     providerIdSnapshot: string | null
-    insuredIdSnapshot: string
-    unitTariffSnapshot: runtime.Decimal
-    currencyCodeSnapshot: string
+    insuredIdSnapshot: string | null
+    unitTariffSnapshot: runtime.Decimal | null
+    currencyCodeSnapshot: string | null
     quantity: runtime.Decimal
-    amount: runtime.Decimal
+    amount: runtime.Decimal | null
     authorizationIdSnapshot: string | null
     diagnosticCodeSnapshot: string | null
     treatmentIdSnapshot: string | null
@@ -4439,11 +4447,11 @@ export interface Prisma__EncounterProcedureClient<T, Null = never, ExtArgs exten
   createdByUser<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   diagnosis<T extends Prisma.EncounterProcedure$diagnosisArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EncounterProcedure$diagnosisArgs<ExtArgs>>): Prisma.Prisma__EncounterDiagnosisClient<runtime.Types.Result.GetResult<Prisma.$EncounterDiagnosisPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   encounter<T extends Prisma.ClinicalEncounterDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClinicalEncounterDefaultArgs<ExtArgs>>): Prisma.Prisma__ClinicalEncounterClient<runtime.Types.Result.GetResult<Prisma.$ClinicalEncounterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  patientInsurance<T extends Prisma.PatientInsuranceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PatientInsuranceDefaultArgs<ExtArgs>>): Prisma.Prisma__PatientInsuranceClient<runtime.Types.Result.GetResult<Prisma.$PatientInsurancePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  patientInsurance<T extends Prisma.EncounterProcedure$patientInsuranceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EncounterProcedure$patientInsuranceArgs<ExtArgs>>): Prisma.Prisma__PatientInsuranceClient<runtime.Types.Result.GetResult<Prisma.$PatientInsurancePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   performedByProvider<T extends Prisma.ProviderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProviderDefaultArgs<ExtArgs>>): Prisma.Prisma__ProviderClient<runtime.Types.Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   referrer<T extends Prisma.EncounterProcedure$referrerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EncounterProcedure$referrerArgs<ExtArgs>>): Prisma.Prisma__ReferrerClient<runtime.Types.Result.GetResult<Prisma.$ReferrerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   svbProcedure<T extends Prisma.SvbProcedureDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SvbProcedureDefaultArgs<ExtArgs>>): Prisma.Prisma__SvbProcedureClient<runtime.Types.Result.GetResult<Prisma.$SvbProcedurePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  svbTariff<T extends Prisma.SvbTariffDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SvbTariffDefaultArgs<ExtArgs>>): Prisma.Prisma__SvbTariffClient<runtime.Types.Result.GetResult<Prisma.$SvbTariffPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  svbTariff<T extends Prisma.EncounterProcedure$svbTariffArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EncounterProcedure$svbTariffArgs<ExtArgs>>): Prisma.Prisma__SvbTariffClient<runtime.Types.Result.GetResult<Prisma.$SvbTariffPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   invoiceItems<T extends Prisma.EncounterProcedure$invoiceItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EncounterProcedure$invoiceItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoiceItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -4945,6 +4953,25 @@ export type EncounterProcedure$diagnosisArgs<ExtArgs extends runtime.Types.Exten
 }
 
 /**
+ * EncounterProcedure.patientInsurance
+ */
+export type EncounterProcedure$patientInsuranceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PatientInsurance
+   */
+  select?: Prisma.PatientInsuranceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PatientInsurance
+   */
+  omit?: Prisma.PatientInsuranceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PatientInsuranceInclude<ExtArgs> | null
+  where?: Prisma.PatientInsuranceWhereInput
+}
+
+/**
  * EncounterProcedure.referrer
  */
 export type EncounterProcedure$referrerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4961,6 +4988,25 @@ export type EncounterProcedure$referrerArgs<ExtArgs extends runtime.Types.Extens
    */
   include?: Prisma.ReferrerInclude<ExtArgs> | null
   where?: Prisma.ReferrerWhereInput
+}
+
+/**
+ * EncounterProcedure.svbTariff
+ */
+export type EncounterProcedure$svbTariffArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SvbTariff
+   */
+  select?: Prisma.SvbTariffSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SvbTariff
+   */
+  omit?: Prisma.SvbTariffOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SvbTariffInclude<ExtArgs> | null
+  where?: Prisma.SvbTariffWhereInput
 }
 
 /**

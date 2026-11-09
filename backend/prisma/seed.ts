@@ -3,6 +3,9 @@ import "dotenv/config";
 import { prisma } from "../src/lib/prisma.js";
 
 const permissions = [
+  ["dentalink.read", "Consultar importación Dentalink", "Consultar cuentas, vista previa e incidencias de importación."],
+  ["dentalink.manage", "Gestionar Dentalink", "Configurar cuenta lógica y mapeos de importación."],
+  ["dentalink.import", "Importar Dentalink", "Preparar y confirmar altas desde el adaptador autorizado."],
   ["dashboard.read", "Ver dashboard", "Acceso al dashboard operativo."],
 
   ["organization.read", "Ver organización", "Consultar datos de la organización."],
@@ -92,6 +95,8 @@ const permissions = [
 ] as const;
 
 const receptionPermissions = [
+  "dentalink.read",
+  "dentalink.import",
   "treatment_case.read",
   "dashboard.read",
   "organization.read",
@@ -156,10 +161,6 @@ const providerPermissions = [
   "procedure.update",
   "procedure.void",
   "invoice.read",
-  "invoice.create",
-  "invoice.prepare_signature",
-  "invoice.sign",
-  "signature.capture",
   "document.read",
   "document.generate",
 ] as const;
@@ -180,7 +181,7 @@ const roles = [
     code: "PROVIDER",
     name: "Profesional",
     description:
-      "Atención clínica, diagnósticos, procedimientos y revisión de facturación clínica.",
+      "Registro de servicios prestados y consulta de facturación.",
   },
 ] as const;
 

@@ -8,6 +8,7 @@ import type { RequestSecurityMetadata } from "../auth/auth.types.js";
 
 import {
   cancelInvoiceSchema,
+  createAppointmentInvoiceSchema,
   reopenInvoiceEncounterSchema,
   listInvoicesQuerySchema,
   requestInvoiceCorrectionSchema,
@@ -246,6 +247,7 @@ export const createAppointmentInvoice: RequestHandler = async (req, res) => {
     appointmentId,
     actor,
     securityMetadata(req, res),
+    createAppointmentInvoiceSchema.parse(req.body ?? {}),
   );
 
   res.status(201).json(successResponse(result));

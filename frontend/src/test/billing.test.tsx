@@ -475,7 +475,7 @@ describe('F06 invoice list and contract', () => {
   it('rebuilds the existing invoice from corrected care rather than creating another invoice', async () => {
     const api = boundary({ correction: true, unbuilt: true })
     session()
-    renderWithProviders(<MemoryRouter><AppointmentBilling appointment={{ id: aid, appointmentNumber: 'APT-40', status: 'COMPLETED' } as Appointment} /></MemoryRouter>)
+    renderWithProviders(<MemoryRouter><AppointmentBilling appointment={{ id: aid, appointmentNumber: 'APT-40', scheduledStart: '2026-11-06T14:00:00Z', status: 'COMPLETED' } as Appointment} /></MemoryRouter>)
     await userEvent.click(await screen.findByRole('button', { name: 'Rebuild invoice from corrected services' }))
     await userEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Confirm rebuild' }))
     await waitFor(() => expect(api.calls.some((call) => call.method === 'POST' && call.path === `/appointments/${aid}/invoice`)).toBe(true))
@@ -1029,6 +1029,7 @@ describe('F06 appointment billing entry', () => {
             {
               id: aid,
               appointmentNumber: 'QA-APPOINTMENT',
+              scheduledStart: '2026-11-06T14:00:00Z',
               status,
             } as Appointment
           }
@@ -1077,9 +1078,22 @@ describe('F06 appointment billing entry', () => {
     entry(permissions, 'IN_PROGRESS')
     expect(
       await screen.findByText(
-        'Complete the appointment and clinical encounter before billing.',
+        'Complete service attention before billing.',
       ),
     ).toBeInTheDocument()
     expect(calls.some((c) => c.method !== 'GET')).toBe(false)
   })
+})
+
+
+it('keeps Escape inside the signature canvas as a pen-lift and still guards explicit discard', async () => {
+  canvasMock(); const { calls } = boundary({ status: 'PENDING_SIGNATURE' }); renderBilling(); await draw()
+  await userEvent.click(screen.getByRole('button', { name: 'Draw using keyboard' }))
+  const canvas = screen.getByRole('img', { name: 'Signature drawing area' })
+  await userEvent.keyboard('{Escape}')
+  expect(screen.getByRole('dialog', { name: 'Signature - version 1' })).toBeInTheDocument()
+  expect(canvas).toHaveFocus(); expect(screen.queryByRole('dialog', { name: 'Discard unsaved signature?' })).not.toBeInTheDocument()
+  await userEvent.click(screen.getByRole('button', { name: 'Cancel' }))
+  expect(screen.getByRole('dialog', { name: 'Discard unsaved signature?' })).toBeInTheDocument()
+  expect(calls.some(c => c.method === 'POST')).toBe(false)
 })

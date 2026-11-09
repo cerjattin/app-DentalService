@@ -369,3 +369,38 @@ export const EncounterProcedureStatus = {
 } as const
 
 export type EncounterProcedureStatus = (typeof EncounterProcedureStatus)[keyof typeof EncounterProcedureStatus]
+
+
+export const DentalinkMappingKind = {
+  PROVIDER: 'PROVIDER',
+  LOCATION: 'LOCATION'
+} as const
+
+export type DentalinkMappingKind = (typeof DentalinkMappingKind)[keyof typeof DentalinkMappingKind]
+
+
+export const DentalinkEntityType = {
+  PATIENT: 'PATIENT',
+  APPOINTMENT: 'APPOINTMENT'
+} as const
+
+export type DentalinkEntityType = (typeof DentalinkEntityType)[keyof typeof DentalinkEntityType]
+
+
+export const DentalinkImportRunState = {
+  READING: 'READING',
+  PREVIEW_READY: 'PREVIEW_READY',
+  CONFIRMED: 'CONFIRMED'
+} as const
+
+export type DentalinkImportRunState = (typeof DentalinkImportRunState)[keyof typeof DentalinkImportRunState]
+
+
+export const DentalinkImportDisposition = {
+  READY: 'READY',
+  ISSUE: 'ISSUE',
+  IMPORTED: 'IMPORTED',
+  SKIPPED: 'SKIPPED'
+} as const
+
+export type DentalinkImportDisposition = (typeof DentalinkImportDisposition)[keyof typeof DentalinkImportDisposition]

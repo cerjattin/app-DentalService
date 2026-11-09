@@ -352,6 +352,7 @@ export type ProviderWhereInput = {
   emailSearch?: Prisma.StringNullableFilter<"Provider"> | string | null
   phoneSearch?: Prisma.StringNullableFilter<"Provider"> | string | null
   specialtySearch?: Prisma.StringNullableFilter<"Provider"> | string | null
+  dentalinkMappings?: Prisma.DentalinkMappingListRelationFilter
   appointments?: Prisma.AppointmentListRelationFilter
   clinicalEncounters?: Prisma.ClinicalEncounterListRelationFilter
   performedProcedures?: Prisma.EncounterProcedureListRelationFilter
@@ -381,6 +382,7 @@ export type ProviderOrderByWithRelationInput = {
   emailSearch?: Prisma.SortOrderInput | Prisma.SortOrder
   phoneSearch?: Prisma.SortOrderInput | Prisma.SortOrder
   specialtySearch?: Prisma.SortOrderInput | Prisma.SortOrder
+  dentalinkMappings?: Prisma.DentalinkMappingOrderByRelationAggregateInput
   appointments?: Prisma.AppointmentOrderByRelationAggregateInput
   clinicalEncounters?: Prisma.ClinicalEncounterOrderByRelationAggregateInput
   performedProcedures?: Prisma.EncounterProcedureOrderByRelationAggregateInput
@@ -392,6 +394,7 @@ export type ProviderWhereUniqueInput = Prisma.AtLeast<{
   id?: bigint | number
   userId?: bigint | number
   organizationId_svbProviderId?: Prisma.ProviderOrganizationIdSvbProviderIdCompoundUniqueInput
+  organizationId_id?: Prisma.ProviderOrganizationIdIdCompoundUniqueInput
   AND?: Prisma.ProviderWhereInput | Prisma.ProviderWhereInput[]
   OR?: Prisma.ProviderWhereInput[]
   NOT?: Prisma.ProviderWhereInput | Prisma.ProviderWhereInput[]
@@ -414,12 +417,13 @@ export type ProviderWhereUniqueInput = Prisma.AtLeast<{
   emailSearch?: Prisma.StringNullableFilter<"Provider"> | string | null
   phoneSearch?: Prisma.StringNullableFilter<"Provider"> | string | null
   specialtySearch?: Prisma.StringNullableFilter<"Provider"> | string | null
+  dentalinkMappings?: Prisma.DentalinkMappingListRelationFilter
   appointments?: Prisma.AppointmentListRelationFilter
   clinicalEncounters?: Prisma.ClinicalEncounterListRelationFilter
   performedProcedures?: Prisma.EncounterProcedureListRelationFilter
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-}, "id" | "userId" | "organizationId_svbProviderId">
+}, "id" | "userId" | "organizationId_svbProviderId" | "organizationId_id">
 
 export type ProviderOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -497,6 +501,7 @@ export type ProviderCreateInput = {
   emailSearch?: string | null
   phoneSearch?: string | null
   specialtySearch?: string | null
+  dentalinkMappings?: Prisma.DentalinkMappingCreateNestedManyWithoutProviderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutProviderInput
   clinicalEncounters?: Prisma.ClinicalEncounterCreateNestedManyWithoutProviderInput
   performedProcedures?: Prisma.EncounterProcedureCreateNestedManyWithoutPerformedByProviderInput
@@ -526,6 +531,7 @@ export type ProviderUncheckedCreateInput = {
   emailSearch?: string | null
   phoneSearch?: string | null
   specialtySearch?: string | null
+  dentalinkMappings?: Prisma.DentalinkMappingUncheckedCreateNestedManyWithoutProviderInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutProviderInput
   clinicalEncounters?: Prisma.ClinicalEncounterUncheckedCreateNestedManyWithoutProviderInput
   performedProcedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutPerformedByProviderInput
@@ -551,6 +557,7 @@ export type ProviderUpdateInput = {
   emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkMappings?: Prisma.DentalinkMappingUpdateManyWithoutProviderNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutProviderNestedInput
   clinicalEncounters?: Prisma.ClinicalEncounterUpdateManyWithoutProviderNestedInput
   performedProcedures?: Prisma.EncounterProcedureUpdateManyWithoutPerformedByProviderNestedInput
@@ -580,6 +587,7 @@ export type ProviderUncheckedUpdateInput = {
   emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkMappings?: Prisma.DentalinkMappingUncheckedUpdateManyWithoutProviderNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutProviderNestedInput
   clinicalEncounters?: Prisma.ClinicalEncounterUncheckedUpdateManyWithoutProviderNestedInput
   performedProcedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutPerformedByProviderNestedInput
@@ -673,6 +681,11 @@ export type ProviderOrderByRelationAggregateInput = {
 export type ProviderOrganizationIdSvbProviderIdCompoundUniqueInput = {
   organizationId: bigint | number
   svbProviderId: string
+}
+
+export type ProviderOrganizationIdIdCompoundUniqueInput = {
+  organizationId: bigint | number
+  id: bigint | number
 }
 
 export type ProviderCountOrderByAggregateInput = {
@@ -880,6 +893,22 @@ export type ProviderUncheckedUpdateOneWithoutUserNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProviderUpdateToOneWithWhereWithoutUserInput, Prisma.ProviderUpdateWithoutUserInput>, Prisma.ProviderUncheckedUpdateWithoutUserInput>
 }
 
+export type ProviderCreateNestedOneWithoutDentalinkMappingsInput = {
+  create?: Prisma.XOR<Prisma.ProviderCreateWithoutDentalinkMappingsInput, Prisma.ProviderUncheckedCreateWithoutDentalinkMappingsInput>
+  connectOrCreate?: Prisma.ProviderCreateOrConnectWithoutDentalinkMappingsInput
+  connect?: Prisma.ProviderWhereUniqueInput
+}
+
+export type ProviderUpdateOneWithoutDentalinkMappingsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProviderCreateWithoutDentalinkMappingsInput, Prisma.ProviderUncheckedCreateWithoutDentalinkMappingsInput>
+  connectOrCreate?: Prisma.ProviderCreateOrConnectWithoutDentalinkMappingsInput
+  upsert?: Prisma.ProviderUpsertWithoutDentalinkMappingsInput
+  disconnect?: Prisma.ProviderWhereInput | boolean
+  delete?: Prisma.ProviderWhereInput | boolean
+  connect?: Prisma.ProviderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProviderUpdateToOneWithWhereWithoutDentalinkMappingsInput, Prisma.ProviderUpdateWithoutDentalinkMappingsInput>, Prisma.ProviderUncheckedUpdateWithoutDentalinkMappingsInput>
+}
+
 export type ProviderCreateWithoutAppointmentsInput = {
   id?: bigint | number
   svbProviderId?: string | null
@@ -900,6 +929,7 @@ export type ProviderCreateWithoutAppointmentsInput = {
   emailSearch?: string | null
   phoneSearch?: string | null
   specialtySearch?: string | null
+  dentalinkMappings?: Prisma.DentalinkMappingCreateNestedManyWithoutProviderInput
   clinicalEncounters?: Prisma.ClinicalEncounterCreateNestedManyWithoutProviderInput
   performedProcedures?: Prisma.EncounterProcedureCreateNestedManyWithoutPerformedByProviderInput
   organization: Prisma.OrganizationCreateNestedOneWithoutProvidersInput
@@ -928,6 +958,7 @@ export type ProviderUncheckedCreateWithoutAppointmentsInput = {
   emailSearch?: string | null
   phoneSearch?: string | null
   specialtySearch?: string | null
+  dentalinkMappings?: Prisma.DentalinkMappingUncheckedCreateNestedManyWithoutProviderInput
   clinicalEncounters?: Prisma.ClinicalEncounterUncheckedCreateNestedManyWithoutProviderInput
   performedProcedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutPerformedByProviderInput
 }
@@ -968,6 +999,7 @@ export type ProviderUpdateWithoutAppointmentsInput = {
   emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkMappings?: Prisma.DentalinkMappingUpdateManyWithoutProviderNestedInput
   clinicalEncounters?: Prisma.ClinicalEncounterUpdateManyWithoutProviderNestedInput
   performedProcedures?: Prisma.EncounterProcedureUpdateManyWithoutPerformedByProviderNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutProvidersNestedInput
@@ -996,6 +1028,7 @@ export type ProviderUncheckedUpdateWithoutAppointmentsInput = {
   emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkMappings?: Prisma.DentalinkMappingUncheckedUpdateManyWithoutProviderNestedInput
   clinicalEncounters?: Prisma.ClinicalEncounterUncheckedUpdateManyWithoutProviderNestedInput
   performedProcedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutPerformedByProviderNestedInput
 }
@@ -1020,6 +1053,7 @@ export type ProviderCreateWithoutClinicalEncountersInput = {
   emailSearch?: string | null
   phoneSearch?: string | null
   specialtySearch?: string | null
+  dentalinkMappings?: Prisma.DentalinkMappingCreateNestedManyWithoutProviderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutProviderInput
   performedProcedures?: Prisma.EncounterProcedureCreateNestedManyWithoutPerformedByProviderInput
   organization: Prisma.OrganizationCreateNestedOneWithoutProvidersInput
@@ -1048,6 +1082,7 @@ export type ProviderUncheckedCreateWithoutClinicalEncountersInput = {
   emailSearch?: string | null
   phoneSearch?: string | null
   specialtySearch?: string | null
+  dentalinkMappings?: Prisma.DentalinkMappingUncheckedCreateNestedManyWithoutProviderInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutProviderInput
   performedProcedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutPerformedByProviderInput
 }
@@ -1088,6 +1123,7 @@ export type ProviderUpdateWithoutClinicalEncountersInput = {
   emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkMappings?: Prisma.DentalinkMappingUpdateManyWithoutProviderNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutProviderNestedInput
   performedProcedures?: Prisma.EncounterProcedureUpdateManyWithoutPerformedByProviderNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutProvidersNestedInput
@@ -1116,6 +1152,7 @@ export type ProviderUncheckedUpdateWithoutClinicalEncountersInput = {
   emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkMappings?: Prisma.DentalinkMappingUncheckedUpdateManyWithoutProviderNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutProviderNestedInput
   performedProcedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutPerformedByProviderNestedInput
 }
@@ -1140,6 +1177,7 @@ export type ProviderCreateWithoutPerformedProceduresInput = {
   emailSearch?: string | null
   phoneSearch?: string | null
   specialtySearch?: string | null
+  dentalinkMappings?: Prisma.DentalinkMappingCreateNestedManyWithoutProviderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutProviderInput
   clinicalEncounters?: Prisma.ClinicalEncounterCreateNestedManyWithoutProviderInput
   organization: Prisma.OrganizationCreateNestedOneWithoutProvidersInput
@@ -1168,6 +1206,7 @@ export type ProviderUncheckedCreateWithoutPerformedProceduresInput = {
   emailSearch?: string | null
   phoneSearch?: string | null
   specialtySearch?: string | null
+  dentalinkMappings?: Prisma.DentalinkMappingUncheckedCreateNestedManyWithoutProviderInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutProviderInput
   clinicalEncounters?: Prisma.ClinicalEncounterUncheckedCreateNestedManyWithoutProviderInput
 }
@@ -1208,6 +1247,7 @@ export type ProviderUpdateWithoutPerformedProceduresInput = {
   emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkMappings?: Prisma.DentalinkMappingUpdateManyWithoutProviderNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutProviderNestedInput
   clinicalEncounters?: Prisma.ClinicalEncounterUpdateManyWithoutProviderNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutProvidersNestedInput
@@ -1236,6 +1276,7 @@ export type ProviderUncheckedUpdateWithoutPerformedProceduresInput = {
   emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkMappings?: Prisma.DentalinkMappingUncheckedUpdateManyWithoutProviderNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutProviderNestedInput
   clinicalEncounters?: Prisma.ClinicalEncounterUncheckedUpdateManyWithoutProviderNestedInput
 }
@@ -1260,6 +1301,7 @@ export type ProviderCreateWithoutOrganizationInput = {
   emailSearch?: string | null
   phoneSearch?: string | null
   specialtySearch?: string | null
+  dentalinkMappings?: Prisma.DentalinkMappingCreateNestedManyWithoutProviderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutProviderInput
   clinicalEncounters?: Prisma.ClinicalEncounterCreateNestedManyWithoutProviderInput
   performedProcedures?: Prisma.EncounterProcedureCreateNestedManyWithoutPerformedByProviderInput
@@ -1287,6 +1329,7 @@ export type ProviderUncheckedCreateWithoutOrganizationInput = {
   emailSearch?: string | null
   phoneSearch?: string | null
   specialtySearch?: string | null
+  dentalinkMappings?: Prisma.DentalinkMappingUncheckedCreateNestedManyWithoutProviderInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutProviderInput
   clinicalEncounters?: Prisma.ClinicalEncounterUncheckedCreateNestedManyWithoutProviderInput
   performedProcedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutPerformedByProviderInput
@@ -1365,6 +1408,7 @@ export type ProviderCreateWithoutUserInput = {
   emailSearch?: string | null
   phoneSearch?: string | null
   specialtySearch?: string | null
+  dentalinkMappings?: Prisma.DentalinkMappingCreateNestedManyWithoutProviderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutProviderInput
   clinicalEncounters?: Prisma.ClinicalEncounterCreateNestedManyWithoutProviderInput
   performedProcedures?: Prisma.EncounterProcedureCreateNestedManyWithoutPerformedByProviderInput
@@ -1392,6 +1436,7 @@ export type ProviderUncheckedCreateWithoutUserInput = {
   emailSearch?: string | null
   phoneSearch?: string | null
   specialtySearch?: string | null
+  dentalinkMappings?: Prisma.DentalinkMappingUncheckedCreateNestedManyWithoutProviderInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutProviderInput
   clinicalEncounters?: Prisma.ClinicalEncounterUncheckedCreateNestedManyWithoutProviderInput
   performedProcedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutPerformedByProviderInput
@@ -1433,6 +1478,7 @@ export type ProviderUpdateWithoutUserInput = {
   emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkMappings?: Prisma.DentalinkMappingUpdateManyWithoutProviderNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutProviderNestedInput
   clinicalEncounters?: Prisma.ClinicalEncounterUpdateManyWithoutProviderNestedInput
   performedProcedures?: Prisma.EncounterProcedureUpdateManyWithoutPerformedByProviderNestedInput
@@ -1442,6 +1488,131 @@ export type ProviderUpdateWithoutUserInput = {
 export type ProviderUncheckedUpdateWithoutUserInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   organizationId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  svbProviderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialty?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  svbProviderIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  licenseNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkMappings?: Prisma.DentalinkMappingUncheckedUpdateManyWithoutProviderNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutProviderNestedInput
+  clinicalEncounters?: Prisma.ClinicalEncounterUncheckedUpdateManyWithoutProviderNestedInput
+  performedProcedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutPerformedByProviderNestedInput
+}
+
+export type ProviderCreateWithoutDentalinkMappingsInput = {
+  id?: bigint | number
+  svbProviderId?: string | null
+  firstName: string
+  lastName: string
+  licenseNumber?: string | null
+  specialty?: string | null
+  email?: string | null
+  phone?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  archivedAt?: Date | string | null
+  firstNameSearch?: string
+  lastNameSearch?: string
+  svbProviderIdSearch?: string | null
+  licenseNumberSearch?: string | null
+  emailSearch?: string | null
+  phoneSearch?: string | null
+  specialtySearch?: string | null
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutProviderInput
+  clinicalEncounters?: Prisma.ClinicalEncounterCreateNestedManyWithoutProviderInput
+  performedProcedures?: Prisma.EncounterProcedureCreateNestedManyWithoutPerformedByProviderInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutProvidersInput
+  user?: Prisma.UserCreateNestedOneWithoutProviderInput
+}
+
+export type ProviderUncheckedCreateWithoutDentalinkMappingsInput = {
+  id?: bigint | number
+  organizationId: bigint | number
+  userId?: bigint | number | null
+  svbProviderId?: string | null
+  firstName: string
+  lastName: string
+  licenseNumber?: string | null
+  specialty?: string | null
+  email?: string | null
+  phone?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  archivedAt?: Date | string | null
+  firstNameSearch?: string
+  lastNameSearch?: string
+  svbProviderIdSearch?: string | null
+  licenseNumberSearch?: string | null
+  emailSearch?: string | null
+  phoneSearch?: string | null
+  specialtySearch?: string | null
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutProviderInput
+  clinicalEncounters?: Prisma.ClinicalEncounterUncheckedCreateNestedManyWithoutProviderInput
+  performedProcedures?: Prisma.EncounterProcedureUncheckedCreateNestedManyWithoutPerformedByProviderInput
+}
+
+export type ProviderCreateOrConnectWithoutDentalinkMappingsInput = {
+  where: Prisma.ProviderWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProviderCreateWithoutDentalinkMappingsInput, Prisma.ProviderUncheckedCreateWithoutDentalinkMappingsInput>
+}
+
+export type ProviderUpsertWithoutDentalinkMappingsInput = {
+  update: Prisma.XOR<Prisma.ProviderUpdateWithoutDentalinkMappingsInput, Prisma.ProviderUncheckedUpdateWithoutDentalinkMappingsInput>
+  create: Prisma.XOR<Prisma.ProviderCreateWithoutDentalinkMappingsInput, Prisma.ProviderUncheckedCreateWithoutDentalinkMappingsInput>
+  where?: Prisma.ProviderWhereInput
+}
+
+export type ProviderUpdateToOneWithWhereWithoutDentalinkMappingsInput = {
+  where?: Prisma.ProviderWhereInput
+  data: Prisma.XOR<Prisma.ProviderUpdateWithoutDentalinkMappingsInput, Prisma.ProviderUncheckedUpdateWithoutDentalinkMappingsInput>
+}
+
+export type ProviderUpdateWithoutDentalinkMappingsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  svbProviderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialty?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firstNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  lastNameSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  svbProviderIdSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  licenseNumberSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appointments?: Prisma.AppointmentUpdateManyWithoutProviderNestedInput
+  clinicalEncounters?: Prisma.ClinicalEncounterUpdateManyWithoutProviderNestedInput
+  performedProcedures?: Prisma.EncounterProcedureUpdateManyWithoutPerformedByProviderNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutProvidersNestedInput
+  user?: Prisma.UserUpdateOneWithoutProviderNestedInput
+}
+
+export type ProviderUncheckedUpdateWithoutDentalinkMappingsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  organizationId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   svbProviderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1508,6 +1679,7 @@ export type ProviderUpdateWithoutOrganizationInput = {
   emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkMappings?: Prisma.DentalinkMappingUpdateManyWithoutProviderNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutProviderNestedInput
   clinicalEncounters?: Prisma.ClinicalEncounterUpdateManyWithoutProviderNestedInput
   performedProcedures?: Prisma.EncounterProcedureUpdateManyWithoutPerformedByProviderNestedInput
@@ -1535,6 +1707,7 @@ export type ProviderUncheckedUpdateWithoutOrganizationInput = {
   emailSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   specialtySearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkMappings?: Prisma.DentalinkMappingUncheckedUpdateManyWithoutProviderNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutProviderNestedInput
   clinicalEncounters?: Prisma.ClinicalEncounterUncheckedUpdateManyWithoutProviderNestedInput
   performedProcedures?: Prisma.EncounterProcedureUncheckedUpdateManyWithoutPerformedByProviderNestedInput
@@ -1569,12 +1742,14 @@ export type ProviderUncheckedUpdateManyWithoutOrganizationInput = {
  */
 
 export type ProviderCountOutputType = {
+  dentalinkMappings: number
   appointments: number
   clinicalEncounters: number
   performedProcedures: number
 }
 
 export type ProviderCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  dentalinkMappings?: boolean | ProviderCountOutputTypeCountDentalinkMappingsArgs
   appointments?: boolean | ProviderCountOutputTypeCountAppointmentsArgs
   clinicalEncounters?: boolean | ProviderCountOutputTypeCountClinicalEncountersArgs
   performedProcedures?: boolean | ProviderCountOutputTypeCountPerformedProceduresArgs
@@ -1588,6 +1763,13 @@ export type ProviderCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ext
    * Select specific fields to fetch from the ProviderCountOutputType
    */
   select?: Prisma.ProviderCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ProviderCountOutputType without action
+ */
+export type ProviderCountOutputTypeCountDentalinkMappingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DentalinkMappingWhereInput
 }
 
 /**
@@ -1634,6 +1816,7 @@ export type ProviderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   emailSearch?: boolean
   phoneSearch?: boolean
   specialtySearch?: boolean
+  dentalinkMappings?: boolean | Prisma.Provider$dentalinkMappingsArgs<ExtArgs>
   appointments?: boolean | Prisma.Provider$appointmentsArgs<ExtArgs>
   clinicalEncounters?: boolean | Prisma.Provider$clinicalEncountersArgs<ExtArgs>
   performedProcedures?: boolean | Prisma.Provider$performedProceduresArgs<ExtArgs>
@@ -1720,6 +1903,7 @@ export type ProviderSelectScalar = {
 
 export type ProviderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "userId" | "svbProviderId" | "firstName" | "lastName" | "licenseNumber" | "specialty" | "email" | "phone" | "isActive" | "createdAt" | "updatedAt" | "archivedAt" | "firstNameSearch" | "lastNameSearch" | "svbProviderIdSearch" | "licenseNumberSearch" | "emailSearch" | "phoneSearch" | "specialtySearch", ExtArgs["result"]["provider"]>
 export type ProviderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  dentalinkMappings?: boolean | Prisma.Provider$dentalinkMappingsArgs<ExtArgs>
   appointments?: boolean | Prisma.Provider$appointmentsArgs<ExtArgs>
   clinicalEncounters?: boolean | Prisma.Provider$clinicalEncountersArgs<ExtArgs>
   performedProcedures?: boolean | Prisma.Provider$performedProceduresArgs<ExtArgs>
@@ -1739,6 +1923,7 @@ export type ProviderIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type $ProviderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Provider"
   objects: {
+    dentalinkMappings: Prisma.$DentalinkMappingPayload<ExtArgs>[]
     appointments: Prisma.$AppointmentPayload<ExtArgs>[]
     clinicalEncounters: Prisma.$ClinicalEncounterPayload<ExtArgs>[]
     performedProcedures: Prisma.$EncounterProcedurePayload<ExtArgs>[]
@@ -2161,6 +2346,7 @@ readonly fields: ProviderFieldRefs;
  */
 export interface Prisma__ProviderClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  dentalinkMappings<T extends Prisma.Provider$dentalinkMappingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Provider$dentalinkMappingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DentalinkMappingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   appointments<T extends Prisma.Provider$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Provider$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   clinicalEncounters<T extends Prisma.Provider$clinicalEncountersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Provider$clinicalEncountersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ClinicalEncounterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   performedProcedures<T extends Prisma.Provider$performedProceduresArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Provider$performedProceduresArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EncounterProcedurePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2614,6 +2800,30 @@ export type ProviderDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Limit how many Providers to delete.
    */
   limit?: number
+}
+
+/**
+ * Provider.dentalinkMappings
+ */
+export type Provider$dentalinkMappingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DentalinkMapping
+   */
+  select?: Prisma.DentalinkMappingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DentalinkMapping
+   */
+  omit?: Prisma.DentalinkMappingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DentalinkMappingInclude<ExtArgs> | null
+  where?: Prisma.DentalinkMappingWhereInput
+  orderBy?: Prisma.DentalinkMappingOrderByWithRelationInput | Prisma.DentalinkMappingOrderByWithRelationInput[]
+  cursor?: Prisma.DentalinkMappingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DentalinkMappingScalarFieldEnum | Prisma.DentalinkMappingScalarFieldEnum[]
 }
 
 /**

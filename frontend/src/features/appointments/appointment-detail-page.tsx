@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CheckCircle2, Pencil, Stethoscope } from 'lucide-react'
+import { CheckCircle2, ClipboardList, Pencil } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { getApiErrorMessage } from '../../api'
@@ -19,7 +19,6 @@ import {
   appointmentKeys,
   getAppointment,
   listActiveProviders,
-  receptionKeys,
   updateAppointment,
 } from './appointment-api'
 import {
@@ -31,7 +30,7 @@ import {
 import { AppointmentUpdateDialog } from './appointment-update-dialog'
 import { AppointmentBilling } from '../billing/appointment-billing'
 import { treatmentCaseKeys } from '../treatment-cases/treatment-case-api'
-import { dashboardKeys } from '../dashboard/dashboard-api'
+import { refreshAppointmentWorkflow } from './appointment-workflow-cache'
 
 function Field({ label, value }: { label: string; value: string | null }) {
   return <div><dt className="text-xs font-medium uppercase text-slate-500">{label}</dt><dd className="mt-1 text-sm text-slate-800">{value || 'Not provided'}</dd></div>
@@ -71,11 +70,10 @@ export function AppointmentDetailPage() {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: treatmentCaseKeys.patient(appointment.patientId) }),
         queryClient.invalidateQueries({ queryKey: patientKeys.detail(appointment.patientId) }),
-        queryClient.invalidateQueries({ queryKey: dashboardKeys.all }),
-        queryClient.invalidateQueries({ queryKey: appointmentKeys.lists() }),
-        queryClient.invalidateQueries({ queryKey: receptionKeys.all }),
+        refreshAppointmentWorkflow(queryClient, appointmentId),
       ])
     },
+    onError: () => refreshAppointmentWorkflow(queryClient, appointmentId),
   })
 
   if (appointmentQuery.isPending) return <LoadingState label="Loading appointment" />
@@ -84,7 +82,7 @@ export function AppointmentDetailPage() {
   const appointment = appointmentQuery.data
   const primaryInsurance = insuranceQuery.data?.find((item) => item.isPrimary) ?? insuranceQuery.data?.[0]
   const canEnterClinical =
-    ['CHECKED_IN', 'IN_PROGRESS', 'COMPLETED'].includes(appointment.status) &&
+    ['CONFIRMED', 'CHECKED_IN', 'IN_PROGRESS', 'COMPLETED'].includes(appointment.status) &&
     hasPermission(permissions, 'encounter.read')
 
   return (
@@ -95,8 +93,8 @@ export function AppointmentDetailPage() {
         description={formatBusinessDateTime(appointment.scheduledStart)}
         actions={
           <div className="flex flex-wrap gap-2">
-            {hasPermission(permissions, 'appointment.update') ? <Button variant="secondary" onClick={() => setEditOpen(true)}><Pencil size={16} />Edit appointment</Button> : null}
-            {canEnterClinical ? <Link to={`/clinical/${appointment.id}`} className="inline-flex h-9 items-center gap-2 rounded-md bg-clinic-blue px-3 text-sm font-medium text-white hover:bg-blue-700"><Stethoscope size={16} />Open clinical workspace</Link> : null}
+            {hasPermission(permissions, 'appointment.update') && ['SCHEDULED', 'CONFIRMED', 'CHECKED_IN'].includes(appointment.status) ? <Button variant="secondary" onClick={() => setEditOpen(true)}><Pencil size={16} />Reschedule appointment</Button> : null}
+            {canEnterClinical ? <Link to={`/clinical/${appointment.id}`} className="inline-flex h-9 items-center gap-2 rounded-md bg-clinic-blue px-3 text-sm font-medium text-white hover:bg-blue-700"><ClipboardList size={16} />Open service attention</Link> : null}
           </div>
         }
       />

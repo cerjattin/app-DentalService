@@ -1,6 +1,9 @@
 import { isTransactionConflict } from "../../infrastructure/database/transaction-conflict.js";
 import { normalizeSearch } from "../../infrastructure/database/text-search.js";
-import { Prisma, type AppointmentStatus } from "../../generated/prisma/client.js";
+import {
+  Prisma,
+  type AppointmentStatus,
+} from "../../generated/prisma/client.js";
 
 import { prisma } from "../../infrastructure/database/prisma.js";
 
@@ -138,9 +141,7 @@ function toAuditValues(appointment: {
 }
 
 function mapConcurrencyError(error: unknown): never {
-  if (
-    isTransactionConflict(error)
-  ) {
+  if (isTransactionConflict(error)) {
     throw new AppError(
       409,
       "APPOINTMENT_PROVIDER_OVERLAP",
@@ -399,11 +400,7 @@ export class AppointmentService {
     );
 
     if (!appointment) {
-      throw new AppError(
-        404,
-        "APPOINTMENT_NOT_FOUND",
-        "Appointment not found",
-      );
+      throw new AppError(404, "APPOINTMENT_NOT_FOUND", "Appointment not found");
     }
 
     return toAppointmentResponse(appointment);
@@ -413,6 +410,28 @@ export class AppointmentService {
     input: CreateAppointmentInput,
     actor: AuthenticatedRequestContext,
     metadata: RequestSecurityMetadata,
+  ) {
+    try {
+      const created = await prisma.$transaction(
+        (tx) => this.createWithinTransaction(tx, input, actor, metadata),
+        {
+          isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+          maxWait: 10_000,
+          timeout: 10_000,
+        },
+      );
+      return toAppointmentResponse(created);
+    } catch (error) {
+      mapConcurrencyError(error);
+    }
+  }
+
+  async createWithinTransaction(
+    tx: Prisma.TransactionClient,
+    input: CreateAppointmentInput,
+    actor: AuthenticatedRequestContext,
+    metadata: RequestSecurityMetadata,
+    importAudit = false,
   ) {
     const clinicLocationId = BigInt(input.clinicLocationId);
     const patientId = BigInt(input.patientId);
@@ -427,77 +446,69 @@ export class AppointmentService {
 
     assertValidPeriod(scheduledStartAt, scheduledEndAt);
 
-    try {
-      const created = await prisma.$transaction(
-        async (tx) => {
-          await validatePatient(tx, patientId, actor.organizationId);
-          await validateAssignableTreatmentCase(tx, treatmentCaseId, patientId, actor.organizationId);
-          await validateAccidentContext(tx, accidentCaseId, patientId, actor.organizationId);
-          await validateProvider(tx, providerId, actor.organizationId, true);
-          await validateLocation(
-            tx,
-            clinicLocationId,
-            actor.organizationId,
-            true,
-          );
+    await validatePatient(tx, patientId, actor.organizationId);
+    await validateAssignableTreatmentCase(
+      tx,
+      treatmentCaseId,
+      patientId,
+      actor.organizationId,
+    );
+    await validateAccidentContext(
+      tx,
+      accidentCaseId,
+      patientId,
+      actor.organizationId,
+    );
+    await validateProvider(tx, providerId, actor.organizationId, true);
+    await validateLocation(tx, clinicLocationId, actor.organizationId, true);
 
-          const allocatedNumber =
-            await numberSequenceService.allocateWithinTransaction(tx, {
-              organizationId: actor.organizationId,
-              sequenceType: "APPOINTMENT",
-            });
+    await assertNoProviderOverlap(
+      tx,
+      actor.organizationId,
+      providerId,
+      scheduledStartAt,
+      scheduledEndAt,
+    );
 
-          await assertNoProviderOverlap(
-            tx,
-            actor.organizationId,
-            providerId,
-            scheduledStartAt,
-            scheduledEndAt,
-          );
+    const allocatedNumber =
+      await numberSequenceService.allocateWithinTransaction(tx, {
+        organizationId: actor.organizationId,
+        sequenceType: "APPOINTMENT",
+      });
 
-          const appointment = await tx.appointment.create({
-            data: {
-              organizationId: actor.organizationId,
-              appointmentNumber: allocatedNumber.formatted,
-              patientId,
-              providerId,
-              clinicLocationId,
-              treatmentCaseId: treatmentCaseId ?? null,
-              accidentCaseId: accidentCaseId ?? null,
-              scheduledStartAt,
-              scheduledEndAt,
-              createdByUserId: actor.userId,
-              reason: input.reason ?? null,
-              notes: input.notes ?? null,
-            },
+    const appointment = await tx.appointment.create({
+      data: {
+        organizationId: actor.organizationId,
+        appointmentNumber: allocatedNumber.formatted,
+        patientId,
+        providerId,
+        clinicLocationId,
+        treatmentCaseId: treatmentCaseId ?? null,
+        accidentCaseId: accidentCaseId ?? null,
+        scheduledStartAt,
+        scheduledEndAt,
+        createdByUserId: actor.userId,
+        reason: input.reason ?? null,
+        notes: input.notes ?? null,
+      },
 
-            select: appointmentDetailSelect,
-          });
+      select: appointmentDetailSelect,
+    });
 
-          await auditService.writeWithinTransaction(tx, {
-            organizationId: actor.organizationId,
-            actorUserId: actor.userId,
-            action: "APPOINTMENT_CREATE",
-            entityType: "APPOINTMENT",
-            entityId: appointment.id,
-            entityKey: appointment.appointmentNumber,
-            newValues: toAuditValues(appointment),
-            ...auditTechnicalFields(metadata),
-          });
+    await auditService.writeWithinTransaction(tx, {
+      organizationId: actor.organizationId,
+      actorUserId: actor.userId,
+      action: "APPOINTMENT_CREATE",
+      entityType: "APPOINTMENT",
+      entityId: appointment.id,
+      entityKey: appointment.appointmentNumber,
+      newValues: importAudit
+        ? { source: "DENTALINK", appointmentId: appointment.id.toString() }
+        : toAuditValues(appointment),
+      ...auditTechnicalFields(metadata),
+    });
 
-          return appointment;
-        },
-        {
-          isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
-          maxWait: 10_000,
-          timeout: 10_000,
-        },
-      );
-
-      return toAppointmentResponse(created);
-    } catch (error) {
-      mapConcurrencyError(error);
-    }
+    return appointment;
   }
 
   async update(
@@ -547,12 +558,7 @@ export class AppointmentService {
           assertValidPeriod(scheduledStartAt, scheduledEndAt);
 
           if (input.providerId !== undefined) {
-            await validateProvider(
-              tx,
-              providerId,
-              actor.organizationId,
-              true,
-            );
+            await validateProvider(tx, providerId, actor.organizationId, true);
           }
 
           if (input.clinicLocationId !== undefined) {
@@ -565,9 +571,21 @@ export class AppointmentService {
           }
 
           const changesSchedule =
-            input.providerId !== undefined ||
-            input.scheduledStart !== undefined ||
-            input.scheduledEnd !== undefined;
+            providerId !== current.providerId ||
+            clinicLocationId !== current.clinicLocationId ||
+            scheduledStartAt.getTime() !== current.scheduledStartAt.getTime() ||
+            scheduledEndAt.getTime() !== current.scheduledEndAt.getTime();
+
+          if (
+            changesSchedule &&
+            !["SCHEDULED", "CONFIRMED", "CHECKED_IN"].includes(current.status)
+          ) {
+            throw new AppError(
+              409,
+              "APPOINTMENT_RESCHEDULE_NOT_ALLOWED",
+              "An appointment can be rescheduled before service attention begins",
+            );
+          }
 
           if (changesSchedule && isBlockingAppointmentStatus(current.status)) {
             await assertNoProviderOverlap(
@@ -591,13 +609,27 @@ export class AppointmentService {
           }
 
           if (input.treatmentCaseId !== undefined) {
-            const nextCaseId = input.treatmentCaseId === null ? null : BigInt(input.treatmentCaseId);
+            const nextCaseId =
+              input.treatmentCaseId === null
+                ? null
+                : BigInt(input.treatmentCaseId);
             if (nextCaseId !== current.treatmentCaseId) {
               const clinicalData = await tx.encounterProcedure.findFirst({
-                where: { encounter: { appointmentId } }, select: { id: true },
+                where: { encounter: { appointmentId } },
+                select: { id: true },
               });
-              if (clinicalData) throw new AppError(409, "APPOINTMENT_CLINICAL_CONTEXT_LOCKED", "Treatment context is frozen after procedures have been recorded");
-              await validateAssignableTreatmentCase(tx, nextCaseId, current.patientId, actor.organizationId);
+              if (clinicalData)
+                throw new AppError(
+                  409,
+                  "APPOINTMENT_CLINICAL_CONTEXT_LOCKED",
+                  "Treatment context is frozen after procedures have been recorded",
+                );
+              await validateAssignableTreatmentCase(
+                tx,
+                nextCaseId,
+                current.patientId,
+                actor.organizationId,
+              );
             }
             updateData.treatmentCaseId =
               input.treatmentCaseId === null
@@ -606,14 +638,32 @@ export class AppointmentService {
           }
 
           if (input.accidentCaseId !== undefined) {
-            const nextAccidentId = input.accidentCaseId === null ? null : BigInt(input.accidentCaseId);
+            const nextAccidentId =
+              input.accidentCaseId === null
+                ? null
+                : BigInt(input.accidentCaseId);
             if (nextAccidentId !== current.accidentCaseId) {
-              const clinicalData = await tx.encounterProcedure.findFirst({ where: { encounter: { appointmentId } }, select: { id: true } });
-              if (clinicalData) throw new AppError(409, "APPOINTMENT_CLINICAL_CONTEXT_LOCKED", "Accident context is frozen after procedures have been recorded");
-              await validateAccidentContext(tx, nextAccidentId, current.patientId, actor.organizationId);
+              const clinicalData = await tx.encounterProcedure.findFirst({
+                where: { encounter: { appointmentId } },
+                select: { id: true },
+              });
+              if (clinicalData)
+                throw new AppError(
+                  409,
+                  "APPOINTMENT_CLINICAL_CONTEXT_LOCKED",
+                  "Accident context is frozen after procedures have been recorded",
+                );
+              await validateAccidentContext(
+                tx,
+                nextAccidentId,
+                current.patientId,
+                actor.organizationId,
+              );
             }
             updateData.accidentCaseId =
-              input.accidentCaseId === null ? null : BigInt(input.accidentCaseId);
+              input.accidentCaseId === null
+                ? null
+                : BigInt(input.accidentCaseId);
           }
 
           if (input.scheduledStart !== undefined) {
@@ -676,6 +726,7 @@ export class AppointmentService {
     metadata: RequestSecurityMetadata,
   ) {
     const updated = await prisma.$transaction(async (tx) => {
+      await tx.$queryRaw`SELECT id FROM appointments WHERE id = ${appointmentId} AND organization_id = ${actor.organizationId} FOR UPDATE`;
       const current = await appointmentRepository.findById(
         appointmentId,
         actor.organizationId,

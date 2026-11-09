@@ -105,6 +105,7 @@ export const navigationGroups: NavigationGroup[] = [
         permissions: ['organization.read'],
         icon: Settings,
       },
+      { label: 'Dentalink preparation', path: '/integrations/dentalink', permissions: ['dentalink.read'], icon: ListChecks },
     ],
   },
 ]

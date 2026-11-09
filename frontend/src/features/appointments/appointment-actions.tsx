@@ -5,7 +5,8 @@ import { hasPermission } from '../../auth/permissions'
 import { useAuth } from '../../auth/use-auth'
 import { Button } from '../../components/ui/button'
 import type { Appointment } from '../../types/appointment'
-import { appointmentKeys, changeAppointmentStatus, receptionKeys } from './appointment-api'
+import { appointmentKeys, changeAppointmentStatus } from './appointment-api'
+import { refreshAppointmentWorkflow } from './appointment-workflow-cache'
 import { availableTransitions, type AppointmentTransition } from './appointment-model'
 import { AppointmentTransitionDialog } from './appointment-transition-dialog'
 
@@ -31,11 +32,9 @@ export function AppointmentActions({
       queryClient.setQueryData(appointmentKeys.detail(updated.id), updated)
       setDialogTransition(undefined)
       onSuccess?.(updated)
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: appointmentKeys.lists() }),
-        queryClient.invalidateQueries({ queryKey: receptionKeys.all }),
-      ])
+      await refreshAppointmentWorkflow(queryClient, updated.id)
     },
+    onError: () => refreshAppointmentWorkflow(queryClient, appointment.id),
   })
   const transitions = availableTransitions(appointment.status).filter((transition) =>
     hasPermission(permissions, transition.permission),

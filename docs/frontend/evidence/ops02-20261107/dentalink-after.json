@@ -1,0 +1,64 @@
+{
+  "date": "2026-11-09T11:39:01.064Z",
+  "accountId": "1",
+  "runId": "1",
+  "source": "SYNTHETIC",
+  "realConnectionVerified": false,
+  "state": "CONFIRMED",
+  "contentHash": "49f1c612eed9b6db7462834577dc80ee9e15ccf3a167f662c77df769fc4ecec2",
+  "counts": {
+    "pages": 2,
+    "ready": 0,
+    "total": 3,
+    "issues": 1,
+    "skipped": 0,
+    "imported": 2,
+    "sourceMode": "SYNTHETIC"
+  },
+  "cacheControl": "private, no-store",
+  "patientTotal": 2,
+  "appointmentTotal": 2,
+  "items": [
+    {
+      "id": "1",
+      "entityType": "PATIENT",
+      "externalId": "000-QA-PATIENT",
+      "disposition": "IMPORTED",
+      "issueCodes": [],
+      "patientId": "2",
+      "appointmentId": null
+    },
+    {
+      "id": "2",
+      "entityType": "APPOINTMENT",
+      "externalId": "000-QA-APPOINTMENT",
+      "disposition": "IMPORTED",
+      "issueCodes": [],
+      "patientId": null,
+      "appointmentId": "34"
+    },
+    {
+      "id": "3",
+      "entityType": "APPOINTMENT",
+      "externalId": "000-QA-ISSUE",
+      "disposition": "ISSUE",
+      "issueCodes": [
+        "UNSUPPORTED_SOURCE_STATUS",
+        "PROVIDER_MAPPING_MISSING"
+      ],
+      "patientId": null,
+      "appointmentId": null
+    }
+  ],
+  "importedAppointment": {
+    "id": "34",
+    "number": "DB-000002",
+    "status": "SCHEDULED",
+    "patientId": "2"
+  },
+  "permissionChecks": {
+    "receptionCanRead": true,
+    "receptionCannotManage": true,
+    "providerCannotRead": true
+  }
+}

@@ -37,6 +37,16 @@ export const updateEncounterProcedureSchema = z
 export type CreateEncounterProcedureInput = z.infer<
   typeof createEncounterProcedureSchema
 >;
+export const recordPerformedServiceSchema = z.strictObject({
+  svbProcedureId: bigintId,
+  quantity: z.string().trim().regex(/^(0|[1-9]\d{0,7})(\.\d{1,2})?$/).default("1.00"),
+});
+export type RecordPerformedServiceInput = z.infer<typeof recordPerformedServiceSchema>;
+
+export const captureEncounterProcedureSchema = z.union([
+  createEncounterProcedureSchema,
+  recordPerformedServiceSchema,
+]);
 
 export type UpdateEncounterProcedureInput = z.infer<
   typeof updateEncounterProcedureSchema

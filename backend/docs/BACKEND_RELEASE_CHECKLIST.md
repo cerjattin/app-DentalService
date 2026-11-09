@@ -1,5 +1,9 @@
 # Backend Release Checklist
 
+## OPS-01 — local candidate, 8 November 2026
+
+The current attention, deferred pricing and prepared Dentalink import contract is [OPS_01_API](OPS_01_API.md). [Backend delivery and fresh evidence](../../docs/backend/OPS_01_ENTREGA.md) identify local checks and cross-area ownership. The real Dentalink HTTP reader remains unconfigured. Deployment, target schema/permissions, external storage and client acceptance require their actual target checks; local QA does not close those gates. SVB presentation remains deferred.
+
 ## NEG-DEP-10/12 — clinical first deployment, SVB deferred
 
 - [x] Server enforces a single complete CLOSED invoice/version on new manual prepare/record; preserves existing evidence/replays and diagnosis of legacy partial preparations.

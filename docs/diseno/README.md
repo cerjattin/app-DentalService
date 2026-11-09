@@ -26,6 +26,14 @@ Mientras se recupera la referencia original, conservar el lenguaje visual existe
 
 Inventario de componentes existentes, fricciones recepción→atención→factura→firma, accesibilidad de firma y formularios, y revisión responsive. Coordinar con Frontend antes de modificar componentes compartidos y con Negocio antes de cambiar secuencias operativas.
 
+## OPS-04 — Revisión vigente del flujo por servicios (7–8 de noviembre de 2026)
+
+[Evaluación, escenarios, evidencias y criterios de aceptación](OPS_04_ENTREGA.md). En QA local exclusivo se observó creación/reprogramación/confirmación, servicios sin cobertura/precio, cierre y entrega a Recepción, recuperación de factura, firma/PDF y corrección con nueva versión conservando historia. Se verificaron escritorio y tablet emulada; zoom real 200%, redes/carreras, adjuntos y aceptación del cliente siguen pendientes.
+
+Se entregan a Frontend cuatro incidencias P2: foco tras guardar servicio, Escape en la firma, recuperación contextual de cobro y cola sin estados de factura. Propuestas adicionales: prevenir cierre vacío, guía Review → Signature → Close y navegación por tareas según permisos. No se modificaron componentes. La barrera del selector de archivos de la extensión se revalidó; firma dibujada y descarga de PDF se comprobaron por separado. Dentalink real continúa pendiente de acceso/contrato publicado y SVB aplazado.
+
+El contrato de atención por servicios sustituye los requisitos antiguos de notas/diagnóstico en la pantalla principal. Los ensayos DEP11 siguientes se conservan como evidencia histórica; su etiqueta de estado vigente se limita a aquella ronda y no sustituye OPS-04.
+
 ## Entrega
 
 Para cada mejora: pantalla y problema, propuesta concreta, estados e interacción, componentes/tokens reutilizados y criterios de aceptación. Las primeras tareas de este chat son diagnóstico; cualquier artefacto de diseño nuevo se crea cuando sea parte de una solicitud concreta.

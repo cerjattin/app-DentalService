@@ -9,6 +9,7 @@ import { Dialog } from '../../components/ui/dialog'
 import { Textarea } from '../../components/ui/textarea'
 import type { Invoice } from '../../types/billing'
 import { encounterKeys } from '../clinical/clinical-api'
+import { refreshAppointmentWorkflow } from '../appointments/appointment-workflow-cache'
 import { dashboardKeys } from '../dashboard/dashboard-api'
 import { correctionKeys, invoiceHistoryKeys, invoiceKeys, invoiceVersionKeys, returnInvoiceToCare } from './billing-api'
 import { BillingError } from './billing-ui'
@@ -31,6 +32,7 @@ export function ReturnToCare({ invoice }: { invoice: Invoice }) {
         client.invalidateQueries({ queryKey: ['clinical-encounter'] }),
         client.invalidateQueries({ queryKey: encounterKeys.appointment(invoice.appointmentId) }),
         client.invalidateQueries({ queryKey: dashboardKeys.all }),
+        refreshAppointmentWorkflow(client, invoice.appointmentId),
       ])
       navigate(`/clinical/${invoice.appointmentId}`)
     },

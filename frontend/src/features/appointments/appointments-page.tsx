@@ -108,11 +108,15 @@ export function AppointmentsPage() {
       render: (appointment) => (
         <div className="flex min-w-max items-center gap-2">
           <Link to={`/appointments/${appointment.id}`} className="inline-flex h-8 items-center rounded-md border border-clinic-border-strong bg-white px-2.5 text-xs font-medium text-slate-700 hover:bg-slate-50">View</Link>
+          {['CONFIRMED', 'CHECKED_IN', 'IN_PROGRESS'].includes(appointment.status) &&
+          hasPermission(permissions, 'encounter.read') && hasPermission(permissions, 'appointment.start') ? (
+            <Link to={`/clinical/${appointment.id}`} className="inline-flex h-8 items-center rounded-md border border-clinic-border-strong bg-white px-2.5 text-xs font-medium text-clinic-blue hover:bg-slate-50">Services</Link>
+          ) : null}
           <AppointmentActions appointment={appointment} compact />
         </div>
       ),
     },
-  ], [canReadPatients])
+  ], [canReadPatients, permissions])
 
   const rows = appointmentsQuery.data?.data ?? []
   const pagination = appointmentsQuery.data?.meta
@@ -122,9 +126,10 @@ export function AppointmentsPage() {
     <div className="mx-auto max-w-[1500px]">
       <PageHeader
         title="Appointments"
-        description="Search the appointment schedule and manage front-desk status changes."
+        description="Manage the schedule and open confirmed appointments for service attention."
         actions={<AppointmentCreateAction />}
       />
+      <p className="mb-4 text-sm text-slate-500">Real Dentalink connection has not been verified. Create appointments manually.{hasPermission(permissions, 'dentalink.read') ? <> <Link className="text-clinic-blue underline" to="/integrations/dentalink">Review import preparation</Link>.</> : null}</p>
       <div className="mb-4 grid gap-3 rounded-lg border border-clinic-border bg-white p-4 md:grid-cols-2 xl:grid-cols-[minmax(280px,1fr)_170px_170px_220px]">
         <div>
           <label htmlFor="appointmentSearch" className="mb-1.5 block text-sm font-medium text-slate-700">Search appointments</label>

@@ -29,7 +29,6 @@ import {
 import { PatientFormDialog } from './patient-form-dialog'
 import { formatDateOnly, patientFullName } from './patient-formatters'
 import { VerifyInsuranceDialog } from './verify-insurance-dialog'
-import { TreatmentCasesSection } from '../treatment-cases/treatment-cases-section'
 
 function Field({ label, value }: { label: string; value: string | null }) {
   return (
@@ -179,7 +178,6 @@ export function PatientDetailPage() {
         </Card>
       </div>
 
-      <TreatmentCasesSection patientId={patientId} active={patient.status === 'ACTIVE'} />
       <section className="mt-5">
         <div className="mb-3 flex items-center justify-between gap-3">
           <div>

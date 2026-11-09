@@ -9,9 +9,10 @@ const money = z.object({ currencyCode: z.string().length(3), amount: z.string().
 const count = z.number().int().nonnegative();
 const dashboard = openApiRegistry.register("DashboardReport", z.object({
   period: z.object({ from: date, to: date, timezone: z.literal("America/Curacao") }), providerId: id.nullable(),
-  kpis: z.object({ production: z.array(money), svbBilled: z.array(money), patientsSeen: count, appointments: count, pendingSignatures: count, closedInvoices: count, toDeclare: count }),
+  kpis: z.object({ production: z.array(money), svbBilled: z.array(money), patientsSeen: count, appointments: count, completedAttentions: count, pendingSignatures: count, closedInvoices: count, toDeclare: count }),
   productionTimeline: z.array(money.extend({ date, chartPercent: z.number() })),
   productionByProvider: z.array(money.extend({ providerId: id, providerName: z.string(), chartPercent: z.number() })),
+  serviceVolumeByProvider: z.array(z.object({ providerId: id, providerName: z.string(), attentions: count, units: z.string() })),
 }));
 const json = (schema: z.ZodType) => ({ "application/json": { schema } });
 const errors = { 400: { description: "Invalid request or INVALID_REPORT_PERIOD", content: json(apiErrorSchema) }, 401: { description: "Authentication required", content: json(apiErrorSchema) }, 403: { description: "Permission denied", content: json(apiErrorSchema) }, 404: { description: "Provider not found in this organization", content: json(apiErrorSchema) } };

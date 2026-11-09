@@ -19,6 +19,7 @@ import { formatBusinessDate, formatBusinessTime } from '../../lib/timezone'
 import type { Appointment, AppointmentListFilters, AppointmentStatus } from '../../types/appointment'
 import { AppointmentActions } from '../appointments/appointment-actions'
 import { listAppointments, receptionKeys } from '../appointments/appointment-api'
+import { BillingReviewQueue } from './billing-review-queue'
 import {
   appointmentPatientName,
   appointmentProviderName,
@@ -32,6 +33,8 @@ const TODAY_PAGE_SIZE = 100
 export function ReceptionPage() {
   const { permissions } = useAuth()
   const canReadPatients = hasPermission(permissions, 'patient.read')
+  const canReviewBilling = hasPermission(permissions, 'invoice.read')
+  const [queue, setQueue] = useState<'today' | 'billing'>('today')
   const [searchInput, setSearchInput] = useState('')
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState<AppointmentStatus | ''>('')
@@ -54,6 +57,7 @@ export function ReceptionPage() {
     queryFn: ({ signal }) => listAppointments(filters, signal),
     placeholderData: keepPreviousData,
     refetchOnWindowFocus: true,
+    enabled: queue === 'today',
   })
 
   const columns = useMemo<DataTableColumn<Appointment>[]>(() => [
@@ -81,11 +85,11 @@ export function ReceptionPage() {
       render: (appointment) => (
         <div className="flex min-w-max items-center gap-2">
           <AppointmentActions appointment={appointment} compact />
-          <Link to={`/appointments/${appointment.id}`} className="inline-flex h-8 items-center rounded-md border border-clinic-border-strong bg-white px-2.5 text-xs font-medium text-slate-700 hover:bg-slate-50">Details</Link>
+          <Link to={`/appointments/${appointment.id}`} className="inline-flex h-8 items-center rounded-md border border-clinic-border-strong bg-white px-2.5 text-xs font-medium text-slate-700 hover:bg-slate-50">{appointment.status === 'COMPLETED' && hasPermission(permissions, 'invoice.create') ? 'Billing' : 'Details'}</Link>
         </div>
       ),
     },
-  ], [canReadPatients])
+  ], [canReadPatients, permissions])
 
   const rows = worklistQuery.data?.data ?? []
   const total = worklistQuery.data?.meta?.total ?? rows.length
@@ -96,13 +100,18 @@ export function ReceptionPage() {
         title="Reception"
         description={`Today's front-desk appointment worklist for ${today}.`}
         actions={
-          <div className="flex gap-2">
-            <Button variant="secondary" disabled={worklistQuery.isFetching} onClick={() => void worklistQuery.refetch()}>{worklistQuery.isFetching ? 'Refreshing…' : 'Refresh worklist'}</Button>
+          <div className="flex flex-wrap gap-2">
+            {queue === 'today' ? <Button variant="secondary" disabled={worklistQuery.isFetching} onClick={() => void worklistQuery.refetch()}>{worklistQuery.isFetching ? 'Refreshing…' : 'Refresh worklist'}</Button> : null}
             <Link to="/appointments" className="inline-flex h-9 items-center gap-2 rounded-md border border-clinic-border-strong bg-white px-3 text-sm font-medium text-slate-700 hover:bg-slate-50"><CalendarDays size={16} />All appointments</Link>
             <AppointmentCreateAction />
           </div>
         }
       />
+      {canReviewBilling ? <div className="mb-4 flex flex-wrap gap-2" role="group" aria-label="Reception queues">
+        <Button variant={queue === 'today' ? 'primary' : 'secondary'} aria-pressed={queue === 'today'} onClick={() => setQueue('today')}>Today's appointments</Button>
+        <Button variant={queue === 'billing' ? 'primary' : 'secondary'} aria-pressed={queue === 'billing'} onClick={() => setQueue('billing')}>Completed / billing review</Button>
+      </div> : null}
+      {queue === 'billing' && canReviewBilling ? <BillingReviewQueue /> : <>
       <p role="status" className="mb-3 text-xs text-slate-500">{worklistQuery.isFetching ? 'Updating worklist…' : worklistQuery.isError ? 'Refresh failed. Retry to obtain the current worklist.' : worklistQuery.dataUpdatedAt ? `Last updated ${formatBusinessTime(new Date(worklistQuery.dataUpdatedAt))} · America/Curacao` : 'Worklist not loaded.'}</p>
       <div className="mb-4 flex flex-col gap-3 rounded-lg border border-clinic-border bg-white p-4 md:flex-row md:items-end">
         <div className="min-w-0 flex-1">
@@ -133,6 +142,7 @@ export function ReceptionPage() {
           {total > TODAY_PAGE_SIZE ? <p className="mt-3 text-sm text-clinic-warning">Showing the first {TODAY_PAGE_SIZE} appointments. Use the appointment list for pagination.</p> : null}
         </>
       )}
+      </>}
     </div>
   )
 }

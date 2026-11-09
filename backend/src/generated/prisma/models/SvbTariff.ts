@@ -418,6 +418,11 @@ export type SvbTariffUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type SvbTariffNullableScalarRelationFilter = {
+  is?: Prisma.SvbTariffWhereInput | null
+  isNot?: Prisma.SvbTariffWhereInput | null
+}
+
 export type SvbTariffScalarRelationFilter = {
   is?: Prisma.SvbTariffWhereInput
   isNot?: Prisma.SvbTariffWhereInput
@@ -493,10 +498,12 @@ export type SvbTariffCreateNestedOneWithoutEncounterProceduresInput = {
   connect?: Prisma.SvbTariffWhereUniqueInput
 }
 
-export type SvbTariffUpdateOneRequiredWithoutEncounterProceduresNestedInput = {
+export type SvbTariffUpdateOneWithoutEncounterProceduresNestedInput = {
   create?: Prisma.XOR<Prisma.SvbTariffCreateWithoutEncounterProceduresInput, Prisma.SvbTariffUncheckedCreateWithoutEncounterProceduresInput>
   connectOrCreate?: Prisma.SvbTariffCreateOrConnectWithoutEncounterProceduresInput
   upsert?: Prisma.SvbTariffUpsertWithoutEncounterProceduresInput
+  disconnect?: Prisma.SvbTariffWhereInput | boolean
+  delete?: Prisma.SvbTariffWhereInput | boolean
   connect?: Prisma.SvbTariffWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.SvbTariffUpdateToOneWithWhereWithoutEncounterProceduresInput, Prisma.SvbTariffUpdateWithoutEncounterProceduresInput>, Prisma.SvbTariffUncheckedUpdateWithoutEncounterProceduresInput>
 }

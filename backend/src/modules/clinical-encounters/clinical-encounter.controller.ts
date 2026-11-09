@@ -1,4 +1,5 @@
 import type { RequestHandler } from "express";
+import { z } from "zod";
 
 import { AppError } from "../../shared/errors/app-error.js";
 import { successResponse } from "../../shared/http/api-response.js";
@@ -133,5 +134,23 @@ export const completeClinicalEncounter: RequestHandler = async (req, res) => {
     securityMetadata(req, res),
   );
 
+  res.status(200).json(successResponse(result));
+};
+
+const emptyBody = z.strictObject({});
+
+export const startServiceAttention: RequestHandler = async (req, res) => {
+  emptyBody.parse(req.body ?? {});
+  const result = await clinicalEncounterService.create(
+    parseBigIntId(req.params.appointmentId, "appointmentId"), {}, requireAuth(req), securityMetadata(req, res), true,
+  );
+  res.status(200).json(successResponse(result));
+};
+
+export const finishServiceAttention: RequestHandler = async (req, res) => {
+  emptyBody.parse(req.body ?? {});
+  const result = await clinicalEncounterService.complete(
+    parseBigIntId(req.params.id, "encounterId"), requireAuth(req), securityMetadata(req, res), true,
+  );
   res.status(200).json(successResponse(result));
 };

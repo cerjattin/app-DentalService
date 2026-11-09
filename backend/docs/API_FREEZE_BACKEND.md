@@ -1,5 +1,13 @@
 # API Freeze Backend
 
+## OPS-01 — contrato local actualizado 2026-11-08
+
+Atención mínima, cierre conjunto y facturación con valoración diferida conservan sus rutas. Se completan idempotencia de inicio, citas legadas/reabiertas y locks de captura/cierre/factura. Se montan doce operaciones internas Dentalink de cuenta/mapeos/vista/confirmación, con lector real NOT_CONFIGURED y prueba sintética confinada. [Contrato HTTP, DTO, permisos, paginación, errores y límites](OPS_01_API.md). La migración08 pertenece a DB; solo aplicada en QA en esta ronda. Sin acceso real Dentalink ni envío SVB.
+
+## Atención y facturación operativa (2026-11-06)
+
+El [contrato de atención y Dentalink](../../docs/negocio/CONTRATO_ATENCION_FACTURACION_DENTALINK_20261106.md) describe los endpoints de inicio y cierre de servicios, el DTO mínimo de captura, la valoración al crear factura y el ajuste de permisos. El cuerpo anterior con seguro conserva la captura legada. Las rutas nuevas requieren la migración de atención antes de ejecutarse en el destino.
+
 ## NEG-DEP-10/12 — alcance clínico, SVB aplazado (2026-11-03)
 
 Esta actualización prevalece sobre la habilitación manual anterior: `manualPortalRecordingEnabled` es false por defecto y nuevo prepare/registro devuelve 409 SVB_PRESENTATION_DEFERRED. Solo QA explícito local _test puede habilitarlo con SVB_MANUAL_RECORDING_ENABLED=true y NODE_ENV=test. Historia/replays/resolución permanecen accesibles. Prepare/registro QA requieren una sola invoice/versión CLOSED con conjunto exacto completo de ítems: MANUAL_ENTRY_SINGLE_INVOICE_REQUIRED / MANUAL_ENTRY_INCOMPLETE_INVOICE. [Contrato, orden de validación, runtime/Storage y evidencia](NEG_DEP_10_12.md). No cambia schema ni SQL aplicado.

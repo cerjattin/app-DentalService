@@ -18,6 +18,7 @@ const pageTitles: Record<string, { title: string; subtitle?: string }> = {
   '/admin/providers': { title: 'Providers', subtitle: 'Professional and user relationships' },
   '/admin/services': { title: 'Services', subtitle: 'SVB catalogue and tariffs' },
   '/admin/settings': { title: 'Settings', subtitle: 'Organization configuration' },
+  '/integrations/dentalink': { title: 'Dentalink preparation', subtitle: 'Administrative import review · real connection not verified' },
 }
 
 function titleForPath(pathname: string) {
@@ -38,7 +39,7 @@ function titleForPath(pathname: string) {
   }
 
   if (pathname.startsWith('/clinical/')) {
-    return { title: 'Clinical Workspace', subtitle: 'Encounter and procedures' }
+    return { title: 'Service Attention', subtitle: 'Services provided' }
   }
 
   if (pathname.startsWith('/invoices/')) {

@@ -11,7 +11,7 @@ const allowedTransitions: Record<AppointmentStatus, AppointmentStatus[]> = {
   SCHEDULED: ["CONFIRMED", "CHECKED_IN", "CANCELLED", "NO_SHOW"],
   CONFIRMED: ["CHECKED_IN", "CANCELLED", "NO_SHOW"],
   CHECKED_IN: ["IN_PROGRESS", "CANCELLED", "NO_SHOW"],
-  IN_PROGRESS: ["COMPLETED", "CANCELLED"],
+  IN_PROGRESS: ["COMPLETED"],
   COMPLETED: [],
   CANCELLED: [],
   NO_SHOW: [],

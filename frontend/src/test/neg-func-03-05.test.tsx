@@ -11,9 +11,7 @@ import { DeclarationDraftAction } from '../features/declarations/declaration-dra
 import { TreatmentCasesSection } from '../features/treatment-cases/treatment-cases-section'
 import { TreatmentCaseSelector } from '../features/treatment-cases/treatment-case-selector'
 import { TreatmentCaseForm } from '../features/treatment-cases/treatment-case-form'
-import { AppointmentCreateDialog } from '../features/appointments/appointment-create-dialog'
 import { AppointmentUpdateDialog } from '../features/appointments/appointment-update-dialog'
-import { ApiError } from '../api'
 import type { Appointment } from '../types/appointment'
 import { parseDeclarationAssignments } from '../features/billing/declaration-assignment-model'
 import type { TreatmentCase } from '../types/treatment-case'
@@ -82,25 +80,22 @@ describe('NEG-FE04 candidate selection and resolution', () => {
 })
 
 describe('NEG-FE05 patient treatment cases', () => {
-  it('clears case selection when the appointment patient changes', async () => {
-    session(['patient.read', 'provider.read', 'clinic_location.read', 'treatment_case.read'])
-    const urls: string[] = []
-    vi.stubGlobal('fetch', vi.fn(async (url) => {
-      urls.push(String(url)); const path = new URL(url).pathname
-      if (path.endsWith('/patients')) return ok([{ id: '11', firstName: 'QA', lastName: 'First', patientNumber: 'P1' }, { id: '22', firstName: 'QA', lastName: 'Second', patientNumber: 'P2' }], meta)
-      if (path.endsWith('/providers')) return ok([{ id: '31', firstName: 'QA', lastName: 'Provider' }], meta)
-      if (path.endsWith('/clinic-locations')) return ok([{ id: '41', name: 'QA clinic' }])
-      if (path.endsWith('/treatment-cases')) return ok(path.includes('/11/') ? [caseRecord] : [], meta)
-      return ok(caseRecord)
-    }))
-    render(<AppointmentCreateDialog onClose={vi.fn()} onCreated={vi.fn()} />); await screen.findByRole('option', { name: 'QA First — P1' }); await userEvent.selectOptions(screen.getByLabelText('Patient', { exact: true }), '11'); await screen.findByRole('option', { name: /0000123/ }); await userEvent.selectOptions(screen.getByLabelText('Treatment case', { exact: true }), caseRecord.id)
-    await userEvent.selectOptions(screen.getByLabelText('Patient', { exact: true }), '22'); await waitFor(() => expect(screen.getByLabelText('Treatment case', { exact: true })).toHaveValue('')); expect(screen.queryByRole('option', { name: /0000123/ })).not.toBeInTheDocument(); expect(urls.some((url) => url.includes('/patients/22/treatment-cases?'))).toBe(true)
-  })
-  it('preserves appointment edits on clinical lock and explicitly retains the recorded reference', async () => {
-    session(['treatment_case.read']); vi.stubGlobal('fetch', vi.fn(async () => ok([caseRecord], meta)))
-    const record = { id: '71', patientId: '11', providerId: '31', organizationId: '1', treatmentCaseId: null, scheduledStart: '2026-11-01T14:00:00Z', scheduledEnd: '2026-11-01T14:30:00Z', reason: 'Existing reason', notes: '', provider: { id: '31', firstName: 'QA', lastName: 'Provider', isActive: true }, location: { name: 'QA clinic' } } as Appointment
-    const submit = vi.fn(); render(<AppointmentUpdateDialog appointment={record} providers={[]} canReadProviders={false} open onOpenChange={vi.fn()} onSubmit={submit} isPending={false} error={new ApiError({ status: 409, code: 'APPOINTMENT_CLINICAL_CONTEXT_LOCKED', message: 'private backend detail' })} />)
-    await userEvent.type(screen.getByLabelText('Notes'), 'Keep appointment notes'); expect(screen.getByLabelText('Treatment case', { exact: true })).toBeDisabled(); await userEvent.click(screen.getByRole('button', { name: 'Keep recorded treatment case' })); await userEvent.click(screen.getByRole('button', { name: 'Save changes' })); await waitFor(() => expect(submit).toHaveBeenCalled()); expect(submit.mock.calls[0]?.[0]).toMatchObject({ notes: 'Keep appointment notes' }); expect(submit.mock.calls[0]?.[0]).not.toHaveProperty('treatmentCaseId')
+  it('reschedules without requesting or replacing a legacy treatment reference', async () => {
+    session(['treatment_case.read'])
+    const fetcher = vi.fn(); vi.stubGlobal('fetch', fetcher)
+    const record = { id: '71', patientId: '11', providerId: '31', organizationId: '1', status: 'CONFIRMED',
+      treatmentCaseId: caseRecord.id, scheduledStart: '2026-11-01T14:00:00Z', scheduledEnd: '2026-11-01T14:30:00Z',
+      reason: 'Existing reason', notes: '', provider: { id: '31', firstName: 'QA', lastName: 'Provider', isActive: true },
+      location: { name: 'QA clinic' } } as Appointment
+    const submit = vi.fn()
+    render(<AppointmentUpdateDialog appointment={record} providers={[]} canReadProviders={false} open onOpenChange={vi.fn()}
+      onSubmit={submit} isPending={false} />)
+    expect(screen.queryByLabelText('Treatment case', { exact: true })).not.toBeInTheDocument()
+    await userEvent.type(screen.getByLabelText('Notes'), 'Administrative change')
+    await userEvent.click(screen.getByRole('button', { name: 'Save changes' }))
+    await waitFor(() => expect(submit).toHaveBeenCalled())
+    expect(submit.mock.calls[0]?.[0]).not.toHaveProperty('treatmentCaseId')
+    expect(fetcher).not.toHaveBeenCalled()
   })
   it('does not request cases without read permission or expose manual keys', () => { session([]); const fetcher = vi.fn(); vi.stubGlobal('fetch', fetcher); render(<TreatmentCasesSection patientId="11" active />); expect(fetcher).not.toHaveBeenCalled(); expect(screen.queryByRole('button', { name: 'Create treatment case' })).not.toBeInTheDocument() })
   it('shows server-readonly linked cases without edit/status/delete controls', async () => {

@@ -62,6 +62,11 @@ export const createEncounter = (id: EntityId, body: EncounterWriteDto) =>
     method: 'POST',
     body,
   })
+export const startServiceAttention = (id: EntityId) =>
+  apiFetch<ClinicalEncounter>(`/appointments/${id}/clinical-encounter/start`, { method: 'POST' })
+
+export const finishServiceAttention = (id: EntityId) =>
+  apiFetch<ClinicalEncounter>(`/clinical-encounters/${id}/finish-services`, { method: 'POST' })
 export const updateEncounter = (id: EntityId, body: EncounterWriteDto) =>
   apiFetch<ClinicalEncounter>(`/clinical-encounters/${id}`, {
     method: 'PATCH',
@@ -108,7 +113,7 @@ export const getTariff = (id: EntityId, serviceDate: string, signal?: AbortSigna
 const proceduresPath = (id: EntityId) => `/clinical-encounters/${id}/procedures`
 export const listProcedures = (id: EntityId, signal?: AbortSignal) =>
   apiFetch<EncounterProcedure[]>(proceduresPath(id), { signal })
-export const addProcedure = (id: EntityId, body: ProcedureWriteDto) =>
+export const addProcedure = (id: EntityId, body: ProcedureWriteDto | Pick<ProcedureWriteDto, 'svbProcedureId' | 'quantity'>) =>
   apiFetch<EncounterProcedure>(proceduresPath(id), { method: 'POST', body })
 export const updateProcedure = (
   id: EntityId,

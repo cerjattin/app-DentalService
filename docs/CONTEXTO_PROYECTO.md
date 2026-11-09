@@ -1,8 +1,36 @@
 # Contexto compartido del proyecto
 
+## Vigencia — 7 de noviembre de 2026, OPS-01 a OPS-05
+
+Prevalecen [contratos OPS](negocio/CONTRATOS_OPERACION_20261107.md) y [atención/facturación/Dentalink](negocio/CONTRATO_ATENCION_FACTURACION_DENTALINK_20261106.md). La autorización vigente permite modificaciones y QA **locales**, con archivos/entornos propios; no escrituras clínicas, importaciones reales, migraciones remotas, cambios de credenciales ni commit/push/deploy.
+
+| Etapa actual | Autoridad por permisos | Regla |
+| --- | --- | --- |
+| Agenda y confirmación | Recepción/Admin | Crear, confirmar, cancelar o reprogramar antes del inicio |
+| Servicios prestados | Profesional/Admin | Inicio desde CONFIRMED; catálogo/cantidad, retirar y reagregar antes del cierre. Sin diagnóstico/nota médica, seguro, tarifa, autorización o remisión como requisito de captura nueva |
+| Entrega conjunta | Profesional/Admin | Al menos un servicio PERFORMED; completar atención+cita en una transacción y entregar a Recepción |
+| Factura y firma | Recepción/Admin | Resolver seguro/moneda/tarifa al facturar. Error administrativo conserva servicios para reintento. Firma de versión exacta e historial inmutable |
+| Corrección/reportes | Permisos efectivos | Misma factura/número y nuevas versiones/firmas según contrato. Volumen sin precio separado de importes/monedas/estados |
+
+Los perfiles de esta tabla son orientación operativa: Backend autoriza por permisos/organización, sin atajos de rol. El cuerpo legado con seguro conserva su contrato específico; el historial médico no se borra, pero no define requisitos ni pantallas del nuevo recorrido. Las restricciones antiguas UAT07/diagnóstico/notas del 3 de noviembre quedan históricas para ese cliente legado, no se aplican como bloqueo de la captura mínima nueva.
+
+**Repositorio comprobado al arrancar OPS:** HEAD `1828797be5abb6d97292dc298dafd6e3976ff9b8` más cambios locales. PostgreSQL/PrismaPg; endpoints start y finish-services montados, DTO mínimo y valoración en factura, pantalla Service attention y métricas de volumen presentes. `20261106000000_service_attention` es la séptima migración local al iniciar la ronda: nullable de valoración y permisos del PROVIDER incorporado. Su aplicación al destino **no está comprobada por Arquitectura**. DB puede añadir otra migración Dentalink; el manifiesto final debe incluir la cadena efectivamente entregada.
+
+**Despliegue:** el usuario informa que ya existe. Se registra como **INFORMADO POR USUARIO**, sin observación directa de URL/versión/schema/Storage. El conector Render está disponible pero no tiene workspace seleccionado; esta ronda no eligió uno ni consultó servicios. Los YAML y precios propuestos del 3 de noviembre no prueban plataforma/plan/factura reales. [Procedimiento de actualización](arquitectura/OPS_05_ACTUALIZACION_DESTINO.md).
+
+**Dentalink:** clínica sin acceso API. Preparar módulo interno/adaptador inyectable y prueba sintética; ninguna simulación acredita conexión/importación real. [Acuerdo de persistencia DB](base-de-datos/OPS_03_MODELO_DENTALINK.md), [dependencias de handoff](arquitectura/OPS_05_COORDINACION_DENTALINK.md). Credencial solo Backend. Primera entrega: pacientes/citas nuevos, identidades por organización/cuenta/ID y citas SCHEDULED; sin fusión por nombre ni cambio de números históricos, actualizaciones externas o escritura al proveedor por inferencia.
+
+**Propiedad:** DB es único escritor de schema/migraciones/cliente generado; Backend API/servicios/repositorios; Frontend componentes/caché; Diseño inspección independiente y escritura UI solo por asignación expresa; Negocio reglas/aceptación; Arquitectura contexto/plan/candidato. Cada área usa QA sintético propio, sin compartir ni limpiar laboratorios ajenos. `deployment/prod-ca-2021.crt` y la captura Supabase se conservan; no son entradas del artefacto de código.
+
+**Evidencia de partida, no ejecución fresca de Arquitectura:** Negocio reporta el 7 de noviembre 482 pruebas Backend aprobadas en 60 archivos, con recuperación optativa omitida. En ensayo aislado de recuperación: 2 PASS y 1 timeout a 120 s, asignado a DB. Frontend lint/build/345 pruebas y Backend build del 6 de noviembre; Backend typecheck del 7. Nuevas ediciones OPS necesitan evidencia propia. Recuperación no aprobada por esos conteos; tampoco navegador, Dentalink real, operación de destino o aceptación del cliente. [Entrega OPS-05](arquitectura/OPS_05_ENTREGA.md).
+
+SVB y reportes se conservan dentro del producto; nueva radicación sigue aplazada por estructura oficial. No inventar maestros/tarifas/campos fiscales ni interpretar exportación técnica como radicación real. IDs/Decimal strings, numeración transaccional, aislamiento y America/Curacao continúan vigentes.
+
+## Registro histórico del 3 de noviembre — no sustituye OPS
+
 Actualizado por Arquitectura: 3 de noviembre de 2026 (NEG-DEP-12). Consolidación histórica inicial: 30 de octubre. Repositorio: `C:\workspace\app-DentalService`.
 
-## Decisiones actuales del usuario
+## Decisiones registradas el 3 de noviembre
 
 1. Separar el trabajo en Arquitectura, Backend, Frontend, Lógica de negocio, Diseño y Base de datos, con seis chats especializados de Codex.
 2. Preparar ahora el primer despliegue clínico, conservando desarrollo/QA local y Express/Prisma/JWT/RBAC. [Cierre vigente y contratos DEP10–12](negocio/CIERRE_PRIMER_DESPLIEGUE_20261103.md).
@@ -19,7 +47,7 @@ Frontend: React, Vite, TypeScript, Tailwind 4, React Router, TanStack Query, Rea
 
 La implementación actual usa **PostgreSQL con PrismaPg**, un cliente compartido por runtime/scripts/seeds y migraciones separadas de MySQL. Express conserva autenticación, permisos, aislamiento por organización y reglas. La interfaz consume Express; no accede directamente a tablas ni claves privadas de Supabase. El adaptador opcional de Supabase Storage privado ya existe; configurar SUPABASE no transfiere documentos locales anteriores ni acredita persistencia remota.
 
-## Estado comprobado en disco
+## Estado comprobado en disco el 3 de noviembre
 
 | Área | Evidencia local | Interpretación |
 | --- | --- | --- |

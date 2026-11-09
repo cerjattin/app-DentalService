@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 const state = vi.hoisted(() => {
   const tx = {
+    $queryRaw: vi.fn(),
     invoice: { findMany: vi.fn() }, invoiceCorrection: { findFirst: vi.fn() },
     encounterProcedure: { delete: vi.fn(), update: vi.fn() },
     svbAuthorizationItem: { findUnique: vi.fn(), update: vi.fn() },
@@ -10,7 +11,7 @@ const state = vi.hoisted(() => {
   return { tx, encounter: vi.fn(), procedure: vi.fn(), transaction: vi.fn(async (work: (client: typeof tx) => Promise<unknown>) => work(tx)) };
 });
 vi.mock("../../src/infrastructure/database/prisma.js", () => ({ prisma: { $transaction: state.transaction } }));
-vi.mock("../../src/modules/clinical-encounters/clinical-encounter.repository.js", () => ({ clinicalEncounterRepository: { findById: state.encounter } }));
+vi.mock("../../src/modules/clinical-encounters/clinical-encounter.repository.js", () => ({ clinicalEncounterRepository: { findById: state.encounter, lockForEncounter: vi.fn() } }));
 vi.mock("../../src/modules/encounter-procedures/encounter-procedure.repository.js", () => ({ encounterProcedureRepository: { findById: state.procedure }, encounterProcedureSelect: {} }));
 vi.mock("../../src/modules/encounter-procedures/encounter-procedure.types.js", () => ({ toEncounterProcedureResponse: (value: unknown) => value }));
 import { Prisma } from "../../src/generated/prisma/client.js";

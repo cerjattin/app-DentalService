@@ -60,9 +60,10 @@ export function listInvoices(filters: InvoiceFilters, signal?: AbortSignal) {
 export function getInvoice(id: EntityId, signal?: AbortSignal) {
   return apiFetch<Invoice>(`/invoices/${id}`, { signal })
 }
-export function createInvoice(appointmentId: EntityId) {
+export function createInvoice(appointmentId: EntityId, billing?: { patientInsuranceId?: EntityId; currencyCode?: string }) {
   return apiFetch<Invoice>(`/appointments/${appointmentId}/invoice`, {
     method: 'POST',
+    ...(billing ? { body: billing } : {}),
   })
 }
 export function returnInvoiceToCare(id: EntityId, body: { reason: string; expectedVersionId: EntityId }) {

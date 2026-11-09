@@ -388,6 +388,8 @@ export type AppointmentWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   appointmentNumberSearch?: Prisma.StringFilter<"Appointment"> | string
   reasonSearch?: Prisma.StringNullableFilter<"Appointment"> | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemListRelationFilter
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityListRelationFilter
   statusHistory?: Prisma.AppointmentStatusHistoryListRelationFilter
   accidentCase?: Prisma.XOR<Prisma.AccidentCaseNullableScalarRelationFilter, Prisma.AccidentCaseWhereInput> | null
   createdByUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -424,6 +426,8 @@ export type AppointmentOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   appointmentNumberSearch?: Prisma.SortOrder
   reasonSearch?: Prisma.SortOrderInput | Prisma.SortOrder
+  dentalinkItems?: Prisma.DentalinkImportItemOrderByRelationAggregateInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityOrderByRelationAggregateInput
   statusHistory?: Prisma.AppointmentStatusHistoryOrderByRelationAggregateInput
   accidentCase?: Prisma.AccidentCaseOrderByWithRelationInput
   createdByUser?: Prisma.UserOrderByWithRelationInput
@@ -439,6 +443,7 @@ export type AppointmentOrderByWithRelationInput = {
 export type AppointmentWhereUniqueInput = Prisma.AtLeast<{
   id?: bigint | number
   organizationId_appointmentNumber?: Prisma.AppointmentOrganizationIdAppointmentNumberCompoundUniqueInput
+  organizationId_id?: Prisma.AppointmentOrganizationIdIdCompoundUniqueInput
   AND?: Prisma.AppointmentWhereInput | Prisma.AppointmentWhereInput[]
   OR?: Prisma.AppointmentWhereInput[]
   NOT?: Prisma.AppointmentWhereInput | Prisma.AppointmentWhereInput[]
@@ -464,6 +469,8 @@ export type AppointmentWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   appointmentNumberSearch?: Prisma.StringFilter<"Appointment"> | string
   reasonSearch?: Prisma.StringNullableFilter<"Appointment"> | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemListRelationFilter
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityListRelationFilter
   statusHistory?: Prisma.AppointmentStatusHistoryListRelationFilter
   accidentCase?: Prisma.XOR<Prisma.AccidentCaseNullableScalarRelationFilter, Prisma.AccidentCaseWhereInput> | null
   createdByUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -474,7 +481,7 @@ export type AppointmentWhereUniqueInput = Prisma.AtLeast<{
   treatmentCase?: Prisma.XOR<Prisma.TreatmentCaseNullableScalarRelationFilter, Prisma.TreatmentCaseWhereInput> | null
   clinicalEncounter?: Prisma.XOR<Prisma.ClinicalEncounterNullableScalarRelationFilter, Prisma.ClinicalEncounterWhereInput> | null
   invoice?: Prisma.XOR<Prisma.InvoiceNullableScalarRelationFilter, Prisma.InvoiceWhereInput> | null
-}, "id" | "organizationId_appointmentNumber">
+}, "id" | "organizationId_appointmentNumber" | "organizationId_id">
 
 export type AppointmentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -553,6 +560,8 @@ export type AppointmentCreateInput = {
   updatedAt?: Date | string
   appointmentNumberSearch?: string
   reasonSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemCreateNestedManyWithoutAppointmentInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityCreateNestedManyWithoutAppointmentInput
   statusHistory?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutAppointmentInput
   accidentCase?: Prisma.AccidentCaseCreateNestedOneWithoutAppointmentsInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedAppointmentsInput
@@ -589,6 +598,8 @@ export type AppointmentUncheckedCreateInput = {
   updatedAt?: Date | string
   appointmentNumberSearch?: string
   reasonSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedCreateNestedManyWithoutAppointmentInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedCreateNestedManyWithoutAppointmentInput
   statusHistory?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutAppointmentInput
   clinicalEncounter?: Prisma.ClinicalEncounterUncheckedCreateNestedOneWithoutAppointmentInput
   invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutAppointmentInput
@@ -611,6 +622,8 @@ export type AppointmentUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
   reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUpdateManyWithoutAppointmentNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUpdateManyWithoutAppointmentNestedInput
   statusHistory?: Prisma.AppointmentStatusHistoryUpdateManyWithoutAppointmentNestedInput
   accidentCase?: Prisma.AccidentCaseUpdateOneWithoutAppointmentsNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedAppointmentsNestedInput
@@ -647,6 +660,8 @@ export type AppointmentUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
   reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedUpdateManyWithoutAppointmentNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedUpdateManyWithoutAppointmentNestedInput
   statusHistory?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutAppointmentNestedInput
   clinicalEncounter?: Prisma.ClinicalEncounterUncheckedUpdateOneWithoutAppointmentNestedInput
   invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutAppointmentNestedInput
@@ -741,6 +756,11 @@ export type AppointmentScalarRelationFilter = {
 export type AppointmentOrganizationIdAppointmentNumberCompoundUniqueInput = {
   organizationId: bigint | number
   appointmentNumber: string
+}
+
+export type AppointmentOrganizationIdIdCompoundUniqueInput = {
+  organizationId: bigint | number
+  id: bigint | number
 }
 
 export type AppointmentCountOrderByAggregateInput = {
@@ -841,6 +861,11 @@ export type AppointmentSumOrderByAggregateInput = {
   treatmentCaseId?: Prisma.SortOrder
   accidentCaseId?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
+}
+
+export type AppointmentNullableScalarRelationFilter = {
+  is?: Prisma.AppointmentWhereInput | null
+  isNot?: Prisma.AppointmentWhereInput | null
 }
 
 export type AppointmentCreateNestedManyWithoutAccidentCaseInput = {
@@ -1183,6 +1208,38 @@ export type AppointmentUncheckedUpdateManyWithoutCreatedByUserNestedInput = {
   deleteMany?: Prisma.AppointmentScalarWhereInput | Prisma.AppointmentScalarWhereInput[]
 }
 
+export type AppointmentCreateNestedOneWithoutDentalinkItemsInput = {
+  create?: Prisma.XOR<Prisma.AppointmentCreateWithoutDentalinkItemsInput, Prisma.AppointmentUncheckedCreateWithoutDentalinkItemsInput>
+  connectOrCreate?: Prisma.AppointmentCreateOrConnectWithoutDentalinkItemsInput
+  connect?: Prisma.AppointmentWhereUniqueInput
+}
+
+export type AppointmentUpdateOneWithoutDentalinkItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.AppointmentCreateWithoutDentalinkItemsInput, Prisma.AppointmentUncheckedCreateWithoutDentalinkItemsInput>
+  connectOrCreate?: Prisma.AppointmentCreateOrConnectWithoutDentalinkItemsInput
+  upsert?: Prisma.AppointmentUpsertWithoutDentalinkItemsInput
+  disconnect?: Prisma.AppointmentWhereInput | boolean
+  delete?: Prisma.AppointmentWhereInput | boolean
+  connect?: Prisma.AppointmentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AppointmentUpdateToOneWithWhereWithoutDentalinkItemsInput, Prisma.AppointmentUpdateWithoutDentalinkItemsInput>, Prisma.AppointmentUncheckedUpdateWithoutDentalinkItemsInput>
+}
+
+export type AppointmentCreateNestedOneWithoutDentalinkIdentitiesInput = {
+  create?: Prisma.XOR<Prisma.AppointmentCreateWithoutDentalinkIdentitiesInput, Prisma.AppointmentUncheckedCreateWithoutDentalinkIdentitiesInput>
+  connectOrCreate?: Prisma.AppointmentCreateOrConnectWithoutDentalinkIdentitiesInput
+  connect?: Prisma.AppointmentWhereUniqueInput
+}
+
+export type AppointmentUpdateOneWithoutDentalinkIdentitiesNestedInput = {
+  create?: Prisma.XOR<Prisma.AppointmentCreateWithoutDentalinkIdentitiesInput, Prisma.AppointmentUncheckedCreateWithoutDentalinkIdentitiesInput>
+  connectOrCreate?: Prisma.AppointmentCreateOrConnectWithoutDentalinkIdentitiesInput
+  upsert?: Prisma.AppointmentUpsertWithoutDentalinkIdentitiesInput
+  disconnect?: Prisma.AppointmentWhereInput | boolean
+  delete?: Prisma.AppointmentWhereInput | boolean
+  connect?: Prisma.AppointmentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AppointmentUpdateToOneWithWhereWithoutDentalinkIdentitiesInput, Prisma.AppointmentUpdateWithoutDentalinkIdentitiesInput>, Prisma.AppointmentUncheckedUpdateWithoutDentalinkIdentitiesInput>
+}
+
 export type AppointmentCreateWithoutAccidentCaseInput = {
   id?: bigint | number
   appointmentNumber: string
@@ -1200,6 +1257,8 @@ export type AppointmentCreateWithoutAccidentCaseInput = {
   updatedAt?: Date | string
   appointmentNumberSearch?: string
   reasonSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemCreateNestedManyWithoutAppointmentInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityCreateNestedManyWithoutAppointmentInput
   statusHistory?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutAppointmentInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedAppointmentsInput
   clinicLocation: Prisma.ClinicLocationCreateNestedOneWithoutAppointmentsInput
@@ -1234,6 +1293,8 @@ export type AppointmentUncheckedCreateWithoutAccidentCaseInput = {
   updatedAt?: Date | string
   appointmentNumberSearch?: string
   reasonSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedCreateNestedManyWithoutAppointmentInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedCreateNestedManyWithoutAppointmentInput
   statusHistory?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutAppointmentInput
   clinicalEncounter?: Prisma.ClinicalEncounterUncheckedCreateNestedOneWithoutAppointmentInput
   invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutAppointmentInput
@@ -1311,6 +1372,8 @@ export type AppointmentCreateWithoutStatusHistoryInput = {
   updatedAt?: Date | string
   appointmentNumberSearch?: string
   reasonSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemCreateNestedManyWithoutAppointmentInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityCreateNestedManyWithoutAppointmentInput
   accidentCase?: Prisma.AccidentCaseCreateNestedOneWithoutAppointmentsInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedAppointmentsInput
   clinicLocation: Prisma.ClinicLocationCreateNestedOneWithoutAppointmentsInput
@@ -1346,6 +1409,8 @@ export type AppointmentUncheckedCreateWithoutStatusHistoryInput = {
   updatedAt?: Date | string
   appointmentNumberSearch?: string
   reasonSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedCreateNestedManyWithoutAppointmentInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedCreateNestedManyWithoutAppointmentInput
   clinicalEncounter?: Prisma.ClinicalEncounterUncheckedCreateNestedOneWithoutAppointmentInput
   invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutAppointmentInput
 }
@@ -1383,6 +1448,8 @@ export type AppointmentUpdateWithoutStatusHistoryInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
   reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUpdateManyWithoutAppointmentNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUpdateManyWithoutAppointmentNestedInput
   accidentCase?: Prisma.AccidentCaseUpdateOneWithoutAppointmentsNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedAppointmentsNestedInput
   clinicLocation?: Prisma.ClinicLocationUpdateOneRequiredWithoutAppointmentsNestedInput
@@ -1418,6 +1485,8 @@ export type AppointmentUncheckedUpdateWithoutStatusHistoryInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
   reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedUpdateManyWithoutAppointmentNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedUpdateManyWithoutAppointmentNestedInput
   clinicalEncounter?: Prisma.ClinicalEncounterUncheckedUpdateOneWithoutAppointmentNestedInput
   invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutAppointmentNestedInput
 }
@@ -1439,6 +1508,8 @@ export type AppointmentCreateWithoutClinicLocationInput = {
   updatedAt?: Date | string
   appointmentNumberSearch?: string
   reasonSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemCreateNestedManyWithoutAppointmentInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityCreateNestedManyWithoutAppointmentInput
   statusHistory?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutAppointmentInput
   accidentCase?: Prisma.AccidentCaseCreateNestedOneWithoutAppointmentsInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedAppointmentsInput
@@ -1473,6 +1544,8 @@ export type AppointmentUncheckedCreateWithoutClinicLocationInput = {
   updatedAt?: Date | string
   appointmentNumberSearch?: string
   reasonSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedCreateNestedManyWithoutAppointmentInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedCreateNestedManyWithoutAppointmentInput
   statusHistory?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutAppointmentInput
   clinicalEncounter?: Prisma.ClinicalEncounterUncheckedCreateNestedOneWithoutAppointmentInput
   invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutAppointmentInput
@@ -1521,6 +1594,8 @@ export type AppointmentCreateWithoutClinicalEncounterInput = {
   updatedAt?: Date | string
   appointmentNumberSearch?: string
   reasonSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemCreateNestedManyWithoutAppointmentInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityCreateNestedManyWithoutAppointmentInput
   statusHistory?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutAppointmentInput
   accidentCase?: Prisma.AccidentCaseCreateNestedOneWithoutAppointmentsInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedAppointmentsInput
@@ -1556,6 +1631,8 @@ export type AppointmentUncheckedCreateWithoutClinicalEncounterInput = {
   updatedAt?: Date | string
   appointmentNumberSearch?: string
   reasonSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedCreateNestedManyWithoutAppointmentInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedCreateNestedManyWithoutAppointmentInput
   statusHistory?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutAppointmentInput
   invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutAppointmentInput
 }
@@ -1593,6 +1670,8 @@ export type AppointmentUpdateWithoutClinicalEncounterInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
   reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUpdateManyWithoutAppointmentNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUpdateManyWithoutAppointmentNestedInput
   statusHistory?: Prisma.AppointmentStatusHistoryUpdateManyWithoutAppointmentNestedInput
   accidentCase?: Prisma.AccidentCaseUpdateOneWithoutAppointmentsNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedAppointmentsNestedInput
@@ -1628,6 +1707,8 @@ export type AppointmentUncheckedUpdateWithoutClinicalEncounterInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
   reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedUpdateManyWithoutAppointmentNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedUpdateManyWithoutAppointmentNestedInput
   statusHistory?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutAppointmentNestedInput
   invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutAppointmentNestedInput
 }
@@ -1649,6 +1730,8 @@ export type AppointmentCreateWithoutInvoiceInput = {
   updatedAt?: Date | string
   appointmentNumberSearch?: string
   reasonSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemCreateNestedManyWithoutAppointmentInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityCreateNestedManyWithoutAppointmentInput
   statusHistory?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutAppointmentInput
   accidentCase?: Prisma.AccidentCaseCreateNestedOneWithoutAppointmentsInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedAppointmentsInput
@@ -1684,6 +1767,8 @@ export type AppointmentUncheckedCreateWithoutInvoiceInput = {
   updatedAt?: Date | string
   appointmentNumberSearch?: string
   reasonSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedCreateNestedManyWithoutAppointmentInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedCreateNestedManyWithoutAppointmentInput
   statusHistory?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutAppointmentInput
   clinicalEncounter?: Prisma.ClinicalEncounterUncheckedCreateNestedOneWithoutAppointmentInput
 }
@@ -1721,6 +1806,8 @@ export type AppointmentUpdateWithoutInvoiceInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
   reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUpdateManyWithoutAppointmentNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUpdateManyWithoutAppointmentNestedInput
   statusHistory?: Prisma.AppointmentStatusHistoryUpdateManyWithoutAppointmentNestedInput
   accidentCase?: Prisma.AccidentCaseUpdateOneWithoutAppointmentsNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedAppointmentsNestedInput
@@ -1756,6 +1843,8 @@ export type AppointmentUncheckedUpdateWithoutInvoiceInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
   reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedUpdateManyWithoutAppointmentNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedUpdateManyWithoutAppointmentNestedInput
   statusHistory?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutAppointmentNestedInput
   clinicalEncounter?: Prisma.ClinicalEncounterUncheckedUpdateOneWithoutAppointmentNestedInput
 }
@@ -1777,6 +1866,8 @@ export type AppointmentCreateWithoutOrganizationInput = {
   updatedAt?: Date | string
   appointmentNumberSearch?: string
   reasonSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemCreateNestedManyWithoutAppointmentInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityCreateNestedManyWithoutAppointmentInput
   statusHistory?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutAppointmentInput
   accidentCase?: Prisma.AccidentCaseCreateNestedOneWithoutAppointmentsInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedAppointmentsInput
@@ -1811,6 +1902,8 @@ export type AppointmentUncheckedCreateWithoutOrganizationInput = {
   updatedAt?: Date | string
   appointmentNumberSearch?: string
   reasonSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedCreateNestedManyWithoutAppointmentInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedCreateNestedManyWithoutAppointmentInput
   statusHistory?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutAppointmentInput
   clinicalEncounter?: Prisma.ClinicalEncounterUncheckedCreateNestedOneWithoutAppointmentInput
   invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutAppointmentInput
@@ -1859,6 +1952,8 @@ export type AppointmentCreateWithoutPatientInput = {
   updatedAt?: Date | string
   appointmentNumberSearch?: string
   reasonSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemCreateNestedManyWithoutAppointmentInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityCreateNestedManyWithoutAppointmentInput
   statusHistory?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutAppointmentInput
   accidentCase?: Prisma.AccidentCaseCreateNestedOneWithoutAppointmentsInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedAppointmentsInput
@@ -1893,6 +1988,8 @@ export type AppointmentUncheckedCreateWithoutPatientInput = {
   updatedAt?: Date | string
   appointmentNumberSearch?: string
   reasonSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedCreateNestedManyWithoutAppointmentInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedCreateNestedManyWithoutAppointmentInput
   statusHistory?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutAppointmentInput
   clinicalEncounter?: Prisma.ClinicalEncounterUncheckedCreateNestedOneWithoutAppointmentInput
   invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutAppointmentInput
@@ -1941,6 +2038,8 @@ export type AppointmentCreateWithoutProviderInput = {
   updatedAt?: Date | string
   appointmentNumberSearch?: string
   reasonSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemCreateNestedManyWithoutAppointmentInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityCreateNestedManyWithoutAppointmentInput
   statusHistory?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutAppointmentInput
   accidentCase?: Prisma.AccidentCaseCreateNestedOneWithoutAppointmentsInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedAppointmentsInput
@@ -1975,6 +2074,8 @@ export type AppointmentUncheckedCreateWithoutProviderInput = {
   updatedAt?: Date | string
   appointmentNumberSearch?: string
   reasonSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedCreateNestedManyWithoutAppointmentInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedCreateNestedManyWithoutAppointmentInput
   statusHistory?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutAppointmentInput
   clinicalEncounter?: Prisma.ClinicalEncounterUncheckedCreateNestedOneWithoutAppointmentInput
   invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutAppointmentInput
@@ -2023,6 +2124,8 @@ export type AppointmentCreateWithoutTreatmentCaseInput = {
   updatedAt?: Date | string
   appointmentNumberSearch?: string
   reasonSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemCreateNestedManyWithoutAppointmentInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityCreateNestedManyWithoutAppointmentInput
   statusHistory?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutAppointmentInput
   accidentCase?: Prisma.AccidentCaseCreateNestedOneWithoutAppointmentsInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedAppointmentsInput
@@ -2057,6 +2160,8 @@ export type AppointmentUncheckedCreateWithoutTreatmentCaseInput = {
   updatedAt?: Date | string
   appointmentNumberSearch?: string
   reasonSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedCreateNestedManyWithoutAppointmentInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedCreateNestedManyWithoutAppointmentInput
   statusHistory?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutAppointmentInput
   clinicalEncounter?: Prisma.ClinicalEncounterUncheckedCreateNestedOneWithoutAppointmentInput
   invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutAppointmentInput
@@ -2105,6 +2210,8 @@ export type AppointmentCreateWithoutCreatedByUserInput = {
   updatedAt?: Date | string
   appointmentNumberSearch?: string
   reasonSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemCreateNestedManyWithoutAppointmentInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityCreateNestedManyWithoutAppointmentInput
   statusHistory?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutAppointmentInput
   accidentCase?: Prisma.AccidentCaseCreateNestedOneWithoutAppointmentsInput
   clinicLocation: Prisma.ClinicLocationCreateNestedOneWithoutAppointmentsInput
@@ -2139,6 +2246,8 @@ export type AppointmentUncheckedCreateWithoutCreatedByUserInput = {
   updatedAt?: Date | string
   appointmentNumberSearch?: string
   reasonSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedCreateNestedManyWithoutAppointmentInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedCreateNestedManyWithoutAppointmentInput
   statusHistory?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutAppointmentInput
   clinicalEncounter?: Prisma.ClinicalEncounterUncheckedCreateNestedOneWithoutAppointmentInput
   invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutAppointmentInput
@@ -2168,6 +2277,278 @@ export type AppointmentUpdateWithWhereUniqueWithoutCreatedByUserInput = {
 export type AppointmentUpdateManyWithWhereWithoutCreatedByUserInput = {
   where: Prisma.AppointmentScalarWhereInput
   data: Prisma.XOR<Prisma.AppointmentUpdateManyMutationInput, Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByUserInput>
+}
+
+export type AppointmentCreateWithoutDentalinkItemsInput = {
+  id?: bigint | number
+  appointmentNumber: string
+  scheduledStartAt: Date | string
+  scheduledEndAt: Date | string
+  status?: $Enums.AppointmentStatus
+  reason?: string | null
+  notes?: string | null
+  checkedInAt?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  cancellationReason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  appointmentNumberSearch?: string
+  reasonSearch?: string | null
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityCreateNestedManyWithoutAppointmentInput
+  statusHistory?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutAppointmentInput
+  accidentCase?: Prisma.AccidentCaseCreateNestedOneWithoutAppointmentsInput
+  createdByUser: Prisma.UserCreateNestedOneWithoutCreatedAppointmentsInput
+  clinicLocation: Prisma.ClinicLocationCreateNestedOneWithoutAppointmentsInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutAppointmentsInput
+  patient: Prisma.PatientCreateNestedOneWithoutAppointmentsInput
+  provider: Prisma.ProviderCreateNestedOneWithoutAppointmentsInput
+  treatmentCase?: Prisma.TreatmentCaseCreateNestedOneWithoutAppointmentsInput
+  clinicalEncounter?: Prisma.ClinicalEncounterCreateNestedOneWithoutAppointmentInput
+  invoice?: Prisma.InvoiceCreateNestedOneWithoutAppointmentInput
+}
+
+export type AppointmentUncheckedCreateWithoutDentalinkItemsInput = {
+  id?: bigint | number
+  organizationId: bigint | number
+  appointmentNumber: string
+  patientId: bigint | number
+  providerId: bigint | number
+  clinicLocationId: bigint | number
+  treatmentCaseId?: bigint | number | null
+  accidentCaseId?: bigint | number | null
+  scheduledStartAt: Date | string
+  scheduledEndAt: Date | string
+  status?: $Enums.AppointmentStatus
+  reason?: string | null
+  notes?: string | null
+  createdByUserId: bigint | number
+  checkedInAt?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  cancellationReason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  appointmentNumberSearch?: string
+  reasonSearch?: string | null
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedCreateNestedManyWithoutAppointmentInput
+  statusHistory?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutAppointmentInput
+  clinicalEncounter?: Prisma.ClinicalEncounterUncheckedCreateNestedOneWithoutAppointmentInput
+  invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutAppointmentInput
+}
+
+export type AppointmentCreateOrConnectWithoutDentalinkItemsInput = {
+  where: Prisma.AppointmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.AppointmentCreateWithoutDentalinkItemsInput, Prisma.AppointmentUncheckedCreateWithoutDentalinkItemsInput>
+}
+
+export type AppointmentUpsertWithoutDentalinkItemsInput = {
+  update: Prisma.XOR<Prisma.AppointmentUpdateWithoutDentalinkItemsInput, Prisma.AppointmentUncheckedUpdateWithoutDentalinkItemsInput>
+  create: Prisma.XOR<Prisma.AppointmentCreateWithoutDentalinkItemsInput, Prisma.AppointmentUncheckedCreateWithoutDentalinkItemsInput>
+  where?: Prisma.AppointmentWhereInput
+}
+
+export type AppointmentUpdateToOneWithWhereWithoutDentalinkItemsInput = {
+  where?: Prisma.AppointmentWhereInput
+  data: Prisma.XOR<Prisma.AppointmentUpdateWithoutDentalinkItemsInput, Prisma.AppointmentUncheckedUpdateWithoutDentalinkItemsInput>
+}
+
+export type AppointmentUpdateWithoutDentalinkItemsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  appointmentNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduledStartAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduledEndAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUpdateManyWithoutAppointmentNestedInput
+  statusHistory?: Prisma.AppointmentStatusHistoryUpdateManyWithoutAppointmentNestedInput
+  accidentCase?: Prisma.AccidentCaseUpdateOneWithoutAppointmentsNestedInput
+  createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedAppointmentsNestedInput
+  clinicLocation?: Prisma.ClinicLocationUpdateOneRequiredWithoutAppointmentsNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutAppointmentsNestedInput
+  patient?: Prisma.PatientUpdateOneRequiredWithoutAppointmentsNestedInput
+  provider?: Prisma.ProviderUpdateOneRequiredWithoutAppointmentsNestedInput
+  treatmentCase?: Prisma.TreatmentCaseUpdateOneWithoutAppointmentsNestedInput
+  clinicalEncounter?: Prisma.ClinicalEncounterUpdateOneWithoutAppointmentNestedInput
+  invoice?: Prisma.InvoiceUpdateOneWithoutAppointmentNestedInput
+}
+
+export type AppointmentUncheckedUpdateWithoutDentalinkItemsInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  organizationId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  appointmentNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  patientId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  providerId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  clinicLocationId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  treatmentCaseId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  accidentCaseId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  scheduledStartAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduledEndAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedUpdateManyWithoutAppointmentNestedInput
+  statusHistory?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutAppointmentNestedInput
+  clinicalEncounter?: Prisma.ClinicalEncounterUncheckedUpdateOneWithoutAppointmentNestedInput
+  invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutAppointmentNestedInput
+}
+
+export type AppointmentCreateWithoutDentalinkIdentitiesInput = {
+  id?: bigint | number
+  appointmentNumber: string
+  scheduledStartAt: Date | string
+  scheduledEndAt: Date | string
+  status?: $Enums.AppointmentStatus
+  reason?: string | null
+  notes?: string | null
+  checkedInAt?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  cancellationReason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  appointmentNumberSearch?: string
+  reasonSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemCreateNestedManyWithoutAppointmentInput
+  statusHistory?: Prisma.AppointmentStatusHistoryCreateNestedManyWithoutAppointmentInput
+  accidentCase?: Prisma.AccidentCaseCreateNestedOneWithoutAppointmentsInput
+  createdByUser: Prisma.UserCreateNestedOneWithoutCreatedAppointmentsInput
+  clinicLocation: Prisma.ClinicLocationCreateNestedOneWithoutAppointmentsInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutAppointmentsInput
+  patient: Prisma.PatientCreateNestedOneWithoutAppointmentsInput
+  provider: Prisma.ProviderCreateNestedOneWithoutAppointmentsInput
+  treatmentCase?: Prisma.TreatmentCaseCreateNestedOneWithoutAppointmentsInput
+  clinicalEncounter?: Prisma.ClinicalEncounterCreateNestedOneWithoutAppointmentInput
+  invoice?: Prisma.InvoiceCreateNestedOneWithoutAppointmentInput
+}
+
+export type AppointmentUncheckedCreateWithoutDentalinkIdentitiesInput = {
+  id?: bigint | number
+  organizationId: bigint | number
+  appointmentNumber: string
+  patientId: bigint | number
+  providerId: bigint | number
+  clinicLocationId: bigint | number
+  treatmentCaseId?: bigint | number | null
+  accidentCaseId?: bigint | number | null
+  scheduledStartAt: Date | string
+  scheduledEndAt: Date | string
+  status?: $Enums.AppointmentStatus
+  reason?: string | null
+  notes?: string | null
+  createdByUserId: bigint | number
+  checkedInAt?: Date | string | null
+  startedAt?: Date | string | null
+  completedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  cancellationReason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  appointmentNumberSearch?: string
+  reasonSearch?: string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedCreateNestedManyWithoutAppointmentInput
+  statusHistory?: Prisma.AppointmentStatusHistoryUncheckedCreateNestedManyWithoutAppointmentInput
+  clinicalEncounter?: Prisma.ClinicalEncounterUncheckedCreateNestedOneWithoutAppointmentInput
+  invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutAppointmentInput
+}
+
+export type AppointmentCreateOrConnectWithoutDentalinkIdentitiesInput = {
+  where: Prisma.AppointmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.AppointmentCreateWithoutDentalinkIdentitiesInput, Prisma.AppointmentUncheckedCreateWithoutDentalinkIdentitiesInput>
+}
+
+export type AppointmentUpsertWithoutDentalinkIdentitiesInput = {
+  update: Prisma.XOR<Prisma.AppointmentUpdateWithoutDentalinkIdentitiesInput, Prisma.AppointmentUncheckedUpdateWithoutDentalinkIdentitiesInput>
+  create: Prisma.XOR<Prisma.AppointmentCreateWithoutDentalinkIdentitiesInput, Prisma.AppointmentUncheckedCreateWithoutDentalinkIdentitiesInput>
+  where?: Prisma.AppointmentWhereInput
+}
+
+export type AppointmentUpdateToOneWithWhereWithoutDentalinkIdentitiesInput = {
+  where?: Prisma.AppointmentWhereInput
+  data: Prisma.XOR<Prisma.AppointmentUpdateWithoutDentalinkIdentitiesInput, Prisma.AppointmentUncheckedUpdateWithoutDentalinkIdentitiesInput>
+}
+
+export type AppointmentUpdateWithoutDentalinkIdentitiesInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  appointmentNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduledStartAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduledEndAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUpdateManyWithoutAppointmentNestedInput
+  statusHistory?: Prisma.AppointmentStatusHistoryUpdateManyWithoutAppointmentNestedInput
+  accidentCase?: Prisma.AccidentCaseUpdateOneWithoutAppointmentsNestedInput
+  createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedAppointmentsNestedInput
+  clinicLocation?: Prisma.ClinicLocationUpdateOneRequiredWithoutAppointmentsNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutAppointmentsNestedInput
+  patient?: Prisma.PatientUpdateOneRequiredWithoutAppointmentsNestedInput
+  provider?: Prisma.ProviderUpdateOneRequiredWithoutAppointmentsNestedInput
+  treatmentCase?: Prisma.TreatmentCaseUpdateOneWithoutAppointmentsNestedInput
+  clinicalEncounter?: Prisma.ClinicalEncounterUpdateOneWithoutAppointmentNestedInput
+  invoice?: Prisma.InvoiceUpdateOneWithoutAppointmentNestedInput
+}
+
+export type AppointmentUncheckedUpdateWithoutDentalinkIdentitiesInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  organizationId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  appointmentNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  patientId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  providerId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  clinicLocationId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  treatmentCaseId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  accidentCaseId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  scheduledStartAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduledEndAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByUserId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
+  reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedUpdateManyWithoutAppointmentNestedInput
+  statusHistory?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutAppointmentNestedInput
+  clinicalEncounter?: Prisma.ClinicalEncounterUncheckedUpdateOneWithoutAppointmentNestedInput
+  invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutAppointmentNestedInput
 }
 
 export type AppointmentCreateManyAccidentCaseInput = {
@@ -2212,6 +2593,8 @@ export type AppointmentUpdateWithoutAccidentCaseInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
   reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUpdateManyWithoutAppointmentNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUpdateManyWithoutAppointmentNestedInput
   statusHistory?: Prisma.AppointmentStatusHistoryUpdateManyWithoutAppointmentNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedAppointmentsNestedInput
   clinicLocation?: Prisma.ClinicLocationUpdateOneRequiredWithoutAppointmentsNestedInput
@@ -2246,6 +2629,8 @@ export type AppointmentUncheckedUpdateWithoutAccidentCaseInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
   reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedUpdateManyWithoutAppointmentNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedUpdateManyWithoutAppointmentNestedInput
   statusHistory?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutAppointmentNestedInput
   clinicalEncounter?: Prisma.ClinicalEncounterUncheckedUpdateOneWithoutAppointmentNestedInput
   invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutAppointmentNestedInput
@@ -2318,6 +2703,8 @@ export type AppointmentUpdateWithoutClinicLocationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
   reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUpdateManyWithoutAppointmentNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUpdateManyWithoutAppointmentNestedInput
   statusHistory?: Prisma.AppointmentStatusHistoryUpdateManyWithoutAppointmentNestedInput
   accidentCase?: Prisma.AccidentCaseUpdateOneWithoutAppointmentsNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedAppointmentsNestedInput
@@ -2352,6 +2739,8 @@ export type AppointmentUncheckedUpdateWithoutClinicLocationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
   reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedUpdateManyWithoutAppointmentNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedUpdateManyWithoutAppointmentNestedInput
   statusHistory?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutAppointmentNestedInput
   clinicalEncounter?: Prisma.ClinicalEncounterUncheckedUpdateOneWithoutAppointmentNestedInput
   invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutAppointmentNestedInput
@@ -2424,6 +2813,8 @@ export type AppointmentUpdateWithoutOrganizationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
   reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUpdateManyWithoutAppointmentNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUpdateManyWithoutAppointmentNestedInput
   statusHistory?: Prisma.AppointmentStatusHistoryUpdateManyWithoutAppointmentNestedInput
   accidentCase?: Prisma.AccidentCaseUpdateOneWithoutAppointmentsNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedAppointmentsNestedInput
@@ -2458,6 +2849,8 @@ export type AppointmentUncheckedUpdateWithoutOrganizationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
   reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedUpdateManyWithoutAppointmentNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedUpdateManyWithoutAppointmentNestedInput
   statusHistory?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutAppointmentNestedInput
   clinicalEncounter?: Prisma.ClinicalEncounterUncheckedUpdateOneWithoutAppointmentNestedInput
   invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutAppointmentNestedInput
@@ -2530,6 +2923,8 @@ export type AppointmentUpdateWithoutPatientInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
   reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUpdateManyWithoutAppointmentNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUpdateManyWithoutAppointmentNestedInput
   statusHistory?: Prisma.AppointmentStatusHistoryUpdateManyWithoutAppointmentNestedInput
   accidentCase?: Prisma.AccidentCaseUpdateOneWithoutAppointmentsNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedAppointmentsNestedInput
@@ -2564,6 +2959,8 @@ export type AppointmentUncheckedUpdateWithoutPatientInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
   reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedUpdateManyWithoutAppointmentNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedUpdateManyWithoutAppointmentNestedInput
   statusHistory?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutAppointmentNestedInput
   clinicalEncounter?: Prisma.ClinicalEncounterUncheckedUpdateOneWithoutAppointmentNestedInput
   invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutAppointmentNestedInput
@@ -2636,6 +3033,8 @@ export type AppointmentUpdateWithoutProviderInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
   reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUpdateManyWithoutAppointmentNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUpdateManyWithoutAppointmentNestedInput
   statusHistory?: Prisma.AppointmentStatusHistoryUpdateManyWithoutAppointmentNestedInput
   accidentCase?: Prisma.AccidentCaseUpdateOneWithoutAppointmentsNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedAppointmentsNestedInput
@@ -2670,6 +3069,8 @@ export type AppointmentUncheckedUpdateWithoutProviderInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
   reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedUpdateManyWithoutAppointmentNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedUpdateManyWithoutAppointmentNestedInput
   statusHistory?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutAppointmentNestedInput
   clinicalEncounter?: Prisma.ClinicalEncounterUncheckedUpdateOneWithoutAppointmentNestedInput
   invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutAppointmentNestedInput
@@ -2742,6 +3143,8 @@ export type AppointmentUpdateWithoutTreatmentCaseInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
   reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUpdateManyWithoutAppointmentNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUpdateManyWithoutAppointmentNestedInput
   statusHistory?: Prisma.AppointmentStatusHistoryUpdateManyWithoutAppointmentNestedInput
   accidentCase?: Prisma.AccidentCaseUpdateOneWithoutAppointmentsNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedAppointmentsNestedInput
@@ -2776,6 +3179,8 @@ export type AppointmentUncheckedUpdateWithoutTreatmentCaseInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
   reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedUpdateManyWithoutAppointmentNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedUpdateManyWithoutAppointmentNestedInput
   statusHistory?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutAppointmentNestedInput
   clinicalEncounter?: Prisma.ClinicalEncounterUncheckedUpdateOneWithoutAppointmentNestedInput
   invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutAppointmentNestedInput
@@ -2848,6 +3253,8 @@ export type AppointmentUpdateWithoutCreatedByUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
   reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUpdateManyWithoutAppointmentNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUpdateManyWithoutAppointmentNestedInput
   statusHistory?: Prisma.AppointmentStatusHistoryUpdateManyWithoutAppointmentNestedInput
   accidentCase?: Prisma.AccidentCaseUpdateOneWithoutAppointmentsNestedInput
   clinicLocation?: Prisma.ClinicLocationUpdateOneRequiredWithoutAppointmentsNestedInput
@@ -2882,6 +3289,8 @@ export type AppointmentUncheckedUpdateWithoutCreatedByUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointmentNumberSearch?: Prisma.StringFieldUpdateOperationsInput | string
   reasonSearch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dentalinkItems?: Prisma.DentalinkImportItemUncheckedUpdateManyWithoutAppointmentNestedInput
+  dentalinkIdentities?: Prisma.DentalinkExternalIdentityUncheckedUpdateManyWithoutAppointmentNestedInput
   statusHistory?: Prisma.AppointmentStatusHistoryUncheckedUpdateManyWithoutAppointmentNestedInput
   clinicalEncounter?: Prisma.ClinicalEncounterUncheckedUpdateOneWithoutAppointmentNestedInput
   invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutAppointmentNestedInput
@@ -2918,10 +3327,14 @@ export type AppointmentUncheckedUpdateManyWithoutCreatedByUserInput = {
  */
 
 export type AppointmentCountOutputType = {
+  dentalinkItems: number
+  dentalinkIdentities: number
   statusHistory: number
 }
 
 export type AppointmentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  dentalinkItems?: boolean | AppointmentCountOutputTypeCountDentalinkItemsArgs
+  dentalinkIdentities?: boolean | AppointmentCountOutputTypeCountDentalinkIdentitiesArgs
   statusHistory?: boolean | AppointmentCountOutputTypeCountStatusHistoryArgs
 }
 
@@ -2933,6 +3346,20 @@ export type AppointmentCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.
    * Select specific fields to fetch from the AppointmentCountOutputType
    */
   select?: Prisma.AppointmentCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * AppointmentCountOutputType without action
+ */
+export type AppointmentCountOutputTypeCountDentalinkItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DentalinkImportItemWhereInput
+}
+
+/**
+ * AppointmentCountOutputType without action
+ */
+export type AppointmentCountOutputTypeCountDentalinkIdentitiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DentalinkExternalIdentityWhereInput
 }
 
 /**
@@ -2967,6 +3394,8 @@ export type AppointmentSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   updatedAt?: boolean
   appointmentNumberSearch?: boolean
   reasonSearch?: boolean
+  dentalinkItems?: boolean | Prisma.Appointment$dentalinkItemsArgs<ExtArgs>
+  dentalinkIdentities?: boolean | Prisma.Appointment$dentalinkIdentitiesArgs<ExtArgs>
   statusHistory?: boolean | Prisma.Appointment$statusHistoryArgs<ExtArgs>
   accidentCase?: boolean | Prisma.Appointment$accidentCaseArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -3074,6 +3503,8 @@ export type AppointmentSelectScalar = {
 
 export type AppointmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "appointmentNumber" | "patientId" | "providerId" | "clinicLocationId" | "treatmentCaseId" | "accidentCaseId" | "scheduledStartAt" | "scheduledEndAt" | "status" | "reason" | "notes" | "createdByUserId" | "checkedInAt" | "startedAt" | "completedAt" | "cancelledAt" | "cancellationReason" | "createdAt" | "updatedAt" | "appointmentNumberSearch" | "reasonSearch", ExtArgs["result"]["appointment"]>
 export type AppointmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  dentalinkItems?: boolean | Prisma.Appointment$dentalinkItemsArgs<ExtArgs>
+  dentalinkIdentities?: boolean | Prisma.Appointment$dentalinkIdentitiesArgs<ExtArgs>
   statusHistory?: boolean | Prisma.Appointment$statusHistoryArgs<ExtArgs>
   accidentCase?: boolean | Prisma.Appointment$accidentCaseArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -3108,6 +3539,8 @@ export type AppointmentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.
 export type $AppointmentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Appointment"
   objects: {
+    dentalinkItems: Prisma.$DentalinkImportItemPayload<ExtArgs>[]
+    dentalinkIdentities: Prisma.$DentalinkExternalIdentityPayload<ExtArgs>[]
     statusHistory: Prisma.$AppointmentStatusHistoryPayload<ExtArgs>[]
     accidentCase: Prisma.$AccidentCasePayload<ExtArgs> | null
     createdByUser: Prisma.$UserPayload<ExtArgs>
@@ -3537,6 +3970,8 @@ readonly fields: AppointmentFieldRefs;
  */
 export interface Prisma__AppointmentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  dentalinkItems<T extends Prisma.Appointment$dentalinkItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Appointment$dentalinkItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DentalinkImportItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  dentalinkIdentities<T extends Prisma.Appointment$dentalinkIdentitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Appointment$dentalinkIdentitiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DentalinkExternalIdentityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   statusHistory<T extends Prisma.Appointment$statusHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Appointment$statusHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentStatusHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   accidentCase<T extends Prisma.Appointment$accidentCaseArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Appointment$accidentCaseArgs<ExtArgs>>): Prisma.Prisma__AccidentCaseClient<runtime.Types.Result.GetResult<Prisma.$AccidentCasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   createdByUser<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -3997,6 +4432,54 @@ export type AppointmentDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Limit how many Appointments to delete.
    */
   limit?: number
+}
+
+/**
+ * Appointment.dentalinkItems
+ */
+export type Appointment$dentalinkItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DentalinkImportItem
+   */
+  select?: Prisma.DentalinkImportItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DentalinkImportItem
+   */
+  omit?: Prisma.DentalinkImportItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DentalinkImportItemInclude<ExtArgs> | null
+  where?: Prisma.DentalinkImportItemWhereInput
+  orderBy?: Prisma.DentalinkImportItemOrderByWithRelationInput | Prisma.DentalinkImportItemOrderByWithRelationInput[]
+  cursor?: Prisma.DentalinkImportItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DentalinkImportItemScalarFieldEnum | Prisma.DentalinkImportItemScalarFieldEnum[]
+}
+
+/**
+ * Appointment.dentalinkIdentities
+ */
+export type Appointment$dentalinkIdentitiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DentalinkExternalIdentity
+   */
+  select?: Prisma.DentalinkExternalIdentitySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DentalinkExternalIdentity
+   */
+  omit?: Prisma.DentalinkExternalIdentityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DentalinkExternalIdentityInclude<ExtArgs> | null
+  where?: Prisma.DentalinkExternalIdentityWhereInput
+  orderBy?: Prisma.DentalinkExternalIdentityOrderByWithRelationInput | Prisma.DentalinkExternalIdentityOrderByWithRelationInput[]
+  cursor?: Prisma.DentalinkExternalIdentityWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DentalinkExternalIdentityScalarFieldEnum | Prisma.DentalinkExternalIdentityScalarFieldEnum[]
 }
 
 /**

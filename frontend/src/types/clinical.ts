@@ -141,9 +141,9 @@ export interface AuthorizationItemWriteDto {
 export interface EncounterProcedure {
   id: EntityId
   encounterId: EntityId
-  patientInsuranceId: EntityId
+  patientInsuranceId: EntityId | null
   svbProcedureId: EntityId
-  svbTariffId: EntityId
+  svbTariffId: EntityId | null
   authorizationItemId: EntityId | null
   diagnosisId: EntityId | null
   referrerId: EntityId | null
@@ -151,11 +151,11 @@ export interface EncounterProcedure {
   procedureCodeSnapshot: string
   procedureDescriptionSnapshot: string
   providerIdSnapshot: string | null
-  insuredIdSnapshot: string
-  unitTariffSnapshot: DecimalString
-  currencyCodeSnapshot: string
+  insuredIdSnapshot: string | null
+  unitTariffSnapshot: DecimalString | null
+  currencyCodeSnapshot: string | null
   quantity: DecimalString
-  amount: DecimalString
+  amount: DecimalString | null
   authorizationIdSnapshot: string | null
   diagnosticCodeSnapshot: string | null
   treatmentIdSnapshot: string | null
@@ -177,7 +177,7 @@ export interface EncounterProcedure {
   svbTariff: Pick<
     SvbTariff,
     'id' | 'amount' | 'currencyCode' | 'validFrom' | 'validTo'
-  >
+  > | null
   patientInsurance: {
     id: EntityId
     patientId: EntityId
@@ -186,7 +186,7 @@ export interface EncounterProcedure {
     validFrom: string | null
     validTo: string | null
     payer: { id: EntityId; code: string; name: string }
-  }
+  } | null
   authorizationItem:
     | (Omit<AuthorizationItem, 'notes'> & {
         externalAuthorizationId: string

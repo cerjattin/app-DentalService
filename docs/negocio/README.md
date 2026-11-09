@@ -1,5 +1,17 @@
 # Lógica de negocio
 
+## Verificación integrada OPS (2026-11-09)
+
+La validación local consolidó las cinco entregas y fijó el candidato para revisión en Git y pruebas de usuario con datos sintéticos. [Resultados, huella y guion de pruebas](VERIFICACION_OPS_20261109.md).
+
+## Contratos de operación por área (2026-11-07)
+
+El usuario autorizó continuar y distribuir tareas a los chats especializados. Los [contratos OPS-01 a OPS-05](CONTRATOS_OPERACION_20261107.md) parten de los cambios locales de atención por servicios y asignan implementación, modelo, interfaz, aceptación y coordinación. La clínica todavía carece de acceso a la API de Dentalink. Su módulo se prepara con contrato y adaptador sustituible, con la conexión real pendiente de acceso y especificación.
+
+## Atención y facturación operativa (2026-11-06)
+
+El usuario redefinió el flujo desplegado. Recepción gestiona la cita y la factura con firma. El profesional registra los servicios y cierra la atención. Se prepara en local el nuevo flujo y el contrato de importación de Dentalink. La clínica aún no tiene acceso habilitado a esa API. [Reglas, cambios de API y contrato de integración](CONTRATO_ATENCION_FACTURACION_DENTALINK_20261106.md).
+
 ## Primer despliegue — alcance vigente 2026-11-03
 
 El envío a SVB queda aplazado por instrucción actual del usuario. La revisión inicial identificó integridad de factura completa (FE-07-01), aceptación de navegador/roles/UX y preparación del destino. DEP10 ya tiene corrección Backend y reensayo integrado de factura parcial/completa; las áreas continúan el cierre local. [Estado actual, evidencia y contratos DEP10–12](CIERRE_PRIMER_DESPLIEGUE_20261103.md). La continuación incluye comprobación propia de Negocio: lint y 379 pruebas Frontend aprobados. Las fuentes SVB sin confirmar permanecen en la fase aplazada; no se inventan valores para el piloto clínico independiente.

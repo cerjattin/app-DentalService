@@ -1,5 +1,9 @@
 # Backend
 
+## OPS-01 — atención por servicios e importación preparada
+
+Inicio idempotente y bloqueos cita → atención para captura, entrega y factura; compatibilidad histórica y refacturación con nueva firma. Módulo interno Dentalink con doce operaciones, DTO normalizado, correspondencias, vista previa privada y confirmación transaccional/idempotente. **513 casos únicos aprobados**, con 509 en la suite general y cuatro optativas verificadas en bases separadas; typecheck/build PASS. El lector HTTP real permanece sin configurar; el sintético se limita a tests locales. [Entrega y evidencia propia](OPS_01_ENTREGA.md), [contrato HTTP consumible](../../backend/docs/OPS_01_API.md), [persistencia entregada por DB](../base-de-datos/OPS_03_ENTREGA.md). Esta ronda es local y no acredita el despliegue existente.
+
 ## NEG-DEP-10/12 — primer despliegue con SVB aplazado
 
 Se corrige FE-07-01 en prepare/registro: una invoice/versión CLOSED con conjunto exacto completo de invoiceItemId, en transacción con locks. Capacidad SVB_MANUAL_RECORDING_ENABLED false por defecto, true solo en QA test local _test. Nuevo registro/preparación rechaza SVB_PRESENTATION_DEFERRED; conserva historia/replays/resolución. Se añade inventario de documentos de solo lectura/manifiesto protegido y prueba de persistencia HTTP tras reinicio de proceso. **482/482 pruebas en 59 archivos, sin omitidos; typecheck/build PASS** en QA exclusivo55447. [Entrega, errores, configuración, manifiesto y pendientes remotos](../../backend/docs/NEG_DEP_10_12.md). Sin schema/SQL nuevo ni cambios operativos. Bucket remoto y smoke del destino NO EJECUTADOS.

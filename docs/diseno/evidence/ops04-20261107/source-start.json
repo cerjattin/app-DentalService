@@ -1,0 +1,54 @@
+[
+  {
+    "path": "frontend/src/components/app-shell/app-shell.tsx",
+    "sha256": "B8C5C4B31F72D81CF09280CC1B4E80BC9D831DD7E02919562F85145E84FF2880"
+  },
+  {
+    "path": "frontend/src/index.css",
+    "sha256": "F2A5D180CF4D3EE8EDD9634E7C252B4BF53F0B0A752A5BAEFF62689A4C3FE917"
+  },
+  {
+    "path": "frontend/src/features/appointments/appointments-page.tsx",
+    "sha256": "7E7B4B6000D64FC31FBD3B84021AB64FFD22F59D8CC2EAD532785B96A653A049"
+  },
+  {
+    "path": "frontend/src/features/appointments/appointment-actions.tsx",
+    "sha256": "78A2474BD22EC0E9F6BB8A36FEB53057A91FA333974DC391478CA705530F8453"
+  },
+  {
+    "path": "frontend/src/features/appointments/appointment-create-dialog.tsx",
+    "sha256": "FDBFCE2B74C4C8E2AC8E3F395C9371FA29BA5D32ABF8A518D89B265411072334"
+  },
+  {
+    "path": "frontend/src/features/clinical/clinical-appointment-page.tsx",
+    "sha256": "056C8A6D5ABDAB6EC1D859649DFDBD4AF26FAAF1F44EB790432335265F61FE5F"
+  },
+  {
+    "path": "frontend/src/features/clinical/procedure-section.tsx",
+    "sha256": "9942338F7F029E90AF951455FE3E4306CCFF125A7BA438AFD1D9153959D3816D"
+  },
+  {
+    "path": "frontend/src/features/clinical/catalogue-search.tsx",
+    "sha256": "F50F88F97E2C5B73568BC9D4181A6D03E7DDA845B336777B18D1CDB055A35ABC"
+  },
+  {
+    "path": "frontend/src/features/billing/appointment-billing.tsx",
+    "sha256": "0BB6EE370C019E67D96EC0ED79F8367E8CE45B6B04D5F3122F89A239E952FBC9"
+  },
+  {
+    "path": "frontend/src/features/billing/return-to-care.tsx",
+    "sha256": "D84FFB330879BAA44B58E33A3163D850BD30E1FC531AC46788AD10C6E3E1B977"
+  },
+  {
+    "path": "frontend/src/features/dashboard/dashboard-report.tsx",
+    "sha256": "DBC46F52103A97FCCC11B2691CEA5683F330614616E7113A4E9C4622DE3059DB"
+  },
+  {
+    "path": "backend/src/modules/clinical-encounters/clinical-encounter.service.ts",
+    "sha256": "3897257C18F9A72DBE6B8C9A95FFFE03FD3C02AA918D2408FA10B820AEDB4769"
+  },
+  {
+    "path": "backend/src/modules/invoices/invoice.service.ts",
+    "sha256": "4ECFC483416FC8AF4C95F858DD0BFDB12597459D8A8B14015B8E87A4C39F82FB"
+  }
+]

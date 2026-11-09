@@ -93,7 +93,12 @@ export const ModelName = {
   SystemSetting: 'SystemSetting',
   TreatmentCase: 'TreatmentCase',
   UserRole: 'UserRole',
-  User: 'User'
+  User: 'User',
+  DentalinkAccount: 'DentalinkAccount',
+  DentalinkMapping: 'DentalinkMapping',
+  DentalinkImportRun: 'DentalinkImportRun',
+  DentalinkImportItem: 'DentalinkImportItem',
+  DentalinkExternalIdentity: 'DentalinkExternalIdentity'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -970,6 +975,90 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const DentalinkAccountScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  externalAccountId: 'externalAccountId',
+  label: 'label',
+  enabled: 'enabled'
+} as const
+
+export type DentalinkAccountScalarFieldEnum = (typeof DentalinkAccountScalarFieldEnum)[keyof typeof DentalinkAccountScalarFieldEnum]
+
+
+export const DentalinkMappingScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  accountId: 'accountId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  kind: 'kind',
+  externalId: 'externalId',
+  providerId: 'providerId',
+  clinicLocationId: 'clinicLocationId'
+} as const
+
+export type DentalinkMappingScalarFieldEnum = (typeof DentalinkMappingScalarFieldEnum)[keyof typeof DentalinkMappingScalarFieldEnum]
+
+
+export const DentalinkImportRunScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  accountId: 'accountId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  requestKey: 'requestKey',
+  fromAt: 'fromAt',
+  toAt: 'toAt',
+  cursor: 'cursor',
+  state: 'state',
+  previewHash: 'previewHash',
+  confirmKey: 'confirmKey',
+  confirmHash: 'confirmHash',
+  counts: 'counts',
+  createdByUserId: 'createdByUserId',
+  confirmedAt: 'confirmedAt'
+} as const
+
+export type DentalinkImportRunScalarFieldEnum = (typeof DentalinkImportRunScalarFieldEnum)[keyof typeof DentalinkImportRunScalarFieldEnum]
+
+
+export const DentalinkImportItemScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  accountId: 'accountId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  patientId: 'patientId',
+  appointmentId: 'appointmentId',
+  runId: 'runId',
+  entityType: 'entityType',
+  externalId: 'externalId',
+  payloadJson: 'payloadJson',
+  payloadHash: 'payloadHash',
+  disposition: 'disposition',
+  issueCodes: 'issueCodes'
+} as const
+
+export type DentalinkImportItemScalarFieldEnum = (typeof DentalinkImportItemScalarFieldEnum)[keyof typeof DentalinkImportItemScalarFieldEnum]
+
+
+export const DentalinkExternalIdentityScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  accountId: 'accountId',
+  patientId: 'patientId',
+  appointmentId: 'appointmentId',
+  entityType: 'entityType',
+  externalId: 'externalId',
+  createdAt: 'createdAt'
+} as const
+
+export type DentalinkExternalIdentityScalarFieldEnum = (typeof DentalinkExternalIdentityScalarFieldEnum)[keyof typeof DentalinkExternalIdentityScalarFieldEnum]
 
 
 export const SortOrder = {

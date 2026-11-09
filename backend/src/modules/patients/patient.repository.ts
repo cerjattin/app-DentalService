@@ -82,8 +82,9 @@ export class PatientRepository {
     organizationId: bigint,
     documentType: string,
     documentNumber: string,
+    client: Prisma.TransactionClient | typeof prisma = prisma,
   ) {
-    return prisma.patient.findUnique({
+    return client.patient.findUnique({
       where: {
         organizationId_documentType_documentNumber: {
           organizationId,
