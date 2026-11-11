@@ -1,5 +1,15 @@
 # SVB form and operational fixes — 2026-10-30
 
+## Layout update — 2026-11-11
+
+The user now explicitly requests the saved signature above the line labeled **Paraaf**. Layout `svb_notaform_v2` / storage suffix `svb-nota-v2` supersedes the positioning described below for newly generated PDFs. The trace is placed at the lower right, above the Paraaf line; the line is lowered within the available footer space to keep the trace clear of the provider field. Signer identity, patient/representative label and Curaçao timestamp remain visible at the left. This is still the existing patient/representative signature evidence; it does not attest a professional signature.
+
+The route, permissions, signed snapshots, source image and signature/content hashes are unchanged. A new storage suffix prevents reuse or overwrite of historical v1 PDFs; the invoice PDF service retains its existing per-version/content/layout idempotence. Stored PDFs remain available and are not regenerated in place. To obtain v2 for an eligible closed version, explicitly generate a new PDF after publishing the Backend update.
+
+Fresh local validation: Backend typecheck/build PASS, unit suite **183/183 in 23 files PASS**. Two new regression cases verify patient/representative image bounds on every page and the distinct layout key. Initial sandbox execution blocked HTTP unit sockets; the same unit suite passed outside that restriction. Visual review used synthetic one-page and two-page fixtures only, with all three pages rendered by Poppler and inspected. No clinical signatures, database writes, integration tests or deployment were performed. Synthetic previews: [one page](../../output/pdf/QA-paraaf-v2.pdf), [two pages](../../output/pdf/QA-paraaf-v2-multipage.pdf).
+
+## Historical v1 delivery — 2026-10-30
+
 The user authorized both operational corrections and the invoice layout supplied in `declaratie_formulier.pdf`. They explicitly confirmed **Aantal = performed-procedure quantity**, not `NumberOfTreatments`, and accepted empty cells when no authoritative snapshot exists.
 
 ## Contracts

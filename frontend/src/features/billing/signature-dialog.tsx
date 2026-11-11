@@ -4,6 +4,7 @@ import { Eraser, PenLine } from 'lucide-react'
 import { useEffect, useRef, useState, type PointerEvent } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { z } from 'zod'
+import { ApiError } from '../../api/api-error'
 import { LoadingState } from '../../components/feedback/loading-state'
 import { FormField } from '../../components/forms/form-field'
 import { Button } from '../../components/ui/button'
@@ -377,6 +378,12 @@ export function SignatureDialog({
           </p>
         ) : null}
         <BillingError error={save.error} />
+        {save.error instanceof ApiError &&
+        ['DOCUMENT_STORAGE_UNAVAILABLE', 'DOCUMENT_STORAGE_NOT_PRIVATE'].includes(save.error.code) ? (
+          <p role="status" className="text-sm text-slate-600">
+            Your drawing is still in this dialog. Keep it open and retry after the administrator restores storage. Closing or reloading the page will lose the drawing.
+          </p>
+        ) : null}
         <div className="flex justify-end gap-2">
           <Button
             variant="secondary"

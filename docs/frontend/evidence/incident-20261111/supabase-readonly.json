@@ -1,0 +1,274 @@
+{
+  "date": "2026-11-11T14:06:44.869Z",
+  "scope": "Configured Supabase metadata, read-only transaction",
+  "target": {
+    "host": "aws-1-ca-central-1.pooler.supabase.com",
+    "port": "5432",
+    "database": "postgres",
+    "projectRef": "tlfdwmaofwpwlcgrhfps"
+  },
+  "migrations": [
+    {
+      "name": "20261030000000_init",
+      "checksum": "3ee7dd600de6123044d0ad3d3dbf2042c2f495839b21361399d1204d922c88e5",
+      "applied": true,
+      "checksumMatches": true
+    },
+    {
+      "name": "20261031000000_declaration_assignment",
+      "checksum": "f32d1ea796f650fe4673276a075a5b82eefc620e839c42f40b80407da6c534e3",
+      "applied": false,
+      "checksumMatches": null
+    },
+    {
+      "name": "20261031010000_treatment_case_usage",
+      "checksum": "c0dc0a1e69400df31daef4b7bec1fcc00415d0ee6850de169fdbdc3e08739f7c",
+      "applied": false,
+      "checksumMatches": null
+    },
+    {
+      "name": "20261031020000_declaration_integrity",
+      "checksum": "c08888b85e5da477e50818c982c429bffaab3a4632b30248e0ac5ee84ac06239",
+      "applied": false,
+      "checksumMatches": null
+    },
+    {
+      "name": "20261031030000_declaration_evidence_checks",
+      "checksum": "ea412c96bd8c5f92cb97cc096d0b59318c600737354b8d9721b00cd3a038dc01",
+      "applied": false,
+      "checksumMatches": null
+    },
+    {
+      "name": "20261103000000_manual_portal",
+      "checksum": "e467d9d8a14ec5cd81f7ade0c90683810d31f749e7294ecb39e7e4676a42e1a7",
+      "applied": false,
+      "checksumMatches": null
+    },
+    {
+      "name": "20261106000000_service_attention",
+      "checksum": "be062be02e172125a17f1f7ed6ee7bcacc702829708ae099c004342366268e4d",
+      "applied": false,
+      "checksumMatches": null
+    },
+    {
+      "name": "20261107000000_dentalink_import",
+      "checksum": "4d2242a6e33b920847cffd6a5451155f9d197a15e07ad44740201f541c8c8a2a",
+      "applied": false,
+      "checksumMatches": null
+    }
+  ],
+  "unknownMigrations": [],
+  "unfinishedMigrations": [],
+  "columns": [
+    {
+      "column_name": "amount",
+      "is_nullable": "NO"
+    },
+    {
+      "column_name": "currency_code_snapshot",
+      "is_nullable": "NO"
+    },
+    {
+      "column_name": "insured_id_snapshot",
+      "is_nullable": "NO"
+    },
+    {
+      "column_name": "patient_insurance_id",
+      "is_nullable": "NO"
+    },
+    {
+      "column_name": "svb_tariff_id",
+      "is_nullable": "NO"
+    },
+    {
+      "column_name": "unit_tariff_snapshot",
+      "is_nullable": "NO"
+    }
+  ],
+  "constraints": [
+    {
+      "conname": "ck_encounter_procedure_amount",
+      "convalidated": true
+    },
+    {
+      "conname": "ck_encounter_procedure_performed",
+      "convalidated": true
+    },
+    {
+      "conname": "ck_encounter_procedure_qty",
+      "convalidated": true
+    },
+    {
+      "conname": "ck_encounter_procedure_tariff",
+      "convalidated": true
+    },
+    {
+      "conname": "ck_unsigned_encounter_procedures_authorization_item_id",
+      "convalidated": true
+    },
+    {
+      "conname": "ck_unsigned_encounter_procedures_created_by_user_id",
+      "convalidated": true
+    },
+    {
+      "conname": "ck_unsigned_encounter_procedures_diagnosis_id",
+      "convalidated": true
+    },
+    {
+      "conname": "ck_unsigned_encounter_procedures_encounter_id",
+      "convalidated": true
+    },
+    {
+      "conname": "ck_unsigned_encounter_procedures_id",
+      "convalidated": true
+    },
+    {
+      "conname": "ck_unsigned_encounter_procedures_number_of_treatments_snapshot",
+      "convalidated": true
+    },
+    {
+      "conname": "ck_unsigned_encounter_procedures_patient_insurance_id",
+      "convalidated": true
+    },
+    {
+      "conname": "ck_unsigned_encounter_procedures_performed_by_provider_id",
+      "convalidated": true
+    },
+    {
+      "conname": "ck_unsigned_encounter_procedures_referrer_id",
+      "convalidated": true
+    },
+    {
+      "conname": "ck_unsigned_encounter_procedures_svb_procedure_id",
+      "convalidated": true
+    },
+    {
+      "conname": "ck_unsigned_encounter_procedures_svb_tariff_id",
+      "convalidated": true
+    },
+    {
+      "conname": "encounter_procedures_pkey",
+      "convalidated": true
+    },
+    {
+      "conname": "fk_encounter_procedures_auth_item",
+      "convalidated": true
+    },
+    {
+      "conname": "fk_encounter_procedures_created_by",
+      "convalidated": true
+    },
+    {
+      "conname": "fk_encounter_procedures_diagnosis",
+      "convalidated": true
+    },
+    {
+      "conname": "fk_encounter_procedures_encounter",
+      "convalidated": true
+    },
+    {
+      "conname": "fk_encounter_procedures_insurance",
+      "convalidated": true
+    },
+    {
+      "conname": "fk_encounter_procedures_provider",
+      "convalidated": true
+    },
+    {
+      "conname": "fk_encounter_procedures_referrer",
+      "convalidated": true
+    },
+    {
+      "conname": "fk_encounter_procedures_svb_procedure",
+      "convalidated": true
+    },
+    {
+      "conname": "fk_encounter_procedures_tariff",
+      "convalidated": true
+    }
+  ],
+  "valuation": {
+    "pending": "0",
+    "valued": "0",
+    "incompatible": "0"
+  },
+  "objects": [
+    {
+      "name": "declaration_active_assignments",
+      "present": false
+    },
+    {
+      "name": "declaration_manual_entries",
+      "present": false
+    },
+    {
+      "name": "declaration_manual_results",
+      "present": false
+    },
+    {
+      "name": "dentalink_accounts",
+      "present": false
+    },
+    {
+      "name": "dentalink_import_runs",
+      "present": false
+    }
+  ],
+  "preflight": [
+    {
+      "code": "APPOINTMENT_TREATMENT_CONTEXT_MISMATCH",
+      "blocks_migration": true,
+      "affected_count": 0
+    },
+    {
+      "code": "DECLARATION_ACTIVE_DUPLICATE",
+      "blocks_migration": true,
+      "affected_count": 0
+    },
+    {
+      "code": "DECLARATION_DRAFT_FROZEN_EVIDENCE",
+      "blocks_migration": false,
+      "affected_count": 0
+    },
+    {
+      "code": "DECLARATION_DRAFT_IDENTITY_CONFLICT",
+      "blocks_migration": false,
+      "affected_count": 0
+    },
+    {
+      "code": "ORDINAL_AUDIT_BATCH_MISSING",
+      "blocks_migration": true,
+      "affected_count": 2
+    },
+    {
+      "code": "ORDINAL_AUDIT_CONFLICT",
+      "blocks_migration": true,
+      "affected_count": 0
+    },
+    {
+      "code": "ORDINAL_AUDIT_INVALID",
+      "blocks_migration": true,
+      "affected_count": 0
+    },
+    {
+      "code": "ORGANIZATION_DECLARANT_INVALID",
+      "blocks_migration": false,
+      "affected_count": 2
+    },
+    {
+      "code": "TREATMENT_CASE_PATIENT_ORGANIZATION_MISMATCH",
+      "blocks_migration": true,
+      "affected_count": 0
+    },
+    {
+      "code": "TREATMENT_USAGE_AUDIT_CONTEXT_MISMATCH",
+      "blocks_migration": true,
+      "affected_count": 1
+    },
+    {
+      "code": "TREATMENT_USAGE_AUDIT_INVALID",
+      "blocks_migration": true,
+      "affected_count": 0
+    }
+  ]
+}

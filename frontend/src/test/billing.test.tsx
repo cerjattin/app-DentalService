@@ -713,6 +713,32 @@ describe('F06 invoice version lifecycle', () => {
 })
 
 describe('F06 signature and binary documents', () => {
+  it.each([
+    ['DOCUMENT_STORAGE_UNAVAILABLE', 'Private document storage is unavailable. Contact an administrator and retry after storage is restored.'],
+    ['DOCUMENT_STORAGE_NOT_PRIVATE', 'Document storage is blocked because its bucket is not private. Contact an administrator.'],
+  ])('preserves the drawing on %s and retries only after explicit save', async (code, message) => {
+    const context = canvasMock()
+    const options = { status: 'PENDING_SIGNATURE', fail: 'POST /documents', code, http: 503 }
+    const { calls } = boundary(options)
+    renderBilling()
+    await draw()
+    await userEvent.click(screen.getByRole('checkbox'))
+    await userEvent.click(screen.getByRole('button', { name: 'Save signature' }))
+    expect(await screen.findByText(message)).toBeInTheDocument()
+    expect(screen.getByText(/Your drawing is still in this dialog/)).toBeInTheDocument()
+    expect(screen.getByText('Signature captured locally')).toBeInTheDocument()
+    expect(screen.getByRole('checkbox')).toBeChecked()
+    expect(screen.getByRole('button', { name: 'Save signature' })).toBeEnabled()
+    expect(calls.filter((call) => call.method === 'POST' && call.path === '/documents')).toHaveLength(1)
+    expect(calls.some((call) => call.method === 'POST' && call.path.endsWith('/signatures'))).toBe(false)
+    const strokes = context.stroke.mock.calls.length
+    options.fail = ''
+    await userEvent.click(screen.getByRole('button', { name: 'Save signature' }))
+    await screen.findByRole('button', { name: 'Confirm signed' })
+    expect(context.stroke).toHaveBeenCalledTimes(strokes)
+    expect(calls.filter((call) => call.method === 'POST' && call.path === '/documents')).toHaveLength(2)
+    expect(calls.filter((call) => call.method === 'POST' && call.path.endsWith('/signatures'))).toHaveLength(1)
+  })
   it('captures a keyboard drawing with OTHER provenance after explicit review', async () => {
     const context = canvasMock(); const { calls } = boundary({ status: 'PENDING_SIGNATURE' }); renderBilling()
     await userEvent.click(await screen.findByRole('button', { name: 'Capture signature' }))

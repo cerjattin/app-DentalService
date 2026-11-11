@@ -205,6 +205,10 @@ const apiErrorMessages: Record<string, string> = {
   DOCUMENT_MIME_TYPE_NOT_ALLOWED: 'This document format is not supported.',
   DOCUMENT_EMPTY: 'The signature image is empty. Capture it again.',
   DOCUMENT_TOO_LARGE: 'The document exceeds the allowed upload size.',
+  DOCUMENT_STORAGE_UNAVAILABLE:
+    'Private document storage is unavailable. Contact an administrator and retry after storage is restored.',
+  DOCUMENT_STORAGE_NOT_PRIVATE:
+    'Document storage is blocked because its bucket is not private. Contact an administrator.',
   DOCUMENT_NOT_FOUND: 'The document could not be found.',
   DOCUMENT_FILE_NOT_FOUND:
     'The stored document is unavailable. Contact an administrator.',

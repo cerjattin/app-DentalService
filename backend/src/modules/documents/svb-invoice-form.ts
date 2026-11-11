@@ -9,8 +9,8 @@ import type {
   InvoiceVersionRecord,
 } from "../invoices/invoice.repository.js";
 
-export const INVOICE_PDF_LAYOUT = "svb_notaform_v1";
-export const INVOICE_PDF_LAYOUT_SUFFIX = "svb-nota-v1";
+export const INVOICE_PDF_LAYOUT = "svb_notaform_v2";
+export const INVOICE_PDF_LAYOUT_SUFFIX = "svb-nota-v2";
 interface SignatureForPdf {
   id: bigint;
   signerName: string;
@@ -265,13 +265,22 @@ function writeForm(
         ? "Handtekening patiënt"
         : "Handtekening vertegenwoordiger",
       32,
-      650,
+      695,
       { width: 180 },
     );
-  doc.image(input.signatureImage, 32, 663, {
-    fit: [175, 43],
-    valign: "center",
+  // Give Paraaf enough height for the saved trace without covering the provider
+  // field above. This is the patient's/representative's evidence, not a new
+  // professional signature. The signer identity remains explicit at the left.
+  doc.save().rect(354, 694, 222, 43).fill("white").restore();
+  doc.font("Helvetica").fontSize(13).fillColor("black");
+  doc.text("Paraaf:", 358, 719, { width: 42, lineBreak: false });
+  doc.image(input.signatureImage, 402, 695, {
+    fit: [170, 38],
+    align: "center",
+    valign: "bottom",
   });
+  doc.save().strokeColor("black").lineWidth(0.8);
+  doc.moveTo(400, 735).lineTo(574, 735).stroke().restore();
   doc
     .font("Helvetica")
     .fontSize(7)

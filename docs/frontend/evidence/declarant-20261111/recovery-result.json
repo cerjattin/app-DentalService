@@ -1,0 +1,44 @@
+{
+  "date": "2026-11-11T17:54:24.428Z",
+  "projectRef": "tlfdwmaofwpwlcgrhfps",
+  "alreadyCorrect": false,
+  "invoiceNumber": "OS-000001",
+  "before": {
+    "invoiceId": "4",
+    "versionId": "5",
+    "versionNumber": 2,
+    "status": "DRAFT",
+    "declarantIdSnapshot": null,
+    "total": "50.00",
+    "currency": "XCG",
+    "contentHash": null,
+    "lockedAt": null,
+    "signedAt": null,
+    "closedAt": null
+  },
+  "after": {
+    "invoiceId": "4",
+    "versionId": "5",
+    "versionNumber": 2,
+    "status": "DRAFT",
+    "declarantIdSnapshot": "14265",
+    "total": "50.00",
+    "currency": "XCG",
+    "contentHash": null,
+    "lockedAt": null,
+    "signedAt": null,
+    "closedAt": null
+  },
+  "invoiceItemsHash": "73ccf008c06169f6d5f5f659b9628d8a2ae045e243fae5f83d2e035cc21e9509",
+  "itemsUnchanged": true,
+  "auditActor": "system maintenance",
+  "correlationId": "approved-draft-declarant-OS000001-v2-20261111",
+  "audit": [
+    {
+      "id": "21721",
+      "actorUserId": null,
+      "action": "INVOICE_DRAFT_DECLARANT_RECOVERY",
+      "versionId": "5"
+    }
+  ]
+}

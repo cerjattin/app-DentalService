@@ -1,0 +1,17 @@
+{
+  "date": "2026-11-11T14:09:22.992Z",
+  "database": "odontho_incident_service_20261111_r2_test",
+  "scope": "Fresh synthetic local database, baseline plus service_attention only",
+  "before": {
+    "errorCode": "P2011",
+    "savedServices": "0"
+  },
+  "after": {
+    "saveSucceeded": true,
+    "serviceId": "2",
+    "quantity": "1.00",
+    "pendingValuation": true,
+    "listedServices": 1
+  },
+  "otherMigrationsApplied": false
+}

@@ -1,0 +1,36 @@
+{
+  "date": "2026-11-11T17:15:15.675Z",
+  "projectRef": "tlfdwmaofwpwlcgrhfps",
+  "operation": "User-approved activation through existing Backend catalogue service",
+  "correlationId": "approved-tariffs-20261111-AG30301-AG30303",
+  "auditActor": "system maintenance",
+  "tariffs": [
+    {
+      "id": "5",
+      "procedureId": "5",
+      "code": "AG30301",
+      "amount": "25.00",
+      "currency": "XCG",
+      "validFrom": "2026-11-05",
+      "validTo": "2026-12-31",
+      "isActive": true,
+      "alreadyActive": true
+    },
+    {
+      "id": "6",
+      "code": "AG30303",
+      "amount": "50.00",
+      "currency": "XCG",
+      "validFrom": "2026-11-05",
+      "validTo": null,
+      "isActive": true
+    }
+  ],
+  "audit": [
+    {
+      "id": "17665",
+      "tariffId": "6",
+      "actorUserId": null
+    }
+  ]
+}

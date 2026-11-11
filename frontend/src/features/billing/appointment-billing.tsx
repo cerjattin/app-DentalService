@@ -18,6 +18,7 @@ import { listPatientInsurance, patientKeys } from '../patients/patient-api'
 import { refreshAppointmentWorkflow } from '../appointments/appointment-workflow-cache'
 import { createInvoice, invoiceKeys, listInvoices } from './billing-api'
 import { BillingError, BillingSection } from './billing-ui'
+import { useInvoiceTariffReview } from './use-invoice-tariff-review'
 
 export function AppointmentBilling({
   appointment,
@@ -65,6 +66,12 @@ function BillingEntry({ appointment }: { appointment: Appointment }) {
     queryFn: ({ signal }) => listPatientInsurance(appointment.patientId, signal),
     enabled: confirm && !rebuild && hasPermission(permissions, 'insurance.read'),
   })
+  const serviceDate = formatBusinessDate(appointment.scheduledStart)
+  const tariffReview = useInvoiceTariffReview(
+    appointment.id, serviceDate,
+    rebuild ? existing?.currentVersion?.currencyCode ?? '' : currencyCode,
+    confirm,
+  )
   return (
     <BillingSection title="Billing">
       {query.isPending ? (
@@ -124,7 +131,7 @@ function BillingEntry({ appointment }: { appointment: Appointment }) {
               </FormField>
             ) : null}
             <BillingError error={insurance.error} />
-            {hasPermission(permissions, 'insurance.read') ? <Button variant="secondary" disabled={create.isPending || insurance.isFetching} onClick={() => void insurance.refetch()}>{insurance.isError ? 'Retry insurance lookup' : 'Refresh billing choices'}</Button> : null}
+            {hasPermission(permissions, 'insurance.read') ? <Button variant="secondary" disabled={create.isPending || insurance.isFetching || tariffReview.busy} onClick={() => void Promise.all([insurance.refetch(), tariffReview.refresh()])}>{insurance.isError ? 'Retry insurance lookup' : 'Refresh billing choices'}</Button> : null}
             {create.error ? <div className="space-y-2 text-sm">
               <p>Keep this dialog open while reviewing the billing data in another tab, then refresh the choices and retry. Contact an administrator if you cannot maintain coverage or service tariffs.</p>
               <div className="flex flex-wrap gap-3">
@@ -138,6 +145,19 @@ function BillingEntry({ appointment }: { appointment: Appointment }) {
                 onChange={(event) => setCurrencyCode(event.target.value.trim().toUpperCase())} />
             </FormField>
           </div> : null}
+          {tariffReview.enabled ? <section aria-label="Service tariff review" className="mb-4 space-y-3 rounded-md border border-clinic-border p-3 text-sm">
+            <div className="flex flex-wrap items-center justify-between gap-2"><h3 className="font-semibold">Service tariff review</h3><Button variant="secondary" disabled={create.isPending || tariffReview.busy} onClick={() => void tariffReview.refresh()}>Refresh tariffs</Button></div>
+            <p>Active tariffs for {serviceDate}{currencyCode ? ` in ${currencyCode}` : ''}. Tariffs are checked again when the invoice is created.</p>
+            {tariffReview.busy ? <p role="status">Checking service tariffs…</p> : null}
+            <BillingError error={tariffReview.error} />
+            <ul className="space-y-3">{tariffReview.rows.map(row => <li key={row.id}>
+              <p className="font-medium">{row.code} · {row.description}</p>
+              {row.query.isSuccess ? row.query.data.data.length === 0 ? <p className="text-clinic-danger">No active tariff for this service date{currencyCode ? ` in ${currencyCode}` : ''}. Review its status, validity period and currency.</p> : <p className="text-slate-600">Available currencies: {[...new Set(row.query.data.data.map(tariff => tariff.currencyCode))].join(', ')}.</p> : null}
+              {hasPermission(permissions, 'svb_procedure.read') ? <a className="text-clinic-blue underline" href={`/admin/services/${row.id}`} target="_blank" rel="noopener noreferrer">Review tariffs for {row.code}</a> : null}
+            </li>)}</ul>
+            {tariffReview.blocked ? <p role="alert">Activate or record the authorized tariff for each listed service, then refresh tariffs before creating the invoice.</p> : null}
+            {tariffReview.error ? <p>Tariff review is unavailable. Refresh to review the current catalogue; invoice creation will still validate billing.</p> : null}
+          </section> : null}
           <div className="flex justify-end gap-2">
             <Button
               variant="secondary"
@@ -146,7 +166,7 @@ function BillingEntry({ appointment }: { appointment: Appointment }) {
             >
               Cancel
             </Button>
-            <Button disabled={create.isPending || Boolean(currencyCode && !/^[A-Z]{3}$/.test(currencyCode))} onClick={() => create.mutate()}>
+            <Button disabled={create.isPending || tariffReview.busy || tariffReview.blocked || Boolean(currencyCode && !/^[A-Z]{3}$/.test(currencyCode))} onClick={() => create.mutate()}>
               {create.isPending ? 'Creating...' : rebuild ? 'Confirm rebuild' : 'Confirm creation'}
             </Button>
           </div>

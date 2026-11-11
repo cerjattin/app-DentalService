@@ -1,5 +1,9 @@
 # Backend
 
+## PDF: signature above Paraaf — 2026-11-11
+
+Per the user's updated layout request, the saved patient/representative trace now sits above Paraaf at the lower right; signer identity remains explicit. New layout/cache suffix `svb-nota-v2` preserves historical PDFs. No API, schema, signed snapshot or source evidence changes. Typecheck/build and 183 unit tests PASS; synthetic one-page/two-page PDFs visually inspected. [Contract update and previews](../../backend/docs/SVB_FORM_AND_OPERATIONAL_FIXES.md#layout-update--2026-11-11). Local only, not deployed.
+
 ## OPS-01 — atención por servicios e importación preparada
 
 Inicio idempotente y bloqueos cita → atención para captura, entrega y factura; compatibilidad histórica y refacturación con nueva firma. Módulo interno Dentalink con doce operaciones, DTO normalizado, correspondencias, vista previa privada y confirmación transaccional/idempotente. **513 casos únicos aprobados**, con 509 en la suite general y cuatro optativas verificadas en bases separadas; typecheck/build PASS. El lector HTTP real permanece sin configurar; el sintético se limita a tests locales. [Entrega y evidencia propia](OPS_01_ENTREGA.md), [contrato HTTP consumible](../../backend/docs/OPS_01_API.md), [persistencia entregada por DB](../base-de-datos/OPS_03_ENTREGA.md). Esta ronda es local y no acredita el despliegue existente.

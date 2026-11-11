@@ -1,0 +1,21 @@
+{
+  "date": "2026-11-11T17:40:59.907Z",
+  "scope": "Read-only invoice and organization identity metadata",
+  "projectRef": "tlfdwmaofwpwlcgrhfps",
+  "invoice": {
+    "invoice_id": "4",
+    "invoice_number": "OS-000001",
+    "appointment_id": "10",
+    "organization_id": "1",
+    "organization_declarant_id": "14265",
+    "version_id": "4",
+    "version_number": 1,
+    "status": "DRAFT",
+    "declarant_id_snapshot": null,
+    "signed_at": null,
+    "closed_at": null,
+    "currency_code": "XCG",
+    "total_amount": "75.00"
+  },
+  "signatureCount": "0"
+}

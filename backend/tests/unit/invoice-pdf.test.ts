@@ -5,6 +5,8 @@ import { Prisma } from "../../src/generated/prisma/client.js";
 import {
   generateInvoicePdfBytes,
   signatureImageForPdf,
+  INVOICE_PDF_LAYOUT,
+  INVOICE_PDF_LAYOUT_SUFFIX,
 } from "../../src/modules/documents/invoice-pdf.generator.js";
 
 const decimal = (value: string) => new Prisma.Decimal(value);
@@ -73,6 +75,33 @@ const pdfText = (bytes: Buffer) =>
     .join("\n");
 
 describe("SVB invoice form from frozen snapshots", () => {
+  it.each(["PATIENT", "GUARDIAN"])(
+    "places the saved %s trace above Paraaf on every page with a distinct layout key",
+    async (signatureType) => {
+      const input = await fixture(6);
+      input.signature.signatureType = signatureType;
+      const bytes = await generateInvoicePdfBytes(input);
+      const raw = bytes.toString("latin1");
+      const pageCount = raw.match(/\/Type \/Page\b/g)!.length;
+      const images = [...raw.matchAll(/([\d.]+) 0 0 (-[\d.]+) ([\d.]+) ([\d.]+) cm\s*\/I\d+ Do/g)]
+        .filter((image) => Math.abs(Number(image[2])) < 100);
+      expect(pageCount).toBeGreaterThan(1);
+      expect(images).toHaveLength(pageCount);
+      for (const image of images) {
+        const [width, negativeHeight, x, bottom] = image.slice(1).map(Number);
+        expect(x).toBeGreaterThanOrEqual(402);
+        expect(x! + width!).toBeLessThanOrEqual(572);
+        expect(bottom! + negativeHeight!).toBeGreaterThanOrEqual(695);
+        expect(bottom).toBeLessThanOrEqual(733);
+      }
+      expect(pdfText(bytes)).toContain("Paraaf:");
+      expect(pdfText(bytes)).toContain(
+        signatureType === "PATIENT" ? "Handtekening pati" : "Handtekening vertegenwoordiger",
+      );
+      expect(INVOICE_PDF_LAYOUT).toBe("svb_notaform_v2");
+      expect(INVOICE_PDF_LAYOUT_SUFFIX).toBe("svb-nota-v2");
+    },
+  );
   it("uses letter-sized form, exact amounts/quantity, saved signature image and snapshot fields", async () => {
     const bytes = await generateInvoicePdfBytes(await fixture());
     const raw = bytes.toString("latin1");

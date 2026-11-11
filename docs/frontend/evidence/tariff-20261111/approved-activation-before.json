@@ -1,0 +1,26 @@
+{
+  "date": "2026-11-11T17:15:14.650Z",
+  "projectRef": "tlfdwmaofwpwlcgrhfps",
+  "tariffs": [
+    {
+      "id": "5",
+      "procedureId": "5",
+      "code": "AG30301",
+      "amount": "25.00",
+      "currency": "XCG",
+      "validFrom": "2026-11-05",
+      "validTo": "2026-12-31",
+      "isActive": true
+    },
+    {
+      "id": "6",
+      "procedureId": "6",
+      "code": "AG30303",
+      "amount": "50.00",
+      "currency": "XCG",
+      "validFrom": "2026-11-05",
+      "validTo": null,
+      "isActive": false
+    }
+  ]
+}

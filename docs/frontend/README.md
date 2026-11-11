@@ -1,5 +1,9 @@
 # Frontend
 
+## Incidencia de firma y Storage — 2026-11-11
+
+Confirmado `DOCUMENT_STORAGE_UNAVAILABLE` en Render; bucket `bkclinicadocs` privado existente y versión 5 pendiente sin firmas al consultar. El usuario identificó una clave `sb_publishable_` incorrecta en `SUPABASE_SERVICE_ROLE_KEY`; sustitución compatible y reensayo remotos pendientes. [Diagnóstico, límites y cierre pendiente](INCIDENTE_FIRMA_STORAGE_20261111.md). Mejora local de mensajes y aviso de conservación del trazo, sin publicar: lint/build y 362 pruebas PASS en la pasada de implementación. No se modificaron documentos ni firmas clínicas.
+
 ## Responsabilidad y ubicación
 
 Pantallas, navegación, formularios, permisos de interfaz, estado remoto, caché y manejo centralizado de errores. Código en `frontend/`; instrucciones específicas en [frontend/AGENTS.md](../../frontend/AGENTS.md).
@@ -37,6 +41,14 @@ Fuentes: [gaps](../../frontend/docs/KNOWN_CONTRACT_GAPS.md) y [correcciones oper
 ## Entrega OPS-02 — 2026-11-09
 
 La validación local abarca cita, atención por servicios, cobro, firma y corrección de la misma factura con PDF por versión. La preparación Dentalink consume la API interna publicada y se verificó con un lector sintético de dos páginas. Se documentan las evidencias, el guion para Diseño y las dependencias de la cola por estado, la conexión real y el destino publicado. [Entrega OPS-02](OPS_02_ENTREGA.md)
+
+## Incidente de captura en Render — 2026-11-11
+
+Los logs confirmaron `P2011` por `patient_insurance_id NOT NULL` al guardar un servicio con valoración pendiente. Se reprodujo el fallo y su corrección con sintéticos. Con proyecto confirmado y autorización expresa se creó un respaldo local protegido, se aplicó únicamente `service_attention` en Supabase y se registró su checksum en Prisma. La verificación posterior aprobó nulabilidad, check y permisos. Las otras seis migraciones requieren resolver sus incidencias históricas. [Diagnóstico, aplicación y evidencias](INCIDENTE_CAPTURA_20261111.md)
+
+## Diagnóstico de Declarant ID — 2026-11-11
+
+El diagnóstico inicial de OS-000001 v1 identificó un snapshot de Declarant ID vacío y `INVOICE_DECLARANT_ID_REQUIRED` al preparar firma. Tras una corrección operativa la versión vigente pasó a ser v2/ID5 por XCG 50.00. Con confirmación específica del usuario se completó únicamente su snapshot vacío con el `14265` de la organización, verificando borrador sin firma y conservando ítems e importe. La operación y su lectura posterior quedaron auditadas. [Informe y evidencias](INCIDENTE_DECLARANT_20261111.md)
 
 ## Validación local contra Supabase — 2026-10-30
 

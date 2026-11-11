@@ -1,0 +1,10 @@
+{
+  "date": "2026-11-11T14:14:45.376Z",
+  "projectRef": "tlfdwmaofwpwlcgrhfps",
+  "migration": "20261106000000_service_attention",
+  "checksum": "be062be02e172125a17f1f7ed6ee7bcacc702829708ae099c004342366268e4d",
+  "canonicalSqlApplied": true,
+  "prismaReconciliation": "APPLIED",
+  "backupSha256": "7a73521a92baaa2b3f39225817bde9b9d34b9d19c608b6749ba9f47327952128",
+  "verifiedAt": "2026-11-11T14:15:50.628Z"
+}

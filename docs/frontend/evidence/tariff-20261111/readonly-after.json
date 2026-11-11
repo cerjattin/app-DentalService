@@ -1,0 +1,61 @@
+{
+  "date": "2026-11-11T17:14:42.905Z",
+  "projectRef": "tlfdwmaofwpwlcgrhfps",
+  "scope": "Read-only invoice tariff diagnosis, no patient identity fields",
+  "appointment": {
+    "id": "10",
+    "appointment_number": "APT-000002",
+    "service_date": "2026-11-11",
+    "status": "COMPLETED",
+    "encounter_id": "5"
+  },
+  "services": [
+    {
+      "id": "11",
+      "svb_procedure_id": "5",
+      "code": "AG30301",
+      "description": "Consult",
+      "quantity": "1.00",
+      "status": "PERFORMED",
+      "svb_tariff_id": null,
+      "currency_code_snapshot": null,
+      "tariffCount": 1,
+      "eligibleTariffCount": 1
+    },
+    {
+      "id": "12",
+      "svb_procedure_id": "6",
+      "code": "AG30303",
+      "description": "Spoedconsult",
+      "quantity": "1.00",
+      "status": "PERFORMED",
+      "svb_tariff_id": null,
+      "currency_code_snapshot": null,
+      "tariffCount": 1,
+      "eligibleTariffCount": 0
+    }
+  ],
+  "tariffs": [
+    {
+      "id": "5",
+      "svb_procedure_id": "5",
+      "amount": "25.00",
+      "currency_code": "XCG",
+      "valid_from": "2026-11-05",
+      "valid_to": "2026-12-31",
+      "is_active": true,
+      "eligible_for_date": true
+    },
+    {
+      "id": "6",
+      "svb_procedure_id": "6",
+      "amount": "50.00",
+      "currency_code": "XCG",
+      "valid_from": "2026-11-05",
+      "valid_to": null,
+      "is_active": false,
+      "eligible_for_date": false
+    }
+  ],
+  "commonCurrencies": []
+}

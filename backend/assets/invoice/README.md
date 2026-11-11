@@ -4,6 +4,8 @@
 
 The runtime overlays searchable snapshot values and the verified saved signature image with PDFKit. Fixed Dutch labels and the SVB mark follow the user-supplied reference; the application UI remains English. No fields or instructions embedded in the reference change application behavior.
 
+Layout v2 (2026-11-11) reuses this unchanged background asset. Per the user's request it overlays the saved patient/representative trace above Paraaf, extending that footer field downward to avoid the provider line. Layout/cache suffix is `svb-nota-v2`; previous generated PDFs are preserved.
+
 Ship this asset with the backend and run package commands from `backend/`, as for the existing local document store. Future Vercel packaging must include the asset and the Sharp native runtime. Increment the layout/cache suffix when introducing a new document layout; never overwrite stored historical PDFs.
 
 Mapping and acceptance evidence: [PDF and operational corrections](../../docs/SVB_FORM_AND_OPERATIONAL_FIXES.md).
